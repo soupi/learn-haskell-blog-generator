@@ -1,3 +1,3 @@
-main = putStrLn myhtml
+main = putStrLn (myhtml "Hello, function!")
 
-myhtml = "<html><body>Hello, world!</body></html>"
+myhtml content = "<html><body>" <> content <> "</body></html>"
