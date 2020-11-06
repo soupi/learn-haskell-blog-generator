@@ -1,7 +1,7 @@
 main :: IO ()
-main = putStrLn myhtml
+main = putStrLn (render myhtml)
 
-myhtml :: String
+myhtml :: Html
 myhtml =
   html_
     "My title"
@@ -10,21 +10,41 @@ myhtml =
     , p_ "Paragraph #2"
     ]
 
-html_ :: String -> [String] -> String
+newtype Html
+  = Html String
+
+type HtmlTitle
+  = String
+
+type HtmlBody
+  = [HtmlBodyContent]
+
+newtype HtmlBodyContent
+  = HtmlBodyContent String
+
+html_ :: HtmlTitle -> HtmlBody -> Html
 html_ title content =
-  el "html"
-    ( concat
-      [ el "head" (el "title" title)
-      , el "body" (concat content)
-      ]
+  Html
+    ( el "html"
+      ( concat
+        [ el "head" (el "title" title)
+        , el "body" (concat (map getBodyContentString content))
+        ]
+      )
     )
 
-p_ :: String -> String
-p_ = el "p"
+p_ :: String -> HtmlBodyContent
+p_ = HtmlBodyContent . el "p"
 
-h1_ :: String -> String
-h1_ = el "h1"
+h1_ :: String -> HtmlBodyContent
+h1_ = HtmlBodyContent . el "h1"
 
 el :: String -> String -> String
 el tag content =
   "<" <> tag <> ">" <> content <> "</" <> tag <> ">"
+
+getBodyContentString :: HtmlBodyContent -> String
+getBodyContentString (HtmlBodyContent str) = str
+
+render :: Html -> String
+render (Html str) = str
