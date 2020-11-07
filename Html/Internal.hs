@@ -38,6 +38,12 @@ p_ = HtmlBodyContent . el "p" . escape
 h1_ :: String -> HtmlBodyContent
 h1_ = HtmlBodyContent . el "h1" . escape
 
+ul_ :: [String] -> HtmlBodyContent
+ul_ = HtmlBodyContent . el "ul" . concat . map (el "li" . escape)
+
+ol_ :: [String] -> HtmlBodyContent
+ol_ = HtmlBodyContent . el "ol" . concat . map (el "li" . escape)
+
 ------------
 -- Render --
 ------------
