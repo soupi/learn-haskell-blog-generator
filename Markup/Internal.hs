@@ -24,6 +24,26 @@ parse =
         ('@' : ' ' : line) : rest ->
           maybe id (:) current (Header 1 (trim line) : impl Nothing rest)
 
+        -- Unordered list
+        ('-' : ' ' : line) : rest ->
+          case current of
+            -- Part of existing unordered list
+            Just (UnorderedList list) ->
+              impl (Just (UnorderedList (list <> [trim line]))) rest
+
+            _ ->
+              maybe id (:) current (impl (Just (UnorderedList [trim line])) rest)
+
+        -- Ordered list
+        ('#' : ' ' : line) : rest ->
+          case current of
+            -- Part of existing Ordered list
+            Just (OrderedList list) ->
+              impl (Just (OrderedList (list <> [trim line]))) rest
+
+            _ ->
+              maybe id (:) current (impl (Just (OrderedList [trim line])) rest)
+
         -- Paragraph
         line : rest ->
           case trim line of
