@@ -1,9 +1,11 @@
 module Main where
 
 import Html
+import Markup
 
 main :: IO ()
-main = putStrLn (render myhtml)
+main = putStrLn (show (parse mymorkup))
+-- main = putStrLn (render myhtml)
 
 myhtml :: Html
 myhtml =
@@ -29,16 +31,14 @@ mymorkup :: String
 mymorkup =
   unlines
     [ "@ Header 1"
-    , "@@ Header 2"
-    , "@@@ Header 3"
-    , "@@@@ Header 4"
-    , "@@@@@ Header 5"
+--  , "@@ Header 2"
+--  , "@@@ Header 3"
+--  , "@@@@ Header 4"
+--  , "@@@@@ Header 5"
     , ""
     , "Paragraph - Keep grouping lines until there's a line with only whitespace"
     , ""
-    , "- Unordered list - Keep grouping unordered list until there's a line that does not start with '- '"
-    , ""
-    , "- Numbered list - Keep grouping numbered list lines until there's a line that does not start with '# '"
-    , ""
-    , "- Code block - Keep grouping numbered list lines until there's a line that does not start with '> '"
+--  , "- Unordered list - Keep grouping unordered list until there's a line that does not start with '- '"
+--  , "- Numbered list - Keep grouping numbered list lines until there's a line that does not start with '# '"
+--  , "- Code block - Keep grouping numbered list lines until there's a line that does not start with '> '"
     ]
