@@ -2,30 +2,14 @@ module Main where
 
 import Html
 import Markup
+import MarkupToHtml
 
 main :: IO ()
-main = putStrLn (show (parse mymorkup))
--- main = putStrLn (render myhtml)
+main = putStrLn (textToHtmlStr mymorkup)
 
-myhtml :: Html
-myhtml =
-  html_
-    "My title"
-    [ h1_ "Header"
-    , p_ "Paragraph #1 which contains:"
-    , ul_
-      [ "<html>code</html>"
-      , "unordered lists"
-      ]
-    , p_ "Paragraph #2 where we list our tutorial sections:"
-    , ol_
-      [ "Tiny Html generation library (Done for now!)"
-      , "Defining our custom markup language and parsing it"
-      , "Glue things together"
-      , "Use libraries to add command line parsing and concurrent proccessing"
-      ]
-    ]
-
+textToHtmlStr :: String -> String
+textToHtmlStr =
+  render . markupToHtml "placeholder title" . parse
 
 mymorkup :: String
 mymorkup =
