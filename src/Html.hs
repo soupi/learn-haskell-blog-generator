@@ -7,9 +7,11 @@ module Html
   , html_
   , p_
   , h1_
+  , h2_
   , ul_
   , ol_
   , code_
+  , span_
   , txt_
   , link_
   , img_

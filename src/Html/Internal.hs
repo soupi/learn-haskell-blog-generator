@@ -30,7 +30,7 @@ html_ title content =
     ( el "html"
       ( concat
         [ el "head" (el "title" (escape title))
-        , el "body" (concat (map getBodyContentString content))
+        , el "body" (concat (map getHtmlStructureString content))
         ]
       )
     )
@@ -41,6 +41,9 @@ p_ = HtmlStructure . el "p" . getHtmlContent
 h1_ :: HtmlContent -> HtmlStructure
 h1_ = HtmlStructure . el "h1" . getHtmlContent
 
+h2_ :: HtmlContent -> HtmlStructure
+h2_ = HtmlStructure . el "h2" . getHtmlContent
+
 ul_ :: [HtmlContent] -> HtmlStructure
 ul_ = HtmlStructure . el "ul" . concat . map (el "li" . getHtmlContent)
 
@@ -50,7 +53,8 @@ ol_ = HtmlStructure . el "ol" . concat . map (el "li" . getHtmlContent)
 code_ :: String -> HtmlStructure
 code_ = HtmlStructure . el "pre"
 
-
+span_ :: [HtmlStructure] -> HtmlStructure
+span_ = HtmlStructure . el "span" . concat . map getHtmlStructureString
 
 txt_ :: String -> HtmlContent
 txt_ = HtmlContent . escape
@@ -98,8 +102,8 @@ el :: String -> String -> String
 el tag content =
   "<" <> tag <> ">" <> content <> "</" <> tag <> ">"
 
-getBodyContentString :: HtmlStructure -> String
-getBodyContentString (HtmlStructure str) = str
+getHtmlStructureString :: HtmlStructure -> String
+getHtmlStructureString (HtmlStructure str) = str
 
 escape :: String -> String
 escape =

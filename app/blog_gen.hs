@@ -1,16 +1,8 @@
 module Main where
 
-import Html
-import Markup
-import MarkupToHtml
+import Process
 
 main :: IO ()
 main = do
-  txt <- readFile "blog-post.txt"
-  let
-    outputHtml = textToHtmlStr txt
-  writeFile "output.html" outputHtml
+  processDir "blog" "output"
 
-textToHtmlStr :: String -> String
-textToHtmlStr =
-  render . markupToHtml "placeholder title" . parse
