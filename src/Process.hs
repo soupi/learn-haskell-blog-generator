@@ -1,5 +1,7 @@
 module Process where
 
+import System.IO (hPutStrLn, stderr)
+import System.Exit (exitFailure)
 import System.Directory
 import System.FilePath
 
@@ -7,8 +9,8 @@ import Html
 import Markup
 import MarkupToHtml
 
-processDir :: FilePath -> FilePath -> IO ()
-processDir inputDir outputDir = do
+processDir :: Bool -> FilePath -> FilePath -> IO ()
+processDir deleteOutputIfExists inputDir outputDir = do
   postsMarkup <- parseDir inputDir
   let
     index =
@@ -21,8 +23,25 @@ processDir inputDir outputDir = do
       map
         (\(path, html) -> (outputDir </> path, html))
         (("index.html", index) : posts)
-  createDirectory outputDir
+
+  createDir deleteOutputIfExists outputDir
+
   mapM_ (\(path, html) -> writeFile path html) files
+
+createDir :: Bool -> FilePath -> IO ()
+createDir deleteOutputIfExists outputDir = do
+  createDirectoryIfMissing True outputDir
+  files <- listDirectory outputDir
+  if deleteOutputIfExists
+    then
+      mapM_ (removeFile . (outputDir </>)) files
+    else
+      if null files -- no files in directory
+        then
+          pure ()
+        else do
+          hPutStrLn stderr ("Error: output path '" <> outputDir <> "' already exists and contains files.")
+          exitFailure
 
 parseDir :: FilePath -> IO [(FilePath, Markup)]
 parseDir inputDir = do
