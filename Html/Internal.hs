@@ -12,10 +12,13 @@ type HtmlTitle
   = String
 
 type HtmlBody
-  = [HtmlBodyContent]
+  = [HtmlStructure]
 
-newtype HtmlBodyContent
-  = HtmlBodyContent String
+newtype HtmlStructure
+  = HtmlStructure String
+
+newtype HtmlContent
+  = HtmlContent String
 
 ----------
 -- EDSL --
@@ -32,17 +35,53 @@ html_ title content =
       )
     )
 
-p_ :: String -> HtmlBodyContent
-p_ = HtmlBodyContent . el "p" . escape
+p_ :: HtmlContent -> HtmlStructure
+p_ = HtmlStructure . el "p" . getHtmlContent
 
-h1_ :: String -> HtmlBodyContent
-h1_ = HtmlBodyContent . el "h1" . escape
+h1_ :: HtmlContent -> HtmlStructure
+h1_ = HtmlStructure . el "h1" . getHtmlContent
 
-ul_ :: [String] -> HtmlBodyContent
-ul_ = HtmlBodyContent . el "ul" . concat . map (el "li" . escape)
+ul_ :: [HtmlContent] -> HtmlStructure
+ul_ = HtmlStructure . el "ul" . concat . map (el "li" . getHtmlContent)
 
-ol_ :: [String] -> HtmlBodyContent
-ol_ = HtmlBodyContent . el "ol" . concat . map (el "li" . escape)
+ol_ :: [HtmlContent] -> HtmlStructure
+ol_ = HtmlStructure . el "ol" . concat . map (el "li" . getHtmlContent)
+
+code_ :: String -> HtmlStructure
+code_ = HtmlStructure . el "pre"
+
+
+
+txt_ :: String -> HtmlContent
+txt_ = HtmlContent . escape
+
+link_ :: String -> HtmlContent -> HtmlContent
+link_ path (HtmlContent content) =
+  HtmlContent
+    ("<a href=\"" <> path <> "\">" <> content <> "</a>")
+
+img_ :: String -> HtmlContent
+img_ path =
+  HtmlContent $ "<img src=\"" <> path <> "\"/<img>"
+
+empty_ :: HtmlContent
+empty_ = HtmlContent ""
+
+---
+
+instance Semigroup HtmlContent where
+  (<>) (HtmlContent c1) (HtmlContent c2) =
+    HtmlContent (c1 <> c2)
+
+instance Monoid HtmlContent where
+  mempty = empty_
+
+
+(<+>) :: HtmlContent -> HtmlContent -> HtmlContent
+(<+>) (HtmlContent c1) (HtmlContent c2) =
+  HtmlContent (c1 <> "&nbsp;" <> c2)
+
+infixr 5 <+>
 
 ------------
 -- Render --
@@ -59,8 +98,8 @@ el :: String -> String -> String
 el tag content =
   "<" <> tag <> ">" <> content <> "</" <> tag <> ">"
 
-getBodyContentString :: HtmlBodyContent -> String
-getBodyContentString (HtmlBodyContent str) = str
+getBodyContentString :: HtmlStructure -> String
+getBodyContentString (HtmlStructure str) = str
 
 escape :: String -> String
 escape =
@@ -75,3 +114,6 @@ escape =
         _ -> [c]
   in
     concat . map escapeChar
+
+getHtmlContent :: HtmlContent -> String
+getHtmlContent (HtmlContent str) = str

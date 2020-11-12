@@ -2,12 +2,18 @@ module Html
   ( Html
   , HtmlTitle
   , HtmlBody
-  , HtmlBodyContent
+  , HtmlStructure
+  , HtmlContent
   , html_
   , p_
   , h1_
   , ul_
   , ol_
+  , code_
+  , txt_
+  , link_
+  , img_
+  , empty_
   , render
   )
 where

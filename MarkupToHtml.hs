@@ -8,18 +8,18 @@ markupToHtml title markup =
   html_ title (map markupPartToHtml markup)
 
 
-markupPartToHtml :: MarkupPart -> HtmlBodyContent
+markupPartToHtml :: MarkupPart -> HtmlStructure
 markupPartToHtml part =
   case part of
     Header _ txt ->
       -- we'll currently ignore the header level because we only have one option
-      h1_ txt
+      h1_ (txt_ txt)
 
     Paragraph p ->
-      p_ p
+      p_ (txt_ p)
 
     UnorderedList list ->
-      ul_ list
+      ul_ (map txt_ list)
 
     OrderedList list ->
-      ol_ list
+      ol_ (map txt_ list)
