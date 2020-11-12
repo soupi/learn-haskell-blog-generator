@@ -23,3 +23,6 @@ markupPartToHtml part =
 
     OrderedList list ->
       ol_ (map txt_ list)
+
+    CodeBlock code ->
+      code_ (unlines code)
