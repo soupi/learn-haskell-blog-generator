@@ -22,6 +22,6 @@ following steps in this tutorial:
 # Defined our markup language and implemented a parser for it
 # Glue both parts together
 # Reading blog posts from file and outputing html to another file
-# Adding a cleaner cli interface and concurrent processing using libraries
+# Adding a cleaner cli interface using libraries
 
 I hope someone will find this project useful!
