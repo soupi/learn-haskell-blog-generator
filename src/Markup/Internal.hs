@@ -1,17 +1,21 @@
+{-# language OverloadedStrings #-}
+
 module Markup.Internal where
+
+import qualified Data.Text as T
 
 type Markup
   = [MarkupPart]
 
 data MarkupPart
-  = Header Int String
-  | Paragraph String
-  | UnorderedList [String]
-  | OrderedList [String]
-  | CodeBlock [String]
+  = Header Int T.Text
+  | Paragraph T.Text
+  | UnorderedList [T.Text]
+  | OrderedList [T.Text]
+  | CodeBlock [T.Text]
   deriving Show
 
-parse :: String -> [MarkupPart]
+parse :: T.Text -> [MarkupPart]
 parse =
   let
     impl current txt =
@@ -20,12 +24,16 @@ parse =
         [] ->
           maybe id (:) current []
 
+        line : rest ->
+          handleLine current line rest
+
+    handleLine current fullline rest
         -- Header 1
-        ('@' : ' ' : line) : rest ->
+      | Just line <- dropPrefixIfExists "@ " fullline =
           maybe id (:) current (Header 1 (trim line) : impl Nothing rest)
 
         -- Unordered list
-        ('-' : ' ' : line) : rest ->
+      | Just line <- dropPrefixIfExists "- " fullline =
           case current of
             -- Part of existing unordered list
             Just (UnorderedList list) ->
@@ -35,7 +43,7 @@ parse =
               maybe id (:) current (impl (Just (UnorderedList [trim line])) rest)
 
         -- Ordered list
-        ('#' : ' ' : line) : rest ->
+      | Just line <- dropPrefixIfExists "# " fullline =
           case current of
             -- Part of existing Ordered list
             Just (OrderedList list) ->
@@ -45,8 +53,8 @@ parse =
               maybe id (:) current (impl (Just (OrderedList [trim line])) rest)
 
         -- Paragraph
-        line : rest ->
-          case trim line of
+      | otherwise =
+          case trim fullline of
             -- Empty line
             "" ->
               maybe id (:) current (impl Nothing rest)
@@ -61,7 +69,15 @@ parse =
                   maybe id (:) current (impl (Just (Paragraph trimmedLine)) rest)
 
   in
-    impl Nothing . lines
+    impl Nothing . T.lines
 
-trim :: String -> String
-trim = unwords . words
+trim :: T.Text -> T.Text
+trim = T.unwords . T.words
+
+dropPrefixIfExists :: T.Text -> T.Text -> Maybe T.Text
+dropPrefixIfExists prefix text
+  | prefix `T.isPrefixOf` text =
+    Just (T.drop (T.length prefix) text)
+
+  | otherwise =
+    Nothing

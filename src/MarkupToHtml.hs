@@ -1,9 +1,11 @@
 module MarkupToHtml where
 
+import qualified Data.Text as T
+
 import Markup
 import Html
 
-markupToHtml :: String -> Markup -> Html
+markupToHtml :: T.Text -> Markup -> Html
 markupToHtml title markup =
   html_ title (map markupPartToHtml markup)
 
@@ -25,4 +27,4 @@ markupPartToHtml part =
       ol_ (map txt_ list)
 
     CodeBlock code ->
-      code_ (unlines code)
+      code_ (T.unlines code)
