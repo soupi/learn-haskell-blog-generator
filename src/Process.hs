@@ -16,22 +16,27 @@ import MarkupToHtml
 
 processDir :: Bool -> FilePath -> FilePath -> IO ()
 processDir deleteOutputIfExists inputDir outputDir = do
-  postsMarkup <- parseDir inputDir
-  let
-    index =
-      render (createIndex postsMarkup)
-    posts =
-      map
-      (\(filename, markup) -> (filename, render (markupToHtml (T.pack filename) markup)))
-      postsMarkup
-    files =
-      map
-        (\(path, html) -> (outputDir </> path, html))
-        (("index.html", index) : posts)
+  files <- prepareHtmls inputDir outputDir
 
   createDir deleteOutputIfExists outputDir
 
-  mapM_ (\(path, html) -> T.writeFile path html) files
+  mapM_ (\(path, html) -> T.writeFile path (render html)) files
+
+prepareHtmls :: FilePath -> FilePath -> IO [(FilePath, Html)]
+prepareHtmls inputDir outputPath = do
+  postsMarkup <- parseDir inputDir
+  let
+    index =
+      createIndex postsMarkup
+    posts =
+      map
+      (\(filename, markup) -> (filename, markupToHtml (T.pack filename) markup))
+      postsMarkup
+    files =
+      map
+        (\(path, html) -> (outputPath </> path, html))
+        (("index.html", index) : posts)
+  pure files
 
 createDir :: Bool -> FilePath -> IO ()
 createDir deleteOutputIfExists outputDir = do
