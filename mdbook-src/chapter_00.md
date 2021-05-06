@@ -1,5 +1,7 @@
 # About this tutorial
 
+> Note: This is WIP
+
 In this tutorial we will implement a very simple static blog generator in Haskell, converting documents written in our own custom markup language to html.
 
 We will:
