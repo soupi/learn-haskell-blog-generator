@@ -1,0 +1,452 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Safer HTML library with types - Learning Haskell by building a blog generator</title>
+        
+        
+
+
+        <!-- Custom HTML head -->
+        
+
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="A step by step guide to learning Haskell by building a simple static blog generator">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        
+        <link rel="icon" href="favicon.svg">
+        
+        
+        <link rel="shortcut icon" href="favicon.png">
+        
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        
+        <link rel="stylesheet" href="css/print.css" media="print">
+        
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        
+        <link rel="stylesheet" href="fonts/fonts.css">
+        
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="chapter_00.html"><strong aria-hidden="true">1.</strong> About this tutorial</a></li><li class="chapter-item expanded "><a href="chapter_01.html"><strong aria-hidden="true">2.</strong> Hello world</a></li><li class="chapter-item expanded "><a href="chapter_02.html"><strong aria-hidden="true">3.</strong> Building an HTML printer library</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="chapter_02a.html"><strong aria-hidden="true">3.1.</strong> Flexible html content (functions)</a></li><li class="chapter-item expanded "><a href="chapter_02b.html"><strong aria-hidden="true">3.2.</strong> Adding type signatures</a></li><li class="chapter-item expanded "><a href="chapter_02c.html"><strong aria-hidden="true">3.3.</strong> Embedded Domain Specific Languages</a></li><li class="chapter-item expanded "><a href="chapter_02d.html" class="active"><strong aria-hidden="true">3.4.</strong> Safer HTML library with types</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                        
+                    </div>
+
+                    <h1 class="menu-title">Learning Haskell by building a blog generator</h1>
+
+                    <div class="right-buttons">
+                        
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        
+                        
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="safer-html-library-with-types"><a class="header" href="#safer-html-library-with-types">Safer HTML library with types</a></h1>
+<p>There are a few ways of defining new types in Haskell, in this section
+we are going to meet two ways: <code>newtype</code> and <code>type</code>.</p>
+<ol>
+<li><code>newtype</code> lets us give a new name to an already existing type in a
+way that the two cannot mix together.</li>
+</ol>
+<p>A <code>newtype</code> declaration looks like this:</p>
+<pre><code class="language-hs">newtype &lt;type-name&gt; = &lt;constructor&gt; &lt;existing-type&gt;
+</code></pre>
+<p>For example in our case we have:</p>
+<pre><code class="language-hs">newtype Html = Html String
+</code></pre>
+<p>The first <code>Html</code>, to the left of the equals sign, lives in the <em>types</em>
+namespace, meaning that you will only see that name to the right of a
+double-colon sign (<code>::</code>).</p>
+<p>The second <code>Html</code> lives in the <em>expressions</em> namespace, meaning that
+you will see it where you expect expressions (we'll touch where
+exactly that can be in a moment).</p>
+<p>The two names, <code>&lt;type-name&gt;</code> and <code>&lt;constructor&gt;</code>, do not have to be the
+same, but they often are. And note that both have to start with a
+capital letter.</p>
+<p>The right-hand side of the newtype declaration describes how an
+expression of that type looks like. In our case, we expect a value of
+type <code>Html</code> to have the constructor <code>Html</code> and then an expression of
+type string, for example <code>Html &quot;hello&quot;</code> or <code>Html (&quot;hello &quot; &lt;&gt; &quot;world&quot;)</code>.</p>
+<p>You can think of the constructor as a function that takes the argument
+and returns something of our new type.</p>
+<p>Note that we cannot use an expression of type <code>Html</code> the same way we'd
+use a <code>String</code>. so <code>&quot;hello &quot; &lt;&gt; Html &quot;world&quot;</code> would fail at type
+checking.</p>
+<p>This is useful when we want <em>encapsulation</em>. We can define use
+existing representation and functions for our underlying type, but not
+mix them with other, unrelated (to our domain) types. Similar as
+meters and feet can both be numbers, but we don't want to accidently
+add feets to meters without any conversion.</p>
+<p>To get this actually working well we'll need a bit more than just
+newtypes, in the next commit we'll introduce modules and smart constructors.</p>
+<ol start="2">
+<li>A <code>type</code> definition looks really similar - the only difference is that
+we have no constructor:</li>
+</ol>
+<pre><code class="language-hs">type &lt;type-name&gt; = &lt;existing-type&gt;
+</code></pre>
+<p>For example in our case we have:</p>
+<pre><code class="language-hs">type HtmlTitle = String
+</code></pre>
+<p><code>type</code>, on the other hand, is just a name alias. so writing <code>HtmlTitle</code>
+or <code>String</code> is exactly the same for Haskell, and we can use
+it to give a bit more clarity to our code.</p>
+<p>Back to <code>newtype</code>s. So how can we use the underlying type? We first
+need to extract it out of the type. We do this using pattern matching.</p>
+<p>Pattern matching can be used in two ways, in case expressions and in
+function definitions.</p>
+<ol>
+<li>case expressions are kinda beefed up switch expressions and look like this:</li>
+</ol>
+<pre><code class="language-hs">case &lt;expression&gt; of
+  &lt;pattern&gt; -&gt; &lt;expression&gt;
+  ...
+  &lt;pattern&gt; -&gt; &lt;expression&gt;
+</code></pre>
+<p>The <code>&lt;expression&gt;</code> is the thing we want to unpack, and the <code>pattern</code>
+is how it actually looks like. For example:</p>
+<pre><code class="language-hs">getBodyContentString :: HtmlBodyContent -&gt; String
+getBodyContentString myhbc =
+  case myhbc of
+    HtmlBodyContent str -&gt; str
+</code></pre>
+<p>This way we can extract the String out of <code>HtmlBodyContent</code> and return
+it.</p>
+<p>In later commits we'll introduce <code>data</code> declarations (which are kinda
+a struct + enum chimera), where we can define multiple constructors to
+a type. Then the multiple patterns of a case expression will make more
+sense.</p>
+<ol start="2">
+<li>Alternatively, when declaring a function, we can also use pattern matching on the
+arguments:</li>
+</ol>
+<pre><code class="language-hs">func &lt;pattern&gt; = &lt;expression&gt;
+</code></pre>
+<p>For example:</p>
+<pre><code class="language-hs">getBodyContentString :: HtmlBodyContent -&gt; String
+getBodyContentString (HtmlBodyContent str) = str
+</code></pre>
+<p>And this is the way we use it in this code, because here it's a bit
+more concise.</p>
+<p>Another interesting operator (which is a regular library function in
+Haskell) we are introducing here is <code>.</code>. Pronounced compose. This is
+similar to the composition operator you may know from math. It takes
+two functions and an argument, and passes the argument to the second
+function, and the result of that is then passed to the first function.</p>
+<p>The type for <code>.</code> is:</p>
+<pre><code class="language-hs">(.) :: (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</code></pre>
+<p>Note that the second function takes as input something of the type
+<code>a</code>, returns something of the type <code>b</code>, and the first functions takes
+something of the type <code>b</code>, and returns something of the type <code>c</code>.</p>
+<p>Note that types that start with a lowercase letter are &quot;type
+variables&quot;. Think of them as similar to regular variables. Just like
+<code>str</code> could be any string, like &quot;hello&quot; or &quot;world&quot;, a type variable
+can be any type: <code>Bool</code>, <code>String</code>, <code>String -&gt; String</code>, etc.</p>
+<p>The catch is that type variables must match in a signature, so if for
+example we write a function with the type signature <code>a -&gt; a</code>, the
+types argument type and the return type <em>must</em> match. And it could be
+any type - we cannot know what it is. So the only way to implement a
+function with that signature is:</p>
+<pre><code class="language-hs">mysteryFunction :: a -&gt; a
+mysteryFunction x = x
+</code></pre>
+<p>If we tried any other way, for example returning some made up value
+like &quot;hello&quot;, or try to use <code>x</code> like a value of a type we know like
+writing <code>x + x</code>, the type checker will complain.</p>
+<p>Also, remember that <code>-&gt;</code> is right associative? So this signature is the same as:</p>
+<pre><code class="language-hs">(.) :: (b -&gt; c) -&gt; (a -&gt; b) -&gt; (a -&gt; c)
+</code></pre>
+<p>Doesn't it look like a function that takes two functions and returns a
+third function that is the composition of the two?</p>
+<p>In our concrete example we have:</p>
+<pre><code class="language-hs">p_ :: String -&gt; HtmlBodyContent
+p_ = HtmlBodyContent . el &quot;p&quot;
+</code></pre>
+<p>Let's take a deeper look and see what are the types of the two
+functions here are:</p>
+<ul>
+<li><code>HtmlBodyContent :: String -&gt; HtmlBodyContent</code></li>
+<li><code>el &quot;p&quot; :: String -&gt; String</code></li>
+<li><code>HtmlBodyContent . el &quot;p&quot; :: String -&gt; HtmlBodyContent</code></li>
+<li><code>(.) :: (b -&gt; c) -&gt; (a -&gt; b) -&gt; (a -&gt; c)</code></li>
+</ul>
+<p>When we try to figure out if an expression type check, we try to match
+the types and see if they work. If they are the same type, all is
+well. If one of them is a type variable and the other isn't we write
+down that the type variable should now be the concrete type, and see
+if everything still works.</p>
+<p>So in our case we know from the type signature that the input type to
+the function <code>String</code> and the output type is <code>HtmlBodyContent</code>, this
+means <code>a</code> is equivalent to <code>String</code> (we write <code>~</code> to denote
+equivalence) and <code>c ~ HtmlBodyContent</code>. We also know that <code>b ~ String</code>
+because we pass <code>HtmlBodyContent</code> to <code>.</code> as the first arguments, which
+means <code>String -&gt; HtmlBodyContent</code> (<code>HtmlBodyContent</code>'s type) must
+match with the type of the first argument of <code>.</code> which is <code>b -&gt; c</code>.</p>
+<p>We keep doing this process until we come to the conclusion that there
+aren't any types that don't match (we don't have two different
+concrete types that are supposed to be equivalent).</p>
+<p>All of this is nice and fun. And indeed now we can't write &quot;Hello&quot;
+where we'd expect either a paragraph or a header, but we can still
+write <code>HtmlBodyContent &quot;hello&quot;</code> and get something that isn't a
+paragraph or a header. Next we'll see how we can make this illegal as
+well.</p>
+<hr />
+<pre><code class="language-hs">-- hello.hs
+
+main :: IO ()
+main = putStrLn (render myhtml)
+
+myhtml :: Html
+myhtml =
+  html_
+    &quot;My title&quot;
+    ( append_
+      (h1_ &quot;Header&quot;)
+      ( append_
+        (p_ &quot;Paragraph #1&quot;)
+        (p_ &quot;Paragraph #2&quot;)
+      )
+    )
+
+newtype Html
+  = Html String
+
+type HtmlTitle
+  = String
+
+newtype HtmlBodyContent
+  = HtmlBodyContent String
+
+html_ :: HtmlTitle -&gt; HtmlBodyContent -&gt; Html
+html_ title content =
+  Html
+    ( el &quot;html&quot;
+      ( el &quot;head&quot; (el &quot;title&quot; title)
+        &lt;&gt; el &quot;body&quot; (getBodyContentString content)
+      )
+    )
+
+p_ :: String -&gt; HtmlBodyContent
+p_ = HtmlBodyContent . el &quot;p&quot;
+
+h1_ :: String -&gt; HtmlBodyContent
+h1_ = HtmlBodyContent . el &quot;h1&quot;
+
+el :: String -&gt; String -&gt; String
+el tag content =
+  &quot;&lt;&quot; &lt;&gt; tag &lt;&gt; &quot;&gt;&quot; &lt;&gt; content &lt;&gt; &quot;&lt;/&quot; &lt;&gt; tag &lt;&gt; &quot;&gt;&quot;
+
+append_ :: HtmlBodyContent -&gt; HtmlBodyContent -&gt; HtmlBodyContent
+append_ c1 c2 =
+  HtmlBodyContent (getBodyContentString c1 &lt;&gt; getBodyContentString c2)
+
+getBodyContentString :: HtmlBodyContent -&gt; String
+getBodyContentString content =
+  case content of
+    HtmlBodyContent str -&gt; str
+
+render :: Html -&gt; String
+render html =
+  case html of
+    Html str -&gt; str
+</code></pre>
+<hr />
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+                            <a rel="prev" href="chapter_02c.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+                    <a rel="prev" href="chapter_02c.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+            </nav>
+
+        </div>
+
+        
+        <!-- Livereload script (if served using the cli tool) -->
+        <script type="text/javascript">
+            var socket = new WebSocket("ws://localhost:3000/__livereload");
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+        
+
+        
+
+        
+
+        
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        
+
+        
+
+        
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+
+    </body>
+</html>

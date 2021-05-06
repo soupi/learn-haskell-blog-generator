@@ -1,0 +1,909 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Learning Haskell by building a blog generator</title>
+        
+        <meta name="robots" content="noindex" />
+        
+        
+
+
+        <!-- Custom HTML head -->
+        
+
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="A step by step guide to learning Haskell by building a simple static blog generator">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        
+        <link rel="icon" href="favicon.svg">
+        
+        
+        <link rel="shortcut icon" href="favicon.png">
+        
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        
+        <link rel="stylesheet" href="css/print.css" media="print">
+        
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        
+        <link rel="stylesheet" href="fonts/fonts.css">
+        
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="chapter_00.html"><strong aria-hidden="true">1.</strong> About this tutorial</a></li><li class="chapter-item expanded "><a href="chapter_01.html"><strong aria-hidden="true">2.</strong> Hello world</a></li><li class="chapter-item expanded "><a href="chapter_02.html"><strong aria-hidden="true">3.</strong> Building an HTML printer library</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="chapter_02a.html"><strong aria-hidden="true">3.1.</strong> Flexible html content (functions)</a></li><li class="chapter-item expanded "><a href="chapter_02b.html"><strong aria-hidden="true">3.2.</strong> Adding type signatures</a></li><li class="chapter-item expanded "><a href="chapter_02c.html"><strong aria-hidden="true">3.3.</strong> Embedded Domain Specific Languages</a></li><li class="chapter-item expanded "><a href="chapter_02d.html"><strong aria-hidden="true">3.4.</strong> Safer HTML library with types</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                        
+                    </div>
+
+                    <h1 class="menu-title">Learning Haskell by building a blog generator</h1>
+
+                    <div class="right-buttons">
+                        
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        
+                        
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="about-this-tutorial"><a class="header" href="#about-this-tutorial">About this tutorial</a></h1>
+<p>In this tutorial we will implement a very simple static blog generator in Haskell, converting documents written in our own custom markup language to html.</p>
+<p>We will:</p>
+<ol>
+<li>Implement a tiny HTML printer library</li>
+<li>Define and parse our custom markup language</li>
+<li>Read files and glue things together</li>
+<li>Add command line arguments parsing</li>
+<li>Alternatively serve the blog over http</li>
+</ol>
+<p>In each chapter of the book we will focus on a particular task we wish to achieve, and through the chapter we'll learn just enough Haskell to complete the task.</p>
+<p>This book is an alternatively presentation of:
+<a href="https://github.com/soupi/learn-haskell-blog-generator">soupi/learn-haskell-blog-generator</a>, which presents the chapters one commit at a time.</p>
+<h1 id="hello-world"><a class="header" href="#hello-world">Hello, world!</a></h1>
+<p>In this chapter we will create a simple html hello world.</p>
+<p>A Haskell source file is composed of definitions.</p>
+<p>The most common definition has the following form:</p>
+<pre><code class="language-hs">&lt;name&gt; = &lt;expression&gt;
+</code></pre>
+<p>Note that:</p>
+<ol>
+<li>We cannot write naked expressions without binding them to a name</li>
+<li>Names must start with a lowercase letter</li>
+<li>We cannot use the same name more than once in a file</li>
+</ol>
+<p>A source file containing a definition of the name <code>main</code> is treated as an executable, and the expression <code>main</code> is bound to is the entry point to the program.</p>
+<p>Let's create a new Haskell source file called <code>hello.hs</code>, and write the following line there:</p>
+<pre><code class="language-hs">main = putStrLn &quot;&lt;html&gt;&lt;body&gt;Hello, world!&lt;/body&gt;&lt;/html&gt;&quot;
+</code></pre>
+<p>We've defined a new name, <code>main</code>, and bound it to the expression <code>putStrLn &quot;&lt;html&gt;&lt;body&gt;Hello, world!&lt;/body&gt;&lt;/html&gt;&quot;</code>.</p>
+<p>the body of <code>main</code> means calling the function <code>putStrLn</code> with the string <code>&quot;&lt;html&gt;&lt;body&gt;Hello, world!&lt;/body&gt;&lt;/html&gt;&quot;</code>.
+<code>putStrLn</code> takes a single string as input and prints that string to the standard output.</p>
+<p><strong>Note</strong>: we don't need parenthesis to pass arguments to functions in Haskell.</p>
+<p>Running this program will result in the following text printed on the screen:</p>
+<pre><code>&lt;html&gt;&lt;body&gt;Hello, world!&lt;/body&gt;&lt;/html&gt;
+</code></pre>
+<p>To run this little program, we can either compile it using the command line program <code>ghc</code>, like this: <code>ghc hello.hs</code> which will create a few files:</p>
+<ol>
+<li><code>hello.o</code> - Object file</li>
+<li><code>hello.hi</code> - Haskell interface file</li>
+<li><code>hello</code> - A native executable file</li>
+</ol>
+<p>and then run <code>hello</code>.</p>
+<p>Or, alternatively, interpret the source file using the command line program <code>runghc</code>, like this: <code>runghc hello.hs</code> which will run the program without compiling it or creating any files.</p>
+<pre><code class="language-sh">&gt; runghc hello.hs
+&lt;html&gt;&lt;body&gt;Hello, world!&lt;/body&gt;&lt;/html&gt;
+</code></pre>
+<p>We can also redirect the output of the program to a file and then open it in firefox.</p>
+<pre><code class="language-sh">&gt; runghc hello.hs &gt; hello.html
+&gt; firefox hello.html
+</code></pre>
+<p>This command should open firefox and display a web page with <code>Hello, world!</code> written in it.</p>
+<p>In this tutorial we'll use <code>runghc</code> regularily, because it saves us time to run the program without compiling it.</p>
+<hr />
+<p><strong>Note</strong>: If you've installed a ghc toolchain via stack and not ghcup, and the commands above do not work because <code>ghc</code> or <code>runghc</code> are missing, prefix the commands above with <code>stack exec -- </code>. Stack will locate the globally installed ghc and use it. So for example <code>runghc hello.hs</code> becomes <code>stack exec -- runghc hello.hs</code>. See the <a href="https://docs.haskellstack.org/en/stable/GUIDE/#exec">Stack user guide</a> for more details.</p>
+<hr />
+<h2 id="more-bindings"><a class="header" href="#more-bindings">More bindings</a></h2>
+<p>We can define the html string passed to <code>putStrLn</code> in a new name instead. Change the content of file <code>hello.hs</code> we defined above to:</p>
+<pre><code class="language-hs">main = putStrLn myhtml
+
+myhtml = &quot;&lt;html&gt;&lt;body&gt;Hello, world!&lt;/body&gt;&lt;/html&gt;&quot;
+</code></pre>
+<p><strong>Note</strong>: the order in which we declare the bindings does not matter. Try reversing the order of definitions and see for yourself.</p>
+<h1 id="building-an-html-printer-library"><a class="header" href="#building-an-html-printer-library">Building an HTML printer library</a></h1>
+<p>In this part we'll explore a few basic building blocks in Haskell,
+including functions, types and modules, while building a small HTML printer library
+with which we will later construct HTML pages from our markup blog posts.</p>
+<h1 id="flexible-html-content-functions"><a class="header" href="#flexible-html-content-functions">Flexible html content (functions)</a></h1>
+<p>We'd like to be able to write different html contents without having to write the whole html-body tags over and over again.</p>
+<p>To define a function, we create a definition like we saw previously and add the arguments names after the name and before the equals sign (<code>=</code>). So a function definition has the following form:</p>
+<pre><code class="language-hs">&lt;name&gt; &lt;arg1&gt; &lt;arg2&gt; ... &lt;argN&gt; = &lt;expression&gt;
+</code></pre>
+<p>The argument names will be available in scope on the right side of the equals sign (in the <code>&lt;expression&gt;</code>), and the function name will be <code>&lt;name&gt;</code>.</p>
+<p>We'll define a function that takes a string which is the content and wraps it in the relevant <code>html</code> and <code>body</code> tags by concatenating them before and after the content.
+We use the operator <code>&lt;&gt;</code> to concatenate two strings.</p>
+<pre><code class="language-hs">wrapHtml content = &quot;&lt;html&gt;&lt;body&gt;&quot; &lt;&gt; content &lt;&gt; &quot;&lt;/body&gt;&lt;/html&gt;&quot;
+</code></pre>
+<p>This function, <code>wrapHtml</code>, takes one argument named <code>content</code> and returns a string that prefixes <code>&lt;html&gt;&lt;body&gt;</code> before the content and appends <code>&lt;/body&gt;&lt;/html&gt;</code>.
+It is common to use camelCase in Haskell.</p>
+<p>Now we can adjust our <code>myhtml</code> definition from the previous chapter:</p>
+<pre><code class="language-hs">myhtml = wrapHtml &quot;Hello, world!&quot;
+</code></pre>
+<p>Again, notice that we don't need parenthesis when calling functions. Function calls have the form:</p>
+<pre><code class="language-hs">&lt;name&gt; &lt;arg1&gt; &lt;arg2&gt; ... &lt;argN&gt;
+</code></pre>
+<p>However, if we wanted to substitute <code>myhtml</code> with the expression <code>myhtml</code> is bound to in <code>main = putStrLn myhtml</code>, we would have to wrap the expression in paranthesis:</p>
+<pre><code class="language-hs">main = putStrLn (wrapHtml &quot;Hello, world!&quot;)
+</code></pre>
+<p>If we accidentally write this instead:</p>
+<pre><code class="language-hs">main = putStrLn wrapHtml &quot;Hello, world!&quot;
+</code></pre>
+<p>we'll get an error from GHC stating that <code>putStrLn</code> is applied to two arguments, but it only takes one. this is because the above is of the form <code>&lt;name&gt; &lt;arg1&gt; &lt;arg2&gt;</code> as we defined earlier. By using parenthesis we can group together the expressions in the right order.</p>
+<hr />
+<p>Exercises:</p>
+<ol>
+<li>
+<p>Separate the functionality of <code>wrapHtml</code> to two functions:</p>
+<ol>
+<li>One that wraps content in <code>html</code> tag</li>
+<li>one that wraps content in a <code>body</code> tag</li>
+</ol>
+<p>Name the new functions <code>html_</code> and <code>body_</code>.</p>
+</li>
+<li>
+<p>Change <code>myhtml</code> to use these two functions.</p>
+</li>
+<li>
+<p>Add another two similar functions for the tags <code>&lt;head&gt;</code> and <code>&lt;title&gt;</code> and name them <code>head_</code> and <code>title_</code>.</p>
+</li>
+<li>
+<p>Create a new function, <code>makeHtml</code>, which takes two strings as input:</p>
+<ol>
+<li>One string for the title</li>
+<li>One string for the body content</li>
+</ol>
+<p>And construct an HTML string using the functions implemented in the previous exercises.</p>
+<p>The output for:</p>
+<pre><code class="language-hs">makeHtml &quot;My page title&quot; &quot;My page content&quot;
+</code></pre>
+<p>Should be:</p>
+<pre><code class="language-html">&lt;html&gt;&lt;head&gt;&lt;title&gt;My page title&lt;/title&gt;&lt;/head&gt;&lt;body&gt;My page content&lt;/body&gt;&lt;/html&gt;
+</code></pre>
+</li>
+<li>
+<p>Use <code>makeHtml</code> in <code>myhtml</code> instead of using <code>html_</code> and <code>body_</code> directly</p>
+</li>
+</ol>
+<hr />
+<p>Solutions:</p>
+<details>
+  <summary>Solution for exercise #1</summary>
+<pre><code class="language-hs">html_ content = &quot;&lt;html&gt;&quot; &lt;&gt; content &lt;&gt; &quot;&lt;/html&gt;&quot;
+   
+body_ content = &quot;&lt;body&gt;&quot; &lt;&gt; content &lt;&gt; &quot;&lt;/body&gt;&quot;
+</code></pre>
+</details>
+<details>
+  <summary>Solution for exercise #2</summary>
+<pre><code class="language-hs">myhtml = html_ (body_ &quot;Hello, world!&quot;)
+</code></pre>
+</details>
+<details>
+  <summary>Solution for exercise #3</summary>
+<pre><code class="language-hs">head_ content = &quot;&lt;head&gt;&quot; &lt;&gt; content &lt;&gt; &quot;&lt;/head&gt;&quot;
+
+title_ content = &quot;&lt;title&gt;&quot; &lt;&gt; content &lt;&gt; &quot;&lt;/title&gt;&quot;
+</code></pre>
+</details>
+<details>
+  <summary>Solution for exercise #4</summary>
+<pre><code class="language-hs">makeHtml title content = html_ (head_ (title_ title) &lt;&gt; body_ content)
+</code></pre>
+</details>
+<details>
+  <summary>Solution for exercise #5</summary>
+<pre><code class="language-hs">myhtml = makeHtml &quot;Hello title&quot; &quot;Hello, world!&quot;
+</code></pre>
+</details>
+<details>
+  <summary>Our final program</summary>
+<pre><code class="language-hs">-- hello.hs
+
+main = putStrLn myhtml
+
+myhtml = makeHtml &quot;Hello title&quot; &quot;Hello, world!&quot;
+
+makeHtml title content = html_ (head_ (title_ title) &lt;&gt; body_ content)
+
+html_ content = &quot;&lt;html&gt;&quot; &lt;&gt; content &lt;&gt; &quot;&lt;/html&gt;&quot;
+   
+body_ content = &quot;&lt;body&gt;&quot; &lt;&gt; content &lt;&gt; &quot;&lt;/body&gt;&quot;
+
+head_ content = &quot;&lt;head&gt;&quot; &lt;&gt; content &lt;&gt; &quot;&lt;/head&gt;&quot;
+
+title_ content = &quot;&lt;title&gt;&quot; &lt;&gt; content &lt;&gt; &quot;&lt;/title&gt;&quot;
+</code></pre>
+<p>We can now run our <code>hello.hs</code> program, pipeline the output into a file,
+and open it in our browser:</p>
+<pre><code class="language-sh">runghc hello.hs &gt; hello.html
+firefox hello.html
+</code></pre>
+<p>It should display <code>Hello, world!</code> on the page and <code>Hello title</code> on the page's title.</p>
+</details>
+<hr />
+<h2 id="indentation"><a class="header" href="#indentation">Indentation</a></h2>
+<p>You might ask how does Haskell know a definition is complete?
+The answer is: Haskell uses indentation to know when things should be grouped together.</p>
+<p>Indentation in Haskell can be a bit tricky, but in general: code which is supposed to be part of another expression should be indented further than the beginning of that expression.</p>
+<p>We know two definitions are separate because the second one is not indented further than the first one.</p>
+<h3 id="indentation-tips"><a class="header" href="#indentation-tips">Indentation tips</a></h3>
+<ol>
+<li>Choose a specific amount of spaces for indentation (2 spaces, 4 spaces, etc) and stick to it. Prefer spaces to tabs.</li>
+<li>Do not indent more than once in any given time.</li>
+<li>When in doubt, drop line as needed and indent once.</li>
+</ol>
+<p>Here are a few examples:</p>
+<pre><code class="language-hs">main =
+    putStrLn &quot;Hello, world!&quot;
+</code></pre>
+<p>or:</p>
+<pre><code class="language-hs">main =
+    putStrLn
+        (wrapHtml &quot;Hello, world!&quot;)
+</code></pre>
+<p><strong>Avoid the following styles</strong>, which use more than one indentation steps:</p>
+<pre><code class="language-hs">main = putStrLn
+        (wrapHtml &quot;Hello, world!&quot;)
+</code></pre>
+<pre><code class="language-hs">main = putStrLn
+                (wrapHtml &quot;Hello, world!&quot;)
+</code></pre>
+<h1 id="adding-type-signatures"><a class="header" href="#adding-type-signatures">Adding type signatures</a></h1>
+<p>Haskell is a statically typed language. That means that every
+expression has a type, and we check that the types are valid with
+regards to each other before running the program. If we discover that
+they are not valid, an error message will be printed and the program
+will not run.</p>
+<p>An example of type error would be if we'd pass a function more
+arguments that it take, or pass a number instead of a string.</p>
+<p>Haskell is also type inferred, so we don't <em>need</em> to specify the type
+of expressions - Haskell can infer from the context of the expression
+what its type is, and that's what we did up until now. But specifying
+types is useful - it adds a layer of documentation for you or others
+that will look at the code later, and it helps verify to some degree
+that what was intended (with the type signature) is what was
+written (with the expression).</p>
+<p>We use double-colon (<code>::</code>) to specify the type of names. We usually
+write it right above the definition of the name itself.</p>
+<p>Here are a few examples of types we can write:</p>
+<ul>
+<li><code>Int</code> - The type of integer numbers</li>
+<li><code>String</code> - The type of strings</li>
+<li><code>Bool</code> - The type of booleans</li>
+<li><code>()</code> - The type of the expression <code>()</code>, also called unit</li>
+<li><code>a -&gt; b</code> - The type of a function from an expression of type <code>a</code> to an expression of type <code>b</code></li>
+<li><code>IO ()</code> - The type of an expression that represents an IO subroutine that returns <code>()</code></li>
+</ul>
+<p>Let's specify the type of <code>title_</code>:</p>
+<pre><code class="language-hs">title_ :: String -&gt; String
+</code></pre>
+<p>We can see in the code that the type of <code>title_</code> is a function that takes
+a <code>String</code> and returns a <code>String</code>.</p>
+<p>Let's also specify the type of <code>makeHtml</code>:</p>
+<pre><code class="language-hs">makeHtml :: String -&gt; String -&gt; String
+</code></pre>
+<p>Previously, we thought about <code>makeHtml</code> as a function that takes
+two strings and returns a string.</p>
+<p>But actually, all functions in Haskell take <strong>exactly one argument</strong> as input
+and return <strong>exactly one value</strong> as output. It's just convenient to refer
+to functions like <code>makeHtml</code> as functions with multiple inputs.</p>
+<p>In our case, <code>makeHtml</code> is a function that takes <strong>one</strong> string argument,
+and returns a <strong>function</strong>. <em>The function it returns</em> takes a string argument
+as well and finally returns a string.</p>
+<p>The magic here is that <code>-&gt;</code> is right associative.</p>
+<p>When we write:</p>
+<pre><code class="language-hs">makeHtml :: String -&gt; String -&gt; String
+</code></pre>
+<p>Haskell parses it as:</p>
+<pre><code class="language-hs">makeHtml :: String -&gt; (String -&gt; String)
+</code></pre>
+<p>Consecuently, the expression <code>makeHtml &quot;My title&quot;</code> is also a function!
+One that will take a string (the content) and will return the expected
+html string with &quot;My title&quot; in the title.</p>
+<p>This is called <em>partial application</em>.</p>
+<p>To illustrate, let's define <code>html_</code> and <code>body_</code> in a different way by
+defining a new function, <code>el</code>.</p>
+<pre><code class="language-hs">el :: String -&gt; String -&gt; String
+el tag content =
+  &quot;&lt;&quot; &lt;&gt; tag &lt;&gt; &quot;&gt;&quot; &lt;&gt; content &lt;&gt; &quot;&lt;/&quot; &lt;&gt; tag &lt;&gt; &quot;&gt;&quot;
+</code></pre>
+<p>el is a function that takes a tag and content, and wraps the content
+with the tag.</p>
+<p>We can now implement <code>html_</code> and <code>body_</code> by partially applying <code>el</code> and
+only provide the tag.</p>
+<pre><code class="language-hs">html_ :: String -&gt; String
+html_ = el &quot;html&quot;
+
+body_ :: String -&gt; String
+body_ = el &quot;body&quot;
+</code></pre>
+<p>Note that we didn't need to add the argument on the left side of
+equals sign because Haskell functions are &quot;first class&quot; - they behave
+exactly like normal expressions. You can define names to them like
+regular values, put them in data structures, pass them to functions,
+everything you can do with regular values like <code>Int</code> or <code>String</code>.</p>
+<p>The way Haskell treats names is very similar to copy paste. anywhere
+you see <code>html_</code> in the code, you can replace it with <code>el &quot;html&quot;</code>. They are
+the same (this is what the equals signs say, right? That the two sides
+are the same).</p>
+<p>This property, of behind able to substitute the two sides of the
+equals sign with one another, is called referential transparency. And
+it is pretty unique to Haskell (and a few language that are very
+similar to it like PureScript and Elm)!</p>
+<hr />
+<p>Exercises:</p>
+<ol>
+<li>
+<p>Add types for all of the functions we created until now</p>
+</li>
+<li>
+<p>Change the implementation of the html functions we built to use <code>el</code> instead</p>
+</li>
+<li>
+<p>Add a couple more functions for defining paragraphs and headers:</p>
+<ol>
+<li><code>p_</code> which uses the tag <code>&lt;p&gt;</code> for paragraphs</li>
+<li><code>h1_</code> which uses the tag <code>&lt;h1&gt;</code> for headers</li>
+</ol>
+</li>
+</ol>
+<hr />
+<p>Solutions:</p>
+<details>
+  <summary>Solution for exercise #1</summary>
+<pre><code class="language-hs">myhtml :: String
+myhtml = makeHtml &quot;Hello title&quot; &quot;Hello, world!&quot;
+
+makeHtml :: String -&gt; String -&gt; String
+makeHtml title content = html_ (head_ (title_ title) &lt;&gt; body_ content)
+
+html_ :: String -&gt; String
+html_ content = &quot;&lt;html&gt;&quot; &lt;&gt; content &lt;&gt; &quot;&lt;/html&gt;&quot;
+   
+body_ :: String -&gt; String
+body_ content = &quot;&lt;body&gt;&quot; &lt;&gt; content &lt;&gt; &quot;&lt;/body&gt;&quot;
+
+head_ :: String -&gt; String
+head_ content = &quot;&lt;head&gt;&quot; &lt;&gt; content &lt;&gt; &quot;&lt;/head&gt;&quot;
+
+title_ :: String -&gt; String
+title_ content = &quot;&lt;title&gt;&quot; &lt;&gt; content &lt;&gt; &quot;&lt;/title&gt;&quot;
+</code></pre>
+</details>
+<details>
+  <summary>Solution for exercise #2</summary>
+<pre><code class="language-hs">html_ :: String -&gt; String
+html_ = el &quot;html&quot;
+   
+body_ :: String -&gt; String
+body_ = el &quot;body&quot;
+
+head_ :: String -&gt; String
+head_ = el &quot;head&quot;
+
+title_ :: String -&gt; String
+title_ = el &quot;title&quot;
+</code></pre>
+</details>
+<details>
+  <summary>Solution for exercise #3</summary>
+<pre><code class="language-hs">p_ :: String -&gt; String
+p_ = el &quot;p&quot;
+
+h1_ :: String -&gt; String
+h1_ = el &quot;h1&quot;
+</code></pre>
+</details>
+<hr />
+<details>
+  <summary>Our final program</summary>
+<pre><code class="language-hs">-- hello.hs
+
+main :: IO ()
+main = putStrLn myhtml
+
+myhtml :: String
+myhtml = makeHtml &quot;Hello title&quot; &quot;Hello, world!&quot;
+
+makeHtml :: String -&gt; String -&gt; String
+makeHtml title content = html_ (head_ (title_ title) &lt;&gt; body_ content)
+
+html_ :: String -&gt; String
+html_ = el &quot;html&quot;
+   
+body_ :: String -&gt; String
+body_ = el &quot;body&quot;
+
+head_ :: String -&gt; String
+head_ = el &quot;head&quot;
+
+title_ :: String -&gt; String
+title_ = el &quot;title&quot;
+
+p_ :: String -&gt; String
+p_ = el &quot;p&quot;
+
+h1_ :: String -&gt; String
+h1_ = el &quot;h1&quot;
+
+el :: String -&gt; String -&gt; String
+el tag content =
+  &quot;&lt;&quot; &lt;&gt; tag &lt;&gt; &quot;&gt;&quot; &lt;&gt; content &lt;&gt; &quot;&lt;/&quot; &lt;&gt; tag &lt;&gt; &quot;&gt;&quot;
+</code></pre>
+</details>
+<h1 id="embedded-domain-specific-languages"><a class="header" href="#embedded-domain-specific-languages">Embedded Domain Specific Languages</a></h1>
+<p>Right out of the bat we run into a common pattern in Haskell: creating
+Embedded Domain Specific Languages (EDSLs for short).</p>
+<p>Domain specific languages (DSLs) are specialized programming languages that are
+tailored to specific domains. In contrast of general purpose languages,
+which try to work well in many domains.</p>
+<p>A few examples of DSLs are:</p>
+<ul>
+<li>make - for defining build systems</li>
+<li>DOT - for defining graphs</li>
+<li>Sed - for defining text transformations</li>
+<li>CSS - for defining styling</li>
+<li>HTML - for defining web pages</li>
+</ul>
+<p>An <em>embedded</em> domain specific language is a little language which is
+embedded inside another programming language, making the
+a program written in the EDSL a valid program in the language it was written in.</p>
+<p>The little HTML library we've been writing can be considered an EDSL.
+It is used specifically for building web pages (by returning html strings),
+and is valid Haskell code!</p>
+<p>In Haskell we frequently create and use EDSLs to express domains specific
+logic. We have EDSLs for concurrency, command-line options parsing, JSON and HTML,
+Creating build systems, writing tests, and many more.</p>
+<p>Specialized languages are useful because they can solve specific problems in
+a concise (and often safe) way, and embedding them in general purpose programming
+languages provides us to use the full power of the language for our domain logic,
+including syntax highlighting and various tools available for the language.</p>
+<p>The drawback of embedding domain specific languages is that we have to adhere
+the rules of the programming language we embed in, such as syntactic and semantic rules.</p>
+<p>Some languages alleviate this drawback by providing meta-programming capabilities
+in the form of macros or other features. And while Haskell does provide such
+capabilities as well, it is also expressive and concise enough that many EDSLs
+do not need them.</p>
+<p>Instead, many Haskell EDSLs use a pattern called <em>the combinator pattern</em>:
+They define <em>primitives</em> and <em>combinators</em> -
+primitives are basic building blocks of the language,
+and combinators are functions that combine primitives to more complex structures.</p>
+<p>In our HTML EDSL, our primitives are functions such as <code>html_</code> and <code>title_</code>
+that can be used to create a single HTML node, and we pass other
+constructed nodes as input to these functions, and combine them to a more complex
+structure with the append function <code>&lt;&gt;</code>.</p>
+<p>There are still a few tricks we can use to make our HTML EDSL better:</p>
+<ol>
+<li>
+<p>We can use Haskell's type system to make sure we only construct <em>valid</em>
+HTML (so for example we don't create a <code>&lt;title&gt;</code> node
+without a <code>&lt;head&gt;</code> node, or have user content that 
+can include unscaped special characters),
+and throw a type error when the user tries to do something invalid.</p>
+</li>
+<li>
+<p>We can improve the syntactic structure of the language so it
+looks like it is rendered using lists.</p>
+</li>
+<li>
+<p>Our HTML EDSL can move to its own module so it can be reused in multiple modules</p>
+</li>
+</ol>
+<p>In the next few sections we'll take a look at how to define our own types and
+how to work with modules to make it harder to make errors, and a little bit
+about linked lists in Haskell.</p>
+<h1 id="safer-html-library-with-types"><a class="header" href="#safer-html-library-with-types">Safer HTML library with types</a></h1>
+<p>There are a few ways of defining new types in Haskell, in this section
+we are going to meet two ways: <code>newtype</code> and <code>type</code>.</p>
+<ol>
+<li><code>newtype</code> lets us give a new name to an already existing type in a
+way that the two cannot mix together.</li>
+</ol>
+<p>A <code>newtype</code> declaration looks like this:</p>
+<pre><code class="language-hs">newtype &lt;type-name&gt; = &lt;constructor&gt; &lt;existing-type&gt;
+</code></pre>
+<p>For example in our case we have:</p>
+<pre><code class="language-hs">newtype Html = Html String
+</code></pre>
+<p>The first <code>Html</code>, to the left of the equals sign, lives in the <em>types</em>
+namespace, meaning that you will only see that name to the right of a
+double-colon sign (<code>::</code>).</p>
+<p>The second <code>Html</code> lives in the <em>expressions</em> namespace, meaning that
+you will see it where you expect expressions (we'll touch where
+exactly that can be in a moment).</p>
+<p>The two names, <code>&lt;type-name&gt;</code> and <code>&lt;constructor&gt;</code>, do not have to be the
+same, but they often are. And note that both have to start with a
+capital letter.</p>
+<p>The right-hand side of the newtype declaration describes how an
+expression of that type looks like. In our case, we expect a value of
+type <code>Html</code> to have the constructor <code>Html</code> and then an expression of
+type string, for example <code>Html &quot;hello&quot;</code> or <code>Html (&quot;hello &quot; &lt;&gt; &quot;world&quot;)</code>.</p>
+<p>You can think of the constructor as a function that takes the argument
+and returns something of our new type.</p>
+<p>Note that we cannot use an expression of type <code>Html</code> the same way we'd
+use a <code>String</code>. so <code>&quot;hello &quot; &lt;&gt; Html &quot;world&quot;</code> would fail at type
+checking.</p>
+<p>This is useful when we want <em>encapsulation</em>. We can define use
+existing representation and functions for our underlying type, but not
+mix them with other, unrelated (to our domain) types. Similar as
+meters and feet can both be numbers, but we don't want to accidently
+add feets to meters without any conversion.</p>
+<p>To get this actually working well we'll need a bit more than just
+newtypes, in the next commit we'll introduce modules and smart constructors.</p>
+<ol start="2">
+<li>A <code>type</code> definition looks really similar - the only difference is that
+we have no constructor:</li>
+</ol>
+<pre><code class="language-hs">type &lt;type-name&gt; = &lt;existing-type&gt;
+</code></pre>
+<p>For example in our case we have:</p>
+<pre><code class="language-hs">type HtmlTitle = String
+</code></pre>
+<p><code>type</code>, on the other hand, is just a name alias. so writing <code>HtmlTitle</code>
+or <code>String</code> is exactly the same for Haskell, and we can use
+it to give a bit more clarity to our code.</p>
+<p>Back to <code>newtype</code>s. So how can we use the underlying type? We first
+need to extract it out of the type. We do this using pattern matching.</p>
+<p>Pattern matching can be used in two ways, in case expressions and in
+function definitions.</p>
+<ol>
+<li>case expressions are kinda beefed up switch expressions and look like this:</li>
+</ol>
+<pre><code class="language-hs">case &lt;expression&gt; of
+  &lt;pattern&gt; -&gt; &lt;expression&gt;
+  ...
+  &lt;pattern&gt; -&gt; &lt;expression&gt;
+</code></pre>
+<p>The <code>&lt;expression&gt;</code> is the thing we want to unpack, and the <code>pattern</code>
+is how it actually looks like. For example:</p>
+<pre><code class="language-hs">getBodyContentString :: HtmlBodyContent -&gt; String
+getBodyContentString myhbc =
+  case myhbc of
+    HtmlBodyContent str -&gt; str
+</code></pre>
+<p>This way we can extract the String out of <code>HtmlBodyContent</code> and return
+it.</p>
+<p>In later commits we'll introduce <code>data</code> declarations (which are kinda
+a struct + enum chimera), where we can define multiple constructors to
+a type. Then the multiple patterns of a case expression will make more
+sense.</p>
+<ol start="2">
+<li>Alternatively, when declaring a function, we can also use pattern matching on the
+arguments:</li>
+</ol>
+<pre><code class="language-hs">func &lt;pattern&gt; = &lt;expression&gt;
+</code></pre>
+<p>For example:</p>
+<pre><code class="language-hs">getBodyContentString :: HtmlBodyContent -&gt; String
+getBodyContentString (HtmlBodyContent str) = str
+</code></pre>
+<p>And this is the way we use it in this code, because here it's a bit
+more concise.</p>
+<p>Another interesting operator (which is a regular library function in
+Haskell) we are introducing here is <code>.</code>. Pronounced compose. This is
+similar to the composition operator you may know from math. It takes
+two functions and an argument, and passes the argument to the second
+function, and the result of that is then passed to the first function.</p>
+<p>The type for <code>.</code> is:</p>
+<pre><code class="language-hs">(.) :: (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</code></pre>
+<p>Note that the second function takes as input something of the type
+<code>a</code>, returns something of the type <code>b</code>, and the first functions takes
+something of the type <code>b</code>, and returns something of the type <code>c</code>.</p>
+<p>Note that types that start with a lowercase letter are &quot;type
+variables&quot;. Think of them as similar to regular variables. Just like
+<code>str</code> could be any string, like &quot;hello&quot; or &quot;world&quot;, a type variable
+can be any type: <code>Bool</code>, <code>String</code>, <code>String -&gt; String</code>, etc.</p>
+<p>The catch is that type variables must match in a signature, so if for
+example we write a function with the type signature <code>a -&gt; a</code>, the
+types argument type and the return type <em>must</em> match. And it could be
+any type - we cannot know what it is. So the only way to implement a
+function with that signature is:</p>
+<pre><code class="language-hs">mysteryFunction :: a -&gt; a
+mysteryFunction x = x
+</code></pre>
+<p>If we tried any other way, for example returning some made up value
+like &quot;hello&quot;, or try to use <code>x</code> like a value of a type we know like
+writing <code>x + x</code>, the type checker will complain.</p>
+<p>Also, remember that <code>-&gt;</code> is right associative? So this signature is the same as:</p>
+<pre><code class="language-hs">(.) :: (b -&gt; c) -&gt; (a -&gt; b) -&gt; (a -&gt; c)
+</code></pre>
+<p>Doesn't it look like a function that takes two functions and returns a
+third function that is the composition of the two?</p>
+<p>In our concrete example we have:</p>
+<pre><code class="language-hs">p_ :: String -&gt; HtmlBodyContent
+p_ = HtmlBodyContent . el &quot;p&quot;
+</code></pre>
+<p>Let's take a deeper look and see what are the types of the two
+functions here are:</p>
+<ul>
+<li><code>HtmlBodyContent :: String -&gt; HtmlBodyContent</code></li>
+<li><code>el &quot;p&quot; :: String -&gt; String</code></li>
+<li><code>HtmlBodyContent . el &quot;p&quot; :: String -&gt; HtmlBodyContent</code></li>
+<li><code>(.) :: (b -&gt; c) -&gt; (a -&gt; b) -&gt; (a -&gt; c)</code></li>
+</ul>
+<p>When we try to figure out if an expression type check, we try to match
+the types and see if they work. If they are the same type, all is
+well. If one of them is a type variable and the other isn't we write
+down that the type variable should now be the concrete type, and see
+if everything still works.</p>
+<p>So in our case we know from the type signature that the input type to
+the function <code>String</code> and the output type is <code>HtmlBodyContent</code>, this
+means <code>a</code> is equivalent to <code>String</code> (we write <code>~</code> to denote
+equivalence) and <code>c ~ HtmlBodyContent</code>. We also know that <code>b ~ String</code>
+because we pass <code>HtmlBodyContent</code> to <code>.</code> as the first arguments, which
+means <code>String -&gt; HtmlBodyContent</code> (<code>HtmlBodyContent</code>'s type) must
+match with the type of the first argument of <code>.</code> which is <code>b -&gt; c</code>.</p>
+<p>We keep doing this process until we come to the conclusion that there
+aren't any types that don't match (we don't have two different
+concrete types that are supposed to be equivalent).</p>
+<p>All of this is nice and fun. And indeed now we can't write &quot;Hello&quot;
+where we'd expect either a paragraph or a header, but we can still
+write <code>HtmlBodyContent &quot;hello&quot;</code> and get something that isn't a
+paragraph or a header. Next we'll see how we can make this illegal as
+well.</p>
+<hr />
+<pre><code class="language-hs">-- hello.hs
+
+main :: IO ()
+main = putStrLn (render myhtml)
+
+myhtml :: Html
+myhtml =
+  html_
+    &quot;My title&quot;
+    ( append_
+      (h1_ &quot;Header&quot;)
+      ( append_
+        (p_ &quot;Paragraph #1&quot;)
+        (p_ &quot;Paragraph #2&quot;)
+      )
+    )
+
+newtype Html
+  = Html String
+
+type HtmlTitle
+  = String
+
+newtype HtmlBodyContent
+  = HtmlBodyContent String
+
+html_ :: HtmlTitle -&gt; HtmlBodyContent -&gt; Html
+html_ title content =
+  Html
+    ( el &quot;html&quot;
+      ( el &quot;head&quot; (el &quot;title&quot; title)
+        &lt;&gt; el &quot;body&quot; (getBodyContentString content)
+      )
+    )
+
+p_ :: String -&gt; HtmlBodyContent
+p_ = HtmlBodyContent . el &quot;p&quot;
+
+h1_ :: String -&gt; HtmlBodyContent
+h1_ = HtmlBodyContent . el &quot;h1&quot;
+
+el :: String -&gt; String -&gt; String
+el tag content =
+  &quot;&lt;&quot; &lt;&gt; tag &lt;&gt; &quot;&gt;&quot; &lt;&gt; content &lt;&gt; &quot;&lt;/&quot; &lt;&gt; tag &lt;&gt; &quot;&gt;&quot;
+
+append_ :: HtmlBodyContent -&gt; HtmlBodyContent -&gt; HtmlBodyContent
+append_ c1 c2 =
+  HtmlBodyContent (getBodyContentString c1 &lt;&gt; getBodyContentString c2)
+
+getBodyContentString :: HtmlBodyContent -&gt; String
+getBodyContentString content =
+  case content of
+    HtmlBodyContent str -&gt; str
+
+render :: Html -&gt; String
+render html =
+  case html of
+    Html str -&gt; str
+</code></pre>
+<hr />
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+
+                
+            </nav>
+
+        </div>
+
+        
+        <!-- Livereload script (if served using the cli tool) -->
+        <script type="text/javascript">
+            var socket = new WebSocket("ws://localhost:3000/__livereload");
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+        
+
+        
+
+        
+
+        
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        
+
+        
+
+        
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+
+        
+        
+        <script type="text/javascript">
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+        
+        
+
+    </body>
+</html>
