@@ -14,3 +14,8 @@ In each chapter of the book we will focus on a particular task we wish to achiev
 
 This book is an alternatively presentation of:
 [soupi/learn-haskell-blog-generator](https://github.com/soupi/learn-haskell-blog-generator), which presents the chapters one commit at a time.
+
+You might be also interested in:
+
+- [Reading Simple Haskell](https://soupi.github.io/rfc/reading_simple_haskell/)
+- [Haskell Study Plan](https://github.com/soupi/haskell-study-plan/)
