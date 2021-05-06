@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Hello world - Learning Haskell by building a blog generator</title>
+        <title>Exercises - Learning Haskell by building a blog generator</title>
         
         
 
@@ -95,7 +95,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="chapter_00.html"><strong aria-hidden="true">1.</strong> About this tutorial</a></li><li class="chapter-item expanded "><a href="chapter_01.html" class="active"><strong aria-hidden="true">2.</strong> Hello world</a></li><li class="chapter-item expanded "><a href="chapter_02.html"><strong aria-hidden="true">3.</strong> Building an HTML printer library</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="chapter_02a.html"><strong aria-hidden="true">3.1.</strong> Flexible html content (functions)</a></li><li class="chapter-item expanded "><a href="chapter_02b.html"><strong aria-hidden="true">3.2.</strong> Adding type signatures</a></li><li class="chapter-item expanded "><a href="chapter_02c.html"><strong aria-hidden="true">3.3.</strong> Embedded Domain Specific Languages</a></li><li class="chapter-item expanded "><a href="chapter_02d.html"><strong aria-hidden="true">3.4.</strong> Safer HTML construction with types</a></li><li class="chapter-item expanded "><a href="chapter_02e.html"><strong aria-hidden="true">3.5.</strong> Preventing incorrect use with modules</a></li><li class="chapter-item expanded "><a href="chapter_02f.html"><strong aria-hidden="true">3.6.</strong> Escaping characters</a></li><li class="chapter-item expanded "><a href="chapter_02g.html"><strong aria-hidden="true">3.7.</strong> Exposing internal functionality (Internal modules)</a></li><li class="chapter-item expanded "><a href="chapter_02h.html"><strong aria-hidden="true">3.8.</strong> Exercises</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="chapter_00.html"><strong aria-hidden="true">1.</strong> About this tutorial</a></li><li class="chapter-item expanded "><a href="chapter_01.html"><strong aria-hidden="true">2.</strong> Hello world</a></li><li class="chapter-item expanded "><a href="chapter_02.html"><strong aria-hidden="true">3.</strong> Building an HTML printer library</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="chapter_02a.html"><strong aria-hidden="true">3.1.</strong> Flexible html content (functions)</a></li><li class="chapter-item expanded "><a href="chapter_02b.html"><strong aria-hidden="true">3.2.</strong> Adding type signatures</a></li><li class="chapter-item expanded "><a href="chapter_02c.html"><strong aria-hidden="true">3.3.</strong> Embedded Domain Specific Languages</a></li><li class="chapter-item expanded "><a href="chapter_02d.html"><strong aria-hidden="true">3.4.</strong> Safer HTML construction with types</a></li><li class="chapter-item expanded "><a href="chapter_02e.html"><strong aria-hidden="true">3.5.</strong> Preventing incorrect use with modules</a></li><li class="chapter-item expanded "><a href="chapter_02f.html"><strong aria-hidden="true">3.6.</strong> Escaping characters</a></li><li class="chapter-item expanded "><a href="chapter_02g.html"><strong aria-hidden="true">3.7.</strong> Exposing internal functionality (Internal modules)</a></li><li class="chapter-item expanded "><a href="chapter_02h.html" class="active"><strong aria-hidden="true">3.8.</strong> Exercises</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -163,71 +163,51 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="hello-world"><a class="header" href="#hello-world">Hello, world!</a></h1>
-<p>In this chapter we will create a simple html hello world.</p>
-<p>A Haskell source file is composed of definitions.</p>
-<p>The most common definition has the following form:</p>
-<pre><code class="language-hs">&lt;name&gt; = &lt;expression&gt;
+                        <h1 id="exercises"><a class="header" href="#exercises">Exercises</a></h1>
+<p>We need a few more features for our html library to be useful for
+our blog software. Add the following features to our <code>Html.Internal</code> module
+and expose them from <code>Html</code>.</p>
+<h2 id="1-unordered-lists"><a class="header" href="#1-unordered-lists">1. Unordered lists</a></h2>
+<p>These lists have the form:</p>
+<pre><code class="language-html">&lt;ul&gt;
+  &lt;li&gt;item 1&lt;/li&gt;
+  &lt;li&gt;item 2&lt;/li&gt;
+  &lt;li&gt;...&lt;/li&gt;
+&lt;/ul&gt;
 </code></pre>
-<p>Note that:</p>
-<ol>
-<li>We cannot write naked expressions without binding them to a name</li>
-<li>Names must start with a lowercase letter</li>
-<li>We cannot use the same name more than once in a file</li>
-</ol>
-<p>A source file containing a definition of the name <code>main</code> is treated as an executable, and the expression <code>main</code> is bound to is the entry point to the program.</p>
-<p>Let's create a new Haskell source file called <code>hello.hs</code>, and write the following line there:</p>
-<pre><code class="language-hs">main = putStrLn &quot;&lt;html&gt;&lt;body&gt;Hello, world!&lt;/body&gt;&lt;/html&gt;&quot;
+<p>We want in our library a new function:</p>
+<pre><code class="language-hs">ul_ :: [HtmlBodyContent] -&gt; HtmlBodyContent
 </code></pre>
-<p>We've defined a new name, <code>main</code>, and bound it to the expression <code>putStrLn &quot;&lt;html&gt;&lt;body&gt;Hello, world!&lt;/body&gt;&lt;/html&gt;&quot;</code>.</p>
-<p>the body of <code>main</code> means calling the function <code>putStrLn</code> with the string <code>&quot;&lt;html&gt;&lt;body&gt;Hello, world!&lt;/body&gt;&lt;/html&gt;&quot;</code>.
-<code>putStrLn</code> takes a single string as input and prints that string to the standard output.</p>
-<p><strong>Note</strong>: we don't need parenthesis to pass arguments to functions in Haskell.</p>
-<p>Running this program will result in the following text printed on the screen:</p>
-<pre><code>&lt;html&gt;&lt;body&gt;Hello, world!&lt;/body&gt;&lt;/html&gt;
+<p>So that users can write this:</p>
+<pre><code class="language-hs">ul_
+  [ p_ &quot;item 1&quot;
+  , p_ &quot;item 2&quot;
+  , p_ &quot;item 3&quot;
+  ]
 </code></pre>
-<p>To run this little program, we can either compile it using the command line program <code>ghc</code>, like this: <code>ghc hello.hs</code> which will create a few files:</p>
-<ol>
-<li><code>hello.o</code> - Object file</li>
-<li><code>hello.hi</code> - Haskell interface file</li>
-<li><code>hello</code> - A native executable file</li>
-</ol>
-<p>and then run <code>hello</code>.</p>
-<p>Or, alternatively, interpret the source file using the command line program <code>runghc</code>, like this: <code>runghc hello.hs</code> which will run the program without compiling it or creating any files.</p>
-<pre><code class="language-sh">&gt; runghc hello.hs
-&lt;html&gt;&lt;body&gt;Hello, world!&lt;/body&gt;&lt;/html&gt;
+<p>and get this:</p>
+<pre><code class="language-html">&lt;ul&gt;
+  &lt;li&gt;item 1&lt;/li&gt;
+  &lt;li&gt;item 2&lt;/li&gt;
+  &lt;li&gt;item 3&lt;/li&gt;
+&lt;/ul&gt;
 </code></pre>
-<p>We can also redirect the output of the program to a file and then open it in firefox.</p>
-<pre><code class="language-sh">&gt; runghc hello.hs &gt; hello.html
-&gt; firefox hello.html
-</code></pre>
-<p>This command should open firefox and display a web page with <code>Hello, world!</code> written in it.</p>
-<p>In this tutorial we'll use <code>runghc</code> regularily, because it saves us time to run the program without compiling it.</p>
-<hr />
-<p><strong>Note</strong>: If you've installed a ghc toolchain via stack and not ghcup, and the commands above do not work because <code>ghc</code> or <code>runghc</code> are missing, prefix the commands above with <code>stack exec -- </code>. Stack will locate the globally installed ghc and use it. So for example <code>runghc hello.hs</code> becomes <code>stack exec -- runghc hello.hs</code>. See the <a href="https://docs.haskellstack.org/en/stable/GUIDE/#exec">Stack user guide</a> for more details.</p>
-<hr />
-<h2 id="more-bindings"><a class="header" href="#more-bindings">More bindings</a></h2>
-<p>We can define the html string passed to <code>putStrLn</code> in a new name instead. Change the content of file <code>hello.hs</code> we defined above to:</p>
-<pre><code class="language-hs">main = putStrLn myhtml
-
-myhtml = &quot;&lt;html&gt;&lt;body&gt;Hello, world!&lt;/body&gt;&lt;/html&gt;&quot;
-</code></pre>
-<p><strong>Note</strong>: the order in which we declare the bindings does not matter. Try reversing the order of definitions and see for yourself.</p>
+<h2 id="2-ordered-lists"><a class="header" href="#2-ordered-lists">2. Ordered lists</a></h2>
+<p>Very similar to unordered lists, but instead of <code>&lt;ul&gt;</code> we use <code>&lt;ol&gt;</code></p>
+<h2 id="3-code-blocks"><a class="header" href="#3-code-blocks">3. Code blocks</a></h2>
+<p>Very similar to <code>&lt;p&gt;</code>, but use the <code>&lt;pre&gt;</code> tag. Call this function <code>code_</code>.</p>
+<h2 id="solutions"><a class="header" href="#solutions">Solutions</a></h2>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                         
-                            <a rel="prev" href="chapter_00.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="chapter_02g.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
                         
 
-                        
-                            <a rel="next" href="chapter_02.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <i class="fa fa-angle-right"></i>
-                            </a>
                         
 
                         <div style="clear: both"></div>
@@ -237,15 +217,11 @@ myhtml = &quot;&lt;html&gt;&lt;body&gt;Hello, world!&lt;/body&gt;&lt;/html&gt;&q
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                 
-                    <a rel="prev" href="chapter_00.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="chapter_02g.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
                 
 
-                
-                    <a rel="next" href="chapter_02.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <i class="fa fa-angle-right"></i>
-                    </a>
                 
             </nav>
 

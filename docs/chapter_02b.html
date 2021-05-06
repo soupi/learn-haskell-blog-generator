@@ -95,7 +95,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="chapter_00.html"><strong aria-hidden="true">1.</strong> About this tutorial</a></li><li class="chapter-item expanded "><a href="chapter_01.html"><strong aria-hidden="true">2.</strong> Hello world</a></li><li class="chapter-item expanded "><a href="chapter_02.html"><strong aria-hidden="true">3.</strong> Building an HTML printer library</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="chapter_02a.html"><strong aria-hidden="true">3.1.</strong> Flexible html content (functions)</a></li><li class="chapter-item expanded "><a href="chapter_02b.html" class="active"><strong aria-hidden="true">3.2.</strong> Adding type signatures</a></li><li class="chapter-item expanded "><a href="chapter_02c.html"><strong aria-hidden="true">3.3.</strong> Embedded Domain Specific Languages</a></li><li class="chapter-item expanded "><a href="chapter_02d.html"><strong aria-hidden="true">3.4.</strong> Safer HTML library with types</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="chapter_00.html"><strong aria-hidden="true">1.</strong> About this tutorial</a></li><li class="chapter-item expanded "><a href="chapter_01.html"><strong aria-hidden="true">2.</strong> Hello world</a></li><li class="chapter-item expanded "><a href="chapter_02.html"><strong aria-hidden="true">3.</strong> Building an HTML printer library</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="chapter_02a.html"><strong aria-hidden="true">3.1.</strong> Flexible html content (functions)</a></li><li class="chapter-item expanded "><a href="chapter_02b.html" class="active"><strong aria-hidden="true">3.2.</strong> Adding type signatures</a></li><li class="chapter-item expanded "><a href="chapter_02c.html"><strong aria-hidden="true">3.3.</strong> Embedded Domain Specific Languages</a></li><li class="chapter-item expanded "><a href="chapter_02d.html"><strong aria-hidden="true">3.4.</strong> Safer HTML construction with types</a></li><li class="chapter-item expanded "><a href="chapter_02e.html"><strong aria-hidden="true">3.5.</strong> Preventing incorrect use with modules</a></li><li class="chapter-item expanded "><a href="chapter_02f.html"><strong aria-hidden="true">3.6.</strong> Escaping characters</a></li><li class="chapter-item expanded "><a href="chapter_02g.html"><strong aria-hidden="true">3.7.</strong> Exposing internal functionality (Internal modules)</a></li><li class="chapter-item expanded "><a href="chapter_02h.html"><strong aria-hidden="true">3.8.</strong> Exercises</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -261,6 +261,10 @@ similar to it like PureScript and Elm)!</p>
 <li><code>h1_</code> which uses the tag <code>&lt;h1&gt;</code> for headers</li>
 </ol>
 </li>
+<li>
+<p>Replace our <code>Hello, world!</code> string with richer content, use <code>h1_</code> and <code>p_</code>.
+We can append html strings created by <code>h1_</code> and <code>p_</code> using the append operator <code>&lt;&gt;</code>.</p>
+</li>
 </ol>
 <hr />
 <p>Solutions:</p>
@@ -309,6 +313,15 @@ h1_ :: String -&gt; String
 h1_ = el &quot;h1&quot;
 </code></pre>
 </details>
+<details>
+  <summary>Solution for exercise #4</summary>
+<pre><code class="language-hs">myhtml :: String
+myhtml =
+  makeHtml
+    &quot;Hello title&quot;
+    (h1_ &quot;Hello, world!&quot; &lt;&gt; p_ &quot;Let's learn about Haskell!&quot;)
+</code></pre>
+</details>
 <hr />
 <details>
   <summary>Our final program</summary>
@@ -318,7 +331,11 @@ main :: IO ()
 main = putStrLn myhtml
 
 myhtml :: String
-myhtml = makeHtml &quot;Hello title&quot; &quot;Hello, world!&quot;
+myhtml =
+  makeHtml
+    &quot;Hello title&quot;
+    (h1_ &quot;Hello, world!&quot; &lt;&gt; p_ &quot;Let's learn about Haskell!&quot;)
+
 
 makeHtml :: String -&gt; String -&gt; String
 makeHtml title content = html_ (head_ (title_ title) &lt;&gt; body_ content)

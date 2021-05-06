@@ -1,9 +1,15 @@
-# Safer HTML library with types
+# Safer HTML construction with types
+
+In this section we'll learn how to create our own distinguished types
+for HTML, and how they can help us avoid invalid construction of HTML strings.
 
 There are a few ways of defining new types in Haskell, in this section
 we are going to meet two ways: `newtype` and `type`.
 
-1. `newtype` lets us give a new name to an already existing type in a
+
+## `newtype`
+
+`newtype` lets us give a new name to an already existing type in a
 way that the two cannot mix together.
 
 A `newtype` declaration looks like this:
@@ -12,7 +18,7 @@ A `newtype` declaration looks like this:
 newtype <type-name> = <constructor> <existing-type>
 ```
 
-For example in our case we have:
+For example in our case we can define a distinct type for `Html` like this:
 
 ```hs
 newtype Html = Html String
@@ -22,8 +28,8 @@ The first `Html`, to the left of the equals sign, lives in the _types_
 namespace, meaning that you will only see that name to the right of a
 double-colon sign (`::`).
 
-The second `Html` lives in the _expressions_ namespace, meaning that
-you will see it where you expect expressions (we'll touch where
+The second `Html` lives in the _expressions_ (or terms/values) namespace,
+meaning that you will see it where you expect expressions (we'll touch where
 exactly that can be in a moment).
 
 The two names, `<type-name>` and `<constructor>`, do not have to be the
@@ -33,41 +39,68 @@ capital letter.
 The right-hand side of the newtype declaration describes how an
 expression of that type looks like. In our case, we expect a value of
 type `Html` to have the constructor `Html` and then an expression of
-type string, for example `Html "hello"` or `Html ("hello " <>
+type string, for example: `Html "hello"` or `Html ("hello " <>
 "world")`.
 
 You can think of the constructor as a function that takes the argument
-and returns something of our new type.
+and returns something of our new type:
 
-Note that we cannot use an expression of type `Html` the same way we'd
+```hs
+Html :: String -> Html
+```
+
+**Note**: We cannot use an expression of type `Html` the same way we'd
 use a `String`. so `"hello " <> Html "world"` would fail at type
 checking.
 
-This is useful when we want *encapsulation*. We can define use
+This is useful when we want *encapsulation*. We can define and use
 existing representation and functions for our underlying type, but not
 mix them with other, unrelated (to our domain) types. Similar as
 meters and feet can both be numbers, but we don't want to accidently
 add feets to meters without any conversion.
 
-To get this actually working well we'll need a bit more than just
-newtypes, in the next commit we'll introduce modules and smart constructors.
+To get this actually working well, we'll need a bit more than just
+newtypes. In the next chapter we'll introduce modules and smart constructors.
 
-2. A `type` definition looks really similar - the only difference is that
+For now, let's create a couple of types for our use case.
+We want two separate types to represent:
+
+1. A complete Html document
+2. A type for nodes that can go inside the <body> tag
+
+We want them to be distinct because we don't want to mix them together.
+
+<details>
+  <summary>Solution</summary>
+
+```hs
+newtype Html = Html String
+
+newtype HtmlBodyContent = HtmlBodyContent String
+```
+
+</details>
+
+## `type`
+
+A `type` definition looks really similar - the only difference is that
 we have no constructor:
 
 ```hs
 type <type-name> = <existing-type>
 ```
 
-For example in our case we have:
+For example in our case we can write:
 
 ```hs
 type HtmlTitle = String
 ```
 
-`type`, on the other hand, is just a name alias. so writing `HtmlTitle`
-or `String` is exactly the same for Haskell, and we can use
-it to give a bit more clarity to our code.
+`type`, on the other hand, is just a name alias. so `HtmlTitle`
+and `String` are interchangeable. We can use `type`s
+to give a bit more clarity to our code.
+
+## Using `newtype`s
 
 Back to `newtype`s. So how can we use the underlying type? We first
 need to extract it out of the type. We do this using pattern matching.
@@ -85,7 +118,7 @@ case <expression> of
 ```
 
 The `<expression>` is the thing we want to unpack, and the `pattern`
-is how it actually looks like. For example:
+is it's concrete shape. For example:
 
 ```hs
 getBodyContentString :: HtmlBodyContent -> String
@@ -97,7 +130,7 @@ getBodyContentString myhbc =
 This way we can extract the String out of `HtmlBodyContent` and return
 it.
 
-In later commits we'll introduce `data` declarations (which are kinda
+In later commits we'll introduce `data` declarations (which are kind of
 a struct + enum chimera), where we can define multiple constructors to
 a type. Then the multiple patterns of a case expression will make more
 sense.
@@ -116,33 +149,42 @@ getBodyContentString :: HtmlBodyContent -> String
 getBodyContentString (HtmlBodyContent str) = str
 ```
 
-And this is the way we use it in this code, because here it's a bit
-more concise.
+Using the types we created, we can change the html functions we defined before,
+namely `html_`, `body_`, `p_`, etc, to operate on these types instead of `String`s.
 
-Another interesting operator (which is a regular library function in
-Haskell) we are introducing here is `.`. Pronounced compose. This is
-similar to the composition operator you may know from math. It takes
-two functions and an argument, and passes the argument to the second
-function, and the result of that is then passed to the first function.
+But first let's meet another operator that will make our code more concise.
 
-The type for `.` is:
+## Chaining functions
+
+Another interesting and extremely common operator
+(which is a regular library function in Haskell) is `.` (pronounced compose).
+This operator was made to look like the composition operator
+you may know from math (`∘`).
+
+Let's look at its type and implementation:
 
 ```hs
 (.) :: (b -> c) -> (a -> b) -> a -> c
+(.) f g x = f (g x)
 ```
 
-Note that the second function takes as input something of the type
-`a`, returns something of the type `b`, and the first functions takes
+Compose takes 3 arguments: two functions (named `f` and `g` here) and
+a third argument named `x`. It then passes the argument `x` to the second
+function `g`, and calls the first function `f` with the result of `g x`.
+
+Note that `g` takes as input something of the type
+`a` and returns something of the type `b`, and `f` takes
 something of the type `b`, and returns something of the type `c`.
 
-Note that types that start with a lowercase letter are "type
-variables". Think of them as similar to regular variables. Just like
-`str` could be any string, like "hello" or "world", a type variable
+Another important thing to note is that types which start with
+a _lowercase letter_ are **type variables**.
+Think of them as similar to regular variables. Just like
+`content` could be any string, like `"hello"` or `"world"`, a type variable
 can be any type: `Bool`, `String`, `String -> String`, etc.
 
 The catch is that type variables must match in a signature, so if for
 example we write a function with the type signature `a -> a`, the
-types argument type and the return type *must* match. And it could be
+input type and the return type **must** match, but it could be
 any type - we cannot know what it is. So the only way to implement a
 function with that signature is:
 
@@ -152,10 +194,10 @@ mysteryFunction x = x
 ```
 
 If we tried any other way, for example returning some made up value
-like "hello", or try to use `x` like a value of a type we know like
+like `"hello"`, or try to use `x` like a value of a type we know like
 writing `x + x`, the type checker will complain.
 
-Also, remember that `->` is right associative? So this signature is the same as:
+Also, remember that `->` is right associative? This signature is equivalent to:
 
 ```hs
 (.) :: (b -> c) -> (a -> b) -> (a -> c)
@@ -164,12 +206,27 @@ Also, remember that `->` is right associative? So this signature is the same as:
 Doesn't it look like a function that takes two functions and returns a
 third function that is the composition of the two?
 
-In our concrete example we have:
+We can now use this operator to change or html functions. Let's start
+with one example: `p_`.
+
+Before, we had:
+
+```hs
+p_ :: String -> String
+p_ = el "p"
+```
+
+And now, we can write:
 
 ```hs
 p_ :: String -> HtmlBodyContent
 p_ = HtmlBodyContent . el "p"
 ```
+
+The function `p_` will take an arbitrary `String` which is the content
+of the paragraph we wish to create, will wrap it in `<p>` tags,
+and then wrap it in the `HtmlBodyContent` constructor - producing the
+output type `HtmlBodyContent`.
 
 Let's take a deeper look and see what are the types of the two
 functions here are:
@@ -187,23 +244,85 @@ if everything still works.
 
 So in our case we know from the type signature that the input type to
 the function `String` and the output type is `HtmlBodyContent`, this
-means `a` is equivalent to `String` (we write `~` to denote
-equivalence) and `c ~ HtmlBodyContent`. We also know that `b ~ String`
-because we pass `HtmlBodyContent` to `.` as the first arguments, which
-means `String -> HtmlBodyContent` (`HtmlBodyContent`'s type) must
-match with the type of the first argument of `.` which is `b -> c`.
+means:
+
+1. `a` is equivalent to `String` (we write `~` to denote equivalence), and
+2. `c ~ HtmlBodyContent`
+
+We also know that:
+
+3. `b ~ String` because we pass `HtmlBodyContent` to `.` as the first arguments, which means
+4. `String -> HtmlBodyContent` must
+match with the type of the first argument of `.` which is `b -> c`, so
+5. `b ~ String` which fits with our previous knowledge from (3)
+6. `-> ~ ->`
+7. `c ~ HtmlBodyContent` which also fits with (2)
 
 We keep doing this process until we come to the conclusion that there
 aren't any types that don't match (we don't have two different
 concrete types that are supposed to be equivalent).
 
-All of this is nice and fun. And indeed now we can't write "Hello"
-where we'd expect either a paragraph or a header, but we can still
-write `HtmlBodyContent "hello"` and get something that isn't a
-paragraph or a header. Next we'll see how we can make this illegal as
-well.
+## Appending HtmlBodyContent
 
----
+Before when we wanted to create richer html content and appended
+nodes to one another, we used the append (`<>`) operator.
+Since we are now not using `String` anymore, we need another way
+to do it.
+
+While it is possible to overload `<>` using a feature in
+Haskell called type classes, we will instead create a new function
+and call it `append_`, and cover type classes later.
+
+`append_` should take two `HtmlBodyContent`s, and return a third `HtmlBodyContent`,
+appending the inner `String` in the first `HtmlBodyContent` to the second and wrapping the result back in `HtmlBodyContent.
+
+Try implementing `append_`.
+
+
+<details>
+  <summary>Solution</summary>
+
+```hs
+append_ :: HtmlBodyContent -> HtmlBodyContent -> HtmlBodyContent
+append_ (HtmlBodyContent a) (HtmlBodyContent b) =
+  HtmlBodyContent (a <> b)
+```
+
+</details>
+
+## Converting back an `Html` to `String`
+
+After constructing a valid `Html` value, we want to be able to
+print it to the output so we can display it in our browser.
+For that, we need to write a function that takes an `Html` and converts it to a `String`, which we can then pass to `putStrLn`.
+
+Implement the `render` function.
+
+<details>
+  <summary>Solution</summary>
+
+```hs
+render :: Html -> String
+render html =
+  case html of
+    Html str -> str
+```
+
+</details>
+
+## The rest of the owl
+
+Try changing the code we wrote in previous chapters to use the new types we created.
+
+**Tips**: we can combine `makeHtml` and `html_`, and remove `body_` `head_` and `title_`
+by calling `el` directly in `html_`, which can now have the type `HtmlTitle -> HtmlBodyContent -> Html`. This will make our html EDSL less flexible but more compact.
+
+We could, alternatively, create newtypes for `HtmlHead` and `HtmlBody` and
+pass those to `html_`, and there is value in doing that, but I've chose
+to keep the API a bit simple for now, we can always refactor later!
+
+<details>
+  <summary> <b>Solution</b> </summary>
 
 ```hs
 -- hello.hs
@@ -226,11 +345,11 @@ myhtml =
 newtype Html
   = Html String
 
-type HtmlTitle
-  = String
-
 newtype HtmlBodyContent
   = HtmlBodyContent String
+
+type HtmlTitle
+  = String
 
 html_ :: HtmlTitle -> HtmlBodyContent -> Html
 html_ title content =
@@ -265,4 +384,11 @@ render html =
   case html of
     Html str -> str
 ```
----
+
+</details>
+
+All of this is nice and fun. And indeed now we can't write `"Hello"`
+where we'd expect either a paragraph or a header, but we can still
+write `HtmlBodyContent "hello"` and get something that isn't a
+paragraph or a header. Next we'll see how we can make this illegal as
+well using modules and smart constructors.

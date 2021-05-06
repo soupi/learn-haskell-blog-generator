@@ -97,7 +97,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="chapter_00.html"><strong aria-hidden="true">1.</strong> About this tutorial</a></li><li class="chapter-item expanded "><a href="chapter_01.html"><strong aria-hidden="true">2.</strong> Hello world</a></li><li class="chapter-item expanded "><a href="chapter_02.html"><strong aria-hidden="true">3.</strong> Building an HTML printer library</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="chapter_02a.html"><strong aria-hidden="true">3.1.</strong> Flexible html content (functions)</a></li><li class="chapter-item expanded "><a href="chapter_02b.html"><strong aria-hidden="true">3.2.</strong> Adding type signatures</a></li><li class="chapter-item expanded "><a href="chapter_02c.html"><strong aria-hidden="true">3.3.</strong> Embedded Domain Specific Languages</a></li><li class="chapter-item expanded "><a href="chapter_02d.html"><strong aria-hidden="true">3.4.</strong> Safer HTML library with types</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="chapter_00.html"><strong aria-hidden="true">1.</strong> About this tutorial</a></li><li class="chapter-item expanded "><a href="chapter_01.html"><strong aria-hidden="true">2.</strong> Hello world</a></li><li class="chapter-item expanded "><a href="chapter_02.html"><strong aria-hidden="true">3.</strong> Building an HTML printer library</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="chapter_02a.html"><strong aria-hidden="true">3.1.</strong> Flexible html content (functions)</a></li><li class="chapter-item expanded "><a href="chapter_02b.html"><strong aria-hidden="true">3.2.</strong> Adding type signatures</a></li><li class="chapter-item expanded "><a href="chapter_02c.html"><strong aria-hidden="true">3.3.</strong> Embedded Domain Specific Languages</a></li><li class="chapter-item expanded "><a href="chapter_02d.html"><strong aria-hidden="true">3.4.</strong> Safer HTML construction with types</a></li><li class="chapter-item expanded "><a href="chapter_02e.html"><strong aria-hidden="true">3.5.</strong> Preventing incorrect use with modules</a></li><li class="chapter-item expanded "><a href="chapter_02f.html"><strong aria-hidden="true">3.6.</strong> Escaping characters</a></li><li class="chapter-item expanded "><a href="chapter_02g.html"><strong aria-hidden="true">3.7.</strong> Exposing internal functionality (Internal modules)</a></li><li class="chapter-item expanded "><a href="chapter_02h.html"><strong aria-hidden="true">3.8.</strong> Exercises</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -482,6 +482,10 @@ similar to it like PureScript and Elm)!</p>
 <li><code>h1_</code> which uses the tag <code>&lt;h1&gt;</code> for headers</li>
 </ol>
 </li>
+<li>
+<p>Replace our <code>Hello, world!</code> string with richer content, use <code>h1_</code> and <code>p_</code>.
+We can append html strings created by <code>h1_</code> and <code>p_</code> using the append operator <code>&lt;&gt;</code>.</p>
+</li>
 </ol>
 <hr />
 <p>Solutions:</p>
@@ -530,6 +534,15 @@ h1_ :: String -&gt; String
 h1_ = el &quot;h1&quot;
 </code></pre>
 </details>
+<details>
+  <summary>Solution for exercise #4</summary>
+<pre><code class="language-hs">myhtml :: String
+myhtml =
+  makeHtml
+    &quot;Hello title&quot;
+    (h1_ &quot;Hello, world!&quot; &lt;&gt; p_ &quot;Let's learn about Haskell!&quot;)
+</code></pre>
+</details>
 <hr />
 <details>
   <summary>Our final program</summary>
@@ -539,7 +552,11 @@ main :: IO ()
 main = putStrLn myhtml
 
 myhtml :: String
-myhtml = makeHtml &quot;Hello title&quot; &quot;Hello, world!&quot;
+myhtml =
+  makeHtml
+    &quot;Hello title&quot;
+    (h1_ &quot;Hello, world!&quot; &lt;&gt; p_ &quot;Let's learn about Haskell!&quot;)
+
 
 makeHtml :: String -&gt; String -&gt; String
 makeHtml title content = html_ (head_ (title_ title) &lt;&gt; body_ content)
@@ -628,24 +645,25 @@ looks like it is rendered using lists.</p>
 <p>In the next few sections we'll take a look at how to define our own types and
 how to work with modules to make it harder to make errors, and a little bit
 about linked lists in Haskell.</p>
-<h1 id="safer-html-library-with-types"><a class="header" href="#safer-html-library-with-types">Safer HTML library with types</a></h1>
+<h1 id="safer-html-construction-with-types"><a class="header" href="#safer-html-construction-with-types">Safer HTML construction with types</a></h1>
+<p>In this section we'll learn how to create our own distinguished types
+for HTML, and how they can help us avoid invalid construction of HTML strings.</p>
 <p>There are a few ways of defining new types in Haskell, in this section
 we are going to meet two ways: <code>newtype</code> and <code>type</code>.</p>
-<ol>
-<li><code>newtype</code> lets us give a new name to an already existing type in a
-way that the two cannot mix together.</li>
-</ol>
+<h2 id="newtype"><a class="header" href="#newtype"><code>newtype</code></a></h2>
+<p><code>newtype</code> lets us give a new name to an already existing type in a
+way that the two cannot mix together.</p>
 <p>A <code>newtype</code> declaration looks like this:</p>
 <pre><code class="language-hs">newtype &lt;type-name&gt; = &lt;constructor&gt; &lt;existing-type&gt;
 </code></pre>
-<p>For example in our case we have:</p>
+<p>For example in our case we can define a distinct type for <code>Html</code> like this:</p>
 <pre><code class="language-hs">newtype Html = Html String
 </code></pre>
 <p>The first <code>Html</code>, to the left of the equals sign, lives in the <em>types</em>
 namespace, meaning that you will only see that name to the right of a
 double-colon sign (<code>::</code>).</p>
-<p>The second <code>Html</code> lives in the <em>expressions</em> namespace, meaning that
-you will see it where you expect expressions (we'll touch where
+<p>The second <code>Html</code> lives in the <em>expressions</em> (or terms/values) namespace,
+meaning that you will see it where you expect expressions (we'll touch where
 exactly that can be in a moment).</p>
 <p>The two names, <code>&lt;type-name&gt;</code> and <code>&lt;constructor&gt;</code>, do not have to be the
 same, but they often are. And note that both have to start with a
@@ -653,31 +671,47 @@ capital letter.</p>
 <p>The right-hand side of the newtype declaration describes how an
 expression of that type looks like. In our case, we expect a value of
 type <code>Html</code> to have the constructor <code>Html</code> and then an expression of
-type string, for example <code>Html &quot;hello&quot;</code> or <code>Html (&quot;hello &quot; &lt;&gt; &quot;world&quot;)</code>.</p>
+type string, for example: <code>Html &quot;hello&quot;</code> or <code>Html (&quot;hello &quot; &lt;&gt; &quot;world&quot;)</code>.</p>
 <p>You can think of the constructor as a function that takes the argument
-and returns something of our new type.</p>
-<p>Note that we cannot use an expression of type <code>Html</code> the same way we'd
+and returns something of our new type:</p>
+<pre><code class="language-hs">Html :: String -&gt; Html
+</code></pre>
+<p><strong>Note</strong>: We cannot use an expression of type <code>Html</code> the same way we'd
 use a <code>String</code>. so <code>&quot;hello &quot; &lt;&gt; Html &quot;world&quot;</code> would fail at type
 checking.</p>
-<p>This is useful when we want <em>encapsulation</em>. We can define use
+<p>This is useful when we want <em>encapsulation</em>. We can define and use
 existing representation and functions for our underlying type, but not
 mix them with other, unrelated (to our domain) types. Similar as
 meters and feet can both be numbers, but we don't want to accidently
 add feets to meters without any conversion.</p>
-<p>To get this actually working well we'll need a bit more than just
-newtypes, in the next commit we'll introduce modules and smart constructors.</p>
-<ol start="2">
-<li>A <code>type</code> definition looks really similar - the only difference is that
-we have no constructor:</li>
+<p>To get this actually working well, we'll need a bit more than just
+newtypes. In the next chapter we'll introduce modules and smart constructors.</p>
+<p>For now, let's create a couple of types for our use case.
+We want two separate types to represent:</p>
+<ol>
+<li>A complete Html document</li>
+<li>A type for nodes that can go inside the <body> tag</li>
 </ol>
+<p>We want them to be distinct because we don't want to mix them together.</p>
+<details>
+  <summary>Solution</summary>
+<pre><code class="language-hs">newtype Html = Html String
+
+newtype HtmlBodyContent = HtmlBodyContent String
+</code></pre>
+</details>
+<h2 id="type"><a class="header" href="#type"><code>type</code></a></h2>
+<p>A <code>type</code> definition looks really similar - the only difference is that
+we have no constructor:</p>
 <pre><code class="language-hs">type &lt;type-name&gt; = &lt;existing-type&gt;
 </code></pre>
-<p>For example in our case we have:</p>
+<p>For example in our case we can write:</p>
 <pre><code class="language-hs">type HtmlTitle = String
 </code></pre>
-<p><code>type</code>, on the other hand, is just a name alias. so writing <code>HtmlTitle</code>
-or <code>String</code> is exactly the same for Haskell, and we can use
-it to give a bit more clarity to our code.</p>
+<p><code>type</code>, on the other hand, is just a name alias. so <code>HtmlTitle</code>
+and <code>String</code> are interchangeable. We can use <code>type</code>s
+to give a bit more clarity to our code.</p>
+<h2 id="using-newtypes"><a class="header" href="#using-newtypes">Using <code>newtype</code>s</a></h2>
 <p>Back to <code>newtype</code>s. So how can we use the underlying type? We first
 need to extract it out of the type. We do this using pattern matching.</p>
 <p>Pattern matching can be used in two ways, in case expressions and in
@@ -691,7 +725,7 @@ function definitions.</p>
   &lt;pattern&gt; -&gt; &lt;expression&gt;
 </code></pre>
 <p>The <code>&lt;expression&gt;</code> is the thing we want to unpack, and the <code>pattern</code>
-is how it actually looks like. For example:</p>
+is it's concrete shape. For example:</p>
 <pre><code class="language-hs">getBodyContentString :: HtmlBodyContent -&gt; String
 getBodyContentString myhbc =
   case myhbc of
@@ -699,7 +733,7 @@ getBodyContentString myhbc =
 </code></pre>
 <p>This way we can extract the String out of <code>HtmlBodyContent</code> and return
 it.</p>
-<p>In later commits we'll introduce <code>data</code> declarations (which are kinda
+<p>In later commits we'll introduce <code>data</code> declarations (which are kind of
 a struct + enum chimera), where we can define multiple constructors to
 a type. Then the multiple patterns of a case expression will make more
 sense.</p>
@@ -713,43 +747,59 @@ arguments:</li>
 <pre><code class="language-hs">getBodyContentString :: HtmlBodyContent -&gt; String
 getBodyContentString (HtmlBodyContent str) = str
 </code></pre>
-<p>And this is the way we use it in this code, because here it's a bit
-more concise.</p>
-<p>Another interesting operator (which is a regular library function in
-Haskell) we are introducing here is <code>.</code>. Pronounced compose. This is
-similar to the composition operator you may know from math. It takes
-two functions and an argument, and passes the argument to the second
-function, and the result of that is then passed to the first function.</p>
-<p>The type for <code>.</code> is:</p>
+<p>Using the types we created, we can change the html functions we defined before,
+namely <code>html_</code>, <code>body_</code>, <code>p_</code>, etc, to operate on these types instead of <code>String</code>s.</p>
+<p>But first let's meet another operator that will make our code more concise.</p>
+<h2 id="chaining-functions"><a class="header" href="#chaining-functions">Chaining functions</a></h2>
+<p>Another interesting and extremely common operator
+(which is a regular library function in Haskell) is <code>.</code> (pronounced compose).
+This operator was made to look like the composition operator
+you may know from math (<code>∘</code>).</p>
+<p>Let's look at its type and implementation:</p>
 <pre><code class="language-hs">(.) :: (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+(.) f g x = f (g x)
 </code></pre>
-<p>Note that the second function takes as input something of the type
-<code>a</code>, returns something of the type <code>b</code>, and the first functions takes
+<p>Compose takes 3 arguments: two functions (named <code>f</code> and <code>g</code> here) and
+a third argument named <code>x</code>. It then passes the argument <code>x</code> to the second
+function <code>g</code>, and calls the first function <code>f</code> with the result of <code>g x</code>.</p>
+<p>Note that <code>g</code> takes as input something of the type
+<code>a</code> and returns something of the type <code>b</code>, and <code>f</code> takes
 something of the type <code>b</code>, and returns something of the type <code>c</code>.</p>
-<p>Note that types that start with a lowercase letter are &quot;type
-variables&quot;. Think of them as similar to regular variables. Just like
-<code>str</code> could be any string, like &quot;hello&quot; or &quot;world&quot;, a type variable
+<p>Another important thing to note is that types which start with
+a <em>lowercase letter</em> are <strong>type variables</strong>.
+Think of them as similar to regular variables. Just like
+<code>content</code> could be any string, like <code>&quot;hello&quot;</code> or <code>&quot;world&quot;</code>, a type variable
 can be any type: <code>Bool</code>, <code>String</code>, <code>String -&gt; String</code>, etc.</p>
 <p>The catch is that type variables must match in a signature, so if for
 example we write a function with the type signature <code>a -&gt; a</code>, the
-types argument type and the return type <em>must</em> match. And it could be
+input type and the return type <strong>must</strong> match, but it could be
 any type - we cannot know what it is. So the only way to implement a
 function with that signature is:</p>
 <pre><code class="language-hs">mysteryFunction :: a -&gt; a
 mysteryFunction x = x
 </code></pre>
 <p>If we tried any other way, for example returning some made up value
-like &quot;hello&quot;, or try to use <code>x</code> like a value of a type we know like
+like <code>&quot;hello&quot;</code>, or try to use <code>x</code> like a value of a type we know like
 writing <code>x + x</code>, the type checker will complain.</p>
-<p>Also, remember that <code>-&gt;</code> is right associative? So this signature is the same as:</p>
+<p>Also, remember that <code>-&gt;</code> is right associative? This signature is equivalent to:</p>
 <pre><code class="language-hs">(.) :: (b -&gt; c) -&gt; (a -&gt; b) -&gt; (a -&gt; c)
 </code></pre>
 <p>Doesn't it look like a function that takes two functions and returns a
 third function that is the composition of the two?</p>
-<p>In our concrete example we have:</p>
+<p>We can now use this operator to change or html functions. Let's start
+with one example: <code>p_</code>.</p>
+<p>Before, we had:</p>
+<pre><code class="language-hs">p_ :: String -&gt; String
+p_ = el &quot;p&quot;
+</code></pre>
+<p>And now, we can write:</p>
 <pre><code class="language-hs">p_ :: String -&gt; HtmlBodyContent
 p_ = HtmlBodyContent . el &quot;p&quot;
 </code></pre>
+<p>The function <code>p_</code> will take an arbitrary <code>String</code> which is the content
+of the paragraph we wish to create, will wrap it in <code>&lt;p&gt;</code> tags,
+and then wrap it in the <code>HtmlBodyContent</code> constructor - producing the
+output type <code>HtmlBodyContent</code>.</p>
 <p>Let's take a deeper look and see what are the types of the two
 functions here are:</p>
 <ul>
@@ -765,20 +815,63 @@ down that the type variable should now be the concrete type, and see
 if everything still works.</p>
 <p>So in our case we know from the type signature that the input type to
 the function <code>String</code> and the output type is <code>HtmlBodyContent</code>, this
-means <code>a</code> is equivalent to <code>String</code> (we write <code>~</code> to denote
-equivalence) and <code>c ~ HtmlBodyContent</code>. We also know that <code>b ~ String</code>
-because we pass <code>HtmlBodyContent</code> to <code>.</code> as the first arguments, which
-means <code>String -&gt; HtmlBodyContent</code> (<code>HtmlBodyContent</code>'s type) must
-match with the type of the first argument of <code>.</code> which is <code>b -&gt; c</code>.</p>
+means:</p>
+<ol>
+<li><code>a</code> is equivalent to <code>String</code> (we write <code>~</code> to denote equivalence), and</li>
+<li><code>c ~ HtmlBodyContent</code></li>
+</ol>
+<p>We also know that:</p>
+<ol start="3">
+<li><code>b ~ String</code> because we pass <code>HtmlBodyContent</code> to <code>.</code> as the first arguments, which means</li>
+<li><code>String -&gt; HtmlBodyContent</code> must
+match with the type of the first argument of <code>.</code> which is <code>b -&gt; c</code>, so</li>
+<li><code>b ~ String</code> which fits with our previous knowledge from (3)</li>
+<li><code>-&gt; ~ -&gt;</code></li>
+<li><code>c ~ HtmlBodyContent</code> which also fits with (2)</li>
+</ol>
 <p>We keep doing this process until we come to the conclusion that there
 aren't any types that don't match (we don't have two different
 concrete types that are supposed to be equivalent).</p>
-<p>All of this is nice and fun. And indeed now we can't write &quot;Hello&quot;
-where we'd expect either a paragraph or a header, but we can still
-write <code>HtmlBodyContent &quot;hello&quot;</code> and get something that isn't a
-paragraph or a header. Next we'll see how we can make this illegal as
-well.</p>
-<hr />
+<h2 id="appending-htmlbodycontent"><a class="header" href="#appending-htmlbodycontent">Appending HtmlBodyContent</a></h2>
+<p>Before when we wanted to create richer html content and appended
+nodes to one another, we used the append (<code>&lt;&gt;</code>) operator.
+Since we are now not using <code>String</code> anymore, we need another way
+to do it.</p>
+<p>While it is possible to overload <code>&lt;&gt;</code> using a feature in
+Haskell called type classes, we will instead create a new function
+and call it <code>append_</code>, and cover type classes later.</p>
+<p><code>append_</code> should take two <code>HtmlBodyContent</code>s, and return a third <code>HtmlBodyContent</code>,
+appending the inner <code>String</code> in the first <code>HtmlBodyContent</code> to the second and wrapping the result back in `HtmlBodyContent.</p>
+<p>Try implementing <code>append_</code>.</p>
+<details>
+  <summary>Solution</summary>
+<pre><code class="language-hs">append_ :: HtmlBodyContent -&gt; HtmlBodyContent -&gt; HtmlBodyContent
+append_ (HtmlBodyContent a) (HtmlBodyContent b) =
+  HtmlBodyContent (a &lt;&gt; b)
+</code></pre>
+</details>
+<h2 id="converting-back-an-html-to-string"><a class="header" href="#converting-back-an-html-to-string">Converting back an <code>Html</code> to <code>String</code></a></h2>
+<p>After constructing a valid <code>Html</code> value, we want to be able to
+print it to the output so we can display it in our browser.
+For that, we need to write a function that takes an <code>Html</code> and converts it to a <code>String</code>, which we can then pass to <code>putStrLn</code>.</p>
+<p>Implement the <code>render</code> function.</p>
+<details>
+  <summary>Solution</summary>
+<pre><code class="language-hs">render :: Html -&gt; String
+render html =
+  case html of
+    Html str -&gt; str
+</code></pre>
+</details>
+<h2 id="the-rest-of-the-owl"><a class="header" href="#the-rest-of-the-owl">The rest of the owl</a></h2>
+<p>Try changing the code we wrote in previous chapters to use the new types we created.</p>
+<p><strong>Tips</strong>: we can combine <code>makeHtml</code> and <code>html_</code>, and remove <code>body_</code> <code>head_</code> and <code>title_</code>
+by calling <code>el</code> directly in <code>html_</code>, which can now have the type <code>HtmlTitle -&gt; HtmlBodyContent -&gt; Html</code>. This will make our html EDSL less flexible but more compact.</p>
+<p>We could, alternatively, create newtypes for <code>HtmlHead</code> and <code>HtmlBody</code> and
+pass those to <code>html_</code>, and there is value in doing that, but I've chose
+to keep the API a bit simple for now, we can always refactor later!</p>
+<details>
+  <summary> <b>Solution</b> </summary>
 <pre><code class="language-hs">-- hello.hs
 
 main :: IO ()
@@ -799,11 +892,11 @@ myhtml =
 newtype Html
   = Html String
 
-type HtmlTitle
-  = String
-
 newtype HtmlBodyContent
   = HtmlBodyContent String
+
+type HtmlTitle
+  = String
 
 html_ :: HtmlTitle -&gt; HtmlBodyContent -&gt; Html
 html_ title content =
@@ -838,7 +931,564 @@ render html =
   case html of
     Html str -&gt; str
 </code></pre>
+</details>
+<p>All of this is nice and fun. And indeed now we can't write <code>&quot;Hello&quot;</code>
+where we'd expect either a paragraph or a header, but we can still
+write <code>HtmlBodyContent &quot;hello&quot;</code> and get something that isn't a
+paragraph or a header. Next we'll see how we can make this illegal as
+well using modules and smart constructors.</p>
+<h1 id="preventing-incorrect-use-with-modules"><a class="header" href="#preventing-incorrect-use-with-modules">Preventing incorrect use with modules</a></h1>
+<p>In this section we will move the Html generation library to its own module.</p>
+<h2 id="modules"><a class="header" href="#modules">Modules</a></h2>
+<p>Each Haskell source file is a module. The module name should have the
+same name as the source file and should start with a capital
+letter. Sub-directories should also be part of the name and we use <code>.</code>
+do denote a sub-directory. We'll see that in the next section.</p>
+<p>The only exception to the rule are entry points to the program -
+modules with the name 'Main' that define <code>main</code> in them. Their source
+file names could have any name they want.</p>
+<p>A module declaration looks like this:</p>
+<pre><code class="language-hs">module &lt;module-name&gt;
+  ( &lt;export-list&gt;
+  )
+where
+</code></pre>
+<p>The export list can be omitted if you want to export everything
+defined in the module, but we don't. We will list exactly the
+functions and type we want to export.</p>
+<p>We will create a new source file named <code>Html.hs</code> and add the following
+module declaration code at the top of the file:</p>
+<pre><code class="language-hs">module Html
+  ( Html
+  , HtmlTitle
+  , HtmlBodyContent
+  , html_
+  , p_
+  , h1_
+  , append_
+  , render
+  )
+where
+</code></pre>
+<p>Note that we do not export:</p>
+<ol>
+<li>
+<p>the constructors for our new types, only the types themselves.
+If we wanted to export the constructors as well we would've written
+<code>Html(Html)</code> or <code>Html(..)</code>. This way the user cannot create their own
+<code>HtmlBodyContent</code> simply by writing <code>HtmlBodyContent &quot;Hello&quot;</code>.</p>
+</li>
+<li>
+<p>Internal functions used by the library, such as <code>el</code> and <code>getBodyContentString</code>.</p>
+</li>
+</ol>
+<p>And we will also move the html related functions from our <code>hello.hs</code> file
+to this new <code>Html.hs</code> file:</p>
+<pre><code class="language-hs">newtype Html
+  = Html String
+
+newtype HtmlBodyContent
+  = HtmlBodyContent String
+
+type HtmlTitle
+  = String
+
+html_ :: HtmlTitle -&gt; HtmlBodyContent -&gt; Html
+html_ title content =
+  Html
+    ( el &quot;html&quot;
+      ( el &quot;head&quot; (el &quot;title&quot; title)
+        &lt;&gt; el &quot;body&quot; (getBodyContentString content)
+      )
+    )
+
+p_ :: String -&gt; HtmlBodyContent
+p_ = HtmlBodyContent . el &quot;p&quot;
+
+h1_ :: String -&gt; HtmlBodyContent
+h1_ = HtmlBodyContent . el &quot;h1&quot;
+
+el :: String -&gt; String -&gt; String
+el tag content =
+  &quot;&lt;&quot; &lt;&gt; tag &lt;&gt; &quot;&gt;&quot; &lt;&gt; content &lt;&gt; &quot;&lt;/&quot; &lt;&gt; tag &lt;&gt; &quot;&gt;&quot;
+
+append_ :: HtmlBodyContent -&gt; HtmlBodyContent -&gt; HtmlBodyContent
+append_ c1 c2 =
+  HtmlBodyContent (getBodyContentString c1 &lt;&gt; getBodyContentString c2)
+
+getBodyContentString :: HtmlBodyContent -&gt; String
+getBodyContentString content =
+  case content of
+    HtmlBodyContent str -&gt; str
+
+render :: Html -&gt; String
+render html =
+  case html of
+    Html str -&gt; str
+</code></pre>
+<p>Now, anyone importing our module (using the <code>import</code> statement which
+can be used below module declarations but above any other
+declaration), will only be able to import what we export.</p>
+<p>Add the following code at the top of the <code>hello.hs</code> file:</p>
+<pre><code class="language-hs">import Html
+</code></pre>
+<p>The <code>hello.hs</code> file should now look like this:</p>
+<pre><code class="language-hs">-- hello.hs
+
+import Html
+
+main :: IO ()
+main = putStrLn (render myhtml)
+
+myhtml :: Html
+myhtml =
+  html_
+    &quot;My title&quot;
+    ( append_
+      (h1_ &quot;Header&quot;)
+      ( append_
+        (p_ &quot;Paragraph #1&quot;)
+        (p_ &quot;Paragraph #2&quot;)
+      )
+    )
+</code></pre>
+<p>And the <code>Html.hs</code> file should look like this:</p>
+<pre><code class="language-hs">-- Html.hs
+
+module Html
+  ( Html
+  , HtmlTitle
+  , HtmlBodyContent
+  , html_
+  , p_
+  , h1_
+  , append_
+  , render
+  )
+where
+
+newtype Html
+  = Html String
+
+newtype HtmlBodyContent
+  = HtmlBodyContent String
+
+type HtmlTitle
+  = String
+
+html_ :: HtmlTitle -&gt; HtmlBodyContent -&gt; Html
+html_ title content =
+  Html
+    ( el &quot;html&quot;
+      ( el &quot;head&quot; (el &quot;title&quot; title)
+        &lt;&gt; el &quot;body&quot; (getBodyContentString content)
+      )
+    )
+
+p_ :: String -&gt; HtmlBodyContent
+p_ = HtmlBodyContent . el &quot;p&quot;
+
+h1_ :: String -&gt; HtmlBodyContent
+h1_ = HtmlBodyContent . el &quot;h1&quot;
+
+el :: String -&gt; String -&gt; String
+el tag content =
+  &quot;&lt;&quot; &lt;&gt; tag &lt;&gt; &quot;&gt;&quot; &lt;&gt; content &lt;&gt; &quot;&lt;/&quot; &lt;&gt; tag &lt;&gt; &quot;&gt;&quot;
+
+append_ :: HtmlBodyContent -&gt; HtmlBodyContent -&gt; HtmlBodyContent
+append_ c1 c2 =
+  HtmlBodyContent (getBodyContentString c1 &lt;&gt; getBodyContentString c2)
+
+getBodyContentString :: HtmlBodyContent -&gt; String
+getBodyContentString content =
+  case content of
+    HtmlBodyContent str -&gt; str
+
+render :: Html -&gt; String
+render html =
+  case html of
+    Html str -&gt; str
+</code></pre>
+<h1 id="escaping-characters"><a class="header" href="#escaping-characters">Escaping characters</a></h1>
+<p>Now that <code>Html</code> has its own source file and module, and creating
+html code can be done only via the functions we exported,
+we can also handle user input that may contain characters we
+that may conflict with our meta language html,
+such as <code>&lt;</code> and <code>&gt;</code> which are used for creating HTML tags.</p>
+<p>We can convert these characters into different strings that HTML can handle.</p>
+<p>See <a href="https://stackoverflow.com/questions/7381974/which-characters-need-to-be-escaped-in-html">https://stackoverflow.com/questions/7381974/which-characters-need-to-be-escaped-in-html</a>
+for a list of characters we need to escape.</p>
+<p>Let's create a new function called <code>escape</code>:</p>
+<pre><code class="language-hs">escape :: String -&gt; String
+escape =
+  let
+    escapeChar c =
+      case c of
+        '&lt;' -&gt; &quot;&amp;lt;&quot;
+        '&gt;' -&gt; &quot;&amp;gt;&quot;
+        '&amp;' -&gt; &quot;&amp;amp;&quot;
+        '&quot;' -&gt; &quot;&amp;quot;&quot;
+        '\'' -&gt; &quot;&amp;#39;&quot;
+        _ -&gt; [c]
+  in
+    concat . map escapeChar
+</code></pre>
+<p>In <code>escape</code> we see a few new things:</p>
+<ol>
+<li>let expressions - we can define local names using this syntax:</li>
+</ol>
+<pre><code class="language-hs">let
+  &lt;name&gt; = &lt;expression&gt;
+in
+  &lt;expression&gt;
+</code></pre>
+<p>This will make <name> available as a variable in the second <expression>.</p>
+<ol start="2">
+<li>
+<p>Pattern matching with multiple patterns - we match on different
+characters and convert them to a string. Note that <code>_</code> is a &quot;catch
+all&quot; pattern that will always succeed.</p>
+</li>
+<li>
+<p>Two new functions: <code>map</code> and <code>concat</code>, we'll talk about these more in depth</p>
+</li>
+</ol>
+<h2 id="linked-lists-briefly"><a class="header" href="#linked-lists-briefly">Linked lists briefly</a></h2>
+<p>Linked lists are a very common data structure in Haskell, so common that
+they have their own special syntax:</p>
+<ol>
+<li>The type for lists are denoted with brackets and inside them is the type of the element. For example:
+<ul>
+<li><code>[Int]</code> - a list of integers</li>
+<li><code>[Char]</code> - a list of characters</li>
+<li><code>[String]</code> - a list of strings</li>
+<li><code>[[String]]</code> - a list of a list of strings</li>
+</ul>
+</li>
+<li>An expression representing a empty list is written like this: <code>[]</code></li>
+<li>Prepending an element to a list is done with the operator <code>:</code> (pronounced cons) which is right-associative (like <code>-&gt;</code>).
+For example: <code>1 : []</code>, or <code>1 : 2 : 3 : []</code>.</li>
+<li>The above lists can also be written like this: <code>[1]</code> and <code>[1, 2, 3]</code>.</li>
+</ol>
+<p>Also, Strings are linked lists of chararacters - String is defined as:
+<code>type String = [Char]</code>, so we can use them the same way we use lists.</p>
 <hr />
+<p>Do note, however, that linked lists, despite their convenience, are often
+not the right tool for the job. They are not particularily space efficient
+and are slow for appending, random access and more. That also makes <code>String</code>
+a lot less efficient than it could be. And I generally recommend using a
+different string type, <code>Text</code>, instead, which is available in an external package.
+We will talk about lists, <code>Text</code>, and other data structures in the future!</p>
+<hr />
+<p>We can implement our own operations on lists by using pattern matching and recursion.
+And we'll touch on this subject later when talking about ADTs.</p>
+<p>For now, we will use the various functions found in the <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-List.html">Data.List</a> module. Specifically, <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-List.html#v:map">map</a> and <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-List.html#v:concat">concat</a>.</p>
+<p><code>map</code> applying a function to each of the elements in a list. Its type signature is:</p>
+<pre><code class="language-hs">map :: (a -&gt; b) -&gt; [a] -&gt; [b]
+</code></pre>
+<p>For example:</p>
+<pre><code class="language-hs">map not [False, True, False] == [True, False, True]
+</code></pre>
+<p>Or as can be seen in our <code>escape</code> function, this can help us escape each character:</p>
+<pre><code class="language-hs">map escapeChar ['&lt;','h','1','&gt;'] == [&quot;&amp;lt;&quot;,&quot;h&quot;,&quot;1&quot;,&quot;&amp;gt;&quot;]
+</code></pre>
+<p>However, note that the <code>escapeChar</code> has the type <code>Char -&gt; String</code>,
+so the result type of <code>map escapeChar ['&lt;','h','1','&gt;']</code> is <code>[String]</code>,
+and what we really want is a <code>String</code> and not <code>[String]</code>.</p>
+<p>This is where <code>concat</code> enters the picture. <code>concat</code> has the type</p>
+<pre><code class="language-hs">concat :: [[a]] -&gt; [a]
+</code></pre>
+<p>It flattens a list of list of something into a list of something.
+In our case in will flatten <code>[String]</code> into <code>String</code>, remember that this works
+because <code>String</code> is a <strong>type alias</strong> for <code>[Char]</code>, so we actually have
+<code>[[Char]] -&gt; [Char]</code>.</p>
+<hr />
+<h2 id="escaping"><a class="header" href="#escaping">Escaping</a></h2>
+<p>The user of our library can currently only supply strings in a few places:</p>
+<ol>
+<li>Page title</li>
+<li>Paragraphs</li>
+<li>Headers</li>
+</ol>
+<p>We can apply our escape function at these places before doing anything else with it.
+That way all html constructions are safe.</p>
+<p>Try adding the escaping function in those places.</p>
+<details>
+  <summary>Solution</summary>
+<pre><code class="language-hs">html_ :: HtmlTitle -&gt; HtmlBodyContent -&gt; Html
+html_ title content =
+  Html
+    ( el &quot;html&quot;
+      ( el &quot;head&quot; (el &quot;title&quot; (escape title))
+        &lt;&gt; el &quot;body&quot; (getBodyContentString content)
+      )
+    )
+
+p_ :: String -&gt; HtmlBodyContent
+p_ = HtmlBodyContent . el &quot;p&quot; . escape
+
+h1_ :: String -&gt; HtmlBodyContent
+h1_ = HtmlBodyContent . el &quot;h1&quot; . escape
+</code></pre>
+</details>
+<hr />
+<details>
+  <summary><b>Our revised Html.hs</b></summary>
+<pre><code class="language-hs">-- Html.hs
+
+module Html
+  ( Html
+  , HtmlTitle
+  , HtmlBodyContent
+  , html_
+  , p_
+  , h1_
+  , append_
+  , render
+  )
+where
+
+-- * Types
+
+newtype Html
+  = Html String
+
+newtype HtmlBodyContent
+  = HtmlBodyContent String
+
+type HtmlTitle
+  = String
+
+-- * EDSL
+
+html_ :: HtmlTitle -&gt; HtmlBodyContent -&gt; Html
+html_ title content =
+  Html
+    ( el &quot;html&quot;
+      ( el &quot;head&quot; (el &quot;title&quot; (escape title))
+        &lt;&gt; el &quot;body&quot; (getBodyContentString content)
+      )
+    )
+
+p_ :: String -&gt; HtmlBodyContent
+p_ = HtmlBodyContent . el &quot;p&quot; . escape
+
+h1_ :: String -&gt; HtmlBodyContent
+h1_ = HtmlBodyContent . el &quot;h1&quot; . escape
+
+append_ :: HtmlBodyContent -&gt; HtmlBodyContent -&gt; HtmlBodyContent
+append_ c1 c2 =
+  HtmlBodyContent (getBodyContentString c1 &lt;&gt; getBodyContentString c2)
+
+-- * Render
+
+render :: Html -&gt; String
+render html =
+  case html of
+    Html str -&gt; str
+
+-- * Utilities
+
+el :: String -&gt; String -&gt; String
+el tag content =
+  &quot;&lt;&quot; &lt;&gt; tag &lt;&gt; &quot;&gt;&quot; &lt;&gt; content &lt;&gt; &quot;&lt;/&quot; &lt;&gt; tag &lt;&gt; &quot;&gt;&quot;
+
+getBodyContentString :: HtmlBodyContent -&gt; String
+getBodyContentString content =
+  case content of
+    HtmlBodyContent str -&gt; str
+
+escape :: String -&gt; String
+escape =
+  let
+    escapeChar c =
+      case c of
+        '&lt;' -&gt; &quot;&amp;lt;&quot;
+        '&gt;' -&gt; &quot;&amp;gt;&quot;
+        '&amp;' -&gt; &quot;&amp;amp;&quot;
+        '&quot;' -&gt; &quot;&amp;quot;&quot;
+        '\'' -&gt; &quot;&amp;#39;&quot;
+        _ -&gt; [c]
+  in
+    concat . map escapeChar
+</code></pre>
+</details>
+<p>Trying constructing an invalid html in <code>hello.hs</code> to see if this works or not!</p>
+<p>Now we can use our tiny html library safely. But what if the user
+wants to use our library with something we didn't think about, for
+example adding unordered lists? We are completely blocking them from
+extending our library. We'll talk about this next.</p>
+<h1 id="exposing-internal-functionality-internal-modules"><a class="header" href="#exposing-internal-functionality-internal-modules">Exposing internal functionality (Internal modules)</a></h1>
+<p>When a user runs into trouble with using a library the best course of
+actions usually are to open an issue in the repository or submit a pull
+request, but sometimes the user needs things to work <em>now</em>.</p>
+<p>We admit that we are not perfect and can't think of all use cases for our
+library. Sometimes the restrictions we add are too great and may limit
+the usage of advanced users that know how things work under the hood and
+need certain functionality to present in our library.</p>
+<p>For that we can expose internal modules to provide some flexibility for
+advanced users. Internal modules are not a language concept but
+rather a (fairly common) design pattern in Haskell.</p>
+<p>Internal modules are simply modules named <code>Internal</code>.
+These modules are considered risky to use by convention.
+Internal modules will export all of the functionality in a
+module, and we will add another module without the <code>Internal</code> suffix
+which will import from our internal module and only export the api
+we'd like to export.</p>
+<p>Internal modules should be considered unstable and risky to use. If
+you end up using one, make sure to open a ticket in the library after
+the storm has passed!</p>
+<p>We will create a new directory named <code>Html</code> and inside it a new file
+named <code>Internal.hs</code>. The name of this module should be <code>Html.Internal</code>.</p>
+<p>This module will contain all of the code that was previously in the <code>Html</code>
+module, but <strong>we will change the module declaration in <code>Html.Internal</code>
+and <em>omit</em> the export list</strong>:</p>
+<pre><code class="language-hs">-- Html/Internal.hs
+
+module Html.Internal where
+
+...
+</code></pre>
+<p>And now in <code>Html.hs</code>, we will remove the code that we moved to <code>Html/Internal.hs</code>
+and in its stead we'll import the internal module:</p>
+<pre><code class="language-hs">-- Hello.hs
+
+module Html
+  ( Html
+  , HtmlTitle
+  , HtmlBodyContent
+  , html_
+  , p_
+  , h1_
+  , append_
+  , render
+  )
+where
+</code></pre>
+<p>Now, users of our library can still import <code>Html</code> and safely use our library,
+but if they run into trouble and have a dire need to implement unordered lists
+to work with our library, they could always work with <code>Html.Internal</code> instead.</p>
+<details>
+  <summary><b>Our revised Html.hs and Html/Internal.hs</b></summary>
+<pre><code class="language-hs">-- Html.hs
+
+module Html
+  ( Html
+  , HtmlTitle
+  , HtmlBodyContent
+  , html_
+  , p_
+  , h1_
+  , append_
+  , render
+  )
+where
+
+import Html.Internal
+</code></pre>
+<pre><code class="language-hs">-- Html/Internal.hs
+
+module Html.Internal where
+
+-- * Types
+
+newtype Html
+  = Html String
+
+newtype HtmlBodyContent
+  = HtmlBodyContent String
+
+type HtmlTitle
+  = String
+
+-- * EDSL
+
+html_ :: HtmlTitle -&gt; HtmlBodyContent -&gt; Html
+html_ title content =
+  Html
+    ( el &quot;html&quot;
+      ( el &quot;head&quot; (el &quot;title&quot; (escape title))
+        &lt;&gt; el &quot;body&quot; (getBodyContentString content)
+      )
+    )
+
+p_ :: String -&gt; HtmlBodyContent
+p_ = HtmlBodyContent . el &quot;p&quot; . escape
+
+h1_ :: String -&gt; HtmlBodyContent
+h1_ = HtmlBodyContent . el &quot;h1&quot; . escape
+
+append_ :: HtmlBodyContent -&gt; HtmlBodyContent -&gt; HtmlBodyContent
+append_ c1 c2 =
+  HtmlBodyContent (getBodyContentString c1 &lt;&gt; getBodyContentString c2)
+
+-- * Render
+
+render :: Html -&gt; String
+render html =
+  case html of
+    Html str -&gt; str
+
+-- * Utilities
+
+el :: String -&gt; String -&gt; String
+el tag content =
+  &quot;&lt;&quot; &lt;&gt; tag &lt;&gt; &quot;&gt;&quot; &lt;&gt; content &lt;&gt; &quot;&lt;/&quot; &lt;&gt; tag &lt;&gt; &quot;&gt;&quot;
+
+getBodyContentString :: HtmlBodyContent -&gt; String
+getBodyContentString content =
+  case content of
+    HtmlBodyContent str -&gt; str
+
+escape :: String -&gt; String
+escape =
+  let
+    escapeChar c =
+      case c of
+        '&lt;' -&gt; &quot;&amp;lt;&quot;
+        '&gt;' -&gt; &quot;&amp;gt;&quot;
+        '&amp;' -&gt; &quot;&amp;amp;&quot;
+        '&quot;' -&gt; &quot;&amp;quot;&quot;
+        '\'' -&gt; &quot;&amp;#39;&quot;
+        _ -&gt; [c]
+  in
+    concat . map escapeChar
+</code></pre>
+</details>
+<h1 id="exercises"><a class="header" href="#exercises">Exercises</a></h1>
+<p>We need a few more features for our html library to be useful for
+our blog software. Add the following features to our <code>Html.Internal</code> module
+and expose them from <code>Html</code>.</p>
+<h2 id="1-unordered-lists"><a class="header" href="#1-unordered-lists">1. Unordered lists</a></h2>
+<p>These lists have the form:</p>
+<pre><code class="language-html">&lt;ul&gt;
+  &lt;li&gt;item 1&lt;/li&gt;
+  &lt;li&gt;item 2&lt;/li&gt;
+  &lt;li&gt;...&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+<p>We want in our library a new function:</p>
+<pre><code class="language-hs">ul_ :: [HtmlBodyContent] -&gt; HtmlBodyContent
+</code></pre>
+<p>So that users can write this:</p>
+<pre><code class="language-hs">ul_
+  [ p_ &quot;item 1&quot;
+  , p_ &quot;item 2&quot;
+  , p_ &quot;item 3&quot;
+  ]
+</code></pre>
+<p>and get this:</p>
+<pre><code class="language-html">&lt;ul&gt;
+  &lt;li&gt;item 1&lt;/li&gt;
+  &lt;li&gt;item 2&lt;/li&gt;
+  &lt;li&gt;item 3&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+<h2 id="2-ordered-lists"><a class="header" href="#2-ordered-lists">2. Ordered lists</a></h2>
+<p>Very similar to unordered lists, but instead of <code>&lt;ul&gt;</code> we use <code>&lt;ol&gt;</code></p>
+<h2 id="3-code-blocks"><a class="header" href="#3-code-blocks">3. Code blocks</a></h2>
+<p>Very similar to <code>&lt;p&gt;</code>, but use the <code>&lt;pre&gt;</code> tag. Call this function <code>code_</code>.</p>
+<h2 id="solutions"><a class="header" href="#solutions">Solutions</a></h2>
 
                     </main>
 

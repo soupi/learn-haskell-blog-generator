@@ -126,6 +126,9 @@ Exercises:
    1. `p_` which uses the tag `<p>` for paragraphs
    2. `h1_` which uses the tag `<h1>` for headers
 
+4. Replace our `Hello, world!` string with richer content, use `h1_` and `p_`.
+   We can append html strings created by `h1_` and `p_` using the append operator `<>`.
+
 ---
 
 Solutions:
@@ -188,6 +191,20 @@ Solutions:
 
 </details>
 
+<details>
+  <summary>Solution for exercise #4</summary>
+  
+  ```hs
+  myhtml :: String
+  myhtml =
+    makeHtml
+      "Hello title"
+      (h1_ "Hello, world!" <> p_ "Let's learn about Haskell!")
+  ```
+
+</details>
+
+
 
 ---
 
@@ -201,7 +218,11 @@ Solutions:
   main = putStrLn myhtml
 
   myhtml :: String
-  myhtml = makeHtml "Hello title" "Hello, world!"
+  myhtml =
+    makeHtml
+      "Hello title"
+      (h1_ "Hello, world!" <> p_ "Let's learn about Haskell!")
+
 
   makeHtml :: String -> String -> String
   makeHtml title content = html_ (head_ (title_ title) <> body_ content)
