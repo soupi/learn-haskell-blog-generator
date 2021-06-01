@@ -95,7 +95,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="chapter_00.html"><strong aria-hidden="true">1.</strong> About this tutorial</a></li><li class="chapter-item expanded "><a href="chapter_01.html"><strong aria-hidden="true">2.</strong> Hello world</a></li><li class="chapter-item expanded "><a href="chapter_02.html"><strong aria-hidden="true">3.</strong> Building an HTML printer library</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="chapter_02a.html"><strong aria-hidden="true">3.1.</strong> Flexible html content (functions)</a></li><li class="chapter-item expanded "><a href="chapter_02b.html"><strong aria-hidden="true">3.2.</strong> Adding type signatures</a></li><li class="chapter-item expanded "><a href="chapter_02c.html"><strong aria-hidden="true">3.3.</strong> Embedded Domain Specific Languages</a></li><li class="chapter-item expanded "><a href="chapter_02d.html" class="active"><strong aria-hidden="true">3.4.</strong> Safer HTML construction with types</a></li><li class="chapter-item expanded "><a href="chapter_02e.html"><strong aria-hidden="true">3.5.</strong> Preventing incorrect use with modules</a></li><li class="chapter-item expanded "><a href="chapter_02f.html"><strong aria-hidden="true">3.6.</strong> Escaping characters</a></li><li class="chapter-item expanded "><a href="chapter_02g.html"><strong aria-hidden="true">3.7.</strong> Exposing internal functionality (Internal modules)</a></li><li class="chapter-item expanded "><a href="chapter_02h.html"><strong aria-hidden="true">3.8.</strong> Exercises</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="chapter_00.html"><strong aria-hidden="true">1.</strong> About this tutorial</a></li><li class="chapter-item expanded "><a href="chapter_01.html"><strong aria-hidden="true">2.</strong> Hello world</a></li><li class="chapter-item expanded "><a href="chapter_02.html"><strong aria-hidden="true">3.</strong> Building an HTML printer library</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="chapter_02a.html"><strong aria-hidden="true">3.1.</strong> Flexible html content (functions)</a></li><li class="chapter-item expanded "><a href="chapter_02b.html"><strong aria-hidden="true">3.2.</strong> Adding type signatures</a></li><li class="chapter-item expanded "><a href="chapter_02c.html"><strong aria-hidden="true">3.3.</strong> Embedded Domain Specific Languages</a></li><li class="chapter-item expanded "><a href="chapter_02d.html" class="active"><strong aria-hidden="true">3.4.</strong> Safer HTML construction with types</a></li><li class="chapter-item expanded "><a href="chapter_02e.html"><strong aria-hidden="true">3.5.</strong> Preventing incorrect use with modules</a></li><li class="chapter-item expanded "><a href="chapter_02f.html"><strong aria-hidden="true">3.6.</strong> Escaping characters</a></li><li class="chapter-item expanded "><a href="chapter_02g.html"><strong aria-hidden="true">3.7.</strong> Exposing internal functionality (Internal modules)</a></li><li class="chapter-item expanded "><a href="chapter_02h.html"><strong aria-hidden="true">3.8.</strong> Richer HTML elements</a></li><li class="chapter-item expanded "><a href="chapter_02i.html"><strong aria-hidden="true">3.9.</strong> Exercises</a></li><li class="chapter-item expanded "><a href="chapter_02j.html"><strong aria-hidden="true">3.10.</strong> Summary</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -215,7 +215,7 @@ We want two separate types to represent:</p>
   <summary>Solution</summary>
 <pre><code class="language-hs">newtype Html = Html String
 
-newtype HtmlBodyContent = HtmlBodyContent String
+newtype HtmlStructure = HtmlStructure String
 </code></pre>
 </details>
 <h2 id="type"><a class="header" href="#type"><code>type</code></a></h2>
@@ -244,12 +244,12 @@ function definitions.</p>
 </code></pre>
 <p>The <code>&lt;expression&gt;</code> is the thing we want to unpack, and the <code>pattern</code>
 is it's concrete shape. For example:</p>
-<pre><code class="language-hs">getBodyContentString :: HtmlBodyContent -&gt; String
+<pre><code class="language-hs">getBodyContentString :: HtmlStructure -&gt; String
 getBodyContentString myhbc =
   case myhbc of
-    HtmlBodyContent str -&gt; str
+    HtmlStructure str -&gt; str
 </code></pre>
-<p>This way we can extract the String out of <code>HtmlBodyContent</code> and return
+<p>This way we can extract the String out of <code>HtmlStructure</code> and return
 it.</p>
 <p>In later commits we'll introduce <code>data</code> declarations (which are kind of
 a struct + enum chimera), where we can define multiple constructors to
@@ -262,8 +262,8 @@ arguments:</li>
 <pre><code class="language-hs">func &lt;pattern&gt; = &lt;expression&gt;
 </code></pre>
 <p>For example:</p>
-<pre><code class="language-hs">getBodyContentString :: HtmlBodyContent -&gt; String
-getBodyContentString (HtmlBodyContent str) = str
+<pre><code class="language-hs">getBodyContentString :: HtmlStructure -&gt; String
+getBodyContentString (HtmlStructure str) = str
 </code></pre>
 <p>Using the types we created, we can change the html functions we defined before,
 namely <code>html_</code>, <code>body_</code>, <code>p_</code>, etc, to operate on these types instead of <code>String</code>s.</p>
@@ -311,19 +311,19 @@ with one example: <code>p_</code>.</p>
 p_ = el &quot;p&quot;
 </code></pre>
 <p>And now, we can write:</p>
-<pre><code class="language-hs">p_ :: String -&gt; HtmlBodyContent
-p_ = HtmlBodyContent . el &quot;p&quot;
+<pre><code class="language-hs">p_ :: String -&gt; HtmlStructure
+p_ = HtmlStructure . el &quot;p&quot;
 </code></pre>
 <p>The function <code>p_</code> will take an arbitrary <code>String</code> which is the content
 of the paragraph we wish to create, will wrap it in <code>&lt;p&gt;</code> tags,
-and then wrap it in the <code>HtmlBodyContent</code> constructor - producing the
-output type <code>HtmlBodyContent</code>.</p>
+and then wrap it in the <code>HtmlStructure</code> constructor - producing the
+output type <code>HtmlStructure</code>.</p>
 <p>Let's take a deeper look and see what are the types of the two
 functions here are:</p>
 <ul>
-<li><code>HtmlBodyContent :: String -&gt; HtmlBodyContent</code></li>
+<li><code>HtmlStructure :: String -&gt; HtmlStructure</code></li>
 <li><code>el &quot;p&quot; :: String -&gt; String</code></li>
-<li><code>HtmlBodyContent . el &quot;p&quot; :: String -&gt; HtmlBodyContent</code></li>
+<li><code>HtmlStructure . el &quot;p&quot; :: String -&gt; HtmlStructure</code></li>
 <li><code>(.) :: (b -&gt; c) -&gt; (a -&gt; b) -&gt; (a -&gt; c)</code></li>
 </ul>
 <p>When we try to figure out if an expression type check, we try to match
@@ -332,25 +332,25 @@ well. If one of them is a type variable and the other isn't we write
 down that the type variable should now be the concrete type, and see
 if everything still works.</p>
 <p>So in our case we know from the type signature that the input type to
-the function <code>String</code> and the output type is <code>HtmlBodyContent</code>, this
+the function <code>String</code> and the output type is <code>HtmlStructure</code>, this
 means:</p>
 <ol>
 <li><code>a</code> is equivalent to <code>String</code> (we write <code>~</code> to denote equivalence), and</li>
-<li><code>c ~ HtmlBodyContent</code></li>
+<li><code>c ~ HtmlStructure</code></li>
 </ol>
 <p>We also know that:</p>
 <ol start="3">
-<li><code>b ~ String</code> because we pass <code>HtmlBodyContent</code> to <code>.</code> as the first arguments, which means</li>
-<li><code>String -&gt; HtmlBodyContent</code> must
+<li><code>b ~ String</code> because we pass <code>HtmlStructure</code> to <code>.</code> as the first arguments, which means</li>
+<li><code>String -&gt; HtmlStructure</code> must
 match with the type of the first argument of <code>.</code> which is <code>b -&gt; c</code>, so</li>
 <li><code>b ~ String</code> which fits with our previous knowledge from (3)</li>
 <li><code>-&gt; ~ -&gt;</code></li>
-<li><code>c ~ HtmlBodyContent</code> which also fits with (2)</li>
+<li><code>c ~ HtmlStructure</code> which also fits with (2)</li>
 </ol>
 <p>We keep doing this process until we come to the conclusion that there
 aren't any types that don't match (we don't have two different
 concrete types that are supposed to be equivalent).</p>
-<h2 id="appending-htmlbodycontent"><a class="header" href="#appending-htmlbodycontent">Appending HtmlBodyContent</a></h2>
+<h2 id="appending-htmlstructure"><a class="header" href="#appending-htmlstructure">Appending HtmlStructure</a></h2>
 <p>Before when we wanted to create richer html content and appended
 nodes to one another, we used the append (<code>&lt;&gt;</code>) operator.
 Since we are now not using <code>String</code> anymore, we need another way
@@ -358,14 +358,14 @@ to do it.</p>
 <p>While it is possible to overload <code>&lt;&gt;</code> using a feature in
 Haskell called type classes, we will instead create a new function
 and call it <code>append_</code>, and cover type classes later.</p>
-<p><code>append_</code> should take two <code>HtmlBodyContent</code>s, and return a third <code>HtmlBodyContent</code>,
-appending the inner <code>String</code> in the first <code>HtmlBodyContent</code> to the second and wrapping the result back in `HtmlBodyContent.</p>
+<p><code>append_</code> should take two <code>HtmlStructure</code>s, and return a third <code>HtmlStructure</code>,
+appending the inner <code>String</code> in the first <code>HtmlStructure</code> to the second and wrapping the result back in `HtmlStructure.</p>
 <p>Try implementing <code>append_</code>.</p>
 <details>
   <summary>Solution</summary>
-<pre><code class="language-hs">append_ :: HtmlBodyContent -&gt; HtmlBodyContent -&gt; HtmlBodyContent
-append_ (HtmlBodyContent a) (HtmlBodyContent b) =
-  HtmlBodyContent (a &lt;&gt; b)
+<pre><code class="language-hs">append_ :: HtmlStructure -&gt; HtmlStructure -&gt; HtmlStructure
+append_ (HtmlStructure a) (HtmlStructure b) =
+  HtmlStructure (a &lt;&gt; b)
 </code></pre>
 </details>
 <h2 id="converting-back-an-html-to-string"><a class="header" href="#converting-back-an-html-to-string">Converting back an <code>Html</code> to <code>String</code></a></h2>
@@ -384,7 +384,7 @@ render html =
 <h2 id="the-rest-of-the-owl"><a class="header" href="#the-rest-of-the-owl">The rest of the owl</a></h2>
 <p>Try changing the code we wrote in previous chapters to use the new types we created.</p>
 <p><strong>Tips</strong>: we can combine <code>makeHtml</code> and <code>html_</code>, and remove <code>body_</code> <code>head_</code> and <code>title_</code>
-by calling <code>el</code> directly in <code>html_</code>, which can now have the type <code>HtmlTitle -&gt; HtmlBodyContent -&gt; Html</code>. This will make our html EDSL less flexible but more compact.</p>
+by calling <code>el</code> directly in <code>html_</code>, which can now have the type <code>HtmlTitle -&gt; HtmlStructure -&gt; Html</code>. This will make our html EDSL less flexible but more compact.</p>
 <p>We could, alternatively, create newtypes for <code>HtmlHead</code> and <code>HtmlBody</code> and
 pass those to <code>html_</code>, and there is value in doing that, but I've chose
 to keep the API a bit simple for now, we can always refactor later!</p>
@@ -410,13 +410,13 @@ myhtml =
 newtype Html
   = Html String
 
-newtype HtmlBodyContent
-  = HtmlBodyContent String
+newtype HtmlStructure
+  = HtmlStructure String
 
 type HtmlTitle
   = String
 
-html_ :: HtmlTitle -&gt; HtmlBodyContent -&gt; Html
+html_ :: HtmlTitle -&gt; HtmlStructure -&gt; Html
 html_ title content =
   Html
     ( el &quot;html&quot;
@@ -425,24 +425,24 @@ html_ title content =
       )
     )
 
-p_ :: String -&gt; HtmlBodyContent
-p_ = HtmlBodyContent . el &quot;p&quot;
+p_ :: String -&gt; HtmlStructure
+p_ = HtmlStructure . el &quot;p&quot;
 
-h1_ :: String -&gt; HtmlBodyContent
-h1_ = HtmlBodyContent . el &quot;h1&quot;
+h1_ :: String -&gt; HtmlStructure
+h1_ = HtmlStructure . el &quot;h1&quot;
 
 el :: String -&gt; String -&gt; String
 el tag content =
   &quot;&lt;&quot; &lt;&gt; tag &lt;&gt; &quot;&gt;&quot; &lt;&gt; content &lt;&gt; &quot;&lt;/&quot; &lt;&gt; tag &lt;&gt; &quot;&gt;&quot;
 
-append_ :: HtmlBodyContent -&gt; HtmlBodyContent -&gt; HtmlBodyContent
+append_ :: HtmlStructure -&gt; HtmlStructure -&gt; HtmlStructure
 append_ c1 c2 =
-  HtmlBodyContent (getBodyContentString c1 &lt;&gt; getBodyContentString c2)
+  HtmlStructure (getBodyContentString c1 &lt;&gt; getBodyContentString c2)
 
-getBodyContentString :: HtmlBodyContent -&gt; String
+getBodyContentString :: HtmlStructure -&gt; String
 getBodyContentString content =
   case content of
-    HtmlBodyContent str -&gt; str
+    HtmlStructure str -&gt; str
 
 render :: Html -&gt; String
 render html =
@@ -452,7 +452,7 @@ render html =
 </details>
 <p>All of this is nice and fun. And indeed now we can't write <code>&quot;Hello&quot;</code>
 where we'd expect either a paragraph or a header, but we can still
-write <code>HtmlBodyContent &quot;hello&quot;</code> and get something that isn't a
+write <code>HtmlStructure &quot;hello&quot;</code> and get something that isn't a
 paragraph or a header. Next we'll see how we can make this illegal as
 well using modules and smart constructors.</p>
 
@@ -493,21 +493,6 @@ well using modules and smart constructors.</p>
 
         </div>
 
-        
-        <!-- Livereload script (if served using the cli tool) -->
-        <script type="text/javascript">
-            var socket = new WebSocket("ws://localhost:3000/__livereload");
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
-
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
         
 
         

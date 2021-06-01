@@ -48,7 +48,7 @@ and in its stead we'll import the internal module:
 module Html
   ( Html
   , HtmlTitle
-  , HtmlBodyContent
+  , HtmlStructure
   , html_
   , p_
   , h1_
@@ -71,7 +71,7 @@ to work with our library, they could always work with `Html.Internal` instead.
 module Html
   ( Html
   , HtmlTitle
-  , HtmlBodyContent
+  , HtmlStructure
   , html_
   , p_
   , h1_
@@ -93,32 +93,32 @@ module Html.Internal where
 newtype Html
   = Html String
 
-newtype HtmlBodyContent
-  = HtmlBodyContent String
+newtype HtmlStructure
+  = HtmlStructure String
 
 type HtmlTitle
   = String
 
 -- * EDSL
 
-html_ :: HtmlTitle -> HtmlBodyContent -> Html
+html_ :: HtmlTitle -> HtmlStructure -> Html
 html_ title content =
   Html
     ( el "html"
       ( el "head" (el "title" (escape title))
-        <> el "body" (getBodyContentString content)
+        <> el "body" (getHtmlStructureString content)
       )
     )
 
-p_ :: String -> HtmlBodyContent
-p_ = HtmlBodyContent . el "p" . escape
+p_ :: String -> HtmlStructure
+p_ = HtmlStructure . el "p" . escape
 
-h1_ :: String -> HtmlBodyContent
-h1_ = HtmlBodyContent . el "h1" . escape
+h1_ :: String -> HtmlStructure
+h1_ = HtmlStructure . el "h1" . escape
 
-append_ :: HtmlBodyContent -> HtmlBodyContent -> HtmlBodyContent
+append_ :: HtmlStructure -> HtmlStructure -> HtmlStructure
 append_ c1 c2 =
-  HtmlBodyContent (getBodyContentString c1 <> getBodyContentString c2)
+  HtmlStructure (getHtmlStructureString c1 <> getHtmlStructureString c2)
 
 -- * Render
 
@@ -133,10 +133,10 @@ el :: String -> String -> String
 el tag content =
   "<" <> tag <> ">" <> content <> "</" <> tag <> ">"
 
-getBodyContentString :: HtmlBodyContent -> String
-getBodyContentString content =
+getHtmlStructureString :: HtmlStructure -> String
+getHtmlStructureString content =
   case content of
-    HtmlBodyContent str -> str
+    HtmlStructure str -> str
 
 escape :: String -> String
 escape =

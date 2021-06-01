@@ -33,7 +33,7 @@ module declaration code at the top of the file:
 module Html
   ( Html
   , HtmlTitle
-  , HtmlBodyContent
+  , HtmlStructure
   , html_
   , p_
   , h1_
@@ -48,9 +48,9 @@ Note that we do not export:
 1. the constructors for our new types, only the types themselves.
    If we wanted to export the constructors as well we would've written
    `Html(Html)` or `Html(..)`. This way the user cannot create their own
-   `HtmlBodyContent` simply by writing `HtmlBodyContent "Hello"`.
+   `HtmlStructure` simply by writing `HtmlStructure "Hello"`.
 
-2. Internal functions used by the library, such as `el` and `getBodyContentString`.
+2. Internal functions used by the library, such as `el` and `getHtmlStructureString`.
 
 And we will also move the html related functions from our `hello.hs` file
 to this new `Html.hs` file:
@@ -59,39 +59,39 @@ to this new `Html.hs` file:
 newtype Html
   = Html String
 
-newtype HtmlBodyContent
-  = HtmlBodyContent String
+newtype HtmlStructure
+  = HtmlStructure String
 
 type HtmlTitle
   = String
 
-html_ :: HtmlTitle -> HtmlBodyContent -> Html
+html_ :: HtmlTitle -> HtmlStructure -> Html
 html_ title content =
   Html
     ( el "html"
       ( el "head" (el "title" title)
-        <> el "body" (getBodyContentString content)
+        <> el "body" (getHtmlStructureString content)
       )
     )
 
-p_ :: String -> HtmlBodyContent
-p_ = HtmlBodyContent . el "p"
+p_ :: String -> HtmlStructure
+p_ = HtmlStructure . el "p"
 
-h1_ :: String -> HtmlBodyContent
-h1_ = HtmlBodyContent . el "h1"
+h1_ :: String -> HtmlStructure
+h1_ = HtmlStructure . el "h1"
 
 el :: String -> String -> String
 el tag content =
   "<" <> tag <> ">" <> content <> "</" <> tag <> ">"
 
-append_ :: HtmlBodyContent -> HtmlBodyContent -> HtmlBodyContent
+append_ :: HtmlStructure -> HtmlStructure -> HtmlStructure
 append_ c1 c2 =
-  HtmlBodyContent (getBodyContentString c1 <> getBodyContentString c2)
+  HtmlStructure (getHtmlStructureString c1 <> getHtmlStructureString c2)
 
-getBodyContentString :: HtmlBodyContent -> String
-getBodyContentString content =
+getHtmlStructureString :: HtmlStructure -> String
+getHtmlStructureString content =
   case content of
-    HtmlBodyContent str -> str
+    HtmlStructure str -> str
 
 render :: Html -> String
 render html =
@@ -140,7 +140,7 @@ And the `Html.hs` file should look like this:
 module Html
   ( Html
   , HtmlTitle
-  , HtmlBodyContent
+  , HtmlStructure
   , html_
   , p_
   , h1_
@@ -152,39 +152,39 @@ where
 newtype Html
   = Html String
 
-newtype HtmlBodyContent
-  = HtmlBodyContent String
+newtype HtmlStructure
+  = HtmlStructure String
 
 type HtmlTitle
   = String
 
-html_ :: HtmlTitle -> HtmlBodyContent -> Html
+html_ :: HtmlTitle -> HtmlStructure -> Html
 html_ title content =
   Html
     ( el "html"
       ( el "head" (el "title" title)
-        <> el "body" (getBodyContentString content)
+        <> el "body" (getHtmlStructureString content)
       )
     )
 
-p_ :: String -> HtmlBodyContent
-p_ = HtmlBodyContent . el "p"
+p_ :: String -> HtmlStructure
+p_ = HtmlStructure . el "p"
 
-h1_ :: String -> HtmlBodyContent
-h1_ = HtmlBodyContent . el "h1"
+h1_ :: String -> HtmlStructure
+h1_ = HtmlStructure . el "h1"
 
 el :: String -> String -> String
 el tag content =
   "<" <> tag <> ">" <> content <> "</" <> tag <> ">"
 
-append_ :: HtmlBodyContent -> HtmlBodyContent -> HtmlBodyContent
+append_ :: HtmlStructure -> HtmlStructure -> HtmlStructure
 append_ c1 c2 =
-  HtmlBodyContent (getBodyContentString c1 <> getBodyContentString c2)
+  HtmlStructure (getHtmlStructureString c1 <> getHtmlStructureString c2)
 
-getBodyContentString :: HtmlBodyContent -> String
-getBodyContentString content =
+getHtmlStructureString :: HtmlStructure -> String
+getHtmlStructureString content =
   case content of
-    HtmlBodyContent str -> str
+    HtmlStructure str -> str
 
 render :: Html -> String
 render html =

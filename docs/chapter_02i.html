@@ -3,10 +3,8 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title></title>
+        <title>Exercises - Learning Haskell by building a blog generator</title>
         
-        
-        <base href="/">
         
 
 
@@ -97,7 +95,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="chapter_00.html"><strong aria-hidden="true">1.</strong> About this tutorial</a></li><li class="chapter-item expanded "><a href="chapter_01.html"><strong aria-hidden="true">2.</strong> Hello world</a></li><li class="chapter-item expanded "><a href="chapter_02.html"><strong aria-hidden="true">3.</strong> Building an HTML printer library</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="chapter_02a.html"><strong aria-hidden="true">3.1.</strong> Flexible html content (functions)</a></li><li class="chapter-item expanded "><a href="chapter_02b.html"><strong aria-hidden="true">3.2.</strong> Adding type signatures</a></li><li class="chapter-item expanded "><a href="chapter_02c.html"><strong aria-hidden="true">3.3.</strong> Embedded Domain Specific Languages</a></li><li class="chapter-item expanded "><a href="chapter_02d.html"><strong aria-hidden="true">3.4.</strong> Safer HTML construction with types</a></li><li class="chapter-item expanded "><a href="chapter_02e.html"><strong aria-hidden="true">3.5.</strong> Preventing incorrect use with modules</a></li><li class="chapter-item expanded "><a href="chapter_02f.html"><strong aria-hidden="true">3.6.</strong> Escaping characters</a></li><li class="chapter-item expanded "><a href="chapter_02g.html"><strong aria-hidden="true">3.7.</strong> Exposing internal functionality (Internal modules)</a></li><li class="chapter-item expanded "><a href="chapter_02h.html"><strong aria-hidden="true">3.8.</strong> Richer HTML elements</a></li><li class="chapter-item expanded "><a href="chapter_02i.html"><strong aria-hidden="true">3.9.</strong> Exercises</a></li><li class="chapter-item expanded "><a href="chapter_02j.html"><strong aria-hidden="true">3.10.</strong> Summary</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="chapter_00.html"><strong aria-hidden="true">1.</strong> About this tutorial</a></li><li class="chapter-item expanded "><a href="chapter_01.html"><strong aria-hidden="true">2.</strong> Hello world</a></li><li class="chapter-item expanded "><a href="chapter_02.html"><strong aria-hidden="true">3.</strong> Building an HTML printer library</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="chapter_02a.html"><strong aria-hidden="true">3.1.</strong> Flexible html content (functions)</a></li><li class="chapter-item expanded "><a href="chapter_02b.html"><strong aria-hidden="true">3.2.</strong> Adding type signatures</a></li><li class="chapter-item expanded "><a href="chapter_02c.html"><strong aria-hidden="true">3.3.</strong> Embedded Domain Specific Languages</a></li><li class="chapter-item expanded "><a href="chapter_02d.html"><strong aria-hidden="true">3.4.</strong> Safer HTML construction with types</a></li><li class="chapter-item expanded "><a href="chapter_02e.html"><strong aria-hidden="true">3.5.</strong> Preventing incorrect use with modules</a></li><li class="chapter-item expanded "><a href="chapter_02f.html"><strong aria-hidden="true">3.6.</strong> Escaping characters</a></li><li class="chapter-item expanded "><a href="chapter_02g.html"><strong aria-hidden="true">3.7.</strong> Exposing internal functionality (Internal modules)</a></li><li class="chapter-item expanded "><a href="chapter_02h.html"><strong aria-hidden="true">3.8.</strong> Richer HTML elements</a></li><li class="chapter-item expanded "><a href="chapter_02i.html" class="active"><strong aria-hidden="true">3.9.</strong> Exercises</a></li><li class="chapter-item expanded "><a href="chapter_02j.html"><strong aria-hidden="true">3.10.</strong> Summary</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -165,15 +163,76 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="document-not-found-404"><a class="header" href="#document-not-found-404">Document not found (404)</a></h1>
-<p>This URL is invalid, sorry. Please use the navigation bar or search to continue.</p>
+                        <h1 id="exercises"><a class="header" href="#exercises">Exercises</a></h1>
+<p>We need a few more features for our html library to be useful for
+our blog software. Add the following features to our <code>Html.Internal</code> module
+and expose them from <code>Html</code>.</p>
+<h2 id="1-unordered-lists"><a class="header" href="#1-unordered-lists">1. Unordered lists</a></h2>
+<p>These lists have the form:</p>
+<pre><code class="language-html">&lt;ul&gt;
+  &lt;li&gt;item 1&lt;/li&gt;
+  &lt;li&gt;item 2&lt;/li&gt;
+  &lt;li&gt;...&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+<p>We want in our library a new function:</p>
+<pre><code class="language-hs">ul_ :: [HtmlStructure] -&gt; HtmlStructure
+</code></pre>
+<p>So that users can write this:</p>
+<pre><code class="language-hs">ul_
+  [ p_ &quot;item 1&quot;
+  , p_ &quot;item 2&quot;
+  , p_ &quot;item 3&quot;
+  ]
+</code></pre>
+<p>and get this:</p>
+<pre><code class="language-html">&lt;ul&gt;
+  &lt;li&gt;&lt;p&gt;item 1&lt;/p&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;p&gt;item 2&lt;/p&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;p&gt;item 3&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+<h2 id="2-ordered-lists"><a class="header" href="#2-ordered-lists">2. Ordered lists</a></h2>
+<p>Very similar to unordered lists, but instead of <code>&lt;ul&gt;</code> we use <code>&lt;ol&gt;</code></p>
+<h2 id="3-code-blocks"><a class="header" href="#3-code-blocks">3. Code blocks</a></h2>
+<p>Very similar to <code>&lt;p&gt;</code>, but use the <code>&lt;pre&gt;</code> tag. Call this function <code>code_</code>.</p>
+<h2 id="solutions"><a class="header" href="#solutions">Solutions</a></h2>
+<details>
+  <summary>Unordered lists</summary>
+<pre><code class="language-hs">ul_ :: [HtmlStructure] -&gt; HtmlStructure
+ul_ =
+  HtmlStructure . el &quot;ul&quot; . concat . map (el &quot;li&quot; . getHtmlStructureString)
+</code></pre>
+</details>
+<details>
+  <summary>Ordered lists</summary>
+<pre><code class="language-hs">ol_ :: [HtmlStructure] -&gt; HtmlStructure
+ol_ =
+  HtmlStructure . el &quot;ol&quot; . concat . map (el &quot;li&quot; . getHtmlStructureString)
+</code></pre>
+<p>Note: the two functions above could be unified.</p>
+</details>
+<details>
+  <summary>Code blocks</summary>
+<pre><code class="language-hs">code_ :: String -&gt; HtmlStructure
+code_ = HtmlStructure . el &quot;pre&quot;
+</code></pre>
+</details>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                         
+                            <a rel="prev" href="chapter_02h.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
 
+                        
+                            <a rel="next" href="chapter_02j.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
                         
 
                         <div style="clear: both"></div>
@@ -183,7 +242,15 @@
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                 
+                    <a rel="prev" href="chapter_02h.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
 
+                
+                    <a rel="next" href="chapter_02j.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
                 
             </nav>
 

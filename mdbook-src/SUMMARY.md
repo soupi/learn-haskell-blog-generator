@@ -10,4 +10,6 @@
   - [Preventing incorrect use with modules](./chapter_02e.md)
   - [Escaping characters](./chapter_02f.md)
   - [Exposing internal functionality (Internal modules)](./chapter_02g.md)
-  - [Exercises](./chapter_02h.md)
+  - [Richer HTML elements](./chapter_02h.md)
+  - [Exercises](./chapter_02i.md)
+  - [Summary](./chapter_02j.md)

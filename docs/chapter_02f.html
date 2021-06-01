@@ -95,7 +95,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="chapter_00.html"><strong aria-hidden="true">1.</strong> About this tutorial</a></li><li class="chapter-item expanded "><a href="chapter_01.html"><strong aria-hidden="true">2.</strong> Hello world</a></li><li class="chapter-item expanded "><a href="chapter_02.html"><strong aria-hidden="true">3.</strong> Building an HTML printer library</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="chapter_02a.html"><strong aria-hidden="true">3.1.</strong> Flexible html content (functions)</a></li><li class="chapter-item expanded "><a href="chapter_02b.html"><strong aria-hidden="true">3.2.</strong> Adding type signatures</a></li><li class="chapter-item expanded "><a href="chapter_02c.html"><strong aria-hidden="true">3.3.</strong> Embedded Domain Specific Languages</a></li><li class="chapter-item expanded "><a href="chapter_02d.html"><strong aria-hidden="true">3.4.</strong> Safer HTML construction with types</a></li><li class="chapter-item expanded "><a href="chapter_02e.html"><strong aria-hidden="true">3.5.</strong> Preventing incorrect use with modules</a></li><li class="chapter-item expanded "><a href="chapter_02f.html" class="active"><strong aria-hidden="true">3.6.</strong> Escaping characters</a></li><li class="chapter-item expanded "><a href="chapter_02g.html"><strong aria-hidden="true">3.7.</strong> Exposing internal functionality (Internal modules)</a></li><li class="chapter-item expanded "><a href="chapter_02h.html"><strong aria-hidden="true">3.8.</strong> Exercises</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="chapter_00.html"><strong aria-hidden="true">1.</strong> About this tutorial</a></li><li class="chapter-item expanded "><a href="chapter_01.html"><strong aria-hidden="true">2.</strong> Hello world</a></li><li class="chapter-item expanded "><a href="chapter_02.html"><strong aria-hidden="true">3.</strong> Building an HTML printer library</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="chapter_02a.html"><strong aria-hidden="true">3.1.</strong> Flexible html content (functions)</a></li><li class="chapter-item expanded "><a href="chapter_02b.html"><strong aria-hidden="true">3.2.</strong> Adding type signatures</a></li><li class="chapter-item expanded "><a href="chapter_02c.html"><strong aria-hidden="true">3.3.</strong> Embedded Domain Specific Languages</a></li><li class="chapter-item expanded "><a href="chapter_02d.html"><strong aria-hidden="true">3.4.</strong> Safer HTML construction with types</a></li><li class="chapter-item expanded "><a href="chapter_02e.html"><strong aria-hidden="true">3.5.</strong> Preventing incorrect use with modules</a></li><li class="chapter-item expanded "><a href="chapter_02f.html" class="active"><strong aria-hidden="true">3.6.</strong> Escaping characters</a></li><li class="chapter-item expanded "><a href="chapter_02g.html"><strong aria-hidden="true">3.7.</strong> Exposing internal functionality (Internal modules)</a></li><li class="chapter-item expanded "><a href="chapter_02h.html"><strong aria-hidden="true">3.8.</strong> Richer HTML elements</a></li><li class="chapter-item expanded "><a href="chapter_02i.html"><strong aria-hidden="true">3.9.</strong> Exercises</a></li><li class="chapter-item expanded "><a href="chapter_02j.html"><strong aria-hidden="true">3.10.</strong> Summary</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -269,20 +269,20 @@ That way all html constructions are safe.</p>
 <p>Try adding the escaping function in those places.</p>
 <details>
   <summary>Solution</summary>
-<pre><code class="language-hs">html_ :: HtmlTitle -&gt; HtmlBodyContent -&gt; Html
+<pre><code class="language-hs">html_ :: HtmlTitle -&gt; HtmlStructure -&gt; Html
 html_ title content =
   Html
     ( el &quot;html&quot;
       ( el &quot;head&quot; (el &quot;title&quot; (escape title))
-        &lt;&gt; el &quot;body&quot; (getBodyContentString content)
+        &lt;&gt; el &quot;body&quot; (getHtmlStructureString content)
       )
     )
 
-p_ :: String -&gt; HtmlBodyContent
-p_ = HtmlBodyContent . el &quot;p&quot; . escape
+p_ :: String -&gt; HtmlStructure
+p_ = HtmlStructure . el &quot;p&quot; . escape
 
-h1_ :: String -&gt; HtmlBodyContent
-h1_ = HtmlBodyContent . el &quot;h1&quot; . escape
+h1_ :: String -&gt; HtmlStructure
+h1_ = HtmlStructure . el &quot;h1&quot; . escape
 </code></pre>
 </details>
 <hr />
@@ -293,7 +293,7 @@ h1_ = HtmlBodyContent . el &quot;h1&quot; . escape
 module Html
   ( Html
   , HtmlTitle
-  , HtmlBodyContent
+  , HtmlStructure
   , html_
   , p_
   , h1_
@@ -307,32 +307,32 @@ where
 newtype Html
   = Html String
 
-newtype HtmlBodyContent
-  = HtmlBodyContent String
+newtype HtmlStructure
+  = HtmlStructure String
 
 type HtmlTitle
   = String
 
 -- * EDSL
 
-html_ :: HtmlTitle -&gt; HtmlBodyContent -&gt; Html
+html_ :: HtmlTitle -&gt; HtmlStructure -&gt; Html
 html_ title content =
   Html
     ( el &quot;html&quot;
       ( el &quot;head&quot; (el &quot;title&quot; (escape title))
-        &lt;&gt; el &quot;body&quot; (getBodyContentString content)
+        &lt;&gt; el &quot;body&quot; (getHtmlStructureString content)
       )
     )
 
-p_ :: String -&gt; HtmlBodyContent
-p_ = HtmlBodyContent . el &quot;p&quot; . escape
+p_ :: String -&gt; HtmlStructure
+p_ = HtmlStructure . el &quot;p&quot; . escape
 
-h1_ :: String -&gt; HtmlBodyContent
-h1_ = HtmlBodyContent . el &quot;h1&quot; . escape
+h1_ :: String -&gt; HtmlStructure
+h1_ = HtmlStructure . el &quot;h1&quot; . escape
 
-append_ :: HtmlBodyContent -&gt; HtmlBodyContent -&gt; HtmlBodyContent
+append_ :: HtmlStructure -&gt; HtmlStructure -&gt; HtmlStructure
 append_ c1 c2 =
-  HtmlBodyContent (getBodyContentString c1 &lt;&gt; getBodyContentString c2)
+  HtmlStructure (getHtmlStructureString c1 &lt;&gt; getHtmlStructureString c2)
 
 -- * Render
 
@@ -347,10 +347,10 @@ el :: String -&gt; String -&gt; String
 el tag content =
   &quot;&lt;&quot; &lt;&gt; tag &lt;&gt; &quot;&gt;&quot; &lt;&gt; content &lt;&gt; &quot;&lt;/&quot; &lt;&gt; tag &lt;&gt; &quot;&gt;&quot;
 
-getBodyContentString :: HtmlBodyContent -&gt; String
-getBodyContentString content =
+getHtmlStructureString :: HtmlStructure -&gt; String
+getHtmlStructureString content =
   case content of
-    HtmlBodyContent str -&gt; str
+    HtmlStructure str -&gt; str
 
 escape :: String -&gt; String
 escape =
@@ -410,21 +410,6 @@ extending our library. We'll talk about this next.</p>
 
         </div>
 
-        
-        <!-- Livereload script (if served using the cli tool) -->
-        <script type="text/javascript">
-            var socket = new WebSocket("ws://localhost:3000/__livereload");
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
-
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
         
 
         

@@ -76,7 +76,7 @@ We want them to be distinct because we don't want to mix them together.
 ```hs
 newtype Html = Html String
 
-newtype HtmlBodyContent = HtmlBodyContent String
+newtype HtmlStructure = HtmlStructure String
 ```
 
 </details>
@@ -121,13 +121,13 @@ The `<expression>` is the thing we want to unpack, and the `pattern`
 is it's concrete shape. For example:
 
 ```hs
-getBodyContentString :: HtmlBodyContent -> String
+getBodyContentString :: HtmlStructure -> String
 getBodyContentString myhbc =
   case myhbc of
-    HtmlBodyContent str -> str
+    HtmlStructure str -> str
 ```
 
-This way we can extract the String out of `HtmlBodyContent` and return
+This way we can extract the String out of `HtmlStructure` and return
 it.
 
 In later commits we'll introduce `data` declarations (which are kind of
@@ -145,8 +145,8 @@ func <pattern> = <expression>
 For example:
 
 ```hs
-getBodyContentString :: HtmlBodyContent -> String
-getBodyContentString (HtmlBodyContent str) = str
+getBodyContentString :: HtmlStructure -> String
+getBodyContentString (HtmlStructure str) = str
 ```
 
 Using the types we created, we can change the html functions we defined before,
@@ -219,21 +219,21 @@ p_ = el "p"
 And now, we can write:
 
 ```hs
-p_ :: String -> HtmlBodyContent
-p_ = HtmlBodyContent . el "p"
+p_ :: String -> HtmlStructure
+p_ = HtmlStructure . el "p"
 ```
 
 The function `p_` will take an arbitrary `String` which is the content
 of the paragraph we wish to create, will wrap it in `<p>` tags,
-and then wrap it in the `HtmlBodyContent` constructor - producing the
-output type `HtmlBodyContent`.
+and then wrap it in the `HtmlStructure` constructor - producing the
+output type `HtmlStructure`.
 
 Let's take a deeper look and see what are the types of the two
 functions here are:
 
-- `HtmlBodyContent :: String -> HtmlBodyContent`
+- `HtmlStructure :: String -> HtmlStructure`
 - `el "p" :: String -> String`
-- `HtmlBodyContent . el "p" :: String -> HtmlBodyContent`
+- `HtmlStructure . el "p" :: String -> HtmlStructure`
 - `(.) :: (b -> c) -> (a -> b) -> (a -> c)`
 
 When we try to figure out if an expression type check, we try to match
@@ -243,26 +243,26 @@ down that the type variable should now be the concrete type, and see
 if everything still works.
 
 So in our case we know from the type signature that the input type to
-the function `String` and the output type is `HtmlBodyContent`, this
+the function `String` and the output type is `HtmlStructure`, this
 means:
 
 1. `a` is equivalent to `String` (we write `~` to denote equivalence), and
-2. `c ~ HtmlBodyContent`
+2. `c ~ HtmlStructure`
 
 We also know that:
 
-3. `b ~ String` because we pass `HtmlBodyContent` to `.` as the first arguments, which means
-4. `String -> HtmlBodyContent` must
+3. `b ~ String` because we pass `HtmlStructure` to `.` as the first arguments, which means
+4. `String -> HtmlStructure` must
 match with the type of the first argument of `.` which is `b -> c`, so
 5. `b ~ String` which fits with our previous knowledge from (3)
 6. `-> ~ ->`
-7. `c ~ HtmlBodyContent` which also fits with (2)
+7. `c ~ HtmlStructure` which also fits with (2)
 
 We keep doing this process until we come to the conclusion that there
 aren't any types that don't match (we don't have two different
 concrete types that are supposed to be equivalent).
 
-## Appending HtmlBodyContent
+## Appending HtmlStructure
 
 Before when we wanted to create richer html content and appended
 nodes to one another, we used the append (`<>`) operator.
@@ -273,8 +273,8 @@ While it is possible to overload `<>` using a feature in
 Haskell called type classes, we will instead create a new function
 and call it `append_`, and cover type classes later.
 
-`append_` should take two `HtmlBodyContent`s, and return a third `HtmlBodyContent`,
-appending the inner `String` in the first `HtmlBodyContent` to the second and wrapping the result back in `HtmlBodyContent.
+`append_` should take two `HtmlStructure`s, and return a third `HtmlStructure`,
+appending the inner `String` in the first `HtmlStructure` to the second and wrapping the result back in `HtmlStructure.
 
 Try implementing `append_`.
 
@@ -283,9 +283,9 @@ Try implementing `append_`.
   <summary>Solution</summary>
 
 ```hs
-append_ :: HtmlBodyContent -> HtmlBodyContent -> HtmlBodyContent
-append_ (HtmlBodyContent a) (HtmlBodyContent b) =
-  HtmlBodyContent (a <> b)
+append_ :: HtmlStructure -> HtmlStructure -> HtmlStructure
+append_ (HtmlStructure a) (HtmlStructure b) =
+  HtmlStructure (a <> b)
 ```
 
 </details>
@@ -315,7 +315,7 @@ render html =
 Try changing the code we wrote in previous chapters to use the new types we created.
 
 **Tips**: we can combine `makeHtml` and `html_`, and remove `body_` `head_` and `title_`
-by calling `el` directly in `html_`, which can now have the type `HtmlTitle -> HtmlBodyContent -> Html`. This will make our html EDSL less flexible but more compact.
+by calling `el` directly in `html_`, which can now have the type `HtmlTitle -> HtmlStructure -> Html`. This will make our html EDSL less flexible but more compact.
 
 We could, alternatively, create newtypes for `HtmlHead` and `HtmlBody` and
 pass those to `html_`, and there is value in doing that, but I've chose
@@ -345,13 +345,13 @@ myhtml =
 newtype Html
   = Html String
 
-newtype HtmlBodyContent
-  = HtmlBodyContent String
+newtype HtmlStructure
+  = HtmlStructure String
 
 type HtmlTitle
   = String
 
-html_ :: HtmlTitle -> HtmlBodyContent -> Html
+html_ :: HtmlTitle -> HtmlStructure -> Html
 html_ title content =
   Html
     ( el "html"
@@ -360,24 +360,24 @@ html_ title content =
       )
     )
 
-p_ :: String -> HtmlBodyContent
-p_ = HtmlBodyContent . el "p"
+p_ :: String -> HtmlStructure
+p_ = HtmlStructure . el "p"
 
-h1_ :: String -> HtmlBodyContent
-h1_ = HtmlBodyContent . el "h1"
+h1_ :: String -> HtmlStructure
+h1_ = HtmlStructure . el "h1"
 
 el :: String -> String -> String
 el tag content =
   "<" <> tag <> ">" <> content <> "</" <> tag <> ">"
 
-append_ :: HtmlBodyContent -> HtmlBodyContent -> HtmlBodyContent
+append_ :: HtmlStructure -> HtmlStructure -> HtmlStructure
 append_ c1 c2 =
-  HtmlBodyContent (getBodyContentString c1 <> getBodyContentString c2)
+  HtmlStructure (getBodyContentString c1 <> getBodyContentString c2)
 
-getBodyContentString :: HtmlBodyContent -> String
+getBodyContentString :: HtmlStructure -> String
 getBodyContentString content =
   case content of
-    HtmlBodyContent str -> str
+    HtmlStructure str -> str
 
 render :: Html -> String
 render html =
@@ -389,6 +389,6 @@ render html =
 
 All of this is nice and fun. And indeed now we can't write `"Hello"`
 where we'd expect either a paragraph or a header, but we can still
-write `HtmlBodyContent "hello"` and get something that isn't a
+write `HtmlStructure "hello"` and get something that isn't a
 paragraph or a header. Next we'll see how we can make this illegal as
 well using modules and smart constructors.
