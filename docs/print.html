@@ -726,8 +726,8 @@ function definitions.</p>
 </code></pre>
 <p>The <code>&lt;expression&gt;</code> is the thing we want to unpack, and the <code>pattern</code>
 is it's concrete shape. For example:</p>
-<pre><code class="language-hs">getBodyContentString :: HtmlStructure -&gt; String
-getBodyContentString myhbc =
+<pre><code class="language-hs">getHtmlStructureString :: HtmlStructure -&gt; String
+getHtmlStructureString myhbc =
   case myhbc of
     HtmlStructure str -&gt; str
 </code></pre>
@@ -744,8 +744,8 @@ arguments:</li>
 <pre><code class="language-hs">func &lt;pattern&gt; = &lt;expression&gt;
 </code></pre>
 <p>For example:</p>
-<pre><code class="language-hs">getBodyContentString :: HtmlStructure -&gt; String
-getBodyContentString (HtmlStructure str) = str
+<pre><code class="language-hs">getHtmlStructureString :: HtmlStructure -&gt; String
+getHtmlStructureString (HtmlStructure str) = str
 </code></pre>
 <p>Using the types we created, we can change the html functions we defined before,
 namely <code>html_</code>, <code>body_</code>, <code>p_</code>, etc, to operate on these types instead of <code>String</code>s.</p>
@@ -903,7 +903,7 @@ html_ title content =
   Html
     ( el &quot;html&quot;
       ( el &quot;head&quot; (el &quot;title&quot; title)
-        &lt;&gt; el &quot;body&quot; (getBodyContentString content)
+        &lt;&gt; el &quot;body&quot; (getHtmlStructureString content)
       )
     )
 
@@ -919,10 +919,10 @@ el tag content =
 
 append_ :: HtmlStructure -&gt; HtmlStructure -&gt; HtmlStructure
 append_ c1 c2 =
-  HtmlStructure (getBodyContentString c1 &lt;&gt; getBodyContentString c2)
+  HtmlStructure (getHtmlStructureString c1 &lt;&gt; getHtmlStructureString c2)
 
-getBodyContentString :: HtmlStructure -&gt; String
-getBodyContentString content =
+getHtmlStructureString :: HtmlStructure -&gt; String
+getHtmlStructureString content =
   case content of
     HtmlStructure str -&gt; str
 

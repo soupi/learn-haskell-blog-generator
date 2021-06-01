@@ -121,8 +121,8 @@ The `<expression>` is the thing we want to unpack, and the `pattern`
 is it's concrete shape. For example:
 
 ```hs
-getBodyContentString :: HtmlStructure -> String
-getBodyContentString myhbc =
+getHtmlStructureString :: HtmlStructure -> String
+getHtmlStructureString myhbc =
   case myhbc of
     HtmlStructure str -> str
 ```
@@ -145,8 +145,8 @@ func <pattern> = <expression>
 For example:
 
 ```hs
-getBodyContentString :: HtmlStructure -> String
-getBodyContentString (HtmlStructure str) = str
+getHtmlStructureString :: HtmlStructure -> String
+getHtmlStructureString (HtmlStructure str) = str
 ```
 
 Using the types we created, we can change the html functions we defined before,
@@ -356,7 +356,7 @@ html_ title content =
   Html
     ( el "html"
       ( el "head" (el "title" title)
-        <> el "body" (getBodyContentString content)
+        <> el "body" (getHtmlStructureString content)
       )
     )
 
@@ -372,10 +372,10 @@ el tag content =
 
 append_ :: HtmlStructure -> HtmlStructure -> HtmlStructure
 append_ c1 c2 =
-  HtmlStructure (getBodyContentString c1 <> getBodyContentString c2)
+  HtmlStructure (getHtmlStructureString c1 <> getHtmlStructureString c2)
 
-getBodyContentString :: HtmlStructure -> String
-getBodyContentString content =
+getHtmlStructureString :: HtmlStructure -> String
+getHtmlStructureString content =
   case content of
     HtmlStructure str -> str
 
