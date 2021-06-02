@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Escaping characters - Learning Haskell by building a blog generator</title>
+        <title>Exposing internal functionality (Internal modules) - Learning Haskell by building a blog generator</title>
         
         
 
@@ -95,7 +95,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="chapter_00.html"><strong aria-hidden="true">1.</strong> About this tutorial</a></li><li class="chapter-item expanded "><a href="chapter_01.html"><strong aria-hidden="true">2.</strong> Hello world</a></li><li class="chapter-item expanded "><a href="chapter_02.html"><strong aria-hidden="true">3.</strong> Building an HTML printer library</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="chapter_02a.html"><strong aria-hidden="true">3.1.</strong> Flexible html content (functions)</a></li><li class="chapter-item expanded "><a href="chapter_02b.html"><strong aria-hidden="true">3.2.</strong> Adding type signatures</a></li><li class="chapter-item expanded "><a href="chapter_02c.html"><strong aria-hidden="true">3.3.</strong> Embedded Domain Specific Languages</a></li><li class="chapter-item expanded "><a href="chapter_02d.html"><strong aria-hidden="true">3.4.</strong> Safer HTML construction with types</a></li><li class="chapter-item expanded "><a href="chapter_02e.html"><strong aria-hidden="true">3.5.</strong> Preventing incorrect use with modules</a></li><li class="chapter-item expanded "><a href="chapter_02f.html" class="active"><strong aria-hidden="true">3.6.</strong> Escaping characters</a></li><li class="chapter-item expanded "><a href="chapter_02g.html"><strong aria-hidden="true">3.7.</strong> Exposing internal functionality (Internal modules)</a></li><li class="chapter-item expanded "><a href="chapter_02h.html"><strong aria-hidden="true">3.8.</strong> Richer HTML elements</a></li><li class="chapter-item expanded "><a href="chapter_02i.html"><strong aria-hidden="true">3.9.</strong> Exercises</a></li><li class="chapter-item expanded "><a href="chapter_02j.html"><strong aria-hidden="true">3.10.</strong> Summary</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="00-about.html"><strong aria-hidden="true">1.</strong> About this tutorial</a></li><li class="chapter-item expanded "><a href="01-hello.html"><strong aria-hidden="true">2.</strong> Hello world</a></li><li class="chapter-item expanded "><a href="02-html_printer.html"><strong aria-hidden="true">3.</strong> Building an HTML printer library</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="02_01-html_content.html"><strong aria-hidden="true">3.1.</strong> Flexible html content (functions)</a></li><li class="chapter-item expanded "><a href="02_02-type_signatures.html"><strong aria-hidden="true">3.2.</strong> Adding type signatures</a></li><li class="chapter-item expanded "><a href="02_03-edsls.html"><strong aria-hidden="true">3.3.</strong> Embedded Domain Specific Languages</a></li><li class="chapter-item expanded "><a href="02_04-safer_construction.html"><strong aria-hidden="true">3.4.</strong> Safer HTML construction with types</a></li><li class="chapter-item expanded "><a href="02_05-modules.html"><strong aria-hidden="true">3.5.</strong> Preventing incorrect use with modules</a></li><li class="chapter-item expanded "><a href="02_06-escaping_characters.html"><strong aria-hidden="true">3.6.</strong> Escaping characters</a></li><li class="chapter-item expanded "><a href="02_07-internal_modules.html" class="active"><strong aria-hidden="true">3.7.</strong> Exposing internal functionality (Internal modules)</a></li><li class="chapter-item expanded "><a href="02_09-exercises.html"><strong aria-hidden="true">3.8.</strong> Exercises</a></li><li class="chapter-item expanded "><a href="02_10-summary.html"><strong aria-hidden="true">3.9.</strong> Summary</a></li></ol></li><li class="chapter-item expanded "><a href="03-markup.html"><strong aria-hidden="true">4.</strong> Custom markup language</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="03-data_type.html"><strong aria-hidden="true">4.1.</strong> Representing the markup language as a Haskell data type</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -163,131 +163,58 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="escaping-characters"><a class="header" href="#escaping-characters">Escaping characters</a></h1>
-<p>Now that <code>Html</code> has its own source file and module, and creating
-html code can be done only via the functions we exported,
-we can also handle user input that may contain characters we
-that may conflict with our meta language html,
-such as <code>&lt;</code> and <code>&gt;</code> which are used for creating HTML tags.</p>
-<p>We can convert these characters into different strings that HTML can handle.</p>
-<p>See <a href="https://stackoverflow.com/questions/7381974/which-characters-need-to-be-escaped-in-html">https://stackoverflow.com/questions/7381974/which-characters-need-to-be-escaped-in-html</a>
-for a list of characters we need to escape.</p>
-<p>Let's create a new function called <code>escape</code>:</p>
-<pre><code class="language-hs">escape :: String -&gt; String
-escape =
-  let
-    escapeChar c =
-      case c of
-        '&lt;' -&gt; &quot;&amp;lt;&quot;
-        '&gt;' -&gt; &quot;&amp;gt;&quot;
-        '&amp;' -&gt; &quot;&amp;amp;&quot;
-        '&quot;' -&gt; &quot;&amp;quot;&quot;
-        '\'' -&gt; &quot;&amp;#39;&quot;
-        _ -&gt; [c]
-  in
-    concat . map escapeChar
-</code></pre>
-<p>In <code>escape</code> we see a few new things:</p>
-<ol>
-<li>let expressions - we can define local names using this syntax:</li>
-</ol>
-<pre><code class="language-hs">let
-  &lt;name&gt; = &lt;expression&gt;
-in
-  &lt;expression&gt;
-</code></pre>
-<p>This will make <name> available as a variable in the second <expression>.</p>
-<ol start="2">
-<li>
-<p>Pattern matching with multiple patterns - we match on different
-characters and convert them to a string. Note that <code>_</code> is a &quot;catch
-all&quot; pattern that will always succeed.</p>
-</li>
-<li>
-<p>Two new functions: <code>map</code> and <code>concat</code>, we'll talk about these more in depth</p>
-</li>
-</ol>
-<h2 id="linked-lists-briefly"><a class="header" href="#linked-lists-briefly">Linked lists briefly</a></h2>
-<p>Linked lists are a very common data structure in Haskell, so common that
-they have their own special syntax:</p>
-<ol>
-<li>The type for lists are denoted with brackets and inside them is the type of the element. For example:
-<ul>
-<li><code>[Int]</code> - a list of integers</li>
-<li><code>[Char]</code> - a list of characters</li>
-<li><code>[String]</code> - a list of strings</li>
-<li><code>[[String]]</code> - a list of a list of strings</li>
-</ul>
-</li>
-<li>An expression representing a empty list is written like this: <code>[]</code></li>
-<li>Prepending an element to a list is done with the operator <code>:</code> (pronounced cons) which is right-associative (like <code>-&gt;</code>).
-For example: <code>1 : []</code>, or <code>1 : 2 : 3 : []</code>.</li>
-<li>The above lists can also be written like this: <code>[1]</code> and <code>[1, 2, 3]</code>.</li>
-</ol>
-<p>Also, Strings are linked lists of chararacters - String is defined as:
-<code>type String = [Char]</code>, so we can use them the same way we use lists.</p>
-<hr />
-<p>Do note, however, that linked lists, despite their convenience, are often
-not the right tool for the job. They are not particularily space efficient
-and are slow for appending, random access and more. That also makes <code>String</code>
-a lot less efficient than it could be. And I generally recommend using a
-different string type, <code>Text</code>, instead, which is available in an external package.
-We will talk about lists, <code>Text</code>, and other data structures in the future!</p>
-<hr />
-<p>We can implement our own operations on lists by using pattern matching and recursion.
-And we'll touch on this subject later when talking about ADTs.</p>
-<p>For now, we will use the various functions found in the <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-List.html">Data.List</a> module. Specifically, <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-List.html#v:map">map</a> and <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-List.html#v:concat">concat</a>.</p>
-<p><code>map</code> applying a function to each of the elements in a list. Its type signature is:</p>
-<pre><code class="language-hs">map :: (a -&gt; b) -&gt; [a] -&gt; [b]
-</code></pre>
-<p>For example:</p>
-<pre><code class="language-hs">map not [False, True, False] == [True, False, True]
-</code></pre>
-<p>Or as can be seen in our <code>escape</code> function, this can help us escape each character:</p>
-<pre><code class="language-hs">map escapeChar ['&lt;','h','1','&gt;'] == [&quot;&amp;lt;&quot;,&quot;h&quot;,&quot;1&quot;,&quot;&amp;gt;&quot;]
-</code></pre>
-<p>However, note that the <code>escapeChar</code> has the type <code>Char -&gt; String</code>,
-so the result type of <code>map escapeChar ['&lt;','h','1','&gt;']</code> is <code>[String]</code>,
-and what we really want is a <code>String</code> and not <code>[String]</code>.</p>
-<p>This is where <code>concat</code> enters the picture. <code>concat</code> has the type</p>
-<pre><code class="language-hs">concat :: [[a]] -&gt; [a]
-</code></pre>
-<p>It flattens a list of list of something into a list of something.
-In our case in will flatten <code>[String]</code> into <code>String</code>, remember that this works
-because <code>String</code> is a <strong>type alias</strong> for <code>[Char]</code>, so we actually have
-<code>[[Char]] -&gt; [Char]</code>.</p>
-<hr />
-<h2 id="escaping"><a class="header" href="#escaping">Escaping</a></h2>
-<p>The user of our library can currently only supply strings in a few places:</p>
-<ol>
-<li>Page title</li>
-<li>Paragraphs</li>
-<li>Headers</li>
-</ol>
-<p>We can apply our escape function at these places before doing anything else with it.
-That way all html constructions are safe.</p>
-<p>Try adding the escaping function in those places.</p>
-<details>
-  <summary>Solution</summary>
-<pre><code class="language-hs">html_ :: HtmlTitle -&gt; HtmlStructure -&gt; Html
-html_ title content =
-  Html
-    ( el &quot;html&quot;
-      ( el &quot;head&quot; (el &quot;title&quot; (escape title))
-        &lt;&gt; el &quot;body&quot; (getHtmlStructureString content)
-      )
-    )
+                        <h1 id="exposing-internal-functionality-internal-modules"><a class="header" href="#exposing-internal-functionality-internal-modules">Exposing internal functionality (Internal modules)</a></h1>
+<p>When a user runs into trouble with using a library the best course of
+actions usually are to open an issue in the repository or submit a pull
+request, but sometimes the user needs things to work <em>now</em>.</p>
+<p>We admit that we are not perfect and can't think of all use cases for our
+library. Sometimes the restrictions we add are too great and may limit
+the usage of advanced users that know how things work under the hood and
+need certain functionality to present in our library.</p>
+<p>For that we can expose internal modules to provide some flexibility for
+advanced users. Internal modules are not a language concept but
+rather a (fairly common) design pattern in Haskell.</p>
+<p>Internal modules are simply modules named <code>Internal</code>.
+These modules are considered risky to use by convention.
+Internal modules will export all of the functionality in a
+module, and we will add another module without the <code>Internal</code> suffix
+which will import from our internal module and only export the api
+we'd like to export.</p>
+<p>Internal modules should be considered unstable and risky to use. If
+you end up using one, make sure to open a ticket in the library after
+the storm has passed!</p>
+<p>We will create a new directory named <code>Html</code> and inside it a new file
+named <code>Internal.hs</code>. The name of this module should be <code>Html.Internal</code>.</p>
+<p>This module will contain all of the code that was previously in the <code>Html</code>
+module, but <strong>we will change the module declaration in <code>Html.Internal</code>
+and <em>omit</em> the export list</strong>:</p>
+<pre><code class="language-hs">-- Html/Internal.hs
 
-p_ :: String -&gt; HtmlStructure
-p_ = HtmlStructure . el &quot;p&quot; . escape
+module Html.Internal where
 
-h1_ :: String -&gt; HtmlStructure
-h1_ = HtmlStructure . el &quot;h1&quot; . escape
+...
 </code></pre>
-</details>
-<hr />
+<p>And now in <code>Html.hs</code>, we will remove the code that we moved to <code>Html/Internal.hs</code>
+and in its stead we'll import the internal module:</p>
+<pre><code class="language-hs">-- Hello.hs
+
+module Html
+  ( Html
+  , HtmlTitle
+  , HtmlStructure
+  , html_
+  , p_
+  , h1_
+  , append_
+  , render
+  )
+where
+</code></pre>
+<p>Now, users of our library can still import <code>Html</code> and safely use our library,
+but if they run into trouble and have a dire need to implement unordered lists
+to work with our library, they could always work with <code>Html.Internal</code> instead.</p>
 <details>
-  <summary><b>Our revised Html.hs</b></summary>
+  <summary><b>Our revised Html.hs and Html/Internal.hs</b></summary>
 <pre><code class="language-hs">-- Html.hs
 
 module Html
@@ -301,6 +228,12 @@ module Html
   , render
   )
 where
+
+import Html.Internal
+</code></pre>
+<pre><code class="language-hs">-- Html/Internal.hs
+
+module Html.Internal where
 
 -- * Types
 
@@ -367,24 +300,19 @@ escape =
     concat . map escapeChar
 </code></pre>
 </details>
-<p>Trying constructing an invalid html in <code>hello.hs</code> to see if this works or not!</p>
-<p>Now we can use our tiny html library safely. But what if the user
-wants to use our library with something we didn't think about, for
-example adding unordered lists? We are completely blocking them from
-extending our library. We'll talk about this next.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                         
-                            <a rel="prev" href="chapter_02e.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="02_06-escaping_characters.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
                         
 
                         
-                            <a rel="next" href="chapter_02g.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="02_09-exercises.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
                         
@@ -396,13 +324,13 @@ extending our library. We'll talk about this next.</p>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                 
-                    <a rel="prev" href="chapter_02e.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="02_06-escaping_characters.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
                 
 
                 
-                    <a rel="next" href="chapter_02g.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next" href="02_09-exercises.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
                 
@@ -410,6 +338,21 @@ extending our library. We'll talk about this next.</p>
 
         </div>
 
+        
+        <!-- Livereload script (if served using the cli tool) -->
+        <script type="text/javascript">
+            var socket = new WebSocket("ws://localhost:3000/__livereload");
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
         
 
         

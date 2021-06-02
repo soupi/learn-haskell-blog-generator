@@ -97,7 +97,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="chapter_00.html"><strong aria-hidden="true">1.</strong> About this tutorial</a></li><li class="chapter-item expanded "><a href="chapter_01.html"><strong aria-hidden="true">2.</strong> Hello world</a></li><li class="chapter-item expanded "><a href="chapter_02.html"><strong aria-hidden="true">3.</strong> Building an HTML printer library</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="chapter_02a.html"><strong aria-hidden="true">3.1.</strong> Flexible html content (functions)</a></li><li class="chapter-item expanded "><a href="chapter_02b.html"><strong aria-hidden="true">3.2.</strong> Adding type signatures</a></li><li class="chapter-item expanded "><a href="chapter_02c.html"><strong aria-hidden="true">3.3.</strong> Embedded Domain Specific Languages</a></li><li class="chapter-item expanded "><a href="chapter_02d.html"><strong aria-hidden="true">3.4.</strong> Safer HTML construction with types</a></li><li class="chapter-item expanded "><a href="chapter_02e.html"><strong aria-hidden="true">3.5.</strong> Preventing incorrect use with modules</a></li><li class="chapter-item expanded "><a href="chapter_02f.html"><strong aria-hidden="true">3.6.</strong> Escaping characters</a></li><li class="chapter-item expanded "><a href="chapter_02g.html"><strong aria-hidden="true">3.7.</strong> Exposing internal functionality (Internal modules)</a></li><li class="chapter-item expanded "><a href="chapter_02h.html"><strong aria-hidden="true">3.8.</strong> Richer HTML elements</a></li><li class="chapter-item expanded "><a href="chapter_02i.html"><strong aria-hidden="true">3.9.</strong> Exercises</a></li><li class="chapter-item expanded "><a href="chapter_02j.html"><strong aria-hidden="true">3.10.</strong> Summary</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="00-about.html"><strong aria-hidden="true">1.</strong> About this tutorial</a></li><li class="chapter-item expanded "><a href="01-hello.html"><strong aria-hidden="true">2.</strong> Hello world</a></li><li class="chapter-item expanded "><a href="02-html_printer.html"><strong aria-hidden="true">3.</strong> Building an HTML printer library</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="02_01-html_content.html"><strong aria-hidden="true">3.1.</strong> Flexible html content (functions)</a></li><li class="chapter-item expanded "><a href="02_02-type_signatures.html"><strong aria-hidden="true">3.2.</strong> Adding type signatures</a></li><li class="chapter-item expanded "><a href="02_03-edsls.html"><strong aria-hidden="true">3.3.</strong> Embedded Domain Specific Languages</a></li><li class="chapter-item expanded "><a href="02_04-safer_construction.html"><strong aria-hidden="true">3.4.</strong> Safer HTML construction with types</a></li><li class="chapter-item expanded "><a href="02_05-modules.html"><strong aria-hidden="true">3.5.</strong> Preventing incorrect use with modules</a></li><li class="chapter-item expanded "><a href="02_06-escaping_characters.html"><strong aria-hidden="true">3.6.</strong> Escaping characters</a></li><li class="chapter-item expanded "><a href="02_07-internal_modules.html"><strong aria-hidden="true">3.7.</strong> Exposing internal functionality (Internal modules)</a></li><li class="chapter-item expanded "><a href="02_09-exercises.html"><strong aria-hidden="true">3.8.</strong> Exercises</a></li><li class="chapter-item expanded "><a href="02_10-summary.html"><strong aria-hidden="true">3.9.</strong> Summary</a></li></ol></li><li class="chapter-item expanded "><a href="03-markup.html"><strong aria-hidden="true">4.</strong> Custom markup language</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="03-data_type.html"><strong aria-hidden="true">4.1.</strong> Representing the markup language as a Haskell data type</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -1455,89 +1455,6 @@ escape =
     concat . map escapeChar
 </code></pre>
 </details>
-<h1 id="richer-html-elements"><a class="header" href="#richer-html-elements">Richer HTML elements</a></h1>
-<p>Our HTML EDSL is nice, but it's missing some key features to be usable
-for blogs - for example images and links are pretty important.
-So we will make some changes to our HTML EDSL so we can include
-text, links and images.</p>
-<p>...</p>
-<!--
-
-What we're going to do is, instead of passing `String` to `p_`, `h1_`
-and other functions that represent HTML *structures*, we will
-pass them a new type called `HtmlContent` which would represent
-content rather than structure - things text, links and images.
-
-We will also implement instances for a couple of type classes for this
-new `HtmlContent` type. Namely `Semigroup` and `Monoid`.
-
-These two type classes are named after their mathematical counter
-part. Semigroup defines an operation that combines two values of a
-type to a single value. This operation in Haskell is the function
-`<>` (pronounced append) and we've already seen it in action for strings!
-A Monoid is a Semigroup that also provides an "empty" value, `mempty`.
-
-Often type classes will have laws attached to them, and any instance
-should make sure these laws hold for it as well. These laws provide
-predictable behaviour, and helps in reducing surprised and getting
-intuition about how a type might behaves just by knowning that it has
-an instance of some type class.
-
-These kind of type classes and laws create proper *abstractions*.
-
-For Semigroup for example, `<>` should be associative, meaning that
-the placement of paranthesis will not change the result.
-`(a <> b) <> c` should be exactly the same as `a <> (b <> c)`.
-
-For example, Int could form a semigroup with the operator `+`, because
-as we learned `+` combines two Int values to get an Int value, and
-adding three integers can be done by first calculating the right it
-and then the left, or the left one and then the right, and the result
-will be the same.
-
-Note that Int could also form a semigroup with the operator `*`, but
-there can only be one instance per type and type class. So instead of
-choosing, Haskell does not implement a semigroup for Int and instead
-defines two `newtype`s in the standard library: `Sum` and `Product`,
-which each has a type class instance of semigroup.
-
-Monoid also has a law, `mempty` should be "neutral" with respect to
-the Semigroup operation on that type (note that each type that wants
-to implement a monoid instance should also implement
-semigroup). Neutral means that doing `x <> mempty` or `mempty <> x`
-will always result with `x`.
-
-For example, for `Sum`, `mempty` is defined as 0, and for `Product` it
-is defined as 1.
-
-We will also defined another operator, `<+>`, that will make easy to
-append two elements with a space between them. We will declare that
-this new operator is an infix operator that is "right associative",
-meaning Haskell should read `a <+> b <+> c` as `a <+> (b <+> c)`,
-and it has precedence 5, which is higher than 4 but lower than
-6. Presedence could be between 0 and 9 and defines which operation
-should occur first. Function application for example has the highest
-precedence over any operator, so for example `func x + func y` will
-always mean `(func x) + (func y)`.
-
-See this table to learn about the presedence of a few other operators:
-
-https://www.haskell.org/onlinereport/decls.html#fixity
-
----
-
-With that, instead of writing `p_ "hello"`, we now have to write
-`p_ (txt_ "hello")`.
-
-But: we can now also write:
-```
-p_ (txt_ "visit my" <+> link_ "https://gilmi.me" (txt_ "website"))
-```
-
-And get a nice mixture of text and hyper links, which we can use to
-create an index page for all of our pages.
-
--->
 <h1 id="exercises"><a class="header" href="#exercises">Exercises</a></h1>
 <p>We need a few more features for our html library to be useful for
 our blog software. Add the following features to our <code>Html.Internal</code> module
@@ -1721,6 +1638,346 @@ escape =
   in
     concat . map escapeChar
 </code></pre>
+<h1 id="custom-markup-language"><a class="header" href="#custom-markup-language">Custom markup language</a></h1>
+<p>In this chapter we will define our own simple markup language
+and parse documents written in this language into Haskell data structures.</p>
+<p>Our simple markup language will contain the following features:</p>
+<ul>
+<li>Headers - prefix by a number of <code>*</code> characters</li>
+<li>Paragraphs - a group of lines without empty lines in between</li>
+<li>Unordered lists - a group of lines each prefixed with <code>- </code></li>
+<li>Unordered lists - a group of lines each prefixed with <code># </code></li>
+<li>Code blocks - a group of lines each prefixed with <code>&gt; </code></li>
+</ul>
+<p>Here's a sample document which we will use as an example:</p>
+<pre><code class="language-org">* Compiling programs with ghc
+
+Running ghc invokes the Glasgow Haskell Compiler (GHC),
+and can be used to compile Haskell modules and programs into native
+executables and libraries.
+
+Create a new Haskell source file named hello.hs, and write
+the following code in it:
+
+&gt; main = putStrLn &quot;Hello, Haskell!&quot;
+
+Now, we can compile the program by invoking ghc with the file name:
+
+&gt; ➜ ghc hello.hs
+&gt; [1 of 1] Compiling Main             ( hello.hs, hello.o )
+&gt; Linking hello ...
+
+GHC created the following files:
+
+- hello.hi - Haskell interface file
+- hello.o - Object file, the output of the compiler before linking
+- hello (or hello.exe on Microsoft Windows) - A native runnable executable.
+
+GHC will produce an executable when the source file satisfies both conditions:
+
+# Defines the main function in the source file
+# Defines the module name to be Main, or does not have a module declaration
+
+Otherwise, it will only produce the .o and .hi files.
+</code></pre>
+<p>Which we will, eventually, want to convert into this (modulo formatting) html:</p>
+<pre><code class="language-html">&lt;h1&gt;Compiling programs with ghc&lt;/h1&gt;
+
+&lt;p&gt;Running ghc invokes the Glasgow Haskell Compiler (GHC),
+and can be used to compile Haskell modules and programs into native
+executables and libraries.
+&lt;/p&gt;
+
+&lt;p&gt;Create a new Haskell source file named hello.hs, and write
+the following code in it:
+&lt;/p&gt;
+
+&lt;pre&gt;main = putStrLn &quot;Hello, Haskell!&quot;
+&lt;/pre&gt;
+
+&lt;p&gt;Now, we can compile the program by invoking ghc with the file name:&lt;/p&gt;
+
+&lt;pre&gt;
+➜ ghc hello.hs
+[1 of 1] Compiling Main             ( hello.hs, hello.o )
+Linking hello ...
+&lt;/pre&gt;
+
+&lt;p&gt;GHC created the following files:
+&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;hello.hi - Haskell interface file&lt;/li&gt;
+  &lt;li&gt;hello.o - Object file, the output of the compiler before linking&lt;/li&gt;
+  &lt;li&gt;hello (or hello.exe on Microsoft Windows) - A native runnable executable.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;GHC will produce an executable when the source file satisfies both conditions:
+&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Defines the main function in the source file&lt;/li&gt;
+  &lt;li&gt;Defines the module name to be Main, or does not have a module declaration&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Otherwise, it will only produce the .o and .hi files.
+&lt;/p&gt;
+</code></pre>
+<h1 id="representing-the-markup-language-as-a-haskell-data-type"><a class="header" href="#representing-the-markup-language-as-a-haskell-data-type">Representing the markup language as a Haskell data type</a></h1>
+<p>One of the clear differentiators between Haskell and other ML-family of languages
+from most mainstream languages is the ability to represent data precisely and succinctly.</p>
+<p>So how do we represent our markup language using Haskell?</p>
+<p>Previously, in our HTML builder library, we used <code>newtype</code>s to differentiate
+between html documents, structures and titles, but we didn't really need to
+differentiate between different kinds of structures such as paragraphs and headers,
+not without parsing the data at least.</p>
+<p>In this case, we have a list of structures, and each structure could be
+one of a few specific options (a paragraph, a header, a list, etc),
+and we want to be able to know which structure is which so we can easily
+convert it into the equivalent HTML representation.</p>
+<p>For that, we have <code>data</code> definitions. <code>data</code> gives us the ability to
+create custom types by grouping multiple types together and having
+alternative structures. Think of them as combination of both structs and enums.</p>
+<p><code>data</code> declarations look like this:</p>
+<pre><code>data &lt;Type-name&gt; &lt;type-args&gt;
+  = &lt;Data-constructor1&gt; &lt;types&gt;
+  | &lt;Data-constructor2&gt; &lt;types&gt;
+  | ...
+</code></pre>
+<p>It looks really similar to <code>newtype</code>, but there are two important
+differences:</p>
+<ol>
+<li>In the <types> part we can write many types (Like <code>Int String Bool</code>).
+For <code>newtype</code>s we can only write one.</li>
+<li>We can have alternative structures using <code>|</code>, <code>newtype</code>s have no
+alternatives.</li>
+</ol>
+<p>Let's see a couple of examples of data types:</p>
+<ol>
+<li>Bool</li>
+</ol>
+<pre><code>data Bool
+  = True
+  | False
+</code></pre>
+<p>We created a new data type named <code>Bool</code> with the possible values <code>True</code> or <code>False</code>.</p>
+<ol start="2">
+<li>Person</li>
+</ol>
+<pre><code>data Person
+  = Person String Int -- where the first is the name and the second is
+                      -- the age
+</code></pre>
+<p>We created a new data type named <code>Person</code>. Values of the type <code>Person</code>
+look like this:</p>
+<pre><code>Person &lt;some-string&gt; &lt;some-int&gt;
+</code></pre>
+<p>For example:</p>
+<pre><code>Person &quot;Gil&quot; 32
+</code></pre>
+<ol start="3">
+<li>Tuple</li>
+</ol>
+<pre><code>data Tuple a b
+  = Tuple a b
+</code></pre>
+<p>This is pretty similar to <code>Person</code>, but we can plug any type we want
+for this definition. For example:</p>
+<pre><code>Tuple &quot;Clicked&quot; True :: Tuple String Bool
+
+Tuple 'a' 'z' :: Tuple Char Char
+</code></pre>
+<p>This type has special syntax in Haskell:</p>
+<pre><code>(&quot;Clicked&quot;, True) :: (String, Bool)
+
+('a', 'z') :: (Char, Char)
+</code></pre>
+<ol start="4">
+<li>Either</li>
+</ol>
+<pre><code>data Either a b
+  = Left a
+  | Right b
+</code></pre>
+<p>Similar to Tuple but instead of having only one constructor, we have
+two. This means that we can choose which side we want. Here are a
+couple of Values of type <code>Either String Int</code>:</p>
+<pre><code>Left &quot;Hello&quot;
+
+Right 17
+</code></pre>
+<p>This type is useful for modeling errors. Either we succeeded and got
+what we wanted (The <code>Right</code> constructor with the value), or we didn't
+and got an error instead (The <code>Left</code> constructor with a string or a
+custom error type).</p>
+<p>Here we use it to model the different kinds of content types we have
+in our markup language. We tag each structure using the data constructor
+and provide the rest of the information (the paragraph text, the list items, etc)
+in the <code>&lt;types&gt;</code> section of the data declaration for each constructor:</p>
+<pre><code class="language-hs">type Document
+  = [Structure]
+
+data Structure
+  = Header Int String
+  | Paragraph String
+  | UnorderedList [String]
+  | OrderedList [String]
+  | CodeBlock [String]
+</code></pre>
+<hr />
+<p>Exercises:</p>
+<p>Represent the following markup documents as value of <code>Document</code>:</p>
+<ol>
+<li>
+<pre><code class="language-org">Hello, world!
+</code></pre>
+</li>
+<li>
+<pre><code class="language-org">* Welcome
+
+To this tutorial about Haskell.
+</code></pre>
+</li>
+<li>
+<pre><code class="language-org">Remember that multiple lines with no separation
+are grouped together to a single paragraph
+but list items remain separate.
+
+# Item 1 of a list
+# Item 2 of the same list
+</code></pre>
+</li>
+<li>
+<pre><code class="language-org">* Compiling programs with ghc
+
+Running ghc invokes the Glasgow Haskell Compiler (GHC),
+and can be used to compile Haskell modules and programs into native
+executables and libraries.
+
+Create a new Haskell source file named hello.hs, and write
+the following code in it:
+
+&gt; main = putStrLn &quot;Hello, Haskell!&quot;
+
+Now, we can compile the program by invoking ghc with the file name:
+
+&gt; ➜ ghc hello.hs
+&gt; [1 of 1] Compiling Main             ( hello.hs, hello.o )
+&gt; Linking hello ...
+
+GHC created the following files:
+
+- hello.hi - Haskell interface file
+- hello.o - Object file, the output of the compiler before linking
+- hello (or hello.exe on Microsoft Windows) - A native runnable executable.
+
+GHC will produce an executable when the source file satisfies both conditions:
+
+# Defines the main function in the source file
+# Defines the module name to be Main, or does not have a module declaration
+
+Otherwise, it will only produce the .o and .hi files.
+</code></pre>
+</li>
+</ol>
+<p>Solutions:</p>
+<details>
+  <summary>Solution 1</summary>
+<pre><code class="language-hs">doc :: Document
+doc =
+  [ Paragraph &quot;Hello, world!&quot;
+  ]
+</code></pre>
+</details>
+<details>
+  <summary>Solution 2</summary>
+<pre><code class="language-hs">doc :: Document
+doc =
+  [ Header 1 &quot;Welcome&quot;
+  , Paragraph &quot;To this tutorial about Haskell.&quot;
+  ]
+</code></pre>
+</details>
+<details>
+  <summary>Solution 3</summary>
+<pre><code class="language-hs">doc :: Document
+doc =
+  [ Paragraph &quot;Remember that multiple lines with no separation are grouped together to a single paragraph but list items remain separate.&quot;
+  , OrderedList
+    [ &quot;Item 1 of a list&quot;
+    , &quot;Item 2 of the same list&quot;
+    ]
+  ]
+</code></pre>
+</details>
+<details>
+  <summary>Solution 4</summary>
+<pre><code class="language-hs">doc :: Document
+doc =
+  [ Header 1 &quot;Compiling programs with ghc&quot;
+  , Paragraph &quot;Running ghc invokes the Glasgow Haskell Compiler (GHC), and can be used to compile Haskell modules and programs into native executables and libraries.&quot;
+  , Paragraph &quot;Create a new Haskell source file named hello.hs, and write the following code in it:&quot;
+  , CodeBlock
+    [ &quot;main = putStrLn \&quot;Hello, Haskell!\&quot;&quot;
+    ]
+  , Paragraph &quot;Now, we can compile the program by invoking ghc with the file name:&quot;
+  , CodeBlock
+    [ &quot;➜ ghc hello.hs&quot;
+    , &quot;[1 of 1] Compiling Main             ( hello.hs, hello.o )&quot;
+    , &quot;Linking hello ...&quot;
+    ]
+  , Paragraph &quot;GHC created the following files:&quot;
+  , UnorderedList
+    [ &quot;hello.hi - Haskell interface file&quot;
+    , &quot;hello.o - Object file, the output of the compiler before linking&quot;
+    , &quot;hello (or hello.exe on Microsoft Windows) - A native runnable executable.&quot;
+    ]
+  , Paragraph &quot;GHC will produce an executable when the source file satisfies both conditions:&quot;
+  , OrderedList
+    [ &quot;Defines the main function in the source file&quot;
+    , &quot;Defines the module name to be Main, or does not have a module declaration&quot;
+    ]
+  , Paragraph &quot;Otherwise, it will only produce the .o and .hi files.&quot;
+  ]
+</code></pre>
+</details>
+<p>Add a new module named <code>Markup</code> and add the data type definition to it.
+Note that in this case we <em>do</em> want to export the constructors of <code>Structure</code>.</p>
+<details>
+  <summary>Solution</summary>
+<pre><code class="language-hs">module Markup
+  ( Document
+  , Structure(..)
+  )
+where
+
+type Document
+  = [Structure]
+
+data Structure
+  = Header Int String
+  | Paragraph String
+  | UnorderedList [String]
+  | OrderedList [String]
+  | CodeBlock [String]
+</code></pre>
+</details>
+<hr />
+<p>You might ask &quot;Why do we even need to represent the markup as a type?
+Why don't we convert it into html as soon as we parse it
+instead?&quot;. That's a good question and a valid strategy. The reason we
+first represent it as a Haskell type is for flexibility and
+modularity.</p>
+<p>If the parsing code is coupled with html generation, we lose the
+ability to preprocess the markup document. For example we might want
+to take only a small part of the document (for summary) and present
+it, or create a table of content from headers. Or maybe we'd like to
+add other targets and not just html - maybe markdown format or a gui reader?</p>
+<p>Parsing to an &quot;abstract data type&quot; (ADT) representation (one that does
+not contain the details of the language, that for example that we use '#' for
+ordered lists) gives us the freedom to do so much more than just
+converting to html that it's usually worth it in my opinion unless you
+really need to optimize the process.</p>
 
                     </main>
 
@@ -1743,6 +2000,21 @@ escape =
 
         </div>
 
+        
+        <!-- Livereload script (if served using the cli tool) -->
+        <script type="text/javascript">
+            var socket = new WebSocket("ws://localhost:3000/__livereload");
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
         
 
         

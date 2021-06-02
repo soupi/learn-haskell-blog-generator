@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Hello world - Learning Haskell by building a blog generator</title>
+        <title>Custom markup language - Learning Haskell by building a blog generator</title>
         
         
 
@@ -95,7 +95,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="chapter_00.html"><strong aria-hidden="true">1.</strong> About this tutorial</a></li><li class="chapter-item expanded "><a href="chapter_01.html" class="active"><strong aria-hidden="true">2.</strong> Hello world</a></li><li class="chapter-item expanded "><a href="chapter_02.html"><strong aria-hidden="true">3.</strong> Building an HTML printer library</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="chapter_02a.html"><strong aria-hidden="true">3.1.</strong> Flexible html content (functions)</a></li><li class="chapter-item expanded "><a href="chapter_02b.html"><strong aria-hidden="true">3.2.</strong> Adding type signatures</a></li><li class="chapter-item expanded "><a href="chapter_02c.html"><strong aria-hidden="true">3.3.</strong> Embedded Domain Specific Languages</a></li><li class="chapter-item expanded "><a href="chapter_02d.html"><strong aria-hidden="true">3.4.</strong> Safer HTML construction with types</a></li><li class="chapter-item expanded "><a href="chapter_02e.html"><strong aria-hidden="true">3.5.</strong> Preventing incorrect use with modules</a></li><li class="chapter-item expanded "><a href="chapter_02f.html"><strong aria-hidden="true">3.6.</strong> Escaping characters</a></li><li class="chapter-item expanded "><a href="chapter_02g.html"><strong aria-hidden="true">3.7.</strong> Exposing internal functionality (Internal modules)</a></li><li class="chapter-item expanded "><a href="chapter_02h.html"><strong aria-hidden="true">3.8.</strong> Richer HTML elements</a></li><li class="chapter-item expanded "><a href="chapter_02i.html"><strong aria-hidden="true">3.9.</strong> Exercises</a></li><li class="chapter-item expanded "><a href="chapter_02j.html"><strong aria-hidden="true">3.10.</strong> Summary</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="00-about.html"><strong aria-hidden="true">1.</strong> About this tutorial</a></li><li class="chapter-item expanded "><a href="01-hello.html"><strong aria-hidden="true">2.</strong> Hello world</a></li><li class="chapter-item expanded "><a href="02-html_printer.html"><strong aria-hidden="true">3.</strong> Building an HTML printer library</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="02_01-html_content.html"><strong aria-hidden="true">3.1.</strong> Flexible html content (functions)</a></li><li class="chapter-item expanded "><a href="02_02-type_signatures.html"><strong aria-hidden="true">3.2.</strong> Adding type signatures</a></li><li class="chapter-item expanded "><a href="02_03-edsls.html"><strong aria-hidden="true">3.3.</strong> Embedded Domain Specific Languages</a></li><li class="chapter-item expanded "><a href="02_04-safer_construction.html"><strong aria-hidden="true">3.4.</strong> Safer HTML construction with types</a></li><li class="chapter-item expanded "><a href="02_05-modules.html"><strong aria-hidden="true">3.5.</strong> Preventing incorrect use with modules</a></li><li class="chapter-item expanded "><a href="02_06-escaping_characters.html"><strong aria-hidden="true">3.6.</strong> Escaping characters</a></li><li class="chapter-item expanded "><a href="02_07-internal_modules.html"><strong aria-hidden="true">3.7.</strong> Exposing internal functionality (Internal modules)</a></li><li class="chapter-item expanded "><a href="02_09-exercises.html"><strong aria-hidden="true">3.8.</strong> Exercises</a></li><li class="chapter-item expanded "><a href="02_10-summary.html"><strong aria-hidden="true">3.9.</strong> Summary</a></li></ol></li><li class="chapter-item expanded "><a href="03-markup.html" class="active"><strong aria-hidden="true">4.</strong> Custom markup language</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="03-data_type.html"><strong aria-hidden="true">4.1.</strong> Representing the markup language as a Haskell data type</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -163,69 +163,104 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="hello-world"><a class="header" href="#hello-world">Hello, world!</a></h1>
-<p>In this chapter we will create a simple html hello world.</p>
-<p>A Haskell source file is composed of definitions.</p>
-<p>The most common definition has the following form:</p>
-<pre><code class="language-hs">&lt;name&gt; = &lt;expression&gt;
-</code></pre>
-<p>Note that:</p>
-<ol>
-<li>We cannot write naked expressions without binding them to a name</li>
-<li>Names must start with a lowercase letter</li>
-<li>We cannot use the same name more than once in a file</li>
-</ol>
-<p>A source file containing a definition of the name <code>main</code> is treated as an executable, and the expression <code>main</code> is bound to is the entry point to the program.</p>
-<p>Let's create a new Haskell source file called <code>hello.hs</code>, and write the following line there:</p>
-<pre><code class="language-hs">main = putStrLn &quot;&lt;html&gt;&lt;body&gt;Hello, world!&lt;/body&gt;&lt;/html&gt;&quot;
-</code></pre>
-<p>We've defined a new name, <code>main</code>, and bound it to the expression <code>putStrLn &quot;&lt;html&gt;&lt;body&gt;Hello, world!&lt;/body&gt;&lt;/html&gt;&quot;</code>.</p>
-<p>the body of <code>main</code> means calling the function <code>putStrLn</code> with the string <code>&quot;&lt;html&gt;&lt;body&gt;Hello, world!&lt;/body&gt;&lt;/html&gt;&quot;</code>.
-<code>putStrLn</code> takes a single string as input and prints that string to the standard output.</p>
-<p><strong>Note</strong>: we don't need parenthesis to pass arguments to functions in Haskell.</p>
-<p>Running this program will result in the following text printed on the screen:</p>
-<pre><code>&lt;html&gt;&lt;body&gt;Hello, world!&lt;/body&gt;&lt;/html&gt;
-</code></pre>
-<p>To run this little program, we can either compile it using the command line program <code>ghc</code>, like this: <code>ghc hello.hs</code> which will create a few files:</p>
-<ol>
-<li><code>hello.o</code> - Object file</li>
-<li><code>hello.hi</code> - Haskell interface file</li>
-<li><code>hello</code> - A native executable file</li>
-</ol>
-<p>and then run <code>hello</code>.</p>
-<p>Or, alternatively, interpret the source file using the command line program <code>runghc</code>, like this: <code>runghc hello.hs</code> which will run the program without compiling it or creating any files.</p>
-<pre><code class="language-sh">&gt; runghc hello.hs
-&lt;html&gt;&lt;body&gt;Hello, world!&lt;/body&gt;&lt;/html&gt;
-</code></pre>
-<p>We can also redirect the output of the program to a file and then open it in firefox.</p>
-<pre><code class="language-sh">&gt; runghc hello.hs &gt; hello.html
-&gt; firefox hello.html
-</code></pre>
-<p>This command should open firefox and display a web page with <code>Hello, world!</code> written in it.</p>
-<p>In this tutorial we'll use <code>runghc</code> regularily, because it saves us time to run the program without compiling it.</p>
-<hr />
-<p><strong>Note</strong>: If you've installed a ghc toolchain via stack and not ghcup, and the commands above do not work because <code>ghc</code> or <code>runghc</code> are missing, prefix the commands above with <code>stack exec -- </code>. Stack will locate the globally installed ghc and use it. So for example <code>runghc hello.hs</code> becomes <code>stack exec -- runghc hello.hs</code>. See the <a href="https://docs.haskellstack.org/en/stable/GUIDE/#exec">Stack user guide</a> for more details.</p>
-<hr />
-<h2 id="more-bindings"><a class="header" href="#more-bindings">More bindings</a></h2>
-<p>We can define the html string passed to <code>putStrLn</code> in a new name instead. Change the content of file <code>hello.hs</code> we defined above to:</p>
-<pre><code class="language-hs">main = putStrLn myhtml
+                        <h1 id="custom-markup-language"><a class="header" href="#custom-markup-language">Custom markup language</a></h1>
+<p>In this chapter we will define our own simple markup language
+and parse documents written in this language into Haskell data structures.</p>
+<p>Our simple markup language will contain the following features:</p>
+<ul>
+<li>Headers - prefix by a number of <code>*</code> characters</li>
+<li>Paragraphs - a group of lines without empty lines in between</li>
+<li>Unordered lists - a group of lines each prefixed with <code>- </code></li>
+<li>Unordered lists - a group of lines each prefixed with <code># </code></li>
+<li>Code blocks - a group of lines each prefixed with <code>&gt; </code></li>
+</ul>
+<p>Here's a sample document which we will use as an example:</p>
+<pre><code class="language-org">* Compiling programs with ghc
 
-myhtml = &quot;&lt;html&gt;&lt;body&gt;Hello, world!&lt;/body&gt;&lt;/html&gt;&quot;
+Running ghc invokes the Glasgow Haskell Compiler (GHC),
+and can be used to compile Haskell modules and programs into native
+executables and libraries.
+
+Create a new Haskell source file named hello.hs, and write
+the following code in it:
+
+&gt; main = putStrLn &quot;Hello, Haskell!&quot;
+
+Now, we can compile the program by invoking ghc with the file name:
+
+&gt; ➜ ghc hello.hs
+&gt; [1 of 1] Compiling Main             ( hello.hs, hello.o )
+&gt; Linking hello ...
+
+GHC created the following files:
+
+- hello.hi - Haskell interface file
+- hello.o - Object file, the output of the compiler before linking
+- hello (or hello.exe on Microsoft Windows) - A native runnable executable.
+
+GHC will produce an executable when the source file satisfies both conditions:
+
+# Defines the main function in the source file
+# Defines the module name to be Main, or does not have a module declaration
+
+Otherwise, it will only produce the .o and .hi files.
 </code></pre>
-<p><strong>Note</strong>: the order in which we declare the bindings does not matter. Try reversing the order of definitions and see for yourself.</p>
+<p>Which we will, eventually, want to convert into this (modulo formatting) html:</p>
+<pre><code class="language-html">&lt;h1&gt;Compiling programs with ghc&lt;/h1&gt;
+
+&lt;p&gt;Running ghc invokes the Glasgow Haskell Compiler (GHC),
+and can be used to compile Haskell modules and programs into native
+executables and libraries.
+&lt;/p&gt;
+
+&lt;p&gt;Create a new Haskell source file named hello.hs, and write
+the following code in it:
+&lt;/p&gt;
+
+&lt;pre&gt;main = putStrLn &quot;Hello, Haskell!&quot;
+&lt;/pre&gt;
+
+&lt;p&gt;Now, we can compile the program by invoking ghc with the file name:&lt;/p&gt;
+
+&lt;pre&gt;
+➜ ghc hello.hs
+[1 of 1] Compiling Main             ( hello.hs, hello.o )
+Linking hello ...
+&lt;/pre&gt;
+
+&lt;p&gt;GHC created the following files:
+&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;hello.hi - Haskell interface file&lt;/li&gt;
+  &lt;li&gt;hello.o - Object file, the output of the compiler before linking&lt;/li&gt;
+  &lt;li&gt;hello (or hello.exe on Microsoft Windows) - A native runnable executable.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;GHC will produce an executable when the source file satisfies both conditions:
+&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Defines the main function in the source file&lt;/li&gt;
+  &lt;li&gt;Defines the module name to be Main, or does not have a module declaration&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Otherwise, it will only produce the .o and .hi files.
+&lt;/p&gt;
+</code></pre>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                         
-                            <a rel="prev" href="chapter_00.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="02_10-summary.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
                         
 
                         
-                            <a rel="next" href="chapter_02.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="03-data_type.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
                         
@@ -237,13 +272,13 @@ myhtml = &quot;&lt;html&gt;&lt;body&gt;Hello, world!&lt;/body&gt;&lt;/html&gt;&q
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                 
-                    <a rel="prev" href="chapter_00.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="02_10-summary.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
                 
 
                 
-                    <a rel="next" href="chapter_02.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next" href="03-data_type.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
                 
@@ -251,6 +286,21 @@ myhtml = &quot;&lt;html&gt;&lt;body&gt;Hello, world!&lt;/body&gt;&lt;/html&gt;&q
 
         </div>
 
+        
+        <!-- Livereload script (if served using the cli tool) -->
+        <script type="text/javascript">
+            var socket = new WebSocket("ws://localhost:3000/__livereload");
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
         
 
         
