@@ -13,4 +13,4 @@
   - [Exercises](./02_09-exercises.md)
   - [Summary](./02_10-summary.md)
 - [Custom markup language](./03-markup.md)
-  - [Representing the markup language as a Haskell data type](./03-data_type.md)
+  - [Representing the markup language as a Haskell data type](./03_01-data_type.md)
