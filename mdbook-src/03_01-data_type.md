@@ -275,6 +275,8 @@ Note that in this case we *do* want to export the constructors of `Structure`.
   <summary>Solution</summary>
 
 ```hs
+-- Markup.hs
+
 module Markup
   ( Document
   , Structure(..)

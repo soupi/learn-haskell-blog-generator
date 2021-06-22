@@ -274,7 +274,7 @@ Haskell called type classes, we will instead create a new function
 and call it `append_`, and cover type classes later.
 
 `append_` should take two `HtmlStructure`s, and return a third `HtmlStructure`,
-appending the inner `String` in the first `HtmlStructure` to the second and wrapping the result back in `HtmlStructure.
+appending the inner `String` in the first `HtmlStructure` to the second and wrapping the result back in `HtmlStructure`.
 
 Try implementing `append_`.
 

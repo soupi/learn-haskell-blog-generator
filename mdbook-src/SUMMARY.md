@@ -14,3 +14,6 @@
   - [Summary](./02_10-summary.md)
 - [Custom markup language](./03-markup.md)
   - [Representing the markup language as a Haskell data type](./03_01-data_type.md)
+  - [Parsing markup part 01 (Recursion)](./03_02-parsing_01.md)
+  - [Displaying the parsing results (typeclasses)](./03_04-displaying_results.md)
+  - [Parsing markup part 02 (Pattern matching)](./03_03-parsing_02.md)

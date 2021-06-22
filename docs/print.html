@@ -97,7 +97,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="00-about.html"><strong aria-hidden="true">1.</strong> About this tutorial</a></li><li class="chapter-item expanded "><a href="01-hello.html"><strong aria-hidden="true">2.</strong> Hello world</a></li><li class="chapter-item expanded "><a href="02-html_printer.html"><strong aria-hidden="true">3.</strong> Building an HTML printer library</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="02_01-html_content.html"><strong aria-hidden="true">3.1.</strong> Flexible html content (functions)</a></li><li class="chapter-item expanded "><a href="02_02-type_signatures.html"><strong aria-hidden="true">3.2.</strong> Adding type signatures</a></li><li class="chapter-item expanded "><a href="02_03-edsls.html"><strong aria-hidden="true">3.3.</strong> Embedded Domain Specific Languages</a></li><li class="chapter-item expanded "><a href="02_04-safer_construction.html"><strong aria-hidden="true">3.4.</strong> Safer HTML construction with types</a></li><li class="chapter-item expanded "><a href="02_05-modules.html"><strong aria-hidden="true">3.5.</strong> Preventing incorrect use with modules</a></li><li class="chapter-item expanded "><a href="02_06-escaping_characters.html"><strong aria-hidden="true">3.6.</strong> Escaping characters</a></li><li class="chapter-item expanded "><a href="02_07-internal_modules.html"><strong aria-hidden="true">3.7.</strong> Exposing internal functionality (Internal modules)</a></li><li class="chapter-item expanded "><a href="02_09-exercises.html"><strong aria-hidden="true">3.8.</strong> Exercises</a></li><li class="chapter-item expanded "><a href="02_10-summary.html"><strong aria-hidden="true">3.9.</strong> Summary</a></li></ol></li><li class="chapter-item expanded "><a href="03-markup.html"><strong aria-hidden="true">4.</strong> Custom markup language</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="03_01-data_type.html"><strong aria-hidden="true">4.1.</strong> Representing the markup language as a Haskell data type</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="00-about.html"><strong aria-hidden="true">1.</strong> About this tutorial</a></li><li class="chapter-item expanded "><a href="01-hello.html"><strong aria-hidden="true">2.</strong> Hello world</a></li><li class="chapter-item expanded "><a href="02-html_printer.html"><strong aria-hidden="true">3.</strong> Building an HTML printer library</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="02_01-html_content.html"><strong aria-hidden="true">3.1.</strong> Flexible html content (functions)</a></li><li class="chapter-item expanded "><a href="02_02-type_signatures.html"><strong aria-hidden="true">3.2.</strong> Adding type signatures</a></li><li class="chapter-item expanded "><a href="02_03-edsls.html"><strong aria-hidden="true">3.3.</strong> Embedded Domain Specific Languages</a></li><li class="chapter-item expanded "><a href="02_04-safer_construction.html"><strong aria-hidden="true">3.4.</strong> Safer HTML construction with types</a></li><li class="chapter-item expanded "><a href="02_05-modules.html"><strong aria-hidden="true">3.5.</strong> Preventing incorrect use with modules</a></li><li class="chapter-item expanded "><a href="02_06-escaping_characters.html"><strong aria-hidden="true">3.6.</strong> Escaping characters</a></li><li class="chapter-item expanded "><a href="02_07-internal_modules.html"><strong aria-hidden="true">3.7.</strong> Exposing internal functionality (Internal modules)</a></li><li class="chapter-item expanded "><a href="02_09-exercises.html"><strong aria-hidden="true">3.8.</strong> Exercises</a></li><li class="chapter-item expanded "><a href="02_10-summary.html"><strong aria-hidden="true">3.9.</strong> Summary</a></li></ol></li><li class="chapter-item expanded "><a href="03-markup.html"><strong aria-hidden="true">4.</strong> Custom markup language</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="03_01-data_type.html"><strong aria-hidden="true">4.1.</strong> Representing the markup language as a Haskell data type</a></li><li class="chapter-item expanded "><a href="03_02-parsing_01.html"><strong aria-hidden="true">4.2.</strong> Parsing markup part 01 (Recursion)</a></li><li class="chapter-item expanded "><a href="03_04-displaying_results.html"><strong aria-hidden="true">4.3.</strong> Displaying the parsing results (typeclasses)</a></li><li class="chapter-item expanded "><a href="03_03-parsing_02.html"><strong aria-hidden="true">4.4.</strong> Parsing markup part 02 (Pattern matching)</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -841,7 +841,7 @@ to do it.</p>
 Haskell called type classes, we will instead create a new function
 and call it <code>append_</code>, and cover type classes later.</p>
 <p><code>append_</code> should take two <code>HtmlStructure</code>s, and return a third <code>HtmlStructure</code>,
-appending the inner <code>String</code> in the first <code>HtmlStructure</code> to the second and wrapping the result back in `HtmlStructure.</p>
+appending the inner <code>String</code> in the first <code>HtmlStructure</code> to the second and wrapping the result back in <code>HtmlStructure</code>.</p>
 <p>Try implementing <code>append_</code>.</p>
 <details>
   <summary>Solution</summary>
@@ -1945,7 +1945,9 @@ doc =
 Note that in this case we <em>do</em> want to export the constructors of <code>Structure</code>.</p>
 <details>
   <summary>Solution</summary>
-<pre><code class="language-hs">module Markup
+<pre><code class="language-hs">-- Markup.hs
+
+module Markup
   ( Document
   , Structure(..)
   )
@@ -1978,6 +1980,653 @@ not contain the details of the language, that for example that we use '#' for
 ordered lists) gives us the freedom to do so much more than just
 converting to html that it's usually worth it in my opinion unless you
 really need to optimize the process.</p>
+<h1 id="parsing-markup-part-01-pattern-matching-recursion-type-classes"><a class="header" href="#parsing-markup-part-01-pattern-matching-recursion-type-classes">Parsing markup part 01 (Pattern matching, recursion, type classes)</a></h1>
+<p>Let's have a look at how to parse a multi-lined string of markup text
+written by a user and convert it to the <code>Document</code> type we defined
+in the previous chapter.</p>
+<p>Our strategy is to take the string of markup text, and:</p>
+<ol>
+<li>Split it to a list where each element is a separate line, and</li>
+<li>Go over the list line by line and process it, remembering
+information from previous lines if necessary</li>
+</ol>
+<p>So the first thing we want to do is to process the string line by line.
+We can do that by converting the string to a list of string.
+Fortunately the Haskell
+<a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Prelude.html#v:lines"><code>Prelude</code></a>
+module from the Haskell standard library
+<a href="https://hackage.haskell.org/package/base"><code>base</code></a> exposes the function
+<a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Prelude.html#v:lines"><code>lines</code></a>
+that does exactly what we want. The <code>Prelude</code> module is exposed in every
+Haskell file by default so we don't need to import it.</p>
+<p>For the line processing part, let's start by ignoring all of the markup syntax
+and just group lines together into paragraphs (paragraphs are separated by an empty line),
+and iteratively add new features later in the chapter:</p>
+<p>A common solution in imperative programs would be to iterate over the lines
+using some <em>loop</em> construct and accumulate lines that should be grouped together
+into some intermediate mutable variable. When we reach an empty line, we insert
+the content of that variable into another mutable variable that accumulates the
+results.</p>
+<p>Our approach in Haskell isn't so different, except that we do not use loops
+or mutable variables. Instead, we use <strong>recursion</strong>.</p>
+<h2 id="recursion-and-accumulating-information"><a class="header" href="#recursion-and-accumulating-information">Recursion and accumulating information</a></h2>
+<p>Instead of loops, in Haskell we use recursion to model iteration.</p>
+<p>Consider the following contrived example: let's say that
+we want to write an algorithm for adding two natural numbers together,
+and we don't have a standard operation to do that (+), but we do
+have two operations we could do for each number: <code>increment</code>
+and <code>decrement</code>.</p>
+<p>A solution we could come up with is to slowly &quot;pass&quot; one number
+to the other number iteratively, by increment one, and decrement the other.
+And we do that until the number we decrement reaches 0.</p>
+<p>For example for <code>3</code> and <code>2</code>:</p>
+<ul>
+<li>We start with <code>3</code> and <code>2</code>, and we increment <code>3</code> and decrement <code>2</code></li>
+<li>On the next step we now have <code>4</code> and <code>1</code>, we increment <code>4</code> and decrement <code>1</code></li>
+<li>On the next step we now have <code>5</code> and <code>0</code>, since the second number is <code>0</code> we declare <code>5</code> as the result.</li>
+</ul>
+<p>This can be written imperatively using a loop:</p>
+<pre><code class="language-js">function sum(n, m) {
+    while (m /= 0) {
+        n = increment(n);
+        m = decrement(m);
+    }
+    return n;
+}
+</code></pre>
+<p>We can write the same algorithm in Haskell without mutation using recursion:</p>
+<pre><code class="language-hs">sum n m =
+    if m /= 0
+        then sum (increment n) (decrement m)
+        else n
+</code></pre>
+<p><strong>In order to emulate iteration with mutable state, we call the function again
+with the values we want the variables to have in the next iteration.</strong></p>
+<h3 id="evaluation-of-recursion"><a class="header" href="#evaluation-of-recursion">Evaluation of recursion</a></h3>
+<p>Recursion commonly has a bad reputation for being slow and possibly unsafe compared to loops.
+This is because in imperative languages, calling a function often requires creating
+a new call stack.</p>
+<p>However, functional languages (and Haskell in particular) play by different
+rules and implement a feature called tail call elimination - when the result of a function call
+is the result of this function (this is called tail position), we can just drop the current function
+stack frame and then allocate one for the function we call, so we don't require <code>N</code> stack frames
+for <code>N</code> iterations.</p>
+<p>This is of course only one way to do tail call elimination and other
+strategies exists, such as translating code like our recursive <code>sum</code> above to the iteration version.</p>
+<h4 id="laziness"><a class="header" href="#laziness">Laziness</a></h4>
+<p>Haskell plays by slightly different rules because it uses a lazy evaluation strategy
+instead of the much more common strict evaluation strategy. An evaluation strategy
+refers to &quot;when do we evaluate a computation&quot;. In a strict language the answer is simple:
+<em>we evaluate the arguments of a function before entering a function</em>.</p>
+<p>So for example the evaluation of <code>sum (increment 3) (decrement 2)</code> using strict evaluation
+will look like this:</p>
+<ol>
+<li>Evaluate <code>increment 3</code> to <code>4</code></li>
+<li>Evaluate <code>decrement 2</code> to <code>1</code></li>
+<li>Evaluate <code>sum 4 1</code></li>
+</ol>
+<p>Or, alternatively (depending on the language) we reverse (1) and (2) and evaluate the arguments
+from right-to-left instead of left-to-right.</p>
+<p>On the other hand, with lazy evaluation, we <em>only evaluate computation when we need it</em>, where
+<em>when do we need it?</em> is when it is part of a computation that will have some effect on the
+outside world, for example when writing a computation to standard out or sending it over the network.</p>
+<p>So unless this computation is required, it won't be evaluated:</p>
+<pre><code class="language-hs">main =
+    if sum (increment 2) (decrement 3) == 5
+        then putStrLn &quot;Yes.&quot;
+        else putStrLn &quot;No.&quot;
+</code></pre>
+<p>In the case above, we need the result of <code>sum (increment 2) (decrement 3)</code>
+in order to know which message to write,
+so it will be evaluated.</p>
+<pre><code class="language-hs">main =
+    let
+        five = sum (increment 2) (decrement 3)
+    in
+        putStrLn &quot;Not required&quot;
+</code></pre>
+<p>In the case above we don't actually need <code>five</code>, so we don't evaluate it!</p>
+<p>But then if we know we need <code>sum (increment 2) (decrement 3)</code>,
+do we use strict evaluation now? The answer is no - because we might not need
+them to complete the computation. For example in this case:</p>
+<pre><code class="language-hs">const a b = a
+
+main =
+    if const (increment 2) (decrement 3) == 3
+        then putStrLn &quot;Yes.&quot;
+        else putStrLn &quot;No.&quot;
+</code></pre>
+<p><code>const</code> ignores the second argument and returns the first, so we don't actually need
+to calculate <code>decrement 3</code> in order to provide an answer to the computation and in
+turn output an answer to the screen.</p>
+<p>So in lazy evaluation we will evaluate expressions when we need to (they are required
+in order to do something for the user), and we evaluate from the outside in - first
+we enter functions, and then we evaluate the arguments when we need to (usually when the thing
+we want to evaluate appears in some control flow such as the condition of an <code>if</code> expression
+or a pattern in pattern matching).</p>
+<hr />
+<p>I've written a more in-depth blog post about how this works in Haskell:
+<a href="https://gilmi.me/blog/post/2020/10/01/substitution-and-equational-reasoning">Substitution and Equational Reasoning</a>.</p>
+<p>Please read it and try to evalute the following program by hand:</p>
+<pre><code class="language-hs">import Prelude hiding (const, sum) -- feel free to ignore this line
+
+increment n = n + 1
+
+decrement n = n - 1
+
+const a b = a
+
+sum n m =
+    if m /= 0
+        then sum (increment n) (decrement m)
+        else n
+
+main =
+    if const (sum 3 2) (decrement 3) == 5
+        then putStrLn &quot;Yes.&quot;
+        else putStrLn &quot;No.&quot;
+</code></pre>
+<p>Remember that evaluation always begins from <code>main</code>.</p>
+<details>
+  <summary>Solution</summary>
+<p>evaluating <code>main</code></p>
+<pre><code class="language-hs">if const (sum 3 2) (decrement 3) == 5
+    then putStrLn &quot;Yes.&quot;
+    else putStrLn &quot;No.&quot;
+</code></pre>
+<p>expanding <code>const</code></p>
+<pre><code class="language-hs">if sum 3 2 == 5
+    then putStrLn &quot;Yes.&quot;
+    else putStrLn &quot;No.&quot;
+</code></pre>
+<p>expanding <code>sum</code></p>
+<pre><code class="language-hs">if (if 2 /= 0 then sum (increment 3) (decrement 2) else 3) == 5
+    then putStrLn &quot;Yes.&quot;
+    else putStrLn &quot;No.&quot;
+</code></pre>
+<p>evaluating the control flow <code>2 /= 0</code></p>
+<pre><code class="language-hs">if (if True then sum (increment 3) (decrement 2) else 3) == 5
+    then putStrLn &quot;Yes.&quot;
+    else putStrLn &quot;No.&quot;
+</code></pre>
+<p>Choosing the <code>then</code> branch</p>
+<pre><code class="language-hs">if (sum (increment 3) (decrement 2)) == 5
+    then putStrLn &quot;Yes.&quot;
+    else putStrLn &quot;No.&quot;
+</code></pre>
+<p>expanding <code>sum</code></p>
+<pre><code class="language-hs">if
+    ( if decrement 2 /= 0
+        then sum
+            (increment (increment 3))
+            (decrement (decrement 2))
+        else (increment 3)
+    ) == 5
+    then putStrLn &quot;Yes.&quot;
+    else putStrLn &quot;No.&quot;
+</code></pre>
+<p>Evaluating <code>decrement 2</code> in the control flow (notice how both places change!)</p>
+<pre><code class="language-hs">if
+    ( if 1 /= 0
+        then sum
+            (increment (increment 3))
+            (decrement 1)
+        else (increment 3)
+    ) == 5
+    then putStrLn &quot;Yes.&quot;
+    else putStrLn &quot;No.&quot;
+</code></pre>
+<p>Evaluating the control flow <code>1 /= 0</code></p>
+<pre><code class="language-hs">if
+    ( if True
+        then sum
+            (increment (increment 3))
+            (decrement 1)
+        else (increment 3)
+    ) == 5
+    then putStrLn &quot;Yes.&quot;
+    else putStrLn &quot;No.&quot;
+</code></pre>
+<p>Choosing the <code>then</code> branch</p>
+<pre><code class="language-hs">if
+    ( sum
+        (increment (increment 3))
+        (decrement 1)
+    ) == 5
+    then putStrLn &quot;Yes.&quot;
+    else putStrLn &quot;No.&quot;
+</code></pre>
+<p>Expanding <code>sum</code></p>
+<pre><code class="language-hs">if
+    ( if decrement 1 /= 0
+        then sum
+            (increment (increment (increment 3)))
+            (decrement (decrement 1))
+        else increment (increment 3)
+    ) == 5
+    then putStrLn &quot;Yes.&quot;
+    else putStrLn &quot;No.&quot;
+</code></pre>
+<p>Evaluating control flow <code>decrement 1</code></p>
+<pre><code class="language-hs">if
+    ( if 0 /= 0
+        then sum
+            (increment (increment (increment 3)))
+            (decrement 0)
+        else increment (increment 3)
+    ) == 5
+    then putStrLn &quot;Yes.&quot;
+    else putStrLn &quot;No.&quot;
+</code></pre>
+<p>Evaluating control flow <code>0 /= 0</code></p>
+<pre><code class="language-hs">if
+    ( if False
+        then sum
+            (increment (increment (increment 3)))
+            (decrement 0)
+        else increment (increment 3)
+    ) == 5
+    then putStrLn &quot;Yes.&quot;
+    else putStrLn &quot;No.&quot;
+</code></pre>
+<p>Choosing the <code>else</code> branch</p>
+<pre><code class="language-hs">if
+    (increment (increment 3)) == 5
+    then putStrLn &quot;Yes.&quot;
+    else putStrLn &quot;No.&quot;
+</code></pre>
+<p>Evaluate control flow <code>increment (increment 3)</code></p>
+<pre><code class="language-hs">if
+    (increment 3 + 1) == 5
+    then putStrLn &quot;Yes.&quot;
+    else putStrLn &quot;No.&quot;
+</code></pre>
+<p>Evaluate in control flow <code>increment 3</code></p>
+<pre><code class="language-hs">if
+    (3 + 1 + 1) == 5
+    then putStrLn &quot;Yes.&quot;
+    else putStrLn &quot;No.&quot;
+</code></pre>
+<p>Evaluate in control flow <code>3 + 1</code></p>
+<pre><code class="language-hs">if
+    (4 + 1) == 5
+    then putStrLn &quot;Yes.&quot;
+    else putStrLn &quot;No.&quot;
+</code></pre>
+<p>Evaluate in control flow <code>4 + 1</code></p>
+<pre><code class="language-hs">if
+    5 == 5
+    then putStrLn &quot;Yes.&quot;
+    else putStrLn &quot;No.&quot;
+</code></pre>
+<p>Evaluate in control flow <code>5 == 5</code></p>
+<pre><code class="language-hs">if
+    True
+    then putStrLn &quot;Yes.&quot;
+    else putStrLn &quot;No.&quot;
+</code></pre>
+<p>Choosing the <code>then</code> branch</p>
+<pre><code class="language-hs">putStrLn &quot;Yes.&quot;
+</code></pre>
+<p>Which when run will print <code>Yes.</code> to the screen.</p>
+</details>
+<hr />
+<h3 id="general-recursion"><a class="header" href="#general-recursion">General recursion</a></h3>
+<p>In general, when trying to solve problems recursively, it is useful to think
+about the problem in three parts:</p>
+<ol>
+<li>Finding the <strong>base case</strong> (the most simple cases - the ones I already know how to answer)</li>
+<li>Figuring out how to <strong>reduce</strong> the problem to something simpler (so it gets closer to the base case)</li>
+<li><strong>Mitigating the difference</strong> between the reduced version and the solution I need to provide</li>
+</ol>
+<p>The reduce and mitigate steps together are usually called the recursive step.</p>
+<p>Let's take a look at another example problem: generating a list of a particular size
+with a specific value in place of every element.</p>
+<p>In Haskell, this function would have the following signature:</p>
+<pre><code class="language-hs">replicate :: Int -&gt; a -&gt; [a]
+</code></pre>
+<p>Here are a few examples using in:</p>
+<pre><code class="language-hs">ghci&gt; replicate 4 True
+[True,True,True,True]
+ghci&gt; replicate 0 True
+[]
+ghci&gt; replicate (-13) True
+[]
+</code></pre>
+<p>How would we implement this function recursively? How would describe it in three steps above?</p>
+<ol>
+<li><strong>Base case</strong>: the cases I already know how to generate are the cases where the length
+of the list is zero (or less) - we just return an empty list.</li>
+<li><strong>Reduce</strong>: while I don't know how to generate a list of size <code>N</code> (where <code>N</code> is positive),
+if I knew the solution for <code>N-1</code> I could:</li>
+<li><strong>Mitigate</strong>: Add another element to the solution for <code>N-1</code> using the <code>:</code> (cons) operator.</li>
+</ol>
+<p>Try to write this in Haskell!</p>
+<details>
+<summary>Solution</summary>
+<pre><code class="language-hs">replicate :: Int -&gt; a -&gt; [a]
+replicate n x =
+    if n &lt;= 0        -- recognizing the base case
+        then
+            []       -- the solution for the base case
+        else
+            x : replicate (n - 1) x
+    --      --- -------------------
+    --       ^           ^
+    --       |           |
+    --       |           +-------- reduction
+    --       |
+    --       +--- mitigation
+</code></pre>
+</details>
+<h3 id="mutual-recursion"><a class="header" href="#mutual-recursion">Mutual recursion</a></h3>
+<p>When solving functions recursively we usually call the same function again,
+but that doesn't have to be the case. It is possible to reduce our problem
+to something simpler that requires an answer from a different function.
+If, in turn, that function will (or another function in that call chain)
+call our function again, we have a <strong>mutual recursive</strong> solution.</p>
+<p>For example, let's write two functions, one that checks whether a natural number
+is even or not, and one that checks whether a number is odd or not
+by only decrementing it.</p>
+<pre><code class="language-hs">even :: Int -&gt; Bool
+
+odd :: Int -&gt; Bool
+</code></pre>
+<p>Let's start with <code>even</code>, how should we solve this recursively?</p>
+<ol>
+<li><strong>Base case</strong>: I know the answer for <code>0</code> - it is <code>True</code>.</li>
+<li><strong>Reduction</strong>: I don't know the answer for a general <code>N</code>, but I could check whether <code>N - 1</code> is odd,</li>
+<li><strong>Mitigation</strong>: if <code>N - 1</code> is odd, then <code>N</code> is even! if it isn't odd, then <code>N</code> isn't even.</li>
+</ol>
+<p>What about <code>odd</code>?</p>
+<ol>
+<li><strong>Base case</strong>: I know the answer for <code>0</code> - it is <code>False</code>.</li>
+<li><strong>Reduction</strong>: I don't know the answer for a general <code>N</code>, but I could check whether <code>N - 1</code> is even,</li>
+<li><strong>Mitigation</strong>: if <code>N - 1</code> is even, then <code>N</code> is odd! if it isn't even, then <code>N</code> isn't odd.</li>
+</ol>
+<p>Try writing this in Haskell!</p>
+<details>
+<summary>Solution</summary>
+<pre><code class="language-hs">even :: Int -&gt; Bool
+even n =
+    if n == 0
+        then
+            True
+        else
+            odd (n - 1)
+
+odd :: Int -&gt; Bool
+odd n =
+    if n == 0
+        then
+            False
+        else
+            even (n - 1)
+
+</code></pre>
+</details>
+<h2 id="partial-functions"><a class="header" href="#partial-functions">Partial functions</a></h2>
+<p>because we didn't handle negative cases in the example above, our functions will loop forever
+when a negative value is passed as input. A function that does not return a result for some value
+(either by not terminating or by throwing an error) is called <strong>a partial function</strong>
+(because it only returns a result of a part of the possible inputs).</p>
+<p>partial functions are generally considered <strong>bad practice</strong> because they can have
+unexpected behaviour at runtime, so we want to <strong>avoid using</strong> partial functions
+as well as <strong>avoid writing</strong> partial functions.</p>
+<p>The best way to avoid writing partial functions is by covering all inputs!
+In the situation above, it is definitely possible to handle negative numbers
+as well, so we should do that!</p>
+<p>There are cases where we can't possibly cover all inputs, but it is sometimes
+possible to mitigate that by restricting the inputs further using the type system.</p>
+<p>For example, the <code>head :: [a] -&gt; a</code> function in <code>Prelude</code> promises
+to return the first element (the head) of a list, but we know that lists
+could possibly be empty, so how can this function deliver on its promise?</p>
+<p>Unfortunately, it can't. But there exists a different function that can:
+<code>head :: NonEmpty a -&gt; a</code> from the
+<a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-List-NonEmpty.html"><code>Data.List.NonEmpty</code></a>
+module! The trick here is that this other <code>head</code> does not take a general list
+as input, it takes a different type entirely, one that promises to have
+at least one element, and therefore can deliver on its promise!</p>
+<p>We could also potentially use smart constructors with <code>newtype</code> and enforce some sort
+of a restriction in the type system, as we saw in earlier chapters.
+But this solution can sometimes be less ergonomic to use.</p>
+<p>An alternative approach is to use <code>data</code> types to encode the absence of a proper result,
+for example, using <code>Maybe</code>, as we'll see in the next chapter.</p>
+<h2 id="parsing-markup"><a class="header" href="#parsing-markup">Parsing markup?</a></h2>
+<p>Let's get back to the task at hand.</p>
+<p>As stated previously, our strategy for parsing the markup text is:</p>
+<ol>
+<li>Split the string to a list where each element is a separate line (which we can do with <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Prelude.html#v:lines"><code>lines</code></a>), and</li>
+<li>Go over the list line by line and process it, remembering
+information from previous lines if necessary</li>
+</ol>
+<p>Remember that we want to start by ignoring all of the markup syntax
+and just group lines together into paragraphs (paragraphs are separated by an empty line),
+and iteratively add new features later in the chapter:</p>
+<pre><code class="language-hs">parse :: String -&gt; Document
+parse = parseLines [] . lines -- (1)
+
+parseLines :: [String] -&gt; [String] -&gt; Document
+parseLines currentParagraph txts =
+    let
+        paragraph = Paragraph (unlines (reverse currentParagraph)) -- (2), (3)
+    in
+        case txts of
+            [] -&gt; [paragraph]
+            currentLine : rest -&gt;
+                if trim currentLine == &quot;&quot;
+                    then
+                        paragraph : parseLines [] rest -- (4)
+                    else
+                        parseLines (currentLine : currentParagraph) rest -- (5)
+
+trim :: String -&gt; String
+trim = unwords . words
+</code></pre>
+<p>Things to note:</p>
+<ol>
+<li>We pass a list that contains the currently grouped paragraph (paragraphs are seperated by an empty line)</li>
+<li>Because of laziness, <code>paragraph</code> is not computed until it's needed, so we don't have to worry about
+the performance implications in the case the we are still grouping lines</li>
+<li>Why do we reverse <code>currentParagraph</code>? (See point (5))</li>
+<li>When we run into an empty line we add the accumulated paragraph to the resulting list (A <code>Document</code> is a list of structures) and start the function again with the rest of the input.</li>
+<li>We pass the new lines to be grouped in a paragraph <strong>in reverse order</strong> because of
+performance characteristics - because of the nature of singly-linked lists,
+prepending an element is fast, and appending is slow. Prepending only requires
+us to create a new cons (<code>:</code>) cell to hold a pointer to the value and a pointer to the list,
+but appending requires us to traverse the list to its end and rebuild the cons cells -
+the last one will contain the last value of the list and a pointer to the list to append,
+the next will contain the value before the last value of the list and a pointer to the
+list which contains the last element and the appended list, and so on.</li>
+</ol>
+<p>This code above will group together paragraphs in a structure, but how do we view our result?
+In the next chapter will take a short detour and talk a bit about type classes, and how
+they can help us in this scenario.</p>
+<h1 id="displaying-the-parsing-results-typeclasses"><a class="header" href="#displaying-the-parsing-results-typeclasses">Displaying the parsing results (typeclasses)</a></h1>
+<p>We want to be able to print a textual representation of values
+of our <code>Document</code> type. There are a few ways to do that:</p>
+<ol>
+<li>Write our own function of type <code>Document -&gt; String</code> which we could then print, or</li>
+<li>Have Haskell write one for us</li>
+</ol>
+<p>Haskell provides us with mechanism that can automatically generates the implementation of a
+<em>typeclass</em> function called <code>show</code>, that will convert our type to <code>String</code>.</p>
+<p>The type of the function <code>show</code> looks like this:</p>
+<pre><code class="language-hs">show :: Show a =&gt; a -&gt; String
+</code></pre>
+<p>This is something new we haven't seen before. Between <code>::</code> and <code>=&gt;</code>
+you see what is called a <strong>type class constraint</strong> on the type <code>a</code>. What
+we say in this signature, is that the function <code>show</code> can work on any
+type that is a member of the type class <code>Show</code>.</p>
+<p>Type classes is a feature in Haskell that allows us to declare common
+interface for different types. In our case, Haskell's standard library
+defines the type class <code>Show</code> in the following (this is a simplified
+version but good enough for our purposes):</p>
+<pre><code class="language-hs">class Show a where
+  show :: a -&gt; String
+</code></pre>
+<p>This means that we have now declared a common interface for Haskell
+types that want it. Any time that wants to implement it needs to
+define an <em>instance</em> for the type class. For example:</p>
+<pre><code class="language-hs">instance Show Bool where
+  show x =
+    case x of
+      True -&gt; &quot;True&quot;
+      False -&gt; &quot;False&quot;
+</code></pre>
+<p>If all the types we use while defining our data type already implement
+this, we can automatically derive it by adding <code>deriving Show</code> at the
+end of the data definition.</p>
+<pre><code class="language-hs">data Structure
+  = Header Int String
+  | Paragraph String
+  | UnorderedList [String]
+  | OrderedList [String]
+  | CodeBlock [String]
+  deriving Show
+</code></pre>
+<p>Now we can use the function <code>show :: Show a =&gt; a -&gt; String</code> for any
+type that implements String. For example, with print:</p>
+<pre><code class="language-hs">print :: Show a =&gt; a -&gt; IO ()
+print = putStrLn . show
+</code></pre>
+<p>We can first convert our type to <code>String</code> and then write it to the
+standard output.</p>
+<p>And because lists also implement <code>Show</code> for any element type that has
+a <code>Show</code> instance, we can now print <code>Document</code>s, because they are just
+aliases for <code>[Structure]</code>. Try it!</p>
+<p>There are many type classes Haskellers use everyday. A couple more are
+<code>Eq</code> for equality and <code>Ord</code> for ordering.</p>
+<p>Typeclasses often come with &quot;rules&quot; or &quot;laws&quot; that instances should satisfy,
+the purpose of these laws is to provide <em>predictable behaviour</em> across
+instances, so that when we run into a new instance we can be confident
+that it will behave in a certain expected way.</p>
+<p>As an example, let's look at the <code>Semigroup</code> typeclass:</p>
+<pre><code class="language-hs">class Semigroup a where
+  (&lt;&gt;) :: a -&gt; a -&gt; a
+</code></pre>
+<p>This typeclass provides a common interface for types with an operation <code>&lt;&gt;</code>
+that can combine two values into one in some way.</p>
+<p>This typeclass also mentions that this <code>&lt;&gt;</code> operation should be associative,
+meaing that these two sides should do the same thing:</p>
+<pre><code class="language-hs">x &lt;&gt; (y &lt;&gt; z) = (x &lt;&gt; y) &lt;&gt; z
+</code></pre>
+<p>An example of a lawful instance of <code>Semigroup</code> is lists with the append operation (<code>++</code>):</p>
+<pre><code class="language-hs">instance Semigroup [a] where
+  (&lt;&gt;) = (++)
+</code></pre>
+<p>Unfortunately the Haskell type system cannot &quot;prove&quot; that instances
+satisfy these laws, but as a community we often shun unlawful instances.</p>
+<p>We have <a href="02_04-safer_construction.html#appending-htmlstructure">previously</a>
+created a function that looks like this for our <code>Html</code> EDSL!
+We can add a <code>Semigroup</code> instance for our <code>HtmlStructure</code> data type
+and have a nicer to use API!</p>
+<p>Please do this and remove the <code>append_</code> function from the API.</p>
+<h1 id="parsing-markup-part-02-pattern-matching"><a class="header" href="#parsing-markup-part-02-pattern-matching">Parsing markup part 02 (Pattern matching)</a></h1>
+<h2 id="maybe"><a class="header" href="#maybe">Maybe</a></h2>
+<pre><code class="language-hs">data Maybe a
+    = Nothing
+    | Just a
+</code></pre>
+<p>The data type <code>Maybe</code> from the standard library is used to add an additional
+value to a type: the absence of a value. For example, <code>Maybe True</code> has three values,
+two with the <code>Just</code> constructor to represent regular boolean values
+(<code>Just True</code> and <code>Just False</code>) and another value, <code>Nothing</code> to represent
+the absence of a boolean value.</p>
+<!--
+
+We can use this 
+
+We can use pattern matching to process this information, matching on
+the `Nothing` or `Just` cases, or we could use a function such as
+`maybe`:
+
+```
+maybe :: b -> (a -> b) -> Maybe a -> b
+maybe nothingCase func x =
+  case x of
+    Nothing -> nothingCase
+    Just v -> func v
+```
+
+Maybe is useful in many many situations.
+
+---
+
+(3) Recursion and accumulating information
+
+Instead of loops, in Haskell we use recursion to model iteration.
+
+In our case, we define a local function inside `parse` named `impl`
+and refer to it inside itself when we want to process the next line
+using the information we learned from the current line.
+
+In `impl`, we process a line using information from the current part
+we are processing. For example, if the line we are currently trying to
+parse is a regular paragraph line, we will want to check if the last
+line was also part of a paragraph so if it was, we can group them
+together.
+If it wasn't we want to mark that part as done, return it, but wait
+for the next lines to know if the current line that is part of a
+paragraph could be grouped to the next line as well.
+
+When we are done processing some markup part, we say that we return a
+list where the first element of it is the markup part we parsed, and
+the rest of it is the parsing of the next lines.
+
+We are done recursing when there are no more lines to process.
+
+Note that the order of pattern matching *matters*. Haskell will choose
+the first pattern in order that matches.
+
+Let's break down a part of the code:
+
+```
+('@' : ' ' : line) : rest ->
+  maybe id (:) current (Header 1 line : impl Nothing rest)
+```
+
+The thing we are pattern matching on is the current line (and the rest
+of the lines) and we want to see if this line is a header.
+If it is, we do the following:
+
+```
+  maybe id (:) current (Header 1 line : impl Nothing rest)
+```
+
+Let's break it down further:
+
+`Header 1 line : impl Nothing rest` - since our line is a header, we
+will want to return a `Header`, and process the rest of the lines
+without taking account previous lines (because headers do not group
+with other lines)
+
+`maybe id (:) current` - here we take care of the information from
+previous rows. If, for example, we had a paragraph from the previous
+line, `current` will be `Just (Paragraph ...)`, s we'd like to do
+`(:) current (Header 1 line : impl Nothing rest)`.
+If for example the previous line was an empty line or another header,
+then there isn't any information that carried from previous lines and
+`current` would be `Nothing, so in this case we don't want to add
+anything and will want to have
+`id (Header 1 line : impl Nothing rest)`.
+
+`id` is the identity function. it looks like this:
+
+```
+id :: a -> a
+id x = x
+```
+
+It returns what it gets. Does nothing.
+
+---
+
+This code is a bit more involved than what we saw previously, so don't
+worry if it takes to time to figure out. Try to simulate how the code
+behaves at each iteration with different inputs.
+
+-->
 
                     </main>
 

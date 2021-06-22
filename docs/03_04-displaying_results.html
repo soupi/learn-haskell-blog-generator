@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Building an HTML printer library - Learning Haskell by building a blog generator</title>
+        <title>Displaying the parsing results (typeclasses) - Learning Haskell by building a blog generator</title>
         
         
 
@@ -95,7 +95,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="00-about.html"><strong aria-hidden="true">1.</strong> About this tutorial</a></li><li class="chapter-item expanded "><a href="01-hello.html"><strong aria-hidden="true">2.</strong> Hello world</a></li><li class="chapter-item expanded "><a href="02-html_printer.html" class="active"><strong aria-hidden="true">3.</strong> Building an HTML printer library</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="02_01-html_content.html"><strong aria-hidden="true">3.1.</strong> Flexible html content (functions)</a></li><li class="chapter-item expanded "><a href="02_02-type_signatures.html"><strong aria-hidden="true">3.2.</strong> Adding type signatures</a></li><li class="chapter-item expanded "><a href="02_03-edsls.html"><strong aria-hidden="true">3.3.</strong> Embedded Domain Specific Languages</a></li><li class="chapter-item expanded "><a href="02_04-safer_construction.html"><strong aria-hidden="true">3.4.</strong> Safer HTML construction with types</a></li><li class="chapter-item expanded "><a href="02_05-modules.html"><strong aria-hidden="true">3.5.</strong> Preventing incorrect use with modules</a></li><li class="chapter-item expanded "><a href="02_06-escaping_characters.html"><strong aria-hidden="true">3.6.</strong> Escaping characters</a></li><li class="chapter-item expanded "><a href="02_07-internal_modules.html"><strong aria-hidden="true">3.7.</strong> Exposing internal functionality (Internal modules)</a></li><li class="chapter-item expanded "><a href="02_09-exercises.html"><strong aria-hidden="true">3.8.</strong> Exercises</a></li><li class="chapter-item expanded "><a href="02_10-summary.html"><strong aria-hidden="true">3.9.</strong> Summary</a></li></ol></li><li class="chapter-item expanded "><a href="03-markup.html"><strong aria-hidden="true">4.</strong> Custom markup language</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="03_01-data_type.html"><strong aria-hidden="true">4.1.</strong> Representing the markup language as a Haskell data type</a></li><li class="chapter-item expanded "><a href="03_02-parsing_01.html"><strong aria-hidden="true">4.2.</strong> Parsing markup part 01 (Recursion)</a></li><li class="chapter-item expanded "><a href="03_04-displaying_results.html"><strong aria-hidden="true">4.3.</strong> Displaying the parsing results (typeclasses)</a></li><li class="chapter-item expanded "><a href="03_03-parsing_02.html"><strong aria-hidden="true">4.4.</strong> Parsing markup part 02 (Pattern matching)</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="00-about.html"><strong aria-hidden="true">1.</strong> About this tutorial</a></li><li class="chapter-item expanded "><a href="01-hello.html"><strong aria-hidden="true">2.</strong> Hello world</a></li><li class="chapter-item expanded "><a href="02-html_printer.html"><strong aria-hidden="true">3.</strong> Building an HTML printer library</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="02_01-html_content.html"><strong aria-hidden="true">3.1.</strong> Flexible html content (functions)</a></li><li class="chapter-item expanded "><a href="02_02-type_signatures.html"><strong aria-hidden="true">3.2.</strong> Adding type signatures</a></li><li class="chapter-item expanded "><a href="02_03-edsls.html"><strong aria-hidden="true">3.3.</strong> Embedded Domain Specific Languages</a></li><li class="chapter-item expanded "><a href="02_04-safer_construction.html"><strong aria-hidden="true">3.4.</strong> Safer HTML construction with types</a></li><li class="chapter-item expanded "><a href="02_05-modules.html"><strong aria-hidden="true">3.5.</strong> Preventing incorrect use with modules</a></li><li class="chapter-item expanded "><a href="02_06-escaping_characters.html"><strong aria-hidden="true">3.6.</strong> Escaping characters</a></li><li class="chapter-item expanded "><a href="02_07-internal_modules.html"><strong aria-hidden="true">3.7.</strong> Exposing internal functionality (Internal modules)</a></li><li class="chapter-item expanded "><a href="02_09-exercises.html"><strong aria-hidden="true">3.8.</strong> Exercises</a></li><li class="chapter-item expanded "><a href="02_10-summary.html"><strong aria-hidden="true">3.9.</strong> Summary</a></li></ol></li><li class="chapter-item expanded "><a href="03-markup.html"><strong aria-hidden="true">4.</strong> Custom markup language</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="03_01-data_type.html"><strong aria-hidden="true">4.1.</strong> Representing the markup language as a Haskell data type</a></li><li class="chapter-item expanded "><a href="03_02-parsing_01.html"><strong aria-hidden="true">4.2.</strong> Parsing markup part 01 (Recursion)</a></li><li class="chapter-item expanded "><a href="03_04-displaying_results.html" class="active"><strong aria-hidden="true">4.3.</strong> Displaying the parsing results (typeclasses)</a></li><li class="chapter-item expanded "><a href="03_03-parsing_02.html"><strong aria-hidden="true">4.4.</strong> Parsing markup part 02 (Pattern matching)</a></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -163,23 +163,99 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="building-an-html-printer-library"><a class="header" href="#building-an-html-printer-library">Building an HTML printer library</a></h1>
-<p>In this part we'll explore a few basic building blocks in Haskell,
-including functions, types and modules, while building a small HTML printer library
-with which we will later construct HTML pages from our markup blog posts.</p>
+                        <h1 id="displaying-the-parsing-results-typeclasses"><a class="header" href="#displaying-the-parsing-results-typeclasses">Displaying the parsing results (typeclasses)</a></h1>
+<p>We want to be able to print a textual representation of values
+of our <code>Document</code> type. There are a few ways to do that:</p>
+<ol>
+<li>Write our own function of type <code>Document -&gt; String</code> which we could then print, or</li>
+<li>Have Haskell write one for us</li>
+</ol>
+<p>Haskell provides us with mechanism that can automatically generates the implementation of a
+<em>typeclass</em> function called <code>show</code>, that will convert our type to <code>String</code>.</p>
+<p>The type of the function <code>show</code> looks like this:</p>
+<pre><code class="language-hs">show :: Show a =&gt; a -&gt; String
+</code></pre>
+<p>This is something new we haven't seen before. Between <code>::</code> and <code>=&gt;</code>
+you see what is called a <strong>type class constraint</strong> on the type <code>a</code>. What
+we say in this signature, is that the function <code>show</code> can work on any
+type that is a member of the type class <code>Show</code>.</p>
+<p>Type classes is a feature in Haskell that allows us to declare common
+interface for different types. In our case, Haskell's standard library
+defines the type class <code>Show</code> in the following (this is a simplified
+version but good enough for our purposes):</p>
+<pre><code class="language-hs">class Show a where
+  show :: a -&gt; String
+</code></pre>
+<p>This means that we have now declared a common interface for Haskell
+types that want it. Any time that wants to implement it needs to
+define an <em>instance</em> for the type class. For example:</p>
+<pre><code class="language-hs">instance Show Bool where
+  show x =
+    case x of
+      True -&gt; &quot;True&quot;
+      False -&gt; &quot;False&quot;
+</code></pre>
+<p>If all the types we use while defining our data type already implement
+this, we can automatically derive it by adding <code>deriving Show</code> at the
+end of the data definition.</p>
+<pre><code class="language-hs">data Structure
+  = Header Int String
+  | Paragraph String
+  | UnorderedList [String]
+  | OrderedList [String]
+  | CodeBlock [String]
+  deriving Show
+</code></pre>
+<p>Now we can use the function <code>show :: Show a =&gt; a -&gt; String</code> for any
+type that implements String. For example, with print:</p>
+<pre><code class="language-hs">print :: Show a =&gt; a -&gt; IO ()
+print = putStrLn . show
+</code></pre>
+<p>We can first convert our type to <code>String</code> and then write it to the
+standard output.</p>
+<p>And because lists also implement <code>Show</code> for any element type that has
+a <code>Show</code> instance, we can now print <code>Document</code>s, because they are just
+aliases for <code>[Structure]</code>. Try it!</p>
+<p>There are many type classes Haskellers use everyday. A couple more are
+<code>Eq</code> for equality and <code>Ord</code> for ordering.</p>
+<p>Typeclasses often come with &quot;rules&quot; or &quot;laws&quot; that instances should satisfy,
+the purpose of these laws is to provide <em>predictable behaviour</em> across
+instances, so that when we run into a new instance we can be confident
+that it will behave in a certain expected way.</p>
+<p>As an example, let's look at the <code>Semigroup</code> typeclass:</p>
+<pre><code class="language-hs">class Semigroup a where
+  (&lt;&gt;) :: a -&gt; a -&gt; a
+</code></pre>
+<p>This typeclass provides a common interface for types with an operation <code>&lt;&gt;</code>
+that can combine two values into one in some way.</p>
+<p>This typeclass also mentions that this <code>&lt;&gt;</code> operation should be associative,
+meaing that these two sides should do the same thing:</p>
+<pre><code class="language-hs">x &lt;&gt; (y &lt;&gt; z) = (x &lt;&gt; y) &lt;&gt; z
+</code></pre>
+<p>An example of a lawful instance of <code>Semigroup</code> is lists with the append operation (<code>++</code>):</p>
+<pre><code class="language-hs">instance Semigroup [a] where
+  (&lt;&gt;) = (++)
+</code></pre>
+<p>Unfortunately the Haskell type system cannot &quot;prove&quot; that instances
+satisfy these laws, but as a community we often shun unlawful instances.</p>
+<p>We have <a href="02_04-safer_construction.html#appending-htmlstructure">previously</a>
+created a function that looks like this for our <code>Html</code> EDSL!
+We can add a <code>Semigroup</code> instance for our <code>HtmlStructure</code> data type
+and have a nicer to use API!</p>
+<p>Please do this and remove the <code>append_</code> function from the API.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                         
-                            <a rel="prev" href="01-hello.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="03_02-parsing_01.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
                         
 
                         
-                            <a rel="next" href="02_01-html_content.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="03_03-parsing_02.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
                         
@@ -191,13 +267,13 @@ with which we will later construct HTML pages from our markup blog posts.</p>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                 
-                    <a rel="prev" href="01-hello.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="03_02-parsing_01.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
                 
 
                 
-                    <a rel="next" href="02_01-html_content.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next" href="03_03-parsing_02.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
                 
