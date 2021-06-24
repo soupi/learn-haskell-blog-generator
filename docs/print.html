@@ -1980,7 +1980,7 @@ not contain the details of the language, that for example that we use '#' for
 ordered lists) gives us the freedom to do so much more than just
 converting to html that it's usually worth it in my opinion unless you
 really need to optimize the process.</p>
-<h1 id="parsing-markup-part-01-pattern-matching-recursion-type-classes"><a class="header" href="#parsing-markup-part-01-pattern-matching-recursion-type-classes">Parsing markup part 01 (Pattern matching, recursion, type classes)</a></h1>
+<h1 id="parsing-markup-part-01-recursion"><a class="header" href="#parsing-markup-part-01-recursion">Parsing markup part 01 (Recursion)</a></h1>
 <p>Let's have a look at how to parse a multi-lined string of markup text
 written by a user and convert it to the <code>Document</code> type we defined
 in the previous chapter.</p>
@@ -2017,7 +2017,7 @@ and we don't have a standard operation to do that (+), but we do
 have two operations we could do for each number: <code>increment</code>
 and <code>decrement</code>.</p>
 <p>A solution we could come up with is to slowly &quot;pass&quot; one number
-to the other number iteratively, by increment one, and decrement the other.
+to the other number iteratively, by incrementing one, and decrementing the other.
 And we do that until the number we decrement reaches 0.</p>
 <p>For example for <code>3</code> and <code>2</code>:</p>
 <ul>
@@ -2068,9 +2068,9 @@ will look like this:</p>
 <p>Or, alternatively (depending on the language) we reverse (1) and (2) and evaluate the arguments
 from right-to-left instead of left-to-right.</p>
 <p>On the other hand, with lazy evaluation, we <em>only evaluate computation when we need it</em>, where
-<em>when do we need it?</em> is when it is part of a computation that will have some effect on the
-outside world, for example when writing a computation to standard out or sending it over the network.</p>
-<p>So unless this computation is required, it won't be evaluated:</p>
+'<em>when do we need it?</em>' is when it is part of a computation that will have some effect on the
+outside world, for example when writing a computation to standard output or sending it over the network.</p>
+<p>So unless this computation is required, it won't be evaluated. For example:</p>
 <pre><code class="language-hs">main =
     if sum (increment 2) (decrement 3) == 5
         then putStrLn &quot;Yes.&quot;
@@ -2078,7 +2078,7 @@ outside world, for example when writing a computation to standard out or sending
 </code></pre>
 <p>In the case above, we need the result of <code>sum (increment 2) (decrement 3)</code>
 in order to know which message to write,
-so it will be evaluated.</p>
+so it will be evaluated. But:</p>
 <pre><code class="language-hs">main =
     let
         five = sum (increment 2) (decrement 3)

@@ -1,4 +1,4 @@
-# Parsing markup part 01 (Pattern matching, recursion, type classes)
+# Parsing markup part 01 (Recursion)
 
 Let's have a look at how to parse a multi-lined string of markup text
 written by a user and convert it to the `Document` type we defined
@@ -44,7 +44,7 @@ have two operations we could do for each number: `increment`
 and `decrement`.
 
 A solution we could come up with is to slowly "pass" one number
-to the other number iteratively, by increment one, and decrement the other.
+to the other number iteratively, by incrementing one, and decrementing the other.
 And we do that until the number we decrement reaches 0.
 
 For example for `3` and `2`:
@@ -110,10 +110,10 @@ Or, alternatively (depending on the language) we reverse (1) and (2) and evaluat
 from right-to-left instead of left-to-right.
 
 On the other hand, with lazy evaluation, we *only evaluate computation when we need it*, where
-*when do we need it?* is when it is part of a computation that will have some effect on the
-outside world, for example when writing a computation to standard out or sending it over the network.
+'*when do we need it?*' is when it is part of a computation that will have some effect on the
+outside world, for example when writing a computation to standard output or sending it over the network.
 
-So unless this computation is required, it won't be evaluated:
+So unless this computation is required, it won't be evaluated. For example:
 
 ```hs
 main =
@@ -124,7 +124,7 @@ main =
 
 In the case above, we need the result of `sum (increment 2) (decrement 3)`
 in order to know which message to write,
-so it will be evaluated.
+so it will be evaluated. But:
 
 ```hs
 main =
