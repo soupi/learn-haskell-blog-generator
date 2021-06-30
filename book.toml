@@ -2,10 +2,6 @@
 authors = ["Gil Mizrahi"]
 language = "en"
 multilingual = false
-src = "mdbook-src"
+src = "src"
 title = "Learning Haskell by building a blog generator"
 description = "A step by step guide to learning Haskell by building a simple static blog generator"
-
-[build]
-build-dir = "docs"
-create-missing = true
