@@ -1,0 +1,405 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Escaping characters - Learning Haskell by building a blog generator</title>
+                
+
+        <!-- Custom HTML head -->
+        
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="A step by step guide to learning Haskell by building a simple static blog generator">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+                <link rel="icon" href="favicon.svg">
+                        <link rel="shortcut icon" href="favicon.png">
+                <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+                <link rel="stylesheet" href="css/print.css" media="print">
+        
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+                <link rel="stylesheet" href="fonts/fonts.css">
+        
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+            </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="00-about.html"><strong aria-hidden="true">1.</strong> About this tutorial</a></li><li class="chapter-item expanded "><a href="01-hello.html"><strong aria-hidden="true">2.</strong> Hello world</a></li><li class="chapter-item expanded "><a href="02-html_printer.html"><strong aria-hidden="true">3.</strong> Building an HTML printer library</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="02_01-html_content.html"><strong aria-hidden="true">3.1.</strong> Flexible html content (functions)</a></li><li class="chapter-item expanded "><a href="02_02-type_signatures.html"><strong aria-hidden="true">3.2.</strong> Adding type signatures</a></li><li class="chapter-item expanded "><a href="02_03-edsls.html"><strong aria-hidden="true">3.3.</strong> Embedded Domain Specific Languages</a></li><li class="chapter-item expanded "><a href="02_04-safer_construction.html"><strong aria-hidden="true">3.4.</strong> Safer HTML construction with types</a></li><li class="chapter-item expanded "><a href="02_05-modules.html"><strong aria-hidden="true">3.5.</strong> Preventing incorrect use with modules</a></li><li class="chapter-item expanded "><a href="02_06-escaping_characters.html" class="active"><strong aria-hidden="true">3.6.</strong> Escaping characters</a></li><li class="chapter-item expanded "><a href="02_07-internal_modules.html"><strong aria-hidden="true">3.7.</strong> Exposing internal functionality (Internal modules)</a></li><li class="chapter-item expanded "><a href="02_09-exercises.html"><strong aria-hidden="true">3.8.</strong> Exercises</a></li><li class="chapter-item expanded "><a href="02_10-summary.html"><strong aria-hidden="true">3.9.</strong> Summary</a></li></ol></li><li class="chapter-item expanded "><a href="03-markup.html"><strong aria-hidden="true">4.</strong> Custom markup language</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="03_01-data_type.html"><strong aria-hidden="true">4.1.</strong> Representing the markup language as a Haskell data type</a></li><li class="chapter-item expanded "><a href="03_02-parsing_01.html"><strong aria-hidden="true">4.2.</strong> Parsing markup part 01 (Recursion)</a></li><li class="chapter-item expanded "><a href="03_04-displaying_results.html"><strong aria-hidden="true">4.3.</strong> Displaying the parsing results (typeclasses)</a></li><li class="chapter-item expanded "><a href="03_03-parsing_02.html"><strong aria-hidden="true">4.4.</strong> Parsing markup part 02 (Pattern matching)</a></li></ol></li></ol>            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                                                <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                                            </div>
+
+                    <h1 class="menu-title">Learning Haskell by building a blog generator</h1>
+
+                    <div class="right-buttons">
+                                                <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                                                                        
+                    </div>
+                </div>
+
+                                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="escaping-characters"><a class="header" href="#escaping-characters">Escaping characters</a></h1>
+<p>Now that <code>Html</code> has its own source file and module, and creating
+html code can be done only via the functions we exported,
+we can also handle user input that may contain characters we
+that may conflict with our meta language html,
+such as <code>&lt;</code> and <code>&gt;</code> which are used for creating HTML tags.</p>
+<p>We can convert these characters into different strings that HTML can handle.</p>
+<p>See <a href="https://stackoverflow.com/questions/7381974/which-characters-need-to-be-escaped-in-html">https://stackoverflow.com/questions/7381974/which-characters-need-to-be-escaped-in-html</a>
+for a list of characters we need to escape.</p>
+<p>Let's create a new function called <code>escape</code>:</p>
+<pre><code class="language-hs">escape :: String -&gt; String
+escape =
+  let
+    escapeChar c =
+      case c of
+        '&lt;' -&gt; &quot;&amp;lt;&quot;
+        '&gt;' -&gt; &quot;&amp;gt;&quot;
+        '&amp;' -&gt; &quot;&amp;amp;&quot;
+        '&quot;' -&gt; &quot;&amp;quot;&quot;
+        '\'' -&gt; &quot;&amp;#39;&quot;
+        _ -&gt; [c]
+  in
+    concat . map escapeChar
+</code></pre>
+<p>In <code>escape</code> we see a few new things:</p>
+<ol>
+<li>let expressions - we can define local names using this syntax:</li>
+</ol>
+<pre><code class="language-hs">let
+  &lt;name&gt; = &lt;expression&gt;
+in
+  &lt;expression&gt;
+</code></pre>
+<p>This will make <name> available as a variable in the second <expression>.</p>
+<ol start="2">
+<li>
+<p>Pattern matching with multiple patterns - we match on different
+characters and convert them to a string. Note that <code>_</code> is a &quot;catch
+all&quot; pattern that will always succeed.</p>
+</li>
+<li>
+<p>Two new functions: <code>map</code> and <code>concat</code>, we'll talk about these more in depth</p>
+</li>
+</ol>
+<h2 id="linked-lists-briefly"><a class="header" href="#linked-lists-briefly">Linked lists briefly</a></h2>
+<p>Linked lists are a very common data structure in Haskell, so common that
+they have their own special syntax:</p>
+<ol>
+<li>The type for lists are denoted with brackets and inside them is the type of the element. For example:
+<ul>
+<li><code>[Int]</code> - a list of integers</li>
+<li><code>[Char]</code> - a list of characters</li>
+<li><code>[String]</code> - a list of strings</li>
+<li><code>[[String]]</code> - a list of a list of strings</li>
+</ul>
+</li>
+<li>An expression representing a empty list is written like this: <code>[]</code></li>
+<li>Prepending an element to a list is done with the operator <code>:</code> (pronounced cons) which is right-associative (like <code>-&gt;</code>).
+For example: <code>1 : []</code>, or <code>1 : 2 : 3 : []</code>.</li>
+<li>The above lists can also be written like this: <code>[1]</code> and <code>[1, 2, 3]</code>.</li>
+</ol>
+<p>Also, Strings are linked lists of chararacters - String is defined as:
+<code>type String = [Char]</code>, so we can use them the same way we use lists.</p>
+<hr />
+<p>Do note, however, that linked lists, despite their convenience, are often
+not the right tool for the job. They are not particularily space efficient
+and are slow for appending, random access and more. That also makes <code>String</code>
+a lot less efficient than it could be. And I generally recommend using a
+different string type, <code>Text</code>, instead, which is available in an external package.
+We will talk about lists, <code>Text</code>, and other data structures in the future!</p>
+<hr />
+<p>We can implement our own operations on lists by using pattern matching and recursion.
+And we'll touch on this subject later when talking about ADTs.</p>
+<p>For now, we will use the various functions found in the <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-List.html">Data.List</a> module. Specifically, <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-List.html#v:map">map</a> and <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-List.html#v:concat">concat</a>.</p>
+<p><code>map</code> applying a function to each of the elements in a list. Its type signature is:</p>
+<pre><code class="language-hs">map :: (a -&gt; b) -&gt; [a] -&gt; [b]
+</code></pre>
+<p>For example:</p>
+<pre><code class="language-hs">map not [False, True, False] == [True, False, True]
+</code></pre>
+<p>Or as can be seen in our <code>escape</code> function, this can help us escape each character:</p>
+<pre><code class="language-hs">map escapeChar ['&lt;','h','1','&gt;'] == [&quot;&amp;lt;&quot;,&quot;h&quot;,&quot;1&quot;,&quot;&amp;gt;&quot;]
+</code></pre>
+<p>However, note that the <code>escapeChar</code> has the type <code>Char -&gt; String</code>,
+so the result type of <code>map escapeChar ['&lt;','h','1','&gt;']</code> is <code>[String]</code>,
+and what we really want is a <code>String</code> and not <code>[String]</code>.</p>
+<p>This is where <code>concat</code> enters the picture. <code>concat</code> has the type</p>
+<pre><code class="language-hs">concat :: [[a]] -&gt; [a]
+</code></pre>
+<p>It flattens a list of list of something into a list of something.
+In our case in will flatten <code>[String]</code> into <code>String</code>, remember that this works
+because <code>String</code> is a <strong>type alias</strong> for <code>[Char]</code>, so we actually have
+<code>[[Char]] -&gt; [Char]</code>.</p>
+<hr />
+<h2 id="escaping"><a class="header" href="#escaping">Escaping</a></h2>
+<p>The user of our library can currently only supply strings in a few places:</p>
+<ol>
+<li>Page title</li>
+<li>Paragraphs</li>
+<li>Headers</li>
+</ol>
+<p>We can apply our escape function at these places before doing anything else with it.
+That way all html constructions are safe.</p>
+<p>Try adding the escaping function in those places.</p>
+<details>
+  <summary>Solution</summary>
+<pre><code class="language-hs">html_ :: HtmlTitle -&gt; HtmlStructure -&gt; Html
+html_ title content =
+  Html
+    ( el &quot;html&quot;
+      ( el &quot;head&quot; (el &quot;title&quot; (escape title))
+        &lt;&gt; el &quot;body&quot; (getHtmlStructureString content)
+      )
+    )
+
+p_ :: String -&gt; HtmlStructure
+p_ = HtmlStructure . el &quot;p&quot; . escape
+
+h1_ :: String -&gt; HtmlStructure
+h1_ = HtmlStructure . el &quot;h1&quot; . escape
+</code></pre>
+</details>
+<hr />
+<details>
+  <summary><b>Our revised Html.hs</b></summary>
+<pre><code class="language-hs">-- Html.hs
+
+module Html
+  ( Html
+  , HtmlTitle
+  , HtmlStructure
+  , html_
+  , p_
+  , h1_
+  , append_
+  , render
+  )
+where
+
+-- * Types
+
+newtype Html
+  = Html String
+
+newtype HtmlStructure
+  = HtmlStructure String
+
+type HtmlTitle
+  = String
+
+-- * EDSL
+
+html_ :: HtmlTitle -&gt; HtmlStructure -&gt; Html
+html_ title content =
+  Html
+    ( el &quot;html&quot;
+      ( el &quot;head&quot; (el &quot;title&quot; (escape title))
+        &lt;&gt; el &quot;body&quot; (getHtmlStructureString content)
+      )
+    )
+
+p_ :: String -&gt; HtmlStructure
+p_ = HtmlStructure . el &quot;p&quot; . escape
+
+h1_ :: String -&gt; HtmlStructure
+h1_ = HtmlStructure . el &quot;h1&quot; . escape
+
+append_ :: HtmlStructure -&gt; HtmlStructure -&gt; HtmlStructure
+append_ c1 c2 =
+  HtmlStructure (getHtmlStructureString c1 &lt;&gt; getHtmlStructureString c2)
+
+-- * Render
+
+render :: Html -&gt; String
+render html =
+  case html of
+    Html str -&gt; str
+
+-- * Utilities
+
+el :: String -&gt; String -&gt; String
+el tag content =
+  &quot;&lt;&quot; &lt;&gt; tag &lt;&gt; &quot;&gt;&quot; &lt;&gt; content &lt;&gt; &quot;&lt;/&quot; &lt;&gt; tag &lt;&gt; &quot;&gt;&quot;
+
+getHtmlStructureString :: HtmlStructure -&gt; String
+getHtmlStructureString content =
+  case content of
+    HtmlStructure str -&gt; str
+
+escape :: String -&gt; String
+escape =
+  let
+    escapeChar c =
+      case c of
+        '&lt;' -&gt; &quot;&amp;lt;&quot;
+        '&gt;' -&gt; &quot;&amp;gt;&quot;
+        '&amp;' -&gt; &quot;&amp;amp;&quot;
+        '&quot;' -&gt; &quot;&amp;quot;&quot;
+        '\'' -&gt; &quot;&amp;#39;&quot;
+        _ -&gt; [c]
+  in
+    concat . map escapeChar
+</code></pre>
+</details>
+<p>Trying constructing an invalid html in <code>hello.hs</code> to see if this works or not!</p>
+<p>Now we can use our tiny html library safely. But what if the user
+wants to use our library with something we didn't think about, for
+example adding unordered lists? We are completely blocking them from
+extending our library. We'll talk about this next.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                                                    <a rel="prev" href="02_05-modules.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+                                                    <a rel="next" href="02_07-internal_modules.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                                    <a rel="prev" href="02_05-modules.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+                                    <a rel="next" href="02_07-internal_modules.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                            </nav>
+
+        </div>
+
+        
+        
+        
+                <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        
+        
+                <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+        
+    </body>
+</html>
