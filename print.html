@@ -2370,7 +2370,7 @@ at least one element, and therefore can deliver on its promise!</p>
 of a restriction in the type system, as we saw in earlier chapters.
 But this solution can sometimes be less ergonomic to use.</p>
 <p>An alternative approach is to use <code>data</code> types to encode the absence of a proper result,
-for example, using <code>Maybe</code>, as we'll see in the next chapter.</p>
+for example, using <code>Maybe</code>, as we'll see in a future chapter.</p>
 <h2 id="parsing-markup"><a class="header" href="#parsing-markup">Parsing markup?</a></h2>
 <p>Let's get back to the task at hand.</p>
 <p>As stated previously, our strategy for parsing the markup text is:</p>
@@ -2503,38 +2503,109 @@ and have a nicer to use API!</p>
 <p>Please do this and remove the <code>append_</code> function from the API.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="parsing-markup-part-02-pattern-matching"><a class="header" href="#parsing-markup-part-02-pattern-matching">Parsing markup part 02 (Pattern matching)</a></h1>
 <h2 id="maybe"><a class="header" href="#maybe">Maybe</a></h2>
+<p>Previously, when we talked about partial functions, we mentioned that one way to avoid
+writing partial functions is encode the absence of a result using <code>Maybe</code>:</p>
 <pre><code class="language-hs">data Maybe a
     = Nothing
     | Just a
 </code></pre>
-<p>The data type <code>Maybe</code> from the standard library is used to add an additional
-value to a type: the absence of a value. For example, <code>Maybe True</code> has three values,
+<p><code>Maybe</code> is a data type from the standard library (named <a href="https://hackage.haskell.org/package/base">base</a>)
+that is used to add an additional value to a type: the absence of a value.
+For example, <code>Maybe Bool</code> has three values,
 two with the <code>Just</code> constructor to represent regular boolean values
 (<code>Just True</code> and <code>Just False</code>) and another value, <code>Nothing</code> to represent
 the absence of a boolean value.</p>
+<p>We can use this to encode the result of <code>head</code>, a function the promises to return
+the first element of a list, without creating a partial function:</p>
+<pre><code class="language-hs">head :: [a] -&gt; Maybe a
+</code></pre>
+<p>This way, when the list is empty, we can return <code>Nothing</code>, and when it has at least
+one element, we can return <code>Just &lt;first element&gt;</code>. This function can be found in
+the <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Maybe.html">Data.Maybe</a>
+module under the name
+<a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Maybe.html#v:listToMaybe">listToMaybe</a>.</p>
+<p>In order to consume values of type <code>Maybe &lt;something&gt;</code>, and other types created with
+<code>data</code>, we can use pattern matching.</p>
+<h2 id="pattern-matching"><a class="header" href="#pattern-matching">Pattern Matching</a></h2>
+<p>We've already seen pattern matching a few times.
+It is an incredibly versatile feature of Haskell, we can use it to do two things main things:</p>
+<ol>
+<li>Deconstruct complex values</li>
+<li>Control flow</li>
+</ol>
+<p>As we've seen when discussing
+<a href="https://soupi.github.io/learn-haskell-blog-generator/03-html/03_04-safer_construction.html#using-newtypes">newtypes</a>,
+we can use <strong>case expressions</strong> and <strong>function definitions</strong> to deconstruct a <code>newtype</code>,
+but we can do that for <code>data</code> types as well:</p>
+<pre><code class="language-hs">-- | A data type representing colors
+data Color
+  = RGB Word8 Word8 Word8
+
+getBluePart :: Color -&gt; Word8
+getBluePart color =
+  case color of
+    RGB _ _ blue -&gt; blue
+</code></pre>
+<p>In <code>getBluePart</code> we deconstruct a composite value into it's part and extract the third component
+representing the blue value in a color represented by red, green and blue components (RGB).</p>
+<p>Note that <code>blue</code> is the name we give to the third component so it will be bound
+to the right of the arrow that comes after the pattern. This is similar to
+a function argument. Also note that <code>_</code> matches any value <em>without</em> binding it to a name.</p>
+<p>We can also try to match a value with more than one pattern:</p>
+<pre><code class="language-hs">data Brightness
+  = Dark
+  | Bright
+
+data EightColor
+  = Black
+  | Red
+  | Green
+  | Yellow
+  | Blue
+  | Magenta
+  | Cyan
+  | White
+
+data AnsiColor
+  = AnsiColor Brightness EightColor
+
+ansiColorToVGA :: AnsiColor -&gt; RGB
+ansiColorToVGA ansicolor =
+  case ansicolor of
+    AnsiColor Dark Black -&gt;
+	  RGB 0 0 0
+    AnsiColor Bright Black -&gt;
+	  RGB 85 85 85
+    AnsiColor Dark Red -&gt;
+	  RGB 170 0 0
+    AnsiColor Bright Red -&gt;
+	  RGB 255 85 85
+	-- and so on
+</code></pre>
+<p>It's important to notice a few things here:</p>
+<ol>
+<li>Patterns can be nested, notice how we deconstructed <code>ansicolor</code> on multiple levels</li>
+<li>We try to match patterns from the top down, it is possible for patterns to overlap with one another and the top one will win</li>
+<li>If the value we try to match does not match any of the patterns listed, an error will be thrown at runtime</li>
+</ol>
+<p>We can ask GHC to notify when we accidentally written overlapping patterns,
+or when we haven't listed enough patterns to match all possible values,
+by passing the flag <code>-Wall</code> to <code>ghc</code> or <code>runghc</code>!</p>
+<p><strong>My recommendation is to always use -Wall!</strong></p>
+<p>As an aside, while it is possible to use pattern matching in function definitions by defining a function
+multiple types, <a href="https://twitter.com/_gilmi/status/1257225601079029760">I personally don't like that feature very much</a>, but if you want to use it instead of case expressions, it is possible.</p>
+<p>Exercises:</p>
+<ol>
+<li>Create a function <code>isBright :: AnsiColor -&gt; Bool</code> that checks whether a color is bright or not</li>
+<li>Use <a href="https://en.wikipedia.org/wiki/ANSI_escape_code#3-bit_and_4-bit">this table</a> to write <code>ansiToUbuntu</code>.</li>
+<li>Create a function <code>isEmpty :: [a] -&gt; Bool</code> that uses <code>listToMaybe</code> to check whether a list is empty or not</li>
+<li>Create a function <code>isEmpty :: [a] -&gt; Bool</code> that <em>doesn't</em> use <code>listToMaybe</code> to check whether a list is empty or not</li>
+</ol>
+<h2 id="parsing-with-rich-context"><a class="header" href="#parsing-with-rich-context">Parsing with rich context</a></h2>
+<p>Previously we wrote a parser that separates documents into different paragraphs.
+With new features under our belt we can now remember the exact context we are in
+(whether it is a text paragraph, a list, or a code block) and act accordingly!</p>
 <!--
-
-We can use this 
-
-We can use pattern matching to process this information, matching on
-the `Nothing` or `Just` cases, or we could use a function such as
-`maybe`:
-
-```
-maybe :: b -> (a -> b) -> Maybe a -> b
-maybe nothingCase func x =
-  case x of
-    Nothing -> nothingCase
-    Just v -> func v
-```
-
-Maybe is useful in many many situations.
-
----
-
-(3) Recursion and accumulating information
-
-Instead of loops, in Haskell we use recursion to model iteration.
 
 In our case, we define a local function inside `parse` named `impl`
 and refer to it inside itself when we want to process the next line
