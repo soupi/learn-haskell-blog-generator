@@ -571,17 +571,17 @@ parse = parseLines [] . lines -- (1)
 
 parseLines :: [String] -&gt; [String] -&gt; Document
 parseLines currentParagraph txts =
-    let
-        paragraph = Paragraph (unlines (reverse currentParagraph)) -- (2), (3)
-    in
-        case txts of
-            [] -&gt; [paragraph]
-            currentLine : rest -&gt;
-                if trim currentLine == &quot;&quot;
-                    then
-                        paragraph : parseLines [] rest -- (4)
-                    else
-                        parseLines (currentLine : currentParagraph) rest -- (5)
+  let
+    paragraph = Paragraph (unlines (reverse currentParagraph)) -- (2), (3)
+  in
+    case txts of
+      [] -&gt; [paragraph]
+      currentLine : rest -&gt;
+        if trim currentLine == &quot;&quot;
+          then
+            paragraph : parseLines [] rest -- (4)
+          else
+            parseLines (currentLine : currentParagraph) rest -- (5)
 
 trim :: String -&gt; String
 trim = unwords . words
