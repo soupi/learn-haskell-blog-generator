@@ -279,18 +279,22 @@ parse = parseLines Nothing . lines -- (1)
 
 parseLines :: Maybe Structure -&gt; [String] -&gt; Document
 parseLines context txts =
- case txts of
-   [] -&gt; maybeToList context   -- (2)
-   currentLine : rest -&gt;
-     if trim currentLine == &quot;&quot;
-       then
-         maybe id (:) context (parseLines Nothing rest) -- (3)
-       else
-         case context of
-           Nothing -&gt;
-             parseLines (Just (Paragraph currentLine)) rest
-           Just (Paragraph paragraph) -&gt;
-             parseLines (Just (Paragraph (currentLine ++ paragraph))) rest -- (4), (5)
+  case txts of
+    [] -&gt; maybeToList context   -- (2)
+    -- Paragraph case
+    currentLine : rest -&gt;
+      let
+        line = trim currentLine
+      in
+        if line == &quot;&quot;
+          then
+            maybe id (:) context (parseLines Nothing rest) -- (3)
+          else
+            case context of
+              Nothing -&gt;
+                parseLines (Just (Paragraph line)) rest
+              Just (Paragraph paragraph) -&gt;
+                parseLines (Just (Paragraph (unwords [paragraph, line]))) rest -- (4), (5)
 
 trim :: String -&gt; String
 trim = unwords . words
@@ -307,7 +311,7 @@ trim = unwords . words
 Check out the types of <code>id</code>, <code>(:)</code> and <code>maybe id (:)</code> in ghci!</p>
 </li>
 <li>
-<p>Hey! Didn't we say that appending <code>String</code>s/lists is slow? Yes, it is.
+<p>Hey! Didn't we say that appending <code>String</code>s/lists is slow (which is what <code>unwords</code> does)? Yes, it is.
 Because in our <code>Structure</code> data type, a paragraph is defined as <code>Paragraph String</code> and not <code>Paragraph [String]</code>,
 we can't use our trick of building a list of lines and the reverse it at the end.</p>
 <p>So what do we do?
@@ -325,9 +329,144 @@ both as a <code>Structure</code> and as a <code>Context</code>, don't worry abou
 <p>In this case I'm going with the approach of not worrying about it too much, because it's a very local code that can easily be fixed later if and when we see it is an issue.</p>
 </li>
 <li>
-<p>Anyway, if you've used <code>-Wall</code> like I've suggested, you'd get a warning from GHC saying that the <em>&quot;pattern matches are non-exhaustive&quot;</em>. This is because we did not cover all cases.</p>
+<p>Anyway, if you've used <code>-Wall</code> like I've suggested, you'd get a warning from GHC saying that the <em>&quot;pattern matches are non-exhaustive&quot;</em>. This is because we did not cover all cases. So let's cover more cases:</p>
 </li>
 </ol>
+<pre><code class="language-hs">parse :: String -&gt; Document
+parse = parseLines Nothing . lines
+
+parseLines :: Maybe Structure -&gt; [String] -&gt; Document
+parseLines context txts =
+  case txts of
+    -- done case
+    [] -&gt; maybeToList context
+   
+    -- Header 1 case
+    ('@' : ' ' : line) : rest -&gt;
+      maybe id (:) context (Header 1 (trim line) : parseLines Nothing rest)
+   
+    -- Unordered list case
+    ('-' : ' ' : line) : rest -&gt;
+      case context of
+        Just (UnorderedList list) -&gt;
+          parseLines (Just (UnorderedList (list &lt;&gt; [trim line]))) rest
+
+        _ -&gt;
+          maybe id (:) context (parseLines (Just (UnorderedList [trim line])) rest)
+   
+    -- Paragraph case
+    currentLine : rest -&gt;
+      let
+        line = trim currentLine
+      in
+        if line == &quot;&quot;
+          then
+            maybe id (:) context (parseLines Nothing rest)
+          else
+            case context of
+              Nothing -&gt;
+                parseLines (Just (Paragraph line)) rest
+              Just (Paragraph paragraph) -&gt;
+                parseLines (Just (Paragraph (unwords [paragraph, line]))) rest
+
+trim :: String -&gt; String
+trim = unwords . words
+</code></pre>
+<p>Exercise: Add the <code>CodeBlock</code> and <code>OrderedList</code> cases.</p>
+<hr />
+<details>
+  <summary>Final module</summary>
+<pre><code class="language-hs">-- Markup.hs
+
+module Markup
+  ( Document
+  , Structure(..)
+  , parse
+  )
+where
+
+import Data.Maybe (maybeToList)
+
+type Document
+  = [Structure]
+
+data Structure
+  = Header Int String
+  | Paragraph String
+  | UnorderedList [String]
+  | OrderedList [String]
+  | CodeBlock [String]
+  deriving (Eq, Show)    -- (1)
+
+
+parse :: String -&gt; Document
+parse = parseLines Nothing . lines
+
+parseLines :: Maybe Structure -&gt; [String] -&gt; Document
+parseLines context txts =
+  case txts of
+    -- done case
+    [] -&gt; maybeToList context
+   
+    -- Header 1 case
+    ('*' : ' ' : line) : rest -&gt;
+      maybe id (:) context (Header 1 (trim line) : parseLines Nothing rest)
+   
+    -- Unordered list case
+    ('-' : ' ' : line) : rest -&gt;
+      case context of
+        Just (UnorderedList list) -&gt;
+          parseLines (Just (UnorderedList (list &lt;&gt; [trim line]))) rest
+
+        _ -&gt;
+          maybe id (:) context (parseLines (Just (UnorderedList [trim line])) rest)
+
+    -- Ordered list case
+    ('#' : ' ' : line) : rest -&gt;
+      case context of
+        Just (OrderedList list) -&gt;
+          parseLines (Just (OrderedList (list &lt;&gt; [trim line]))) rest
+
+        _ -&gt;
+          maybe id (:) context (parseLines (Just (OrderedList [trim line])) rest)
+
+    -- Code block case
+    ('&gt;' : ' ' : line) : rest -&gt;
+      case context of
+        Just (CodeBlock code) -&gt;
+          parseLines (Just (CodeBlock (code &lt;&gt; [line]))) rest
+
+        _ -&gt;
+          maybe id (:) context (parseLines (Just (CodeBlock [line])) rest)
+
+    -- Paragraph case
+    currentLine : rest -&gt;
+      let
+        line = trim currentLine
+      in
+        if line == &quot;&quot;
+          then
+            maybe id (:) context (parseLines Nothing rest)
+          else
+            case context of
+              Nothing -&gt;
+                parseLines (Just (Paragraph line)) rest
+              Just (Paragraph paragraph) -&gt;
+                parseLines (Just (Paragraph (unwords [paragraph, line]))) rest
+
+trim :: String -&gt; String
+trim = unwords . words
+</code></pre>
+</details>
+<hr />
+<h3 id="how-do-we-know-our-parser-works-correctly"><a class="header" href="#how-do-we-know-our-parser-works-correctly">How do we know our parser works correctly?</a></h3>
+<p>At an earlier chapter, we parsed a few example of our markup language <a href="01-data_type.html#exercises">by hand</a>.
+Now, we can try to test our parser by comparing our solutions to our parser.
+By adding the <code>Eq</code> constraint to our data type (as shown in (1)), we can add these to our module and
+use the <code>==</code> (equals) operator to compare our solutions to the result our parser gives.
+Try it in ghci!</p>
+<p>In the next chapter, we'll discuss how to use a testing framework and
+write automated tests for our parser.</p>
 
                     </main>
 
