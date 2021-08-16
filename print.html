@@ -2534,8 +2534,8 @@ that it will behave in a certain expected way.</p>
 <p>This typeclass provides a common interface for types with an operation <code>&lt;&gt;</code>
 that can combine two values into one in some way.</p>
 <p>This typeclass also mentions that this <code>&lt;&gt;</code> operation should be associative,
-meaing that these two sides should do the same thing:</p>
-<pre><code class="language-hs">x &lt;&gt; (y &lt;&gt; z) = (x &lt;&gt; y) &lt;&gt; z
+meaning that these two sides should evaluate to the same result:</p>
+<pre><code>x &lt;&gt; (y &lt;&gt; z) = (x &lt;&gt; y) &lt;&gt; z
 </code></pre>
 <p>An example of a lawful instance of <code>Semigroup</code> is lists with the append operation (<code>++</code>):</p>
 <pre><code class="language-hs">instance Semigroup [a] where
@@ -2543,6 +2543,11 @@ meaing that these two sides should do the same thing:</p>
 </code></pre>
 <p>Unfortunately the Haskell type system cannot &quot;prove&quot; that instances
 satisfy these laws, but as a community we often shun unlawful instances.</p>
+<p>Many data types (together with their respective operations) can
+form a <code>Semigroup</code> (or any other type class), and instances
+don't even have to look similar or have a common analogy/metaphor.</p>
+<p><strong>Type classes are often just <em>interfaces</em> with <em>laws</em></strong> (or expected behaviour if you will).
+Approaching them with this mindset can be very liberating!</p>
 <p>We have <a href="04-markup/02_04-safer_construction.html#appending-htmlstructure">previously</a>
 created a function that looks like this for our <code>Html</code> EDSL!
 We can add a <code>Semigroup</code> instance for our <code>HtmlStructure</code> data type
