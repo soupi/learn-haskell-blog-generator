@@ -1718,7 +1718,7 @@ convert it into the equivalent HTML representation.</p>
 create custom types by grouping multiple types together and having
 alternative structures. Think of them as combination of both structs and enums.</p>
 <p><code>data</code> declarations look like this:</p>
-<pre><code>data &lt;Type-name&gt; &lt;type-args&gt;
+<pre><code class="language-hs">data &lt;Type-name&gt; &lt;type-args&gt;
   = &lt;Data-constructor1&gt; &lt;types&gt;
   | &lt;Data-constructor2&gt; &lt;types&gt;
   | ...
@@ -1726,24 +1726,28 @@ alternative structures. Think of them as combination of both structs and enums.<
 <p>It looks really similar to <code>newtype</code>, but there are two important
 differences:</p>
 <ol>
-<li>In the <types> part we can write many types (Like <code>Int String Bool</code>).
+<li>In the <types> part we can write many types (Like <code>Int</code>, <code>String</code>, or <code>Bool</code>).
 For <code>newtype</code>s we can only write one.</li>
 <li>We can have alternative structures using <code>|</code>, <code>newtype</code>s have no
 alternatives.</li>
 </ol>
+<p>This is because <code>newtype</code>s is used to provide a type safe <strong>alias</strong>,  and <code>data</code>
+is used to build a new <strong>composite</strong> type that can potentially have <em>alternatives</em>.</p>
 <p>Let's see a couple of examples of data types:</p>
 <ol>
-<li>Bool</li>
-</ol>
-<pre><code>data Bool
+<li>
+<p>Bool</p>
+<pre><code class="language-hs">data Bool
   = True
   | False
 </code></pre>
-<p>We created a new data type named <code>Bool</code> with the possible values <code>True</code> or <code>False</code>.</p>
-<ol start="2">
-<li>Person</li>
-</ol>
-<pre><code>data Person
+<p>We created a new data type named <code>Bool</code> with the possible values <code>True</code> or <code>False</code>.
+In this case we only have <em>constructor</em> alternatives and none of the alternatives
+carriers additional values, this is similar to enums in other languages.</p>
+</li>
+<li>
+<p>Person</p>
+<pre><code class="language-hs">data Person
   = Person String Int -- where the first is the name and the second is
                       -- the age
 </code></pre>
@@ -1752,36 +1756,77 @@ look like this:</p>
 <pre><code>Person &lt;some-string&gt; &lt;some-int&gt;
 </code></pre>
 <p>For example:</p>
-<pre><code>Person &quot;Gil&quot; 32
+<pre><code class="language-hs">Person &quot;Gil&quot; 32
 </code></pre>
-<ol start="3">
-<li>Tuple</li>
-</ol>
-<pre><code>data Tuple a b
+<p>In this case we create a <em>composite</em> of multiple types, without alternatives.
+This is similar to structs in other language, but structs give each field
+a name, and here we distinguish them by position.</p>
+<p>Alternatively, Haskell has <em>syntactic sugar</em> for naming fields called <strong>records</strong>.
+The above definition can also be written like this:</p>
+<pre><code class="language-hs">data Person
+  = Person
+    { name :: String
+	, age :: Int
+	}
+</code></pre>
+<p>Values of this type can be written exactly as before,</p>
+<pre><code class="language-hs">Person &quot;Gil&quot; 32
+</code></pre>
+<p>Or with this syntax:</p>
+<pre><code class="language-hs">Person { name = &quot;Gil&quot;, age = 32 }
+</code></pre>
+<p>Haskell will also generate functions that can be used to extract the fields from the composite type:</p>
+<pre><code class="language-hs">name :: Person -&gt; String
+age :: Person -&gt; Int
+</code></pre>
+<p>Which can be used like this:</p>
+<pre><code class="language-hs">ghci&gt; age (Person { name = &quot;Gil&quot;, age = 32 })
+32
+</code></pre>
+<p>Unfortunately, this also means that if we defined a different data type with the field
+<code>age</code>, the functions which GHC needs to generate will clash.</p>
+<p>The easiest way to solve this is to give fields unique names, for example
+by adding a prefix:</p>
+<pre><code class="language-hs">data Person
+  = Person
+    { pName :: String
+	, pAge :: Int
+	}
+</code></pre>
+<p>Another way is by using extensions to the Haskell language, which we will cover
+in later chapters.</p>
+</li>
+<li>
+<p>Tuple</p>
+<pre><code class="language-hs">data Tuple a b
   = Tuple a b
 </code></pre>
 <p>This is pretty similar to <code>Person</code>, but we can plug any type we want
 for this definition. For example:</p>
-<pre><code>Tuple &quot;Clicked&quot; True :: Tuple String Bool
+<pre><code class="language-hs">Tuple &quot;Clicked&quot; True :: Tuple String Bool
 
 Tuple 'a' 'z' :: Tuple Char Char
 </code></pre>
 <p>This type has special syntax in Haskell:</p>
-<pre><code>(&quot;Clicked&quot;, True) :: (String, Bool)
+<pre><code class="language-hs">(&quot;Clicked&quot;, True) :: (String, Bool)
 
 ('a', 'z') :: (Char, Char)
 </code></pre>
-<ol start="4">
-<li>Either</li>
-</ol>
-<pre><code>data Either a b
+<p>This <code>Tuple</code> definition is polymorphic, we define the structure but are able to
+plug different types into the structure to get concerete types. This about <code>Tuple</code>
+as just a <em>template</em> for a data type waiting to be filled, or as a <em>function</em> waiting
+for types as input in order to return a data type.</p>
+</li>
+<li>
+<p>Either</p>
+<pre><code class="language-hs">data Either a b
   = Left a
   | Right b
 </code></pre>
 <p>Similar to Tuple but instead of having only one constructor, we have
 two. This means that we can choose which side we want. Here are a
 couple of Values of type <code>Either String Int</code>:</p>
-<pre><code>Left &quot;Hello&quot;
+<pre><code class="language-hs">Left &quot;Hello&quot;
 
 Right 17
 </code></pre>
@@ -1789,6 +1834,8 @@ Right 17
 what we wanted (The <code>Right</code> constructor with the value), or we didn't
 and got an error instead (The <code>Left</code> constructor with a string or a
 custom error type).</p>
+</li>
+</ol>
 <p>Here we use it to model the different kinds of content types we have
 in our markup language. We tag each structure using the data constructor
 and provide the rest of the information (the paragraph text, the list items, etc)
