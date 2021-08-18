@@ -227,7 +227,23 @@ Approaching them with this mindset can be very liberating!</p>
 created a function that looks like this for our <code>Html</code> EDSL!
 We can add a <code>Semigroup</code> instance for our <code>HtmlStructure</code> data type
 and have a nicer to use API!</p>
-<p>Please do this and remove the <code>append_</code> function from the API.</p>
+<p>Exercise: Please do this and remove the <code>append_</code> function from the API.</p>
+<details>
+  <summary>Solution</summary>
+<p>Replace this:</p>
+<pre><code class="language-hs">append_ :: HtmlStructure -&gt; HtmlStructure -&gt; HtmlStructure
+append_ c1 c2 =
+  HtmlStructure (getHtmlStructureString c1 &lt;&gt; getHtmlStructureString c2)
+</code></pre>
+<p>With this:</p>
+<pre><code class="language-hs">instance Semigroup HtmlStructure where
+  (&lt;&gt;) c1 c2 =
+    HtmlStructure (getHtmlStructureString c1 &lt;&gt; getHtmlStructureString c2)
+</code></pre>
+<p>And remove the export of <code>append_</code> in <code>Html.hs</code>. You won't need to further export anything
+as type class instances are exported automatically.</p>
+<p>You will also need replace the usage of <code>append_</code> with <code>&lt;&gt;</code> in <code>hello.hs</code>.</p>
+</details>
 
                     </main>
 
