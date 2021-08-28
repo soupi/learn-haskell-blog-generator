@@ -3191,8 +3191,8 @@ whenIO cond action =
 <pre><code class="language-hs">main :: IO ()
 main =
   putStrLn &quot;This program will tell you a secret&quot; *&gt;
-	whenIO confirm (putStrLn &quot;IO is actually pretty awesome&quot;) *&gt;
-	  putStrLn &quot;Bye&quot;
+    whenIO confirm (putStrLn &quot;IO is actually pretty awesome&quot;) *&gt;
+      putStrLn &quot;Bye&quot;
 </code></pre>
 <p>Notice how <code>putStrLn &quot;IO is actually pretty awesome&quot;</code> isn't executed
 right away, but only if it is what <code>whenIO</code> returns, and in turn is <em>combined</em>
@@ -3281,19 +3281,19 @@ main :: IO ()
 main =
   getArgs &gt;&gt;= \args -&gt;
     case args of
-    -- No program arguments: reading from stdin and writing to stdout
-    [] -&gt;
-      getContents &gt;&gt;= \content -&gt;
-      putStrLn (show (parse content))
-    [input, output] -&gt;
-      readFile input &gt;&gt;= \content -&gt;
-        doesFileExist input &gt;&gt;= \exists -&gt;
-          let
-            writeResult = writeFile output (show (parse content))
-          in
-            if exists
-              then whenIO confirm writeResult
-              else writeResult
+      -- No program arguments: reading from stdin and writing to stdout
+      [] -&gt;
+        getContents &gt;&gt;= \content -&gt;
+        putStrLn (show (parse content))
+      [input, output] -&gt;
+        readFile input &gt;&gt;= \content -&gt;
+          doesFileExist input &gt;&gt;= \exists -&gt;
+            let
+              writeResult = writeFile output (show (parse content))
+            in
+              if exists
+                then whenIO confirm writeResult
+                else writeResult
 
 confirm :: IO Bool
 confirm =
@@ -3311,6 +3311,146 @@ whenIO cond action =
     if result
       then action
       else pure ()
+</code></pre>
+</details>
+<hr />
+<h2 id="do-notation"><a class="header" href="#do-notation">Do notation</a></h2>
+<p>While using <code>&gt;&gt;=</code> to chain IO action is manageable, Haskell provides
+an even more convenient syntactic sugar called <em>do notation</em>
+which emulates imperative programming.</p>
+<p>A <em>do block</em> starts with the <code>do</code> keyword, and continues with one or more
+&quot;statements&quot; which can be one of the following:</p>
+<ul>
+<li>An expression of type <code>IO ()</code>, such as:
+<ul>
+<li><code>putStrLn &quot;Hello&quot;</code></li>
+<li><code>if True then pure 1 else pure 2</code></li>
+</ul>
+</li>
+<li>A let block, such as
+<ul>
+<li><code>let x = 1</code></li>
+<li>or multiple let declarations:
+<pre><code class="language-hs">let
+  x = 1
+  y = 2
+</code></pre>
+Note that we do not write the <code>in</code> here.</li>
+</ul>
+</li>
+<li>A binding <code>&lt;variable&gt; &lt;- &lt;expresion&gt;</code>, such as
+<pre><code class="language-hs">line &lt;- getLine
+</code></pre>
+</li>
+</ul>
+<p>And the last &quot;statement&quot; must be an expression of type <code>IO &lt;something&gt;</code> -
+this will be the result type of the do block.</p>
+<p>These construct will be translated to <code>&lt;expression&gt; *&gt;</code>, <code>let ... in</code> and
+<code>&lt;expression&gt; &gt;&gt;= \&lt;variable&gt;</code> respectively.</p>
+<p>For example:</p>
+<pre><code class="language-hs">greeting :: IO ()
+greeting = do
+  putStrLn &quot;Tell me your name.&quot;
+  let greet name = &quot;Hello, &quot; ++ name ++ &quot;!&quot;
+  name &lt;- getLine
+  putStrLn (greet name)
+</code></pre>
+<p>Is just syntactic sugar for:</p>
+<pre><code class="language-hs">greeting :: IO ()
+greeting =
+  putStrLn &quot;Tell me your name.&quot; *&gt;
+    let
+      greet name = &quot;Hello, &quot; ++ name ++ &quot;!&quot;
+    in
+      getLine &gt;&gt;= \name -&gt;
+        putStrLn (greet name)
+</code></pre>
+<p>It's important to note the difference between <code>let</code> and <code>&lt;-</code> (bind).
+<code>let</code> is used to give a new name to an expression which will be in scope
+for subsequent lines, and <code>&lt;-</code> is used to bind the result <code>a</code> in an <code>IO a</code>
+action to a new name which will be in scope for subsequent lines.</p>
+<table>
+  <tr>
+    <th>code</th>
+    <th>operator</th>
+    <th>type of the left side</th>
+    <th>type of the right side</th>
+    <th>comment</th>
+  </tr>
+  <tr>
+    <td><pre><pre>let gretting = "hello"</pre></pre></td>
+    <td><pre>=</pre></td>
+    <td><pre>String</pre></td>
+    <td><pre>String</pre></td>
+    <td>Both sides are interchangeable</td>
+  </tr>
+  <tr>
+    <td><pre>let mygetline = getLine</pre></td>
+    <td><pre>=</pre></td>
+    <td><pre>IO String</pre></td>
+    <td><pre>IO String</pre></td>
+    <td>We just create a new name for <code>getLine</code></td>
+  </tr>
+  <tr>
+    <td><pre>name <- getLine</pre></td>
+    <td><pre><-</pre></td>
+    <td><pre>String</pre></td>
+    <td><pre>IO String</pre></td>
+    <td>Technically <code><-</code> is not an operator, but just a syntactic sugar for <code>>>=</code> + lambda, where we bind the result of the computation to a variable</td>
+  </tr>
+</table>
+<p>Do notation is very very common and is often preferable to using <code>&gt;&gt;=</code> directly.</p>
+<hr />
+<ol>
+<li>
+<p>Exercise: Translate the examples in this chapter to <em>do notation</em>.</p>
+</li>
+<li>
+<p>Exercise: Translate our glue code for the blog generator to <em>do notation</em>. <details><summary>Solution</summary></p>
+</li>
+</ol>
+<pre><code class="language-hs">-- Main.hs
+
+import Markup
+
+import System.Directory (doesFileExist)
+import System.Environment (getArgs)
+import System.IO (getContents, readFile, writeFile)
+
+main :: IO ()
+main = do
+  args &lt;- getArgs
+  case args of
+    -- No program arguments: reading from stdin and writing to stdout
+    [] -&gt; do
+      content &lt;- getContents
+      putStrLn (show (parse content))
+
+    [input, output] -&gt; do
+      content &lt;- readFile input
+      exists &lt;- doesFileExist input
+      let
+        writeResult = writeFile output (show (parse content))
+      if exists
+        then whenIO confirm writeResult
+        else writeResult
+
+confirm :: IO Bool
+confirm = do
+  putStrLn &quot;Are you sure? (y/n)&quot;
+  answer &lt;- getLine
+  case answer of
+    &quot;y&quot; -&gt; pure True
+    &quot;n&quot; -&gt; pure False
+    _ -&gt; putStrLn &quot;Invalid response. use y or n&quot; *&gt;
+      confirm
+
+whenIO :: IO Bool -&gt; IO () -&gt; IO ()
+whenIO cond action = do
+  result &lt;- cond
+  if result
+    then action
+    else pure ()
 </code></pre>
 </details>
 <hr />
