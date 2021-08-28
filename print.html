@@ -3248,7 +3248,7 @@ the usage as we described above</li>
 
 getContents :: IO String -- Read all of the content from stdin
 
-readFile' :: FilePath -&gt; IO String -- Read all of the content from a file
+readFile :: FilePath -&gt; IO String -- Read all of the content from a file
 
 writeFile :: FilePath -&gt; String -&gt; IO () -- Write a string into a file
 
@@ -3257,7 +3257,7 @@ doesFileExist :: FilePath -&gt; IO Bool -- Checks whether a file exists
 <p>And the following imports:</p>
 <pre><code class="language-hs">import System.Directory (doesFileExist)
 import System.Environment (getArgs)
-import System.IO (getContents, readFile', writeFile)
+import System.IO (getContents, readFile, writeFile)
 </code></pre>
 <p>Since we haven't implemented a conversion function <code>Document -&gt; Html</code> yet,
 for the sake of the exercise, we can <code>show</code> the <code>Document</code> instead of converting it.
