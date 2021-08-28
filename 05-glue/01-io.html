@@ -179,6 +179,358 @@ the usage as we described above</li>
 using a library, and also read whole directories and not single files.</p>
 <p>But first, we need to learn a bit about IO in Haskell, what makes
 it special, and why it's a bit different from otherprogramming languages.</p>
+<h2 id="purely-functional"><a class="header" href="#purely-functional">Purely functional</a></h2>
+<p>Originally, Haskell was designed in order to become an <em>open standard</em>
+functional programming language with <strong>non-strict semantics</strong>, to serve
+as a unifying language for future research in functional language design.</p>
+<p>In GHC Haskell, we use a <em>lazy evaluation strategy</em> to implement non-strict
+semantics (We've talked about laziness
+<a href="https://soupi.github.io/learn-haskell-blog-generator/04-markup/02-parsing_01.html#laziness">before</a>).</p>
+<p>The requirement for non-strict semantics has raise an interesting challenge,
+how do we design a language that can do more than just evaluate expressions,
+how do we model interaction with the outside world? How do we do IO?</p>
+<p>The challenge with doing IO operation in a language with a lazy evaluation strategy
+is that as programs grow larger, the order of evaluation becomes less trivial to
+figure out. Consider this hypothetical code example
+(which won't actually typecheck in Haskell, we'll see why soon):</p>
+<pre><code class="language-hs">addWithInput :: Int -&gt; Int
+addWithInput n = readIntFromStdin + n
+
+main =
+  let
+    result1 = addWithInput 1
+    result2 = addWithInput 2
+  in
+    print (result2 - result1)
+</code></pre>
+<p>This hypothetical program will read 2 integers from the standard input,
+and then will substract the second one (+2) from the first one (+1),
+or so we would expect if this was a strict language. In a strict language
+we expect the order of operations to to happen from the top-down.
+But in a lazy language we don't actually evaluate an expression until
+it is needed, and so neither <code>result1</code> nor <code>result2</code> are evaluted
+until we wish to print the result of substracting one from the other,
+and then the evaluation goes in order from left to right, we first
+evaluate <code>result2</code>.</p>
+<p>Evaluating <code>result2</code>, with substitution, means to replace occurances of <code>n</code>
+with the input <code>2</code>, and then evaluate the top level function (<code>+</code>), it is a
+primitive function, we then evaluate it's arguments, <code>readIntFromStdin</code>
+and then <code>n</code>, at this point <em>we are reading the first integer from the stdin</em>.</p>
+<p>After calcuating the result, we can move to evaluate <code>result1</code>, in which,
+during evaluation, <em>will read the second integer from stdin</em>, this is the
+complete opposite of what we wanted. And the underlying issue is that
+<code>addWithInput</code> is <strong>not a pure function</strong>, meaning that <strong>it can return
+different results even when it takes the same input</strong>.</p>
+<p>The presence of impure functions makes it harder for us to reason about lazy evaluation,
+and also messes up our ability to use <em>equational reasoning</em> as well.</p>
+<p>So for Haskell it was decided to only allow <strong>pure function</strong> - one that
+will <em>always</em> return the same output (given the same input) and for which
+<strong>evaluation is deterministic</strong>.</p>
+<p>But now, how can we do input/ouput operations? There are many possible solutions
+for the design space, in Haskell it was chosen to design a first class interface
+with an accompanied type called <code>IO</code>. <code>IO</code>'s interface will force a dinstiction
+from non-IO expressions, and will also require that in order to combine
+multiple <code>IO</code> operations, we will have to determine the order between them.</p>
+<h2 id="io"><a class="header" href="#io">IO</a></h2>
+<p><code>IO</code> is an opaque type, like our <code>Html</code> type that where we hid it's internal
+representation from the user behind an interface. But in this case it is a
+built-in type that is hidden by the Haskell language rather than a module.</p>
+<p>It has a payload type like <code>Maybe</code> has which represents the
+result of an <code>IO</code> operation. When there isn't a meaningful result, we use
+the unit type, <code>()</code> which only has one value, <code>()</code>.</p>
+<p>Here are a few functions that return <code>IO</code> operations:</p>
+<pre><code class="language-hs">putStrLn :: String -&gt; IO ()
+
+getLine :: IO String
+
+getArgs :: IO [String]
+
+lookupEnv :: String -&gt; IO (Maybe String)
+
+writeFile :: FilePath -&gt; String -&gt; IO ()
+</code></pre>
+<!-- You can find more useful IO functions and operations in the
+[System.IO](https://hackage.haskell.org/package/base-4.15.0.0/docs/System-IO.html) module.
+which is shipped with `base`. -->
+<p>Notice that each function returns an <code>IO &lt;something&gt;</code>, but what does that mean?</p>
+<p>The meaning behind <code>IO a</code> is that it is a <em>description of a program (or subroutine)
+that when executed will produce some value of type <code>a</code>, and may do some I/O effects
+during execution</em>.</p>
+<p>Executing an <code>IO a</code> is different from evaluating it.
+Evaluating an <code>IO a</code> expression is pure - the <strong>evalution</strong> will always reduce to
+the same <strong>description</strong> of a program. This helps us keep purity and equational reasoning!</p>
+<p>The Haskell runtime will <em>execute</em> the entry point to the program
+(the expression <code>main</code>, that must have the type <code>IO ()</code>) in order for our IO operation
+to also run it has to be <em>combined into</em> the <code>main</code> expression - let's see what that means.</p>
+<h2 id="combining-io-expressions"><a class="header" href="#combining-io-expressions">Combining IO expressions</a></h2>
+<p>Just like our <code>Html</code> type, the IO interface provides <strong>combinators</strong> for composing
+small <code>IO</code> operations into bigger ones, this interface also makes sure that the order
+of operations is well defined!</p>
+<p>Note that, just like with <code>&lt;&gt;</code> we've defined for <code>Html</code>, the combinators for <code>IO</code>
+are implemented as <strong>type-class instances</strong> rather than specialized variants
+(for example our <code>append_</code> function was a specialized version of <code>&lt;&gt;</code> tailored only
+for <code>Html</code>).</p>
+<p>In this section I will introduce specialized type signatures rather than generalized ones,
+because I think it'll be easier to digest, but we'll talk about the generalized versions
+later.</p>
+<h3 id=""><a class="header" href="#">&gt;&gt;=</a></h3>
+<p>Our first combinator is <code>&gt;&gt;=</code> (pronounced bind), and is the most useful of the bunch:</p>
+<pre><code class="language-hs">(&gt;&gt;=) :: IO a -&gt; (a -&gt; IO b) -&gt; IO b
+</code></pre>
+<p>This combinator takes two arguments, the first is an IO operation, and the second is
+a function that <em>takes as input the result of the first IO operation</em> and returns
+a new <code>IO b</code> which is the final result.</p>
+<p>Here are a few examples using the functions we described above:</p>
+<ol>
+<li>
+<p>Echo</p>
+<pre><code>getLine &gt;&gt;= (\line -&gt; putStrLn line)
+</code></pre>
+<p>We are reading a line from the standard input pass on the left of <code>&gt;&gt;=</code>,
+and receive the input to the left of <code>&gt;&gt;=</code>, and then write it to the
+standard output. <code>&gt;&gt;=</code>'s role here is to <strong>pass the result of the IO operation
+on the left to the function returning an IO operation on the right</strong>.</p>
+<p>Notice how <code>&gt;&gt;=</code> <em>defines an order of operations - from left to right</em>.</p>
+<p>The type of each sub expression here is:</p>
+<pre><code class="language-hs">getLine :: IO String
+
+putStrLn :: String -&gt; IO ()
+
+(&gt;&gt;=) :: IO String -&gt; (String -&gt; IO ()) -&gt; IO ()
+
+line :: String
+</code></pre>
+<ul>
+<li>Question: what is the type of the whole expression? <details><summary>Answer</summary>IO ()</details></li>
+</ul>
+<p>Also note that this example above can be written in a more concise manner
+in point free style <code>getLine &gt;&gt;= putStrLn</code>.</p>
+</li>
+<li>
+<p>Appending two inputs</p>
+<pre><code>getLine &gt;&gt;= (\honorific -&gt; getLine &gt;&gt;= (\name -&gt; putStrLn (&quot;Hello &quot; ++ honorific ++ &quot; &quot; ++ name)))
+</code></pre>
+<p>This subroutine combines multiple operations together, it reads two lines from
+the standard input and prints a greeting.
+Note that:</p>
+<ul>
+<li>Using <code>&gt;&gt;=</code> defines the order of operation from left to right</li>
+<li>Because of the scoping rules in Haskell, <code>honorific</code> will still be in scope for the most inner function</li>
+</ul>
+<p>This is a bit hard to read, but we can remove the parens and add indentation to make it a bit easier to read:</p>
+<pre><code>getLine &gt;&gt;= \honorific -&gt;
+  getLine &gt;&gt;= \name -&gt;
+    putStrLn (&quot;Hello &quot; ++ honorific ++ &quot; &quot; ++ name)
+</code></pre>
+</li>
+</ol>
+<p>Let's see a few more combinators!</p>
+<h3 id="-and"><a class="header" href="#-and">*&gt; and &gt;&gt;</a></h3>
+<pre><code class="language-hs">(*&gt;) :: IO a -&gt; IO b -&gt; IO b
+(&gt;&gt;) :: IO a -&gt; IO b -&gt; IO b
+</code></pre>
+<p><code>*&gt;</code> and <code>&gt;&gt;</code> have the same type signature for <code>IO</code> and mean the same thing,
+in fact, <code>*&gt;</code> is a slightly more generalized version of <code>&gt;&gt;</code> and can always
+be used instead of <code>&gt;&gt;</code>, which only still exists to avoid breaking backwards
+compatability.</p>
+<p><code>*&gt;</code> for <code>IO</code> means run the first IO operation, discard the result
+the run the second operation. It can be implemented using <code>&gt;&gt;=</code>:</p>
+<pre><code class="language-hs">a *&gt; b = a &gt;&gt;= \_ -&gt; b
+</code></pre>
+<p>This combinator is useful when you want to run several IO operations one after
+the other that might not return anything meaningful, such as <code>putStrLn</code>:</p>
+<pre><code>putStrLn &quot;hello&quot; *&gt; putStrLn &quot;world&quot;
+</code></pre>
+<h3 id="pure-and-return"><a class="header" href="#pure-and-return">pure and return</a></h3>
+<pre><code class="language-hs">pure :: a -&gt; IO a
+</code></pre>
+<p>like <code>*&gt;</code> and <code>&gt;&gt;</code>, <code>pure</code> is a more general version of <code>return</code> that also has the
+advantage of not having a resemblence to unrelated keywords in other languages.</p>
+<p>Remember that we said <code>IO a</code> is description of a program
+that when executed will produce some value of type <code>a</code>, and may do some I/O effects
+during execution?</p>
+<p>With <code>pure</code>, we can build an <code>IO a</code> that does no I/O, and will produce a
+specific value of type <code>a</code>, the one we supply to <code>pure</code>!</p>
+<p>This function is useful when we want to do some computation that depends on <code>IO</code>.</p>
+<p>For example:</p>
+<pre><code class="language-hs">confirm :: IO Bool
+confirm =
+  putStrLn &quot;Are you sure? (y/n)&quot; *&gt;
+    getLine &gt;&gt;= \answer -&gt;
+      case answer of
+        &quot;y&quot; -&gt; pure True
+        &quot;n&quot; -&gt; pure False
+        _ -&gt; putStrLn &quot;Invalid response. use y or n&quot; *&gt;
+          confirm
+</code></pre>
+<p>Trying to return just <code>True</code> or <code>False</code> here wouldn't work because of the
+type of <code>&gt;&gt;=</code>:</p>
+<pre><code class="language-hs">(&gt;&gt;=) :: IO a -&gt; (a -&gt; IO b) -&gt; IO b
+</code></pre>
+<p>The right side of <code>&gt;&gt;=</code> in our code example (<code>\answer -&gt; case ...</code>) must
+be of type <code>String -&gt; IO Bool</code> this is because:</p>
+<ol>
+<li><code>getLine :: IO String</code>, so the <code>a</code> in the type signature of <code>&gt;&gt;=</code>
+should be the same as <code>String</code> in this instance, and</li>
+<li><code>confirm :: IO Bool</code>, so <code>b</code> should be <code>Bool</code></li>
+</ol>
+<h3 id="fmap-and-"><a class="header" href="#fmap-and-">fmap and &lt;$&gt;</a></h3>
+<pre><code class="language-hs">fmap :: (a -&gt; b) -&gt; IO a -&gt; IO b
+</code></pre>
+<p><code>&lt;$&gt;</code> is the infix version of <code>fmap</code>. Use it at your discretion.</p>
+<p>What if we wanted to write a function that reads a line from stdin
+and returns it with <code>!</code> at the end? We could write it using a combination
+of <code>&gt;&gt;=</code> and <code>pure</code>:</p>
+<pre><code>getLine &gt;&gt;= \line -&gt; pure (line ++ &quot;!&quot;)
+</code></pre>
+<p>With <code>fmap</code>, we can remove the <code>pure</code> part:</p>
+<pre><code>fmap (\line -&gt; line ++ &quot;!&quot;) getLine
+</code></pre>
+<p>What <code>fmap</code> does is apply a function to the value to be returning
+from the IO operation, also known as &quot;mapping&quot; over it.</p>
+<p>By the way, <code>fmap</code> looks very similar to a different function we ran into:
+<code>map :: (a -&gt; b) -&gt; [a] -&gt; [b]</code>. It's not a coincidence. We'll talk about it later!</p>
+<h2 id="io-is-first-class"><a class="header" href="#io-is-first-class">IO is first class</a></h2>
+<p>The beauty of <code>IO</code> is that it's a completely first-class construct in the language,
+and is not really different from <code>Maybe</code> and <code>Either</code>. We can pass it to
+functions, put it in a container, etc. Remember that it represents a description
+of a program, and without being combine into <code>main</code> in some way won't actually
+<em>do</em> anything.</p>
+<p>Here's an example of a function that takes IO actions as input:</p>
+<pre><code class="language-hs">whenIO :: IO Bool -&gt; IO () -&gt; IO ()
+whenIO cond action =
+  cond &gt;&gt;= \result -&gt;
+    if result
+      then action
+      else pure ()
+</code></pre>
+<p>And how it can be used:</p>
+<pre><code class="language-hs">main :: IO ()
+main =
+  putStrLn &quot;This program will tell you a secret&quot; *&gt;
+	whenIO confirm (putStrLn &quot;IO is actually pretty awesome&quot;) *&gt;
+	  putStrLn &quot;Bye&quot;
+</code></pre>
+<p>Notice how <code>putStrLn &quot;IO is actually pretty awesome&quot;</code> isn't executed
+right away, but only if it is what <code>whenIO</code> returns, and in turn is <em>combined</em>
+with <code>*&gt;</code> as part of the <code>main</code> expression.</p>
+<h2 id="getting-out-of-io"><a class="header" href="#getting-out-of-io">Getting out of IO?</a></h2>
+<p>What we've seen above has great concequences to the Haskell language,
+in our <code>Html</code> type, we had a function <code>render :: Html -&gt; String</code>
+that could turn an <code>Html</code> to a string value.</p>
+<p>In Haskell, <strong>there is no way</strong> to implement a function such as <code>execute :: IO a -&gt; a</code>
+in a way that preserves purity and equational reasoning!</p>
+<p>Also, <code>IO</code> is <em>opaque</em>, it does not let us examine it. So we are really bound
+to what the Haskell API for <code>IO</code> allows us to do.</p>
+<p>This means that <strong>we need to think about using IO differently</strong>!</p>
+<p>In Haskell, once we got into <code>IO</code>, there is no getting out.
+The only thing we can do is build bigger IO computations by <em>combining</em>
+it with more IO computations. And we also can't use <code>IO a</code> in place of an <code>a</code></p>
+<p>So for example, we can't write <code>getLine ++ &quot;!&quot;</code> because <code>++</code> expects both
+sides to be Strings, and <code>getLine</code>'s type is <code>IO String</code>. The types do not match!
+We have to use <code>fmap</code> and the return must be <code>IO String</code>.</p>
+<p>In Haskell we like to keep <code>IO</code> usage minimal, and we like to push it to the edges
+of the program. This pattern is often called <em>Functional core, imperative shell</em>.</p>
+<h2 id="functional-core-imperative-shell"><a class="header" href="#functional-core-imperative-shell">Functional core, imperative shell</a></h2>
+<p>In our blog generator program, we want to read a file, parse it, and convert it to html,
+and then print the result to the console.</p>
+<p>In many programming languages, we might interleave reading from the file with parsing,
+and writing to the file with the html conversion. But we don't mix these here.
+Parsing operates on a <code>String</code> value rather than some file handle,
+and <code>Html</code> is being convert to a <code>String</code> rather than being written to the screen directly.</p>
+<p>This approach of separating <code>IO</code> and pushing it to the edge of the program gives us
+a lot of flexibility. These functions without <code>IO</code> are easier to test and examine,
+they are more modular can work in many contexts (reading from stdin,
+reading from network socket, writing to an http connection, and more).</p>
+<p>This pattern is often a good approach for building Haskell programs. Especially
+batch programs.</p>
+<h2 id="building-a-blog-generator"><a class="header" href="#building-a-blog-generator">Building a blog generator</a></h2>
+<p>We'd like to start building a blog generator, and we want to have the following
+interface:</p>
+<blockquote>
+<ol>
+<li>If the user calls the program without arguments, we will read from
+the standard input, and write to the standard output</li>
+<li>If the user calls the program with two arguments, the first one
+will be the input file name which we will read, and the second one
+will be the output file name to which we will write</li>
+<li>If the output file already exists, we'll ask the user if they want
+to override the file</li>
+<li>On other kind of input, we'll output a generic message explaining
+the usage as we described above</li>
+</ol>
+</blockquote>
+<p>We are going to need a few functions:</p>
+<pre><code class="language-hs">getArgs :: IO [String] -- get the program arguments
+
+getContents :: IO String -- Read all of the content from stdin
+
+readFile' :: FilePath -&gt; IO String -- Read all of the content from a file
+
+writeFile :: FilePath -&gt; String -&gt; IO () -- Write a string into a file
+
+doesFileExist :: FilePath -&gt; IO Bool -- Checks whether a file exists
+</code></pre>
+<p>And the following imports:</p>
+<pre><code class="language-hs">import System.Directory (doesFileExist)
+import System.Environment (getArgs)
+import System.IO (getContents, readFile', writeFile)
+</code></pre>
+<p>Since we haven't implemented a conversion function <code>Document -&gt; Html</code> yet,
+for the sake of the exercise, we can <code>show</code> the <code>Document</code> instead of converting it.
+In the next chapter we will implement the conversion function. But if you are feeling
+adventurous, you can try and implement it yourselves. You should have already ran into
+all of the features and building blocks you need to implement it.</p>
+<hr />
+<p>Try implementing the &quot;imperative shell&quot; for our blog generator program.
+Start with <code>main</code>, pattern match on the result of <code>getArgs</code>, and decide what to
+do. Look back at the examples above for inspiration. Use <code>error</code> to report an error.</p>
+<details><summary>Answer</summary>
+<pre><code class="language-hs">-- Main.hs
+
+import Markup
+
+import System.Directory (doesFileExist)
+import System.Environment (getArgs)
+import System.IO (getContents, readFile, writeFile)
+
+main :: IO ()
+main =
+  getArgs &gt;&gt;= \args -&gt;
+    case args of
+    -- No program arguments: reading from stdin and writing to stdout
+    [] -&gt;
+      getContents &gt;&gt;= \content -&gt;
+      putStrLn (show (parse content))
+    [input, output] -&gt;
+      readFile input &gt;&gt;= \content -&gt;
+        doesFileExist input &gt;&gt;= \exists -&gt;
+          let
+            writeResult = writeFile output (show (parse content))
+          in
+            if exists
+              then whenIO confirm writeResult
+              else writeResult
+
+confirm :: IO Bool
+confirm =
+  putStrLn &quot;Are you sure? (y/n)&quot; *&gt;
+    getLine &gt;&gt;= \answer -&gt;
+      case answer of
+        &quot;y&quot; -&gt; pure True
+        &quot;n&quot; -&gt; pure False
+        _ -&gt; putStrLn &quot;Invalid response. use y or n&quot; *&gt;
+          confirm
+
+whenIO :: IO Bool -&gt; IO () -&gt; IO ()
+whenIO cond action =
+  cond &gt;&gt;= \result -&gt;
+    if result
+      then action
+      else pure ()
+</code></pre>
+</details>
+<hr />
 
                     </main>
 
