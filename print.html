@@ -2955,7 +2955,7 @@ will be the input file name which we will read, and the second one
 will be the output file name to which we will write</li>
 <li>If the output file already exists, we'll ask the user if they want
 to override the file</li>
-<li>On other kind of input, we'll output a generic message explaining
+<li>On any other kind of input, we'll output a generic message explaining
 the usage as we described above</li>
 </ol>
 <p>At a later chapter, we will add a little fancier argument parsing
@@ -2993,34 +2993,40 @@ we expect the order of operations to to happen from the top-down.
 But in a lazy language we don't actually evaluate an expression until
 it is needed, and so neither <code>result1</code> nor <code>result2</code> are evaluted
 until we wish to print the result of substracting one from the other,
-and then the evaluation goes in order from left to right, we first
-evaluate <code>result2</code>.</p>
+and then when we try to evaluate <code>-</code>, it requires to evaluate the two arguments
+in order from left to right, so we first evaluate <code>result2</code>.</p>
 <p>Evaluating <code>result2</code>, with substitution, means to replace occurances of <code>n</code>
 with the input <code>2</code>, and then evaluate the top level function (<code>+</code>), it is a
 primitive function, we then evaluate it's arguments, <code>readIntFromStdin</code>
 and then <code>n</code>, at this point <em>we are reading the first integer from the stdin</em>.</p>
 <p>After calcuating the result, we can move to evaluate <code>result1</code>, in which,
 during evaluation, <em>will read the second integer from stdin</em>, this is the
-complete opposite of what we wanted. And the underlying issue is that
-<code>addWithInput</code> is <strong>not a pure function</strong>, meaning that <strong>it can return
-different results even when it takes the same input</strong>.</p>
+complete opposite of what we wanted!</p>
+<p>Issues like these make lazy evaluation hard to work with in the presence of
+<strong>side effects</strong> - when the evaluation of an expression <em>can affect or be affected
+by the outside world</em>, this includes reading/writing from mutable memory
+or performing I/O operations.</p>
+<p>We call functions that has side-effects such as <code>addWithInput</code> <strong>impure functions</strong>.
+And an unfortunate consequence of impure functions is that
+<strong>they can return different results even when they takes the same input</strong>.</p>
 <p>The presence of impure functions makes it harder for us to reason about lazy evaluation,
-and also messes up our ability to use <em>equational reasoning</em> as well.</p>
-<p>So for Haskell it was decided to only allow <strong>pure function</strong> - one that
-will <em>always</em> return the same output (given the same input) and for which
-<strong>evaluation is deterministic</strong>.</p>
+and also messes up our ability to use <em>equational reasoning</em> to understand programs.</p>
+<p>Therefore, for Haskell, it was decided to only allow <strong>pure</strong> and expressions - ones that
+have <em>no side effects</em> - pure functions will <em>always</em> return the same output (given the same input)
+and <strong>evaluating pure expressions is deterministic</strong>.</p>
 <p>But now, how can we do input/ouput operations? There are many possible solutions
 for the design space, in Haskell it was chosen to design a first class interface
 with an accompanied type called <code>IO</code>. <code>IO</code>'s interface will force a dinstiction
 from non-IO expressions, and will also require that in order to combine
 multiple <code>IO</code> operations, we will have to determine the order between them.</p>
 <h2 id="io"><a class="header" href="#io">IO</a></h2>
-<p><code>IO</code> is an opaque type, like our <code>Html</code> type that where we hid it's internal
-representation from the user behind an interface. But in this case it is a
+<p><code>IO</code> is an opaque type, like our <code>Html</code> type in which we hid its internal
+representation from the user behind an interface. But in this case <code>IO</code> is a
 built-in type that is hidden by the Haskell language rather than a module.</p>
-<p>It has a payload type like <code>Maybe</code> has which represents the
-result of an <code>IO</code> operation. When there isn't a meaningful result, we use
-the unit type, <code>()</code> which only has one value, <code>()</code>.</p>
+<p><code>IO</code> has a payload type like <code>Maybe</code> has which represents the
+result of an <code>IO</code> operation/action/computation.
+When there isn't a meaningful result, we use the unit type,
+<code>()</code> (which only has one value: <code>()</code>) to represent that.</p>
 <p>Here are a few functions that return <code>IO</code> operations:</p>
 <pre><code class="language-hs">putStrLn :: String -&gt; IO ()
 
@@ -3173,6 +3179,22 @@ of <code>&gt;&gt;=</code> and <code>pure</code>:</p>
 from the IO operation, also known as &quot;mapping&quot; over it.</p>
 <p>By the way, <code>fmap</code> looks very similar to a different function we ran into:
 <code>map :: (a -&gt; b) -&gt; [a] -&gt; [b]</code>. It's not a coincidence. We'll talk about it later!</p>
+<h3 id="summary-1"><a class="header" href="#summary-1">Summary</a></h3>
+<p>Here's a list of <code>IO</code> combinators we ran into:</p>
+<pre><code class="language-hs">-- chaining IO operations: passing the *result* of the left IO operation
+-- as an argument to the function on the right.
+-- Pronounced &quot;bind&quot;.
+(&gt;&gt;=) :: IO a -&gt; (a -&gt; IO b) -&gt; IO b
+
+-- sequence two IO operations, discarding the payload of the first.
+(*&gt;) :: IO a -&gt; IO b -&gt; IO b
+
+-- &quot;lift&quot; a value into IO context, does not add any I/O effects.
+pure :: a -&gt; IO a
+
+-- &quot;map&quot; (or apply a function) over the payload value of an IO operation.
+fmap :: (a -&gt; b) -&gt; IO a -&gt; IO b
+</code></pre>
 <h2 id="io-is-first-class"><a class="header" href="#io-is-first-class">IO is first class</a></h2>
 <p>The beauty of <code>IO</code> is that it's a completely first-class construct in the language,
 and is not really different from <code>Maybe</code> and <code>Either</code>. We can pass it to
@@ -3208,10 +3230,11 @@ to what the Haskell API for <code>IO</code> allows us to do.</p>
 <p>This means that <strong>we need to think about using IO differently</strong>!</p>
 <p>In Haskell, once we got into <code>IO</code>, there is no getting out.
 The only thing we can do is build bigger IO computations by <em>combining</em>
-it with more IO computations. And we also can't use <code>IO a</code> in place of an <code>a</code></p>
-<p>So for example, we can't write <code>getLine ++ &quot;!&quot;</code> because <code>++</code> expects both
+it with more IO computations.</p>
+<p>We also can't use <code>IO a</code> in place of an <code>a</code>, so for example,
+we can't write <code>getLine ++ &quot;!&quot;</code> because <code>++</code> expects both
 sides to be Strings, and <code>getLine</code>'s type is <code>IO String</code>. The types do not match!
-We have to use <code>fmap</code> and the return must be <code>IO String</code>.</p>
+We have to use <code>fmap</code> and the return type must be <code>IO String</code>, like we've seen before.</p>
 <p>In Haskell we like to keep <code>IO</code> usage minimal, and we like to push it to the edges
 of the program. This pattern is often called <em>Functional core, imperative shell</em>.</p>
 <h2 id="functional-core-imperative-shell"><a class="header" href="#functional-core-imperative-shell">Functional core, imperative shell</a></h2>
@@ -3222,8 +3245,9 @@ and writing to the file with the html conversion. But we don't mix these here.
 Parsing operates on a <code>String</code> value rather than some file handle,
 and <code>Html</code> is being convert to a <code>String</code> rather than being written to the screen directly.</p>
 <p>This approach of separating <code>IO</code> and pushing it to the edge of the program gives us
-a lot of flexibility. These functions without <code>IO</code> are easier to test and examine,
-they are more modular can work in many contexts (reading from stdin,
+a lot of flexibility. These functions without <code>IO</code> are easier to test and examine
+(because they are guaranteed to have deterministic evaluation!),
+and they are more modular can work in many contexts (reading from stdin,
 reading from network socket, writing to an http connection, and more).</p>
 <p>This pattern is often a good approach for building Haskell programs. Especially
 batch programs.</p>
@@ -3239,7 +3263,7 @@ will be the input file name which we will read, and the second one
 will be the output file name to which we will write</li>
 <li>If the output file already exists, we'll ask the user if they want
 to override the file</li>
-<li>On other kind of input, we'll output a generic message explaining
+<li>On any other kind of input, we'll output a generic message explaining
 the usage as we described above</li>
 </ol>
 </blockquote>
@@ -3296,6 +3320,10 @@ main =
               if exists
                 then whenIO confirm writeResult
                 else writeResult
+
+      -- Any other kind of program arguments
+      _ -&gt;
+        putStrLn &quot;Usage: runghc Main.hs [-- &lt;input-file&gt; &lt;output-file&gt;]&quot;
 
 confirm :: IO Bool
 confirm =
@@ -3436,6 +3464,10 @@ main = do
       if exists
         then whenIO confirm writeResult
         else writeResult
+
+    -- Any other kind of program arguments
+    _ -&gt;
+      putStrLn &quot;Usage: runghc Main.hs [-- &lt;input-file&gt; &lt;output-file&gt;]&quot;
 
 confirm :: IO Bool
 confirm = do
