@@ -415,7 +415,7 @@ as well and finally returns a string.</p>
 <p>Consecuently, the expression <code>makeHtml &quot;My title&quot;</code> is also a function!
 One that will take a string (the content) and will return the expected
 html string with &quot;My title&quot; in the title.</p>
-<p>This is called <em>partial application</em>.</p>
+<p>This is called <strong>partial application</strong>.</p>
 <p>To illustrate, let's define <code>html_</code> and <code>body_</code> in a different way by
 defining a new function, <code>el</code>.</p>
 <pre><code class="language-hs">el :: String -&gt; String -&gt; String
@@ -433,18 +433,65 @@ body_ :: String -&gt; String
 body_ = el &quot;body&quot;
 </code></pre>
 <p>Note that we didn't need to add the argument on the left side of
-equals sign because Haskell functions are &quot;first class&quot; - they behave
+equals sign because Haskell functions are &quot;<strong>first class</strong>&quot; - they behave
 exactly like normal expressions. You can define names to them like
 regular values, put them in data structures, pass them to functions,
 everything you can do with regular values like <code>Int</code> or <code>String</code>.</p>
 <p>The way Haskell treats names is very similar to copy paste. anywhere
 you see <code>html_</code> in the code, you can replace it with <code>el &quot;html&quot;</code>. They are
 the same (this is what the equals signs say, right? That the two sides
-are the same).</p>
-<p>This property, of behind able to substitute the two sides of the
-equals sign with one another, is called referential transparency. And
+are the same). This property, of behind able to <em>substitute</em> the two sides of the
+equals sign with one another, is called <strong>referential transparency</strong>. And
 it is pretty unique to Haskell (and a few language that are very
 similar to it like PureScript and Elm)!</p>
+<h3 id="anonymouslambda-functions"><a class="header" href="#anonymouslambda-functions">Anonymous/lambda functions</a></h3>
+<p>To further drive the point that Haskell functions are first class and
+all functions take exactly one argument,
+I'll mention that the syntax we've been using up until
+now to define function is just syntactic sugar! We can also define
+<strong>anonymous functions</strong> - functions without a name, anywhere we'd like.
+anonymous functions are also known as <strong>lambda functions</strong>.
+This is a tribute to the original, most primitive
+functional programming language - the lambda calculus.</p>
+<p>We can create an anonymous function anywhere we'd expect an expression
+such as <code>&quot;hello&quot;</code> with the following syntax:</p>
+<pre><code class="language-hs">\&lt;argument&gt; -&gt; &lt;expression&gt;
+</code></pre>
+<p>This little <code>\</code> (which bears some resemblance to the lowercase greek letter lambda 'λ')
+marks the head of the lambda function,
+and the arrow (<code>-&gt;</code>) marks the beginning of the body of the function.
+We can even chain lambda, making them &quot;multiple argument functions&quot; by
+defining another lambda in the body for another, like this:</p>
+<pre><code class="language-hs">three = (\num1 -&gt; \num2 -&gt; num1 + num2) 1 2
+</code></pre>
+<p>Just as before, we evaluate functions by substituting the function argument with
+the applied value. In the example above we subtitute <code>num1</code> with <code>1</code>, and get
+<code>(\num2 -&gt; 1 + num2) 2</code>. Then subtitute <code>num2</code> with <code>2</code> and get <code>1 + 2</code>.
+We'll talk more about substitution later.</p>
+<p>So, when we write:</p>
+<pre><code class="language-hs">el :: String -&gt; String -&gt; String
+el tag content =
+  &quot;&lt;&quot; &lt;&gt; tag &lt;&gt; &quot;&gt;&quot; &lt;&gt; content &lt;&gt; &quot;&lt;/&quot; &lt;&gt; tag &lt;&gt; &quot;&gt;&quot;
+</code></pre>
+<p>Haskell actually translates this under the hood to:</p>
+<pre><code class="language-hs">el :: String -&gt; (String -&gt; String)
+el = \tag -&gt; \content -&gt;
+  &quot;&lt;&quot; &lt;&gt; tag &lt;&gt; &quot;&gt;&quot; &lt;&gt; content &lt;&gt; &quot;&lt;/&quot; &lt;&gt; tag &lt;&gt; &quot;&gt;&quot;
+</code></pre>
+<p>Hopefully this form makes it a bit clearer why Haskell functions
+always take one argument and return another, even when we have
+syntactic sugar that might suggest otherwise.</p>
+<p>I'll mention one more syntactic sugar for anonymous functions:
+We don't actually have to write multiple argument anonymous functions
+this way, we can just write: </p>
+<pre><code class="language-hs">\&lt;arg1&gt; &lt;arg2&gt; ... &lt;argN&gt; -&gt; &lt;expression&gt;
+</code></pre>
+<p>to save us some trouble. For example:</p>
+<pre><code class="language-hs">three = (\num1 num2 -&gt; num1 + num2) 1 2
+</code></pre>
+<p>But it's worth remembering what they are under the hood.</p>
+<p>We won't be needing anonymous/lambda functions at this point,
+but we'll talk more about them later and see where they can be useful.</p>
 <hr />
 <p>Exercises:</p>
 <ol>
