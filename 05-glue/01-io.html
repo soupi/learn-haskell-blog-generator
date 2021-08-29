@@ -502,6 +502,8 @@ main =
       [] -&gt;
         getContents &gt;&gt;= \content -&gt;
         putStrLn (show (parse content))
+
+      -- With input and output file paths as program arguments
       [input, output] -&gt;
         readFile input &gt;&gt;= \content -&gt;
           doesFileExist input &gt;&gt;= \exists -&gt;
@@ -642,6 +644,7 @@ main = do
       content &lt;- getContents
       putStrLn (show (parse content))
 
+    -- With input and output file paths as program arguments
     [input, output] -&gt; do
       content &lt;- readFile input
       exists &lt;- doesFileExist input
@@ -658,7 +661,8 @@ confirm = do
   case answer of
     &quot;y&quot; -&gt; pure True
     &quot;n&quot; -&gt; pure False
-    _ -&gt; putStrLn &quot;Invalid response. use y or n&quot; *&gt;
+    _ -&gt; do
+      putStrLn &quot;Invalid response. use y or n&quot;
       confirm
 
 whenIO :: IO Bool -&gt; IO () -&gt; IO ()
