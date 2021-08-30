@@ -186,6 +186,8 @@
 <hr />
 <p><strong>Note</strong>: If you've installed a ghc toolchain via stack and not ghcup, and the commands above do not work because <code>ghc</code> or <code>runghc</code> are missing, prefix the commands above with <code>stack exec -- </code>. Stack will locate the globally installed ghc and use it. So for example <code>runghc hello.hs</code> becomes <code>stack exec -- runghc hello.hs</code>. See the <a href="https://docs.haskellstack.org/en/stable/GUIDE/#exec">Stack user guide</a> for more details.</p>
 <hr />
+<!-- > Want to learn more about the core Haskell tools? [see this article](https://gilmi.me/blog/post/2021/08/14/hs-core-tools).
+-->
 <h2 id="more-bindings"><a class="header" href="#more-bindings">More bindings</a></h2>
 <p>We can define the html string passed to <code>putStrLn</code> in a new name instead. Change the content of file <code>hello.hs</code> we defined above to:</p>
 <pre><code class="language-hs">main = putStrLn myhtml
