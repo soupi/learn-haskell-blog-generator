@@ -394,8 +394,7 @@ of <code>&gt;&gt;=</code> and <code>pure</code>:</p>
 </code></pre>
 <p>What <code>fmap</code> does is apply a function to the value to be returning
 from the IO operation, also known as &quot;mapping&quot; over it.</p>
-<p>By the way, <code>fmap</code> looks very similar to a different function we ran into:
-<code>map :: (a -&gt; b) -&gt; [a] -&gt; [b]</code>. It's not a coincidence. We'll talk about it later!</p>
+<p>(Btw, Have you noticed the similarities between <code>fmap</code> and <code>map :: (a -&gt; b) -&gt; [a] -&gt; [b]</code>?)</p>
 <h3 id="summary"><a class="header" href="#summary">Summary</a></h3>
 <p>Here's a list of <code>IO</code> combinators we ran into:</p>
 <pre><code class="language-hs">-- chaining IO operations: passing the *result* of the left IO operation

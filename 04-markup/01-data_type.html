@@ -207,8 +207,8 @@ The above definition can also be written like this:</p>
 <pre><code class="language-hs">data Person
   = Person
     { name :: String
-	, age :: Int
-	}
+    , age :: Int
+    }
 </code></pre>
 <p>Values of this type can be written exactly as before,</p>
 <pre><code class="language-hs">Person &quot;Gil&quot; 32
@@ -231,8 +231,8 @@ by adding a prefix:</p>
 <pre><code class="language-hs">data Person
   = Person
     { pName :: String
-	, pAge :: Int
-	}
+    , pAge :: Int
+    }
 </code></pre>
 <p>Another way is by using extensions to the Haskell language, which we will cover
 in later chapters.</p>
@@ -255,8 +255,26 @@ Tuple 'a' 'z' :: Tuple Char Char
 </code></pre>
 <p>This <code>Tuple</code> definition is polymorphic, we define the structure but are able to
 plug different types into the structure to get concerete types. This about <code>Tuple</code>
-as just a <em>template</em> for a data type waiting to be filled, or as a <em>function</em> waiting
-for types as input in order to return a data type.</p>
+as just a <em>template</em> for a data type waiting to be filled, or as a <strong>function</strong> waiting
+for types as input in order to return a data type. We can even take a look at the &quot;type&quot;
+signature of <code>Tuple</code> in <code>ghci</code> using the <code>:kind</code> command.</p>
+<pre><code class="language-hs">ghci&gt; data Tuple a b = Tuple a b
+ghci&gt; :kind Tuple
+Tuple :: * -&gt; * -&gt; *
+</code></pre>
+<hr />
+<h4 id="quick-detour-kinds"><a class="header" href="#quick-detour-kinds">Quick detour: Kinds</a></h4>
+<p>The <code>:kind</code> command is called as such because the &quot;type&quot; of a type is called a <strong>kind</strong>.
+Kinds can be one of two things, either a <code>*</code> which means a saturated (or concrete) type,
+such as <code>Int</code> or <code>Person</code>, or an <code>-&gt;</code> of two kinds, which is, as you might have guessed,
+a type function, taking kind and returning a kind.</p>
+<p>Note that only types that have the kind <code>*</code> can have values. So for example while <code>Tuple Int</code>
+is a valid Haskell concept that has the <em>kind</em> <code>* -&gt; *</code>, and we can write code that will
+work &quot;generically&quot; for all types that have a certain kind (e.g. <code>* -&gt; *</code>), we cannot
+construct a value that will have the kind <code>* -&gt; *</code>. All values have types, and all
+such types that have values has the kind <code>*</code>.</p>
+<p>We will talk about kinds later, for now let's focus on types!</p>
+<hr />
 </li>
 <li>
 <p>Either</p>

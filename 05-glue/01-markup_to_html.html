@@ -307,7 +307,7 @@ and <code>0</code> in place of the identity member form a monoid:</p>
 <pre><code class="language-hs">17 + 0 = 17
 0 + 99 = 99
 </code></pre>
-<p>So integers together with the <code>+</code> operation for a semigroup, and
+<p>So integers together with the <code>+</code> operation form a semigroup, and
 together with <code>0</code> form a monoid.</p>
 <p>We learn new things from this:</p>
 <ol>
@@ -324,7 +324,7 @@ that could work for any monoid</li>
 <p>(Note: this is actually a simplified version. The
 <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Prelude.html#t:Monoid">actual</a>
 is a bit more complicated because of backwards compatability and performance reasons.
-<code>Semigroup</code> was actually introduced after <code>Monoid</code>!)</p>
+<code>Semigroup</code> was actually introduced in Haskell after <code>Monoid</code>!)</p>
 <p>We could add an instance of <code>Monoid</code> for our markup <code>Structure</code> data type:</p>
 <pre><code class="language-hs">instance Monoid a where
   mempty = empty_
@@ -345,11 +345,58 @@ Abstractions are useful and help us reuse code!</p>
 This is because integers can also form a monoid with <code>*</code> and <code>1</code>! But <strong>there can only
 be one instance per type</strong>. Instead, two other <code>newtype</code>s exist that provide that
 functionality, <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Monoid.html#t:Sum">Sum</a>
-and <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Monoid.html#t:Product">Product</a>.</p>
+and <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Monoid.html#t:Product">Product</a>.
+See how they can be used in <code>ghci</code>:</p>
+<pre><code class="language-hs">ghci&gt; import Data.Monoid
+ghci&gt; Product 2 &lt;&gt; Product 3 -- note, Product is a data constructor
+Product {getProduct = 6}
+ghci&gt; getProduct (Product 2 &lt;&gt; Product 3)
+6
+ghci&gt; getProduct $ mconcat $ map Product [1..5]
+120
+</code></pre>
+<h2 id="another-abstraction"><a class="header" href="#another-abstraction">Another abstraction?</a></h2>
+<p>We've used <code>map</code> and then <code>mconcat</code> twice now. Surely there has to be a function
+that unifies this pattern. And indeed, it is called
+<a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Foldable.html#v:foldMap"><code>foldMap</code></a>,
+and it works not only for lists, it will work for any data structure that can be &quot;folded&quot;,
+or &quot;reduced&quot;, into a summary value. This abstraction and type class is called <strong>Foldable</strong>.</p>
+<p>For a simpler understanding of <code>Foldable</code>, we can look at <code>fold</code>:</p>
+<pre><code class="language-hs">fold :: (Foldable t, Monoid m) =&gt; t m -&gt; m
+
+-- compare with
+mconcat :: Monoid m            =&gt; [m] -&gt; m
+</code></pre>
+<p><code>mconcat</code> is just a specialized version of <code>fold</code> for lists.
+And <code>fold</code> can be a used for any pair of data structure that implements
+<code>Foldable</code> and a payload type that implements <code>Monoid</code>. This
+could be <code>[]</code> with <code>Structure</code>, or <code>Maybe</code> with <code>Product Int</code>, or
+your new shiny binary tree with <code>String</code> as the payload type. But note that
+the <code>Foldable</code> type must be of <em>kind</em> <code>* -&gt; *</code>. So for example <code>Html</code>
+cannot be a <code>Foldable</code>.</p>
+<p><code>foldMap</code> is a function that allows us to apply a function to the
+payload type of the <code>Foldable</code> type right before appending (<code>&lt;&gt;</code>) them.</p>
+<pre><code class="language-hs">foldMap :: (Foldable t, Monoid m) -&gt; (a -&gt; m) -&gt; t a -&gt; m
+
+-- compare to a specialized version with:
+-- - t ~ []
+-- - m ~ Html.Structure
+-- - a ~ Markup.Structure
+foldMap
+  :: (Markup.Structure -&gt; Html.Structure)
+  -&gt; [Html.Structure]
+  -&gt; Html.Structure
+</code></pre>
+<p>True to its name, it really &quot;maps&quot; before it &quot;folds&quot;. You might pause here
+and think &quot;this 'map' we are talking about isn't specific for lists, maybe
+that's another abstraction?&quot;, yes. It is actually a very important and
+fundamental abstraction called <code>Functor</code>.
+But I think we had enough abstractions for today.
+We'll cover it in a later chapter!</p>
 <h2 id="finishing-our-conversion-module"><a class="header" href="#finishing-our-conversion-module">Finishing our conversion module</a></h2>
 <p>Let's finish our code by writing <code>convert</code>:</p>
 <pre><code class="language-hs">convert :: Html.Title -&gt; Markup.Document -&gt; Html.Html
-convert title = Html.html_ title . mconcat . map convertStructure
+convert title = Html.html_ title . foldMap convertStructure
 </code></pre>
 <p>Now we have a full implementation and are able to convert markup documents
 to html:</p>
@@ -360,7 +407,7 @@ import qualified Markup
 import qualified Html
 
 convert :: Html.Title -&gt; Markup.Document -&gt; Html.Html
-convert title = Html.html_ title . mconcat . map convertStructure
+convert title = Html.html_ title . foldMap convertStructure
 
 convertStructure :: Markup.Structure -&gt; Html.Structure
 convertStructure structure =
