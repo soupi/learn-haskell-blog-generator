@@ -1,0 +1,442 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Converting Markup to HTML - Learning Haskell by building a blog generator</title>
+                
+
+        <!-- Custom HTML head -->
+        
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="A step by step guide to learning Haskell by building a simple static blog generator">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+                <link rel="icon" href="../favicon.svg">
+                        <link rel="shortcut icon" href="../favicon.png">
+                <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+                <link rel="stylesheet" href="../css/print.css" media="print">
+        
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+                <link rel="stylesheet" href="../fonts/fonts.css">
+        
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+            </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../01-about.html"><strong aria-hidden="true">1.</strong> About this tutorial</a></li><li class="chapter-item expanded "><a href="../02-hello.html"><strong aria-hidden="true">2.</strong> Hello world</a></li><li class="chapter-item expanded "><a href="../03-html_printer.html"><strong aria-hidden="true">3.</strong> Building an HTML printer library</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../03-html/01-html_content.html"><strong aria-hidden="true">3.1.</strong> Flexible html content (functions)</a></li><li class="chapter-item expanded "><a href="../03-html/02-type_signatures.html"><strong aria-hidden="true">3.2.</strong> Adding type signatures</a></li><li class="chapter-item expanded "><a href="../03-html/03-edsls.html"><strong aria-hidden="true">3.3.</strong> Embedded Domain Specific Languages</a></li><li class="chapter-item expanded "><a href="../03-html/04-safer_construction.html"><strong aria-hidden="true">3.4.</strong> Safer HTML construction with types</a></li><li class="chapter-item expanded "><a href="../03-html/05-modules.html"><strong aria-hidden="true">3.5.</strong> Preventing incorrect use with modules</a></li><li class="chapter-item expanded "><a href="../03-html/06-escaping_characters.html"><strong aria-hidden="true">3.6.</strong> Escaping characters</a></li><li class="chapter-item expanded "><a href="../03-html/07-internal_modules.html"><strong aria-hidden="true">3.7.</strong> Exposing internal functionality (Internal modules)</a></li><li class="chapter-item expanded "><a href="../03-html/09-exercises.html"><strong aria-hidden="true">3.8.</strong> Exercises</a></li><li class="chapter-item expanded "><a href="../03-html/10-summary.html"><strong aria-hidden="true">3.9.</strong> Summary</a></li></ol></li><li class="chapter-item expanded "><a href="../04-markup.html"><strong aria-hidden="true">4.</strong> Custom markup language</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../04-markup/01-data_type.html"><strong aria-hidden="true">4.1.</strong> Representing the markup language as a Haskell data type</a></li><li class="chapter-item expanded "><a href="../04-markup/02-parsing_01.html"><strong aria-hidden="true">4.2.</strong> Parsing markup part 01 (Recursion)</a></li><li class="chapter-item expanded "><a href="../04-markup/03-displaying_results.html"><strong aria-hidden="true">4.3.</strong> Displaying the parsing results (typeclasses)</a></li><li class="chapter-item expanded "><a href="../04-markup/04-parsing_02.html"><strong aria-hidden="true">4.4.</strong> Parsing markup part 02 (Pattern matching)</a></li></ol></li><li class="chapter-item expanded "><a href="../05-glue.html"><strong aria-hidden="true">5.</strong> Gluing things together</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../05-glue/01-markup_to_html.html" class="active"><strong aria-hidden="true">5.1.</strong> Converting Markup to HTML</a></li><li class="chapter-item expanded "><a href="../05-glue/02-io.html"><strong aria-hidden="true">5.2.</strong> Working with IO</a></li></ol></li><li class="chapter-item expanded "><a href="../06-next.html"><strong aria-hidden="true">6.</strong> Where to go next?</a></li></ol>            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                                                <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                                            </div>
+
+                    <h1 class="menu-title">Learning Haskell by building a blog generator</h1>
+
+                    <div class="right-buttons">
+                                                <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                                                                        
+                    </div>
+                </div>
+
+                                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="converting-markup-to-html"><a class="header" href="#converting-markup-to-html">Converting Markup to HTML</a></h1>
+<p>One key part is missing before we can do glue everything together, and that is
+to convert our <code>Markup</code> data types to <code>Html</code>.</p>
+<p>We'll start by creating a new module and import both the <code>Markup</code> and the <code>Html</code> modules.</p>
+<pre><code class="language-hs">module Convert where
+
+import qualified Markup
+import qualified Html
+</code></pre>
+<h2 id="qualified-imports"><a class="header" href="#qualified-imports">Qualified Imports</a></h2>
+<p>This time, we've imported the modules qualified. Qualified imports means that
+instead of exposing the names that we've defined in the imported module to
+the general module namespace, they now have to be prefixed with the module name.</p>
+<p>For example, <code>parse</code> becomes <code>Markup.parse</code>.
+If we would've imported <code>Html.Internal</code> qualified, we'd have to write
+<code>Html.Internal.el</code> which is a bit long.</p>
+<p>We can also give a new name to the module to be used instead with the <code>as</code>
+keyword:</p>
+<pre><code class="language-hs">import qualified Html.Internal as HI
+</code></pre>
+<p>And now write <code>HI.el</code> instead.</p>
+<p>I like using qualified imports because readers do not have to guess where a
+name came from. Some modules are even designed to be imported qualified.
+For example, many container APIs such as maps, sets and vectors have very similar
+API. If we want to multiple containers in a single module we pretty much have
+to use qualified imports so that when we write a function such as <code>singleton</code>,
+which creates a container with a single value, GHC will know to which <code>singleton</code>
+function from which module we are refering.</p>
+<p>Some people prefer to use import lists instead of qualified imports as well,
+because qualified names can be a bit verbose and noisy. I usually prefer them,
+but up to you. For more information about imports,
+see this <a href="https://wiki.haskell.org/Import">wiki article</a>.</p>
+<p>In this case we don't <em>have</em> to you qualified imports, but I think they make
+the code a bit clearer.</p>
+<h2 id="converting-markupstructure-to-htmlstructure"><a class="header" href="#converting-markupstructure-to-htmlstructure">Converting Markup.Structure to Html.Structure</a></h2>
+<p>Converting a markup structure to an Html structure is mostly straightforward
+at this point, we need to pattern match on the markup structure and use
+the relevant Html API.</p>
+<pre><code class="language-hs">convertStructure :: Markup.Structure -&gt; Html.Structure
+convertStructure structure =
+  case structure of
+    Markup.Header 1 txt -&gt;
+      Html.h1_ txt
+
+    Markup.Paragraph p -&gt;
+      Html.p_ p
+
+    Markup.UnorderedList list -&gt;
+      Html.ul_ $ map Html.p_ list
+
+    Markup.OrderedList list -&gt;
+      Html.ol_ $ map Html.p_ list
+
+    Markup.CodeBlock list -&gt;
+      Html.code_ (unlines list)
+</code></pre>
+<p>Notice that running this code with <code>-Wall</code> will reveal that the pattern matching
+is <em>non-exhaustive</em>. This is because we don't currently have a way to build
+headers that are not <code>h1</code>. There are a few ways to handle this:</p>
+<ul>
+<li>Ignore the warning - this will like fail at runtime one day and the user will be sad</li>
+<li>Pattern match other cases and add a nice error with the <code>error</code> function, has
+the same disadvantage above, but will also not notify that there's a possible issue
+here at compile time.</li>
+<li>Pattern match and do the wrong thing - user is still sad</li>
+<li>Encode errors in the type system using <code>Either</code>, we'll see how to do this in later
+chapters</li>
+<li>Restrict the input - change <code>Markup.Header</code> to not include a number but rather
+specific supported headers. This is a reasonable approach.</li>
+<li>Implement an Html function supporting arbitrary headers. Should be straightforward
+to do.</li>
+</ul>
+<hr />
+<p>Exercise: Implement <code>h_ :: Natural -&gt; String -&gt; Structure</code>.</p>
+<details><summary>Solution</summary>
+<pre><code class="language-hs">import Numeric.Natural
+
+h_ :: Natural -&gt; String -&gt; Structure
+h_ n = Structure . el (&quot;h&quot; &lt;&gt; show n) . escape
+</code></pre>
+<p>Don't forget to export it from <code>Html.hs</code>!</p>
+</details>
+<p>Exercise: Fix <code>convertStructure</code> using <code>h_</code>.</p>
+<details><summary>Solution</summary>
+<pre><code class="language-hs">convertStructure :: Markup.Structure -&gt; Html.Structure
+convertStructure structure =
+  case structure of
+    Markup.Header n txt -&gt;
+      Html.h_ n txt
+
+    Markup.Paragraph p -&gt;
+      Html.p_ p
+
+    Markup.UnorderedList list -&gt;
+      Html.ul_ $ map Html.p_ list
+
+    Markup.OrderedList list -&gt;
+      Html.ol_ $ map Html.p_ list
+
+    Markup.CodeBlock list -&gt;
+      Html.code_ (unlines list)
+</code></pre>
+</details>
+<hr />
+<h2 id="document---html"><a class="header" href="#document---html">Document -&gt; Html</a></h2>
+<p>In order to create an <code>Html</code> document, we need to use the <code>html_</code> function.
+This function expects two things: a <code>Title</code>, and a <code>Structure</code>.</p>
+<p>For a title we just could supply it from outside using the file name.</p>
+<p>In order to convert our markup <code>Document</code> (which is a list of markup <code>Structure</code>)
+to an html <code>Structure</code>, we need to convert each markup <code>Structure</code> and then
+concatenate them together.</p>
+<p>We already know how to convert each markup <code>Structure</code>, we can use the
+<code>convertStructure</code> function we wrote and <code>map</code>. This will provide
+us with the following function:</p>
+<pre><code>map convertStructure :: Markup.Document -&gt; [Html.Structure]
+</code></pre>
+<p>To concatenate all of the <code>Html.Structure</code>, we could write a recursive
+function that tries to do that. However we will quickly run to an issue
+with the base case, what to do when the list is empty?</p>
+<p>We could just provide dummy <code>Html.Structure</code> that represents an empty
+html structure.</p>
+<p>Let's add this to <code>Html.Internal</code>:</p>
+<pre><code class="language-hs">empty_ :: Structure
+empty_ = Structure &quot;&quot;
+</code></pre>
+<p>Now we can write our recursive function. Try it!</p>
+<details><summary>Solution</summary>
+<pre><code class="language-hs">concatStructure :: [Structure] -&gt; Structure
+concatStructure list =
+  case list of
+    [] -&gt; empty_
+    x : xs -&gt; x &lt;&gt; concatStructure list
+</code></pre>
+</details>
+<p>Remember the <code>&lt;&gt;</code> function we implemented as an instance of the <code>Semigroup</code>
+type class? We said that <code>Semigroup</code> is an <strong>abstraction</strong> for things
+that implements <code>(&lt;&gt;) :: a -&gt; a -&gt; a</code>, where  <code>&lt;&gt;</code> is associative
+(<code>a &lt;&gt; (b &lt;&gt; c) = (a &lt;&gt; b) &lt;&gt; c</code>).</p>
+<p>It turns out that things that have an &quot;empty&quot; value and are also
+an instance of <code>Semigroup</code> is quite a common thing. For example a string.
+And this is actually a well known <strong>abstraction</strong>. This abstraction
+is called a <strong>monoid</strong>.</p>
+<h2 id="monoids"><a class="header" href="#monoids">Monoids</a></h2>
+<p>Actually, maybe &quot;empty&quot; isn't a very good description of what we want,
+and isn't very useful as an abstraction. Instead, we can describe it as
+what is often called an &quot;identity&quot; element.
+An identity element is one that satisfy the following laws:</p>
+<ul>
+<li><code>x &lt;&gt; &lt;identity&gt; = x</code></li>
+<li><code>&lt;identity&gt; &lt;&gt; x = x</code></li>
+</ul>
+<p>In other words, if we try to use this &quot;empty&quot; - this identity value,
+as one argument to <code>&lt;&gt;</code>, we will always get the other argument back.</p>
+<p>For <code>String</code>, the empty string, <code>&quot;&quot;</code>, satisfies this:</p>
+<pre><code class="language-hs">&quot;&quot; &lt;&gt; &quot;world&quot; = &quot;world&quot;
+&quot;hello&quot; &lt;&gt; &quot;&quot; = &quot;hello&quot;
+</code></pre>
+<p>This is of course true for any value we'd write and not just &quot;world&quot; and &quot;hello&quot;.</p>
+<p>Actually, if we move out of the Haskell world for a second, even integers
+with <code>+</code> as the associative binary operations <code>+</code> (in place of <code>&lt;&gt;</code>)
+and <code>0</code> in place of the identity member form a monoid:</p>
+<pre><code class="language-hs">17 + 0 = 17
+0 + 99 = 99
+</code></pre>
+<p>So integers together with the <code>+</code> operation for a semigroup, and
+together with <code>0</code> form a monoid.</p>
+<p>We learn new things from this:</p>
+<ol>
+<li>A monoid is a more specific abstraction over semigroup, it builds on it
+by adding a new condition (the existence of an identity member)</li>
+<li>This abstraction can we useful! We can write a general <code>concatStructure</code>
+that could work for any monoid</li>
+</ol>
+<p>And indeed, there exists a type class in <code>base</code> called <code>Monoid</code> which has
+<code>Semigroup</code> as a <strong>superclass</strong>.</p>
+<pre><code class="language-hs">class Semigroup a =&gt; Monoid a where
+  mempty :: a
+</code></pre>
+<p>(Note: this is actually a simplified version. The
+<a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Prelude.html#t:Monoid">actual</a>
+is a bit more complicated because of backwards compatability and performance reasons.
+<code>Semigroup</code> was actually introduced after <code>Monoid</code>!)</p>
+<p>We could add an instance of <code>Monoid</code> for our markup <code>Structure</code> data type:</p>
+<pre><code class="language-hs">instance Monoid a where
+  mempty = empty_
+</code></pre>
+<p>And now, instead of using our own <code>concatStructure</code>, we can use the library function</p>
+<pre><code class="language-hs">mconcat :: Monoid a =&gt; [a] -&gt; a
+</code></pre>
+<p>Which could theoretically be implemented as:</p>
+<pre><code class="language-hs">mconcat :: Monoid a =&gt; [a] -&gt; a
+mconcat list =
+  case list of
+    [] -&gt; mempty
+    x : xs -&gt; x &lt;&gt; mconcat list
+</code></pre>
+<p>Pretty much the same way as our <code>concatStructure</code>, but it works for any <code>Monoid</code>!
+Abstractions are useful and help us reuse code!</p>
+<p>Side note: integers with <code>+</code> and <code>0</code> aren't actually an instance of <code>Monoid</code> in Haskell.
+This is because integers can also form a monoid with <code>*</code> and <code>1</code>! But <strong>there can only
+be one instance per type</strong>. Instead, two other <code>newtype</code>s exist that provide that
+functionality, <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Monoid.html#t:Sum">Sum</a>
+and <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Monoid.html#t:Product">Product</a>.</p>
+<h2 id="finishing-our-conversion-module"><a class="header" href="#finishing-our-conversion-module">Finishing our conversion module</a></h2>
+<p>Let's finish our code by writing <code>convert</code>:</p>
+<pre><code class="language-hs">convert :: Html.Title -&gt; Markup.Document -&gt; Html.Html
+convert title = Html.html_ title . mconcat . map convertStructure
+</code></pre>
+<p>Now we have a full implementation and are able to convert markup documents
+to html:</p>
+<pre><code class="language-hs">-- Convert.hs
+module Convert where
+
+import qualified Markup
+import qualified Html
+
+convert :: Html.Title -&gt; Markup.Document -&gt; Html.Html
+convert title = Html.html_ title . mconcat . map convertStructure
+
+convertStructure :: Markup.Structure -&gt; Html.Structure
+convertStructure structure =
+  case structure of
+    Markup.Header n txt -&gt;
+      Html.h_ n txt
+
+    Markup.Paragraph p -&gt;
+      Html.p_ p
+
+    Markup.UnorderedList list -&gt;
+      Html.ul_ $ map Html.p_ list
+
+    Markup.OrderedList list -&gt;
+      Html.ol_ $ map Html.p_ list
+
+    Markup.CodeBlock list -&gt;
+      Html.code_ (unlines list)
+</code></pre>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<p>We learned about:</p>
+<ul>
+<li>Qualified imports</li>
+<li>Ways to handle errors</li>
+<li>The <code>Monoid</code> type class and abstraction</li>
+</ul>
+<p>Next, we are going to glue our functionality together and learn about
+I/O in Haskell!</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                                                    <a rel="prev" href="../05-glue.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+                                                    <a rel="next" href="../05-glue/02-io.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                                    <a rel="prev" href="../05-glue.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+                                    <a rel="next" href="../05-glue/02-io.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                            </nav>
+
+        </div>
+
+        
+        
+        
+                <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        
+        
+                <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+        
+    </body>
+</html>
