@@ -1,0 +1,749 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Defining a project description - Learning Haskell by building a blog generator</title>
+                
+
+        <!-- Custom HTML head -->
+        
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="A step by step guide to learning Haskell by building a simple static blog generator">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+                <link rel="icon" href="../favicon.svg">
+                        <link rel="shortcut icon" href="../favicon.png">
+                <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+                <link rel="stylesheet" href="../css/print.css" media="print">
+        
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+                <link rel="stylesheet" href="../fonts/fonts.css">
+        
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+            </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../01-about.html"><strong aria-hidden="true">1.</strong> About this tutorial</a></li><li class="chapter-item expanded "><a href="../02-hello.html"><strong aria-hidden="true">2.</strong> Hello world</a></li><li class="chapter-item expanded "><a href="../03-html_printer.html"><strong aria-hidden="true">3.</strong> Building an HTML printer library</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../03-html/01-html_content.html"><strong aria-hidden="true">3.1.</strong> Flexible html content (functions)</a></li><li class="chapter-item expanded "><a href="../03-html/02-type_signatures.html"><strong aria-hidden="true">3.2.</strong> Adding type signatures</a></li><li class="chapter-item expanded "><a href="../03-html/03-edsls.html"><strong aria-hidden="true">3.3.</strong> Embedded Domain Specific Languages</a></li><li class="chapter-item expanded "><a href="../03-html/04-safer_construction.html"><strong aria-hidden="true">3.4.</strong> Safer HTML construction with types</a></li><li class="chapter-item expanded "><a href="../03-html/05-modules.html"><strong aria-hidden="true">3.5.</strong> Preventing incorrect use with modules</a></li><li class="chapter-item expanded "><a href="../03-html/06-escaping_characters.html"><strong aria-hidden="true">3.6.</strong> Escaping characters</a></li><li class="chapter-item expanded "><a href="../03-html/07-internal_modules.html"><strong aria-hidden="true">3.7.</strong> Exposing internal functionality (Internal modules)</a></li><li class="chapter-item expanded "><a href="../03-html/09-exercises.html"><strong aria-hidden="true">3.8.</strong> Exercises</a></li><li class="chapter-item expanded "><a href="../03-html/10-summary.html"><strong aria-hidden="true">3.9.</strong> Summary</a></li></ol></li><li class="chapter-item expanded "><a href="../04-markup.html"><strong aria-hidden="true">4.</strong> Custom markup language</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../04-markup/01-data_type.html"><strong aria-hidden="true">4.1.</strong> Representing the markup language as a Haskell data type</a></li><li class="chapter-item expanded "><a href="../04-markup/02-parsing_01.html"><strong aria-hidden="true">4.2.</strong> Parsing markup part 01 (Recursion)</a></li><li class="chapter-item expanded "><a href="../04-markup/03-displaying_results.html"><strong aria-hidden="true">4.3.</strong> Displaying the parsing results (typeclasses)</a></li><li class="chapter-item expanded "><a href="../04-markup/04-parsing_02.html"><strong aria-hidden="true">4.4.</strong> Parsing markup part 02 (Pattern matching)</a></li></ol></li><li class="chapter-item expanded "><a href="../05-glue.html"><strong aria-hidden="true">5.</strong> Gluing things together</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../05-glue/01-markup_to_html.html"><strong aria-hidden="true">5.1.</strong> Converting Markup to HTML</a></li><li class="chapter-item expanded "><a href="../05-glue/02-io.html"><strong aria-hidden="true">5.2.</strong> Working with IO</a></li><li class="chapter-item expanded "><a href="../05-glue/03-project.html" class="active"><strong aria-hidden="true">5.3.</strong> Defining a project description</a></li></ol></li><li class="chapter-item expanded "><a href="../06-next.html"><strong aria-hidden="true">6.</strong> Where to go next?</a></li></ol>            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                                                <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                                            </div>
+
+                    <h1 class="menu-title">Learning Haskell by building a blog generator</h1>
+
+                    <div class="right-buttons">
+                                                <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                                                                        
+                    </div>
+                </div>
+
+                                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="defining-a-project-description"><a class="header" href="#defining-a-project-description">Defining a project description</a></h1>
+<p>Up until now we've only used <code>base</code> and the libraries
+<a href="https://downloads.haskell.org/ghc/latest/docs/html/users_guide/9.0.1-notes.html#included-libraries">included</a>
+with GHC. Because of that we didn't really need to do anything more fancy
+than <code>runghc</code> to run our program. However, we want to start using
+external libraries which are not included with GHC in our programs.</p>
+<p>External packages can be downloaded from <a href="https://hackage.haskell.org/">Hackage</a>,
+Haskell's central package archive, <a href="https://www.stackage.org/">Stackage</a>,
+a subset of Hackage packages that are known to work together, or even
+from remote git repositories. Usually Haskellers uses a <strong>package manager</strong> to
+download and manage packages for different projects. The most popular package
+managers for Haskell are <a href="https://cabal.readthedocs.io">cabal</a> and
+<a href="https://haskellstack.org">stack</a>.</p>
+<p>The main difference between the two tools is their philosophy.
+<code>cabal</code> tries to be a more minimalist tool that handles building Haskell projects
+and package management using the whole of Hackage and uses complicated algorithms
+to make sure packages work together.
+<code>stack</code> tries to be a more maximal tool that handles installing the right GHC
+for each project, provide integration with external tools like hoogle,
+and lets the user choose which 'set' of packages (including their versions) they want to use.</p>
+<p>If you've installed Haskell using ghcup, you most likely have <code>cabal</code> installed.
+If you've installed Haskell using stack, well, you have <code>stack</code> installed.
+Check the <a href="https://www.haskell.org/downloads/">haskell.org downloads page</a> if that's not the case.</p>
+<h2 id="creating-a-project"><a class="header" href="#creating-a-project">Creating a project</a></h2>
+<p>Using external packages can be done in multiple ways.
+For quick experimentation, we can just
+<a href="https://gilmi.me/blog/post/2021/08/14/hs-core-tools#using-external-packages-in-ghci">ask stack or cabal</a>
+to build or even run our program with external packages.
+But as programs gets larger, use more dependencies, and require more functionality,
+it is better to just <strong>create a project description</strong> for our programs and even libraries.</p>
+<p>Describing packages is done in a <strong>cabal file</strong>. We can ask cabal or stack
+to generate one for use using <code>cabal init --libandexe</code> or <code>stack new</code>,
+along with many other files, but we will likely need to edit the file by hand
+later so let's just paste some sort of an initial example and then edit it.</p>
+<pre><code class="language-cabal">cabal-version:       2.4
+
+name:                name should match with &lt;name&gt;.cabal
+version:             version should use PvP
+synopsis:            Synopsis will appear in the hackage package listing and search
+description:         The description will appear at the top of a library
+homepage:            Homepage url
+bug-reports:         issue-tracker url
+license:             License name
+license-file:        License file
+author:              Author name
+maintainer:          Maintainer email
+category:            Hackage categories, separated by commas
+extra-doc-files:
+  README.md
+
+common common-settings
+  default-language: Haskell2010
+  ghc-options:
+    -Wall
+
+library
+  import: common-settings
+  hs-source-dirs: src
+  build-depends:
+      base
+    , directory
+  exposed-modules:
+    HsBlog
+      HsBlog.Convert
+      HsBlog.Html
+        HsBlog.Html.Internal
+      HsBlog.Markup
+  -- other-modules:
+
+executable hs-blog-gen
+  import: common-settings
+  hs-source-dirs: app
+  main-is: Main.hs
+  build-depends:
+      base
+    , &lt;package-name&gt;
+  ghc-options:
+    -O
+</code></pre>
+<p>Let's break it down to a few parts, the <strong>package metadata</strong>, <strong>common settings</strong>,
+<strong>library</strong> and <strong>executable</strong>.</p>
+<h3 id="package-metadata"><a class="header" href="#package-metadata">Package metadata</a></h3>
+<p>The first part should be fairly straightforward from the comments, maybe except for:</p>
+<ul>
+<li><code>cabal-version</code>: Defines which cabal versions can build this project. We've specified 2.4 and above.
+<a href="https://cabal.readthedocs.io/en/3.4/file-format-changelog.html?highlight=cabal-version">More info on different versions</a>.</li>
+<li><code>name</code>: The name of your library and package. Must match with the .cabal filename. Usually starts with a lowercase. <a href="https://hackage.haskell.org/packages/search?terms=name">Check if your package name is already taken on hackage</a>.</li>
+<li><code>version</code>: Some Haskell packages use <a href="https://semver.org/">semver</a>, most use <a href="https://pvp.haskell.org/">PvP</a>.</li>
+<li><code>license</code>: Most Haskell packages use <a href="https://choosealicense.com/licenses/bsd-3-clause/">BSD-3-Clause</a>. <a href="https://neilmitchell.blogspot.com/2018/08/licensing-my-haskell-packages.html">Neil Mitchell blogged about this</a>. The license we chose is because this is a book learning material.</li>
+<li><code>extra-doc-files</code>: Include extra doc files here, such as <code>README</code> or <code>CHANGELOG</code>.</li>
+</ul>
+<p>Let's fill this with the metadata of our project:</p>
+<pre><code class="language-cabal">cabal-version:       2.4
+
+name:                hs-blog
+version:             0.1.0.0
+synopsis:            A custom blog generator from markup files
+description:         This package provides a static blog generator
+                     from a custom markup format to HTML.
+                     It defines a parsing for this custom markup format
+                     as well as an html pretty printer EDSL.
+
+                     It is used as the example project in the online book
+                     'Learn Haskell Blog Generator'. See the README for
+                     more details.
+homepage:            https://github.com/soupi/learn-haskell-blog-generator
+bug-reports:         https://github.com/soupi/learn-haskell-blog-generator/issues
+license:             CC0-1.0
+license-file:        LICENSE.txt
+author:              Gil Mizrahi
+maintainer:          gilmi@posteo.net
+category:            Learning, Web
+extra-doc-files:
+  README.md
+</code></pre>
+<h3 id="common-settings"><a class="header" href="#common-settings">Common settings</a></h3>
+<p>Cabal package descriptions can include multiple &quot;targets&quot;: libraries, executables,
+and test suites. Since Cabal 2.2, we can use
+<a href="https://cabal.readthedocs.io/en/3.4/cabal-package.html?highlight=common#common-stanzas">common stanzas</a>
+to group settings to be shared between different targets, so we don't have to repeat them for each target.</p>
+<p>In our case we've created a new common stanza (or block) called <code>common-settings</code> and
+defined the default language (Haskell has two standards, 98 and 2010),
+and instructed ghc to compile with <code>-Wall</code>.</p>
+<pre><code class="language-cabal">common common-settings
+  default-language: Haskell2010
+  ghc-options:
+    -Wall
+</code></pre>
+<p>Later, in our targets descriptions, we can add <code>import: common-settings</code> ,
+and all of these settings will be automatically added.</p>
+<!--
+
+> #### Aside: language extensions
+>
+> Haskell is a standardized language. However, GHC provides *extensions* to the language -
+> additional features that aren't covered in the 98 or 2010 standards of Haskell.
+> Features such as syntactic extensions, extensions to the type checker, and more.
+> These extensions can be added by adding `{-# language <extension-name> #-}`
+> to the top of a Haskell source file, or they can be set by *default* in the `.cabal file`.
+> 
+> As an example, we've enabled
+> [NumericUnderscores](https://ghc.gitlab.haskell.org/ghc/doc/users_guide/exts/numeric_underscores.html),
+> which allows us to add arbitrary underscores (`_`) in numeric literals for ease of reading.
+> For example, instead of writing `1000000` we can write `1_000_000`. We don't actually
+> need this at the moment, but it's nice to know about it.
+> 
+> The list of language extensions can be found in the
+> [GHC manual](https://ghc.gitlab.haskell.org/ghc/doc/users_guide/exts.html), but don't worry
+> about it just yet, we will cover more extensions later.
+
+-->
+<h3 id="library"><a class="header" href="#library">Library</a></h3>
+<p>In a <code>library</code> target, we define:</p>
+<ul>
+<li>The settings with which to build the library (in this case we just import <code>common-settings</code>)</li>
+<li>The directory in which the source files can be found</li>
+<li>The packages we require to build the library</li>
+<li>The modules exposed from the library and can be used by others</li>
+<li>The modules <em>not</em> exposed from the library and which <em>cannot</em> be used by others,
+these could be any module you don't wish to export, such as an internal utility
+functions module.
+In our case we don't have anything like this, so we commented out the <code>other-modules</code>
+label.</li>
+</ul>
+<p>Note that it is common to specify <strong>version bounds</strong> for packages.
+Version bounds specify <em>with which packages version this library works with</em>.
+These can also be generated using cabal with the <code>cabal gen-bounds</code> command.</p>
+<pre><code class="language-cabal">library
+  import: common-settings
+  hs-source-dirs: src
+  build-depends:
+      base
+    , directory
+  exposed-modules:
+    HsBlog
+      HsBlog.Convert
+      HsBlog.Html
+        HsBlog.Html.Internal
+      HsBlog.Markup
+  -- other-modules:
+</code></pre>
+<p>Also note that we've added an additional <em>hierarchy</em> for our modules and defined
+a different source directory. This means we will need to move the files around
+a bit and change the <code>module</code> name in each file and the <code>import</code> statements. This is to avoid
+conflict with other packages that a user might import.</p>
+<p>Do this now!</p>
+<details><summary>Solution</summary>
+<ol>
+<li>
+<p><code>Main.hs</code> -&gt; <code>src/HsBlog.hs</code></p>
+<pre><code class="language-hs">module HsBlog
+  ( main
+  , process
+  )
+  where
+
+import qualified HsBlog.Markup as Markup
+import qualified HsBlog.Html as Html
+import HsBlog.Convert (convert)
+</code></pre>
+</li>
+<li>
+<p><code>Convert.hs</code> -&gt; <code>src/HsBlog/Convert.hs</code></p>
+<pre><code class="language-hs">module HsBlog.Convert where
+
+import qualified HsBlog.Markup as Markup
+import qualified HsBlog.Html as Html
+</code></pre>
+</li>
+<li>
+<p><code>Html.hs</code> -&gt; <code>src/HsBlog/Html.hs</code></p>
+<pre><code class="language-hs">module HsBlog.Html
+...
+
+import HsBlog.Html.Internal
+</code></pre>
+</li>
+<li>
+<p><code>Html/Internal.hs</code> -&gt; <code>src/HsBlog/Html/Internal.hs</code></p>
+<pre><code class="language-hs">module HsBlog.Html.Internal where
+</code></pre>
+</li>
+<li>
+<p><code>Markup.hs</code> -&gt; <code>src/HsBlog/Markup.hs</code></p>
+<pre><code class="language-hs">module HsBlog.Markup
+</code></pre>
+</li>
+</ol>
+</details>
+<h3 id="executable"><a class="header" href="#executable">Executable</a></h3>
+<p>We have separated our code to two sections: a library and an executable, why?</p>
+<p>First, libraries can be used by others. if we publish our code and someone wants to
+use it and build upon it, they can. Executables can't be imported to other projects.
+Second, we can write unit tests for libraries, which we will do soon. It is usually
+benefitical to write most, if not all, of our logic as a library, and provide
+a thin executable over it.</p>
+<p>Executables' descriptions are very similar to libraries, here we define:</p>
+<ul>
+<li>The name of the executable</li>
+<li>Where the source directory for this application is</li>
+<li>Which file is the 'Main' file</li>
+<li>Import our library, which is named <code>hs-blog</code></li>
+<li>Add additional flag for GHC: <code>-O</code> to compile with optimizations</li>
+</ul>
+<pre><code class="language-cabal">executable hs-blog-gen
+  import: common-settings
+  hs-source-dirs: app
+  main-is: Main.hs
+  build-depends:
+      base
+    , hs-blog
+  ghc-options:
+    -O
+</code></pre>
+<p>We can write many executables descriptions. In this case we only need one.</p>
+<p><strong>Exercise</strong>: Add a new file: <code>app/Main.hs</code> which imports <code>HsBlog</code> and runs <code>main</code>.</p>
+<details><summary>Solution</summary>
+<pre><code class="language-hs">-- app/Main.hs
+
+module Main where
+
+import qualified HsBlog
+
+main :: IO ()
+main = HsBlog.main
+</code></pre>
+</details>
+<h3 id="test-suites"><a class="header" href="#test-suites">Test-suites</a></h3>
+<p><code>test-suite</code> defines a target for running package tests. We will get back to it
+in a later chapter.</p>
+<h2 id="our-complete-cabal-file"><a class="header" href="#our-complete-cabal-file">Our complete .cabal file</a></h2>
+<pre><code class="language-cabal">cabal-version:       2.4
+
+name:                hs-blog
+version:             0.1.0.0
+synopsis:            A custom blog generator from markup files
+description:         This package provides a static blog generator
+                     from a custom markup format to HTML.
+                     It defines a parsing for this custom markup format
+                     as well as an html pretty printer EDSL.
+
+                     It is used as the example project in the online book
+                     'Learn Haskell Blog Generator'. See the README for
+                     more details.
+homepage:            https://github.com/soupi/learn-haskell-blog-generator
+bug-reports:         https://github.com/soupi/learn-haskell-blog-generator/issues
+license:             CC0-1.0
+license-file:        LICENSE.txt
+author:              Gil Mizrahi
+maintainer:          gilmi@posteo.net
+category:            Learning, Web
+extra-doc-files:
+  README.md
+
+common common-settings
+  default-language: Haskell2010
+  ghc-options:
+    -Wall
+
+library
+  import: common-settings
+  hs-source-dirs: src
+  build-depends:
+      base
+    , directory
+  exposed-modules:
+    HsBlog
+      HsBlog.Convert
+      HsBlog.Html
+        HsBlog.Html.Internal
+      HsBlog.Markup
+  -- other-modules:
+
+executable hs-blog-gen
+  import: common-settings
+  hs-source-dirs: app
+  main-is: Main.hs
+  build-depends:
+      base
+    , hs-blog
+  ghc-options:
+    -O
+</code></pre>
+<p>We'll also add a <code>README.md</code> file and a <code>LICENSE.txt</code> file:</p>
+<details><summary>README.md</summary>
+<p>Just write whatever you want here:</p>
+<pre><code class="language-md"># hs-blog
+
+One day it will be a static blog generator.
+
+[Read the book](https://soupi.github.io/learn-haskell-blog-generator).
+</code></pre>
+</details>
+<details><summary>LICENSE.txt</summary>
+<p>This is CC0-1.0 Universal</p>
+<pre><code>Creative Commons Legal Code
+
+CC0 1.0 Universal
+
+    CREATIVE COMMONS CORPORATION IS NOT A LAW FIRM AND DOES NOT PROVIDE
+    LEGAL SERVICES. DISTRIBUTION OF THIS DOCUMENT DOES NOT CREATE AN
+    ATTORNEY-CLIENT RELATIONSHIP. CREATIVE COMMONS PROVIDES THIS
+    INFORMATION ON AN &quot;AS-IS&quot; BASIS. CREATIVE COMMONS MAKES NO WARRANTIES
+    REGARDING THE USE OF THIS DOCUMENT OR THE INFORMATION OR WORKS
+    PROVIDED HEREUNDER, AND DISCLAIMS LIABILITY FOR DAMAGES RESULTING FROM
+    THE USE OF THIS DOCUMENT OR THE INFORMATION OR WORKS PROVIDED
+    HEREUNDER.
+
+Statement of Purpose
+
+The laws of most jurisdictions throughout the world automatically confer
+exclusive Copyright and Related Rights (defined below) upon the creator
+and subsequent owner(s) (each and all, an &quot;owner&quot;) of an original work of
+authorship and/or a database (each, a &quot;Work&quot;).
+
+Certain owners wish to permanently relinquish those rights to a Work for
+the purpose of contributing to a commons of creative, cultural and
+scientific works (&quot;Commons&quot;) that the public can reliably and without fear
+of later claims of infringement build upon, modify, incorporate in other
+works, reuse and redistribute as freely as possible in any form whatsoever
+and for any purposes, including without limitation commercial purposes.
+These owners may contribute to the Commons to promote the ideal of a free
+culture and the further production of creative, cultural and scientific
+works, or to gain reputation or greater distribution for their Work in
+part through the use and efforts of others.
+
+For these and/or other purposes and motivations, and without any
+expectation of additional consideration or compensation, the person
+associating CC0 with a Work (the &quot;Affirmer&quot;), to the extent that he or she
+is an owner of Copyright and Related Rights in the Work, voluntarily
+elects to apply CC0 to the Work and publicly distribute the Work under its
+terms, with knowledge of his or her Copyright and Related Rights in the
+Work and the meaning and intended legal effect of CC0 on those rights.
+
+1. Copyright and Related Rights. A Work made available under CC0 may be
+protected by copyright and related or neighboring rights (&quot;Copyright and
+Related Rights&quot;). Copyright and Related Rights include, but are not
+limited to, the following:
+
+  i. the right to reproduce, adapt, distribute, perform, display,
+     communicate, and translate a Work;
+ ii. moral rights retained by the original author(s) and/or performer(s);
+iii. publicity and privacy rights pertaining to a person's image or
+     likeness depicted in a Work;
+ iv. rights protecting against unfair competition in regards to a Work,
+     subject to the limitations in paragraph 4(a), below;
+  v. rights protecting the extraction, dissemination, use and reuse of data
+     in a Work;
+ vi. database rights (such as those arising under Directive 96/9/EC of the
+     European Parliament and of the Council of 11 March 1996 on the legal
+     protection of databases, and under any national implementation
+     thereof, including any amended or successor version of such
+     directive); and
+vii. other similar, equivalent or corresponding rights throughout the
+     world based on applicable law or treaty, and any national
+     implementations thereof.
+
+2. Waiver. To the greatest extent permitted by, but not in contravention
+of, applicable law, Affirmer hereby overtly, fully, permanently,
+irrevocably and unconditionally waives, abandons, and surrenders all of
+Affirmer's Copyright and Related Rights and associated claims and causes
+of action, whether now known or unknown (including existing as well as
+future claims and causes of action), in the Work (i) in all territories
+worldwide, (ii) for the maximum duration provided by applicable law or
+treaty (including future time extensions), (iii) in any current or future
+medium and for any number of copies, and (iv) for any purpose whatsoever,
+including without limitation commercial, advertising or promotional
+purposes (the &quot;Waiver&quot;). Affirmer makes the Waiver for the benefit of each
+member of the public at large and to the detriment of Affirmer's heirs and
+successors, fully intending that such Waiver shall not be subject to
+revocation, rescission, cancellation, termination, or any other legal or
+equitable action to disrupt the quiet enjoyment of the Work by the public
+as contemplated by Affirmer's express Statement of Purpose.
+
+3. Public License Fallback. Should any part of the Waiver for any reason
+be judged legally invalid or ineffective under applicable law, then the
+Waiver shall be preserved to the maximum extent permitted taking into
+account Affirmer's express Statement of Purpose. In addition, to the
+extent the Waiver is so judged Affirmer hereby grants to each affected
+person a royalty-free, non transferable, non sublicensable, non exclusive,
+irrevocable and unconditional license to exercise Affirmer's Copyright and
+Related Rights in the Work (i) in all territories worldwide, (ii) for the
+maximum duration provided by applicable law or treaty (including future
+time extensions), (iii) in any current or future medium and for any number
+of copies, and (iv) for any purpose whatsoever, including without
+limitation commercial, advertising or promotional purposes (the
+&quot;License&quot;). The License shall be deemed effective as of the date CC0 was
+applied by Affirmer to the Work. Should any part of the License for any
+reason be judged legally invalid or ineffective under applicable law, such
+partial invalidity or ineffectiveness shall not invalidate the remainder
+of the License, and in such case Affirmer hereby affirms that he or she
+will not (i) exercise any of his or her remaining Copyright and Related
+Rights in the Work or (ii) assert any associated claims and causes of
+action with respect to the Work, in either case contrary to Affirmer's
+express Statement of Purpose.
+
+4. Limitations and Disclaimers.
+
+ a. No trademark or patent rights held by Affirmer are waived, abandoned,
+    surrendered, licensed or otherwise affected by this document.
+ b. Affirmer offers the Work as-is and makes no representations or
+    warranties of any kind concerning the Work, express, implied,
+    statutory or otherwise, including without limitation warranties of
+    title, merchantability, fitness for a particular purpose, non
+    infringement, or the absence of latent or other defects, accuracy, or
+    the present or absence of errors, whether or not discoverable, all to
+    the greatest extent permissible under applicable law.
+ c. Affirmer disclaims responsibility for clearing rights of other persons
+    that may apply to the Work or any use thereof, including without
+    limitation any person's Copyright and Related Rights in the Work.
+    Further, Affirmer disclaims responsibility for obtaining any necessary
+    consents, permissions or other rights required for any use of the
+    Work.
+ d. Affirmer understands and acknowledges that Creative Commons is not a
+    party to this document and has no duty or obligation with respect to
+    this CC0 or use of the Work.
+</code></pre>
+</details>
+<h2 id="cabalproject-and-stackyaml"><a class="header" href="#cabalproject-and-stackyaml"><code>cabal.project</code> and <code>stack.yaml</code></a></h2>
+<p>The <a href="https://cabal.readthedocs.io/en/3.4/cabal-project.html">cabal.project</a> and
+<a href="https://docs.haskellstack.org/en/stable/yaml_configuration/#project-specific-config">stack.yaml</a>
+files are used by <code>cabal</code> and <code>stack</code> respectively to add additional information on <em>how
+to build the package</em>. While <code>cabal.project</code> isn't necessary to use <code>cabal</code>, <code>stack.yaml</code>
+is necessary in order to use <code>stack</code>. So we will cover it briefly.</p>
+<p>There are two important fields a <code>stack.yaml</code> file must have:</p>
+<ul>
+<li><code>resolver</code>: Describes which snapshot to use for packages and ghc version.
+We will choose the latest (at time of writing) on the <code>lts</code> branch: <code>lts-18.9</code>.
+Visit <a href="https://www.stackage.org/lts-18.9">this link</a> to find which packages this
+snapshot includes, what are their version, and for which GHC version is set
+for the snapshot.</li>
+<li><code>packages</code>: Describes the location of packages we plan to build. In our case
+we have only one, in the current directory.</li>
+</ul>
+<p>We'll add <code>stack.yaml</code> to our project directory:</p>
+<pre><code class="language-yaml">resolver: lts-18.9
+
+packages:
+- .
+</code></pre>
+<p>For additional options and configurations, please consult the relevant user guides.</p>
+<h2 id="usage"><a class="header" href="#usage">Usage</a></h2>
+<p>Now, instead of manually running <code>runghc Main.hs</code>, we will now use either <code>stack</code>
+or <code>cabal</code> to build and run our program and package (I mostly use stack, but up to you).</p>
+<h3 id="for-cabal"><a class="header" href="#for-cabal">For cabal:</a></h3>
+<p>Building the project - on the first run, cabal will download the package dependencies
+and use the GHC on PATH to build the project.</p>
+<p>cabal caches packages between projects, so if a new project uses the same packages
+with the same versions (and the same flag settings) they will not need to be reinstalled.</p>
+<pre><code class="language-sh">cabal v2-build
+</code></pre>
+<p>Running the project: <code>stack exec</code> will run the executable.</p>
+<pre><code class="language-sh">cabal v2-run hs-blog-gen -- &lt;program options&gt;
+</code></pre>
+<h3 id="for-stack"><a class="header" href="#for-stack">For stack:</a></h3>
+<p>Building the project - on the first run, stack will install the right GHC for this project
+which is specified according to the <code>resolver</code> field in the <code>stack.yaml</code> file,
+will download the package dependencies, and build the project.</p>
+<p>Stack caches these installations between projects that use the same resolver,
+so future projects with the same resolver and future runs of this project won't
+require reinstallation.</p>
+<pre><code class="language-sh">stack build
+</code></pre>
+<p>Running the project: <code>stack exec</code> will run the executable.</p>
+<pre><code class="language-sh">stack exec hs-blog-gen -- &lt;program options&gt;
+</code></pre>
+<h3 id="build-artifacts"><a class="header" href="#build-artifacts">Build artifacts</a></h3>
+<p>Both stack and cabal create build artifacts that we will not want to track using
+our version control. These build artifacts are found in the <code>dist</code>, <code>dist-newstyle</code>
+and <code>.stack-work</code> directories. We can add these to a <code>.gitignore</code> file
+(or similar for other version control programs) to ignore them:</p>
+<pre><code class="language-txt">dist
+dist-newstyle
+.stack-work
+</code></pre>
+<h2 id="finding-packages"><a class="header" href="#finding-packages">Finding packages</a></h2>
+<p>Finding packages isn't a very straightforward process at the moment.
+People have written on
+<a href="https://www.haskellforall.com/2018/05/how-i-evaluate-haskell-packages.html">how they choose packages</a>,
+<a href="https://github.com/soupi/haskell-study-plan#useful-packages">recommendation</a> <a href="https://haskelliseasy.readthedocs.io/en/latest/">lists</a>, and more.</p>
+<p>My suggestion is:</p>
+<ul>
+<li>Search for a tutorial on something you'd like to do, and see which packages come up</li>
+<li>Use the download amount on Hackage as an indication of package popularity</li>
+<li>Use <a href="https://www.stackage.org/lts">Stackage</a> package synopsises to locate a relevant package</li>
+<li>Check social network channels for recommendations, but know that sometimes people tend
+to recommend inappropriate solutions and packages that might be too complicated or
+still experimental</li>
+</ul>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<p>We've created a package description for our library and used <code>stack</code> or/and <code>cabal</code>
+to build our program. In future chapters we'll start adding external packages,
+we'll only have to add them to the <code>build-depends</code> section in the cabal file and
+our package manager will download and install the required package for us!</p>
+<p>We've made some change to our project directory, and it should now look like this:</p>
+<pre><code>.
+├── app
+│   └── Main.hs
+├── hs-blog.cabal
+├── LICENSE.txt
+├── README.md
+├── src
+│   ├── HsBlog
+│   │   ├── Convert.hs
+│   │   ├── Html
+│   │   │   └── Internal.hs
+│   │   ├── Html.hs
+│   │   └── Markup.hs
+│   └── HsBlog.hs
+└── stack.yaml
+
+4 directories, 10 files
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                                                    <a rel="prev" href="../05-glue/02-io.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        
+                                                    <a rel="next" href="../06-next.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                                    <a rel="prev" href="../05-glue/02-io.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+                                    <a rel="next" href="../06-next.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                            </nav>
+
+        </div>
+
+        
+        
+        
+                <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        
+        
+                <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+        
+    </body>
+</html>
