@@ -144,20 +144,21 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="adding-type-signatures"><a class="header" href="#adding-type-signatures">Adding type signatures</a></h1>
-<p>Haskell is a statically typed language. That means that every
+<p>Haskell is a <strong>statically typed</strong> programming language. That means that every
 expression has a type, and we check that the types are valid with
 regards to each other before running the program. If we discover that
 they are not valid, an error message will be printed and the program
 will not run.</p>
-<p>An example of type error would be if we'd pass a function more
-arguments that it take, or pass a number instead of a string.</p>
-<p>Haskell is also type inferred, so we don't <em>need</em> to specify the type
-of expressions - Haskell can infer from the context of the expression
-what its type is, and that's what we did up until now. But specifying
-types is useful - it adds a layer of documentation for you or others
+<p>An example of a type error would be if we'd pass 3 arguments to a function
+that takes only 2, or pass a number instead of a string.</p>
+<p>Haskell is also <strong>type inferred</strong>, so we don't <em>need</em> to specify the type
+of expressions - Haskell can <em>infer</em> from the context of the expression
+what its type should be, and that's what we did up until now. However, <strong>specifying
+types is useful</strong> - it adds a layer of documentation for you or others
 that will look at the code later, and it helps verify to some degree
 that what was intended (with the type signature) is what was
-written (with the expression).</p>
+written (with the expression). It is generally recommended to annotate all <em>top-level</em>
+definitions with type signatures.</p>
 <p>We use double-colon (<code>::</code>) to specify the type of names. We usually
 write it right above the definition of the name itself.</p>
 <p>Here are a few examples of types we can write:</p>
@@ -185,16 +186,15 @@ to functions like <code>makeHtml</code> as functions with multiple inputs.</p>
 <p>In our case, <code>makeHtml</code> is a function that takes <strong>one</strong> string argument,
 and returns a <strong>function</strong>. <em>The function it returns</em> takes a string argument
 as well and finally returns a string.</p>
-<p>The magic here is that <code>-&gt;</code> is right associative.</p>
-<p>When we write:</p>
+<p>The magic here is that <code>-&gt;</code> is right associative. Which means that when we write:</p>
 <pre><code class="language-hs">makeHtml :: String -&gt; String -&gt; String
 </code></pre>
 <p>Haskell parses it as:</p>
 <pre><code class="language-hs">makeHtml :: String -&gt; (String -&gt; String)
 </code></pre>
 <p>Consecuently, the expression <code>makeHtml &quot;My title&quot;</code> is also a function!
-One that will take a string (the content) and will return the expected
-html string with &quot;My title&quot; in the title.</p>
+One that will take a string (the content, the second argument of <code>makeHtml</code>)
+and will return the expected html string with &quot;My title&quot; in the title.</p>
 <p>This is called <strong>partial application</strong>.</p>
 <p>To illustrate, let's define <code>html_</code> and <code>body_</code> in a different way by
 defining a new function, <code>el</code>.</p>
@@ -223,7 +223,7 @@ the same (this is what the equals signs say, right? That the two sides
 are the same). This property, of behind able to <em>substitute</em> the two sides of the
 equals sign with one another, is called <strong>referential transparency</strong>. And
 it is pretty unique to Haskell (and a few language that are very
-similar to it like PureScript and Elm)!</p>
+similar to it like PureScript and Elm)! We'll talk more about this in a later chapter.</p>
 <h3 id="anonymouslambda-functions"><a class="header" href="#anonymouslambda-functions">Anonymous/lambda functions</a></h3>
 <p>To further drive the point that Haskell functions are first class and
 all functions take exactly one argument,
@@ -240,8 +240,8 @@ such as <code>&quot;hello&quot;</code> with the following syntax:</p>
 <p>This little <code>\</code> (which bears some resemblance to the lowercase greek letter lambda 'λ')
 marks the head of the lambda function,
 and the arrow (<code>-&gt;</code>) marks the beginning of the body of the function.
-We can even chain lambda, making them &quot;multiple argument functions&quot; by
-defining another lambda in the body for another, like this:</p>
+We can even chain lambda functions, making them &quot;multiple argument functions&quot; by
+defining another lambda in the body of another, like this:</p>
 <pre><code class="language-hs">three = (\num1 -&gt; \num2 -&gt; num1 + num2) 1 2
 </code></pre>
 <p>Just as before, we evaluate functions by substituting the function argument with

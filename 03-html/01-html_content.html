@@ -144,30 +144,40 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="flexible-html-content-functions"><a class="header" href="#flexible-html-content-functions">Flexible html content (functions)</a></h1>
-<p>We'd like to be able to write different html contents without having to write the whole html-body tags over and over again.</p>
-<p>To define a function, we create a definition like we saw previously and add the arguments names after the name and before the equals sign (<code>=</code>). So a function definition has the following form:</p>
+<p>We'd like to be able to write different html pages without having to write the whole
+structure of html and body tags over and over again. We can do that with functions.</p>
+<p>To define a function, we create a definition like we saw previously and add the argument
+names after the name and before the equals sign (<code>=</code>).
+So a function definition has the following form:</p>
 <pre><code class="language-hs">&lt;name&gt; &lt;arg1&gt; &lt;arg2&gt; ... &lt;argN&gt; = &lt;expression&gt;
 </code></pre>
-<p>The argument names will be available in scope on the right side of the equals sign (in the <code>&lt;expression&gt;</code>), and the function name will be <code>&lt;name&gt;</code>.</p>
-<p>We'll define a function that takes a string which is the content and wraps it in the relevant <code>html</code> and <code>body</code> tags by concatenating them before and after the content.
+<p>The argument names will be available in scope on the right side of the equals sign
+(in the <code>&lt;expression&gt;</code>), and the function name will be <code>&lt;name&gt;</code>.</p>
+<p>We'll define a function that takes a string, which is the content of the page, and wraps it in
+the relevant <code>html</code> and <code>body</code> tags by concatenating them before and after the content.
 We use the operator <code>&lt;&gt;</code> to concatenate two strings.</p>
 <pre><code class="language-hs">wrapHtml content = &quot;&lt;html&gt;&lt;body&gt;&quot; &lt;&gt; content &lt;&gt; &quot;&lt;/body&gt;&lt;/html&gt;&quot;
 </code></pre>
-<p>This function, <code>wrapHtml</code>, takes one argument named <code>content</code> and returns a string that prefixes <code>&lt;html&gt;&lt;body&gt;</code> before the content and appends <code>&lt;/body&gt;&lt;/html&gt;</code>.
-It is common to use camelCase in Haskell.</p>
+<p>This function, <code>wrapHtml</code>, takes one argument named <code>content</code> and returns a string
+that prefixes <code>&lt;html&gt;&lt;body&gt;</code> before the content and appends <code>&lt;/body&gt;&lt;/html&gt;</code> after it.
+Note that it is common to use camelCase in Haskell for names.</p>
 <p>Now we can adjust our <code>myhtml</code> definition from the previous chapter:</p>
 <pre><code class="language-hs">myhtml = wrapHtml &quot;Hello, world!&quot;
 </code></pre>
 <p>Again, notice that we don't need parenthesis when calling functions. Function calls have the form:</p>
 <pre><code class="language-hs">&lt;name&gt; &lt;arg1&gt; &lt;arg2&gt; ... &lt;argN&gt;
 </code></pre>
-<p>However, if we wanted to substitute <code>myhtml</code> with the expression <code>myhtml</code> is bound to in <code>main = putStrLn myhtml</code>, we would have to wrap the expression in paranthesis:</p>
+<p>However, if we wanted to substitute <code>myhtml</code> with the expression <code>myhtml</code> is bound
+to in <code>main = putStrLn myhtml</code>, we would have to wrap the expression in paranthesis:</p>
 <pre><code class="language-hs">main = putStrLn (wrapHtml &quot;Hello, world!&quot;)
 </code></pre>
 <p>If we accidentally write this instead:</p>
 <pre><code class="language-hs">main = putStrLn wrapHtml &quot;Hello, world!&quot;
 </code></pre>
-<p>we'll get an error from GHC stating that <code>putStrLn</code> is applied to two arguments, but it only takes one. this is because the above is of the form <code>&lt;name&gt; &lt;arg1&gt; &lt;arg2&gt;</code> as we defined earlier. By using parenthesis we can group together the expressions in the right order.</p>
+<p>we'll get an error from GHC stating that <code>putStrLn</code> is applied to two arguments,
+but it only takes one. This is because the above is of the form <code>&lt;name&gt; &lt;arg1&gt; &lt;arg2&gt;</code>
+in which, as we defined earlier, <code>&lt;arg1&gt;</code> and <code>&lt;arg2&gt;</code> are arguments to <code>&lt;name&gt;</code>.</p>
+<p>By using parenthesis we can group together the expressions in the right order.</p>
 <hr />
 <p>Exercises:</p>
 <ol>
@@ -183,7 +193,8 @@ It is common to use camelCase in Haskell.</p>
 <p>Change <code>myhtml</code> to use these two functions.</p>
 </li>
 <li>
-<p>Add another two similar functions for the tags <code>&lt;head&gt;</code> and <code>&lt;title&gt;</code> and name them <code>head_</code> and <code>title_</code>.</p>
+<p>Add another two similar functions for the tags <code>&lt;head&gt;</code> and <code>&lt;title&gt;</code>
+and name them <code>head_</code> and <code>title_</code>.</p>
 </li>
 <li>
 <p>Create a new function, <code>makeHtml</code>, which takes two strings as input:</p>
@@ -263,11 +274,13 @@ firefox hello.html
 <h2 id="indentation"><a class="header" href="#indentation">Indentation</a></h2>
 <p>You might ask how does Haskell know a definition is complete?
 The answer is: Haskell uses indentation to know when things should be grouped together.</p>
-<p>Indentation in Haskell can be a bit tricky, but in general: code which is supposed to be part of another expression should be indented further than the beginning of that expression.</p>
+<p>Indentation in Haskell can be a bit tricky, but in general: code which is supposed to be
+part of another expression should be indented further than the beginning of that expression.</p>
 <p>We know two definitions are separate because the second one is not indented further than the first one.</p>
 <h3 id="indentation-tips"><a class="header" href="#indentation-tips">Indentation tips</a></h3>
 <ol>
-<li>Choose a specific amount of spaces for indentation (2 spaces, 4 spaces, etc) and stick to it. Prefer spaces to tabs.</li>
+<li>Choose a specific amount of spaces for indentation (2 spaces, 4 spaces, etc) and stick to it.
+Always use spaces over tabs.</li>
 <li>Do not indent more than once in any given time.</li>
 <li>When in doubt, drop line as needed and indent once.</li>
 </ol>
@@ -280,7 +293,8 @@ The answer is: Haskell uses indentation to know when things should be grouped to
     putStrLn
         (wrapHtml &quot;Hello, world!&quot;)
 </code></pre>
-<p><strong>Avoid the following styles</strong>, which use more than one indentation steps:</p>
+<p><strong>Avoid the following styles</strong>, which use more than one indentation steps, or completely disregard
+indentation steps:</p>
 <pre><code class="language-hs">main = putStrLn
         (wrapHtml &quot;Hello, world!&quot;)
 </code></pre>

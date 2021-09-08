@@ -177,11 +177,12 @@ which presents the chapters one commit at a time.</p>
 This book (when exported to pdf) is less than 100 pages long.</li>
 <li>It's <strong>project oriented</strong>. Many Haskell books teach Haskell by teaching the underlying
 concepts and features in a neat progression. In this book we try to build a thing,
-and learn Haskell on the way. There are other tutorials like this. The most notable ones are
+and learn Haskell on the way.
+There are other tutorials like this. The most notable ones are
 <a href="https://www.apress.com/gp/book/9781430262510#otherversion=9781430262503">Beginning Haskell</a>
-and <a href="https://haskell-via-sokoban.nomeata.de/">Haskell via Sokoban</a></li>
-<li>It's <strong>free</strong></li>
-<li>It's <strong>on the internet</strong>, which means corrections are easy to make</li>
+and <a href="https://haskell-via-sokoban.nomeata.de/">Haskell via Sokoban</a>.</li>
+<li>It's <strong>free</strong>.</li>
+<li>It's <strong>on the internet</strong>, which means corrections are easy to make.</li>
 </ul>
 <h3 id="cons"><a class="header" href="#cons">Cons</a></h3>
 <p>There are probably more, but here are a few possible cons:</p>
@@ -189,7 +190,7 @@ and <a href="https://haskell-via-sokoban.nomeata.de/">Haskell via Sokoban</a></l
 <li>It may <strong>lack depth</strong> - many, much longer Haskell tutorials are long because they go
 deeper into the nuts and bolts of each feature.</li>
 <li>It may <strong>not cover as many features or techniques</strong> as other tutorials -
-we try to cover features as they are pop up in our implementation, but we will
+we try to cover features as they pop up in our implementation, but we will
 probably miss features that aren't as commonly used for our tasks,
 while other resources may try to cover many different use cases.</li>
 <li>It is <strong>very new</strong> and not &quot;battle-tested&quot;. Who knows if this is a good approach to
@@ -208,11 +209,12 @@ recommend <a href="https://github.com/soupi/haskell-study-plan#about-this-guide"
 </code></pre>
 <p>Note that:</p>
 <ol>
-<li>We cannot write naked expressions without binding them to a name</li>
+<li>We cannot write expressions without binding them to a name</li>
 <li>Names must start with a lowercase letter</li>
 <li>We cannot use the same name more than once in a file</li>
 </ol>
-<p>A source file containing a definition of the name <code>main</code> is treated as an executable, and the expression <code>main</code> is bound to is the entry point to the program.</p>
+<p>A source file containing a definition of the name <code>main</code> can be treated as an executable,
+and the expression <code>main</code> is bound to is the entry point to the program.</p>
 <p>Let's create a new Haskell source file called <code>hello.hs</code>, and write the following line there:</p>
 <pre><code class="language-hs">main = putStrLn &quot;&lt;html&gt;&lt;body&gt;Hello, world!&lt;/body&gt;&lt;/html&gt;&quot;
 </code></pre>
@@ -230,7 +232,8 @@ recommend <a href="https://github.com/soupi/haskell-study-plan#about-this-guide"
 <li><code>hello</code> - A native executable file</li>
 </ol>
 <p>and then run <code>hello</code>.</p>
-<p>Or, alternatively, interpret the source file using the command line program <code>runghc</code>, like this: <code>runghc hello.hs</code> which will run the program without compiling it or creating any files.</p>
+<p>Or, alternatively, interpret the source file using the command line program <code>runghc</code>,
+like this: <code>runghc hello.hs</code>. This will run the program without compiling it or creating any files.</p>
 <pre><code class="language-sh">&gt; runghc hello.hs
 &lt;html&gt;&lt;body&gt;Hello, world!&lt;/body&gt;&lt;/html&gt;
 </code></pre>
@@ -247,41 +250,55 @@ recommend <a href="https://github.com/soupi/haskell-study-plan#about-this-guide"
 <p>If you want to learn more about the core Haskell tools, <a href="https://gilmi.me/blog/post/2021/08/14/hs-core-tools">you can read this article</a>. But what's described above is enough for now.</p>
 </blockquote>
 <h2 id="more-bindings"><a class="header" href="#more-bindings">More bindings</a></h2>
-<p>We can define the html string passed to <code>putStrLn</code> in a new name instead. Change the content of file <code>hello.hs</code> we defined above to:</p>
+<p>We can define the html string passed to <code>putStrLn</code> in a new name instead of passing
+it directly to <code>putStrLn</code>. Change the content of file <code>hello.hs</code> we defined above to:</p>
 <pre><code class="language-hs">main = putStrLn myhtml
 
 myhtml = &quot;&lt;html&gt;&lt;body&gt;Hello, world!&lt;/body&gt;&lt;/html&gt;&quot;
 </code></pre>
-<p><strong>Note</strong>: the order in which we declare the bindings does not matter. Try reversing the order of definitions and see for yourself.</p>
+<p><strong>Note</strong>: the order in which we declare the bindings does not matter.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="building-an-html-printer-library"><a class="header" href="#building-an-html-printer-library">Building an HTML printer library</a></h1>
 <p>In this part we'll explore a few basic building blocks in Haskell,
 including functions, types and modules, while building a small HTML printer library
 with which we will later construct HTML pages from our markup blog posts.</p>
+<p>If you're not familiar with HTML and would like a quick tutorial before diving in, MDN's
+<a href="https://developer.mozilla.org/en-US/docs/Learn/HTML/Introduction_to_HTML/Getting_started">Getting started with HTML</a>
+is a good overview on the subject.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="flexible-html-content-functions"><a class="header" href="#flexible-html-content-functions">Flexible html content (functions)</a></h1>
-<p>We'd like to be able to write different html contents without having to write the whole html-body tags over and over again.</p>
-<p>To define a function, we create a definition like we saw previously and add the arguments names after the name and before the equals sign (<code>=</code>). So a function definition has the following form:</p>
+<p>We'd like to be able to write different html pages without having to write the whole
+structure of html and body tags over and over again. We can do that with functions.</p>
+<p>To define a function, we create a definition like we saw previously and add the argument
+names after the name and before the equals sign (<code>=</code>).
+So a function definition has the following form:</p>
 <pre><code class="language-hs">&lt;name&gt; &lt;arg1&gt; &lt;arg2&gt; ... &lt;argN&gt; = &lt;expression&gt;
 </code></pre>
-<p>The argument names will be available in scope on the right side of the equals sign (in the <code>&lt;expression&gt;</code>), and the function name will be <code>&lt;name&gt;</code>.</p>
-<p>We'll define a function that takes a string which is the content and wraps it in the relevant <code>html</code> and <code>body</code> tags by concatenating them before and after the content.
+<p>The argument names will be available in scope on the right side of the equals sign
+(in the <code>&lt;expression&gt;</code>), and the function name will be <code>&lt;name&gt;</code>.</p>
+<p>We'll define a function that takes a string, which is the content of the page, and wraps it in
+the relevant <code>html</code> and <code>body</code> tags by concatenating them before and after the content.
 We use the operator <code>&lt;&gt;</code> to concatenate two strings.</p>
 <pre><code class="language-hs">wrapHtml content = &quot;&lt;html&gt;&lt;body&gt;&quot; &lt;&gt; content &lt;&gt; &quot;&lt;/body&gt;&lt;/html&gt;&quot;
 </code></pre>
-<p>This function, <code>wrapHtml</code>, takes one argument named <code>content</code> and returns a string that prefixes <code>&lt;html&gt;&lt;body&gt;</code> before the content and appends <code>&lt;/body&gt;&lt;/html&gt;</code>.
-It is common to use camelCase in Haskell.</p>
+<p>This function, <code>wrapHtml</code>, takes one argument named <code>content</code> and returns a string
+that prefixes <code>&lt;html&gt;&lt;body&gt;</code> before the content and appends <code>&lt;/body&gt;&lt;/html&gt;</code> after it.
+Note that it is common to use camelCase in Haskell for names.</p>
 <p>Now we can adjust our <code>myhtml</code> definition from the previous chapter:</p>
 <pre><code class="language-hs">myhtml = wrapHtml &quot;Hello, world!&quot;
 </code></pre>
 <p>Again, notice that we don't need parenthesis when calling functions. Function calls have the form:</p>
 <pre><code class="language-hs">&lt;name&gt; &lt;arg1&gt; &lt;arg2&gt; ... &lt;argN&gt;
 </code></pre>
-<p>However, if we wanted to substitute <code>myhtml</code> with the expression <code>myhtml</code> is bound to in <code>main = putStrLn myhtml</code>, we would have to wrap the expression in paranthesis:</p>
+<p>However, if we wanted to substitute <code>myhtml</code> with the expression <code>myhtml</code> is bound
+to in <code>main = putStrLn myhtml</code>, we would have to wrap the expression in paranthesis:</p>
 <pre><code class="language-hs">main = putStrLn (wrapHtml &quot;Hello, world!&quot;)
 </code></pre>
 <p>If we accidentally write this instead:</p>
 <pre><code class="language-hs">main = putStrLn wrapHtml &quot;Hello, world!&quot;
 </code></pre>
-<p>we'll get an error from GHC stating that <code>putStrLn</code> is applied to two arguments, but it only takes one. this is because the above is of the form <code>&lt;name&gt; &lt;arg1&gt; &lt;arg2&gt;</code> as we defined earlier. By using parenthesis we can group together the expressions in the right order.</p>
+<p>we'll get an error from GHC stating that <code>putStrLn</code> is applied to two arguments,
+but it only takes one. This is because the above is of the form <code>&lt;name&gt; &lt;arg1&gt; &lt;arg2&gt;</code>
+in which, as we defined earlier, <code>&lt;arg1&gt;</code> and <code>&lt;arg2&gt;</code> are arguments to <code>&lt;name&gt;</code>.</p>
+<p>By using parenthesis we can group together the expressions in the right order.</p>
 <hr />
 <p>Exercises:</p>
 <ol>
@@ -297,7 +314,8 @@ It is common to use camelCase in Haskell.</p>
 <p>Change <code>myhtml</code> to use these two functions.</p>
 </li>
 <li>
-<p>Add another two similar functions for the tags <code>&lt;head&gt;</code> and <code>&lt;title&gt;</code> and name them <code>head_</code> and <code>title_</code>.</p>
+<p>Add another two similar functions for the tags <code>&lt;head&gt;</code> and <code>&lt;title&gt;</code>
+and name them <code>head_</code> and <code>title_</code>.</p>
 </li>
 <li>
 <p>Create a new function, <code>makeHtml</code>, which takes two strings as input:</p>
@@ -377,11 +395,13 @@ firefox hello.html
 <h2 id="indentation"><a class="header" href="#indentation">Indentation</a></h2>
 <p>You might ask how does Haskell know a definition is complete?
 The answer is: Haskell uses indentation to know when things should be grouped together.</p>
-<p>Indentation in Haskell can be a bit tricky, but in general: code which is supposed to be part of another expression should be indented further than the beginning of that expression.</p>
+<p>Indentation in Haskell can be a bit tricky, but in general: code which is supposed to be
+part of another expression should be indented further than the beginning of that expression.</p>
 <p>We know two definitions are separate because the second one is not indented further than the first one.</p>
 <h3 id="indentation-tips"><a class="header" href="#indentation-tips">Indentation tips</a></h3>
 <ol>
-<li>Choose a specific amount of spaces for indentation (2 spaces, 4 spaces, etc) and stick to it. Prefer spaces to tabs.</li>
+<li>Choose a specific amount of spaces for indentation (2 spaces, 4 spaces, etc) and stick to it.
+Always use spaces over tabs.</li>
 <li>Do not indent more than once in any given time.</li>
 <li>When in doubt, drop line as needed and indent once.</li>
 </ol>
@@ -394,7 +414,8 @@ The answer is: Haskell uses indentation to know when things should be grouped to
     putStrLn
         (wrapHtml &quot;Hello, world!&quot;)
 </code></pre>
-<p><strong>Avoid the following styles</strong>, which use more than one indentation steps:</p>
+<p><strong>Avoid the following styles</strong>, which use more than one indentation steps, or completely disregard
+indentation steps:</p>
 <pre><code class="language-hs">main = putStrLn
         (wrapHtml &quot;Hello, world!&quot;)
 </code></pre>
@@ -402,20 +423,21 @@ The answer is: Haskell uses indentation to know when things should be grouped to
                 (wrapHtml &quot;Hello, world!&quot;)
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="adding-type-signatures"><a class="header" href="#adding-type-signatures">Adding type signatures</a></h1>
-<p>Haskell is a statically typed language. That means that every
+<p>Haskell is a <strong>statically typed</strong> programming language. That means that every
 expression has a type, and we check that the types are valid with
 regards to each other before running the program. If we discover that
 they are not valid, an error message will be printed and the program
 will not run.</p>
-<p>An example of type error would be if we'd pass a function more
-arguments that it take, or pass a number instead of a string.</p>
-<p>Haskell is also type inferred, so we don't <em>need</em> to specify the type
-of expressions - Haskell can infer from the context of the expression
-what its type is, and that's what we did up until now. But specifying
-types is useful - it adds a layer of documentation for you or others
+<p>An example of a type error would be if we'd pass 3 arguments to a function
+that takes only 2, or pass a number instead of a string.</p>
+<p>Haskell is also <strong>type inferred</strong>, so we don't <em>need</em> to specify the type
+of expressions - Haskell can <em>infer</em> from the context of the expression
+what its type should be, and that's what we did up until now. However, <strong>specifying
+types is useful</strong> - it adds a layer of documentation for you or others
 that will look at the code later, and it helps verify to some degree
 that what was intended (with the type signature) is what was
-written (with the expression).</p>
+written (with the expression). It is generally recommended to annotate all <em>top-level</em>
+definitions with type signatures.</p>
 <p>We use double-colon (<code>::</code>) to specify the type of names. We usually
 write it right above the definition of the name itself.</p>
 <p>Here are a few examples of types we can write:</p>
@@ -443,16 +465,15 @@ to functions like <code>makeHtml</code> as functions with multiple inputs.</p>
 <p>In our case, <code>makeHtml</code> is a function that takes <strong>one</strong> string argument,
 and returns a <strong>function</strong>. <em>The function it returns</em> takes a string argument
 as well and finally returns a string.</p>
-<p>The magic here is that <code>-&gt;</code> is right associative.</p>
-<p>When we write:</p>
+<p>The magic here is that <code>-&gt;</code> is right associative. Which means that when we write:</p>
 <pre><code class="language-hs">makeHtml :: String -&gt; String -&gt; String
 </code></pre>
 <p>Haskell parses it as:</p>
 <pre><code class="language-hs">makeHtml :: String -&gt; (String -&gt; String)
 </code></pre>
 <p>Consecuently, the expression <code>makeHtml &quot;My title&quot;</code> is also a function!
-One that will take a string (the content) and will return the expected
-html string with &quot;My title&quot; in the title.</p>
+One that will take a string (the content, the second argument of <code>makeHtml</code>)
+and will return the expected html string with &quot;My title&quot; in the title.</p>
 <p>This is called <strong>partial application</strong>.</p>
 <p>To illustrate, let's define <code>html_</code> and <code>body_</code> in a different way by
 defining a new function, <code>el</code>.</p>
@@ -481,7 +502,7 @@ the same (this is what the equals signs say, right? That the two sides
 are the same). This property, of behind able to <em>substitute</em> the two sides of the
 equals sign with one another, is called <strong>referential transparency</strong>. And
 it is pretty unique to Haskell (and a few language that are very
-similar to it like PureScript and Elm)!</p>
+similar to it like PureScript and Elm)! We'll talk more about this in a later chapter.</p>
 <h3 id="anonymouslambda-functions"><a class="header" href="#anonymouslambda-functions">Anonymous/lambda functions</a></h3>
 <p>To further drive the point that Haskell functions are first class and
 all functions take exactly one argument,
@@ -498,8 +519,8 @@ such as <code>&quot;hello&quot;</code> with the following syntax:</p>
 <p>This little <code>\</code> (which bears some resemblance to the lowercase greek letter lambda 'λ')
 marks the head of the lambda function,
 and the arrow (<code>-&gt;</code>) marks the beginning of the body of the function.
-We can even chain lambda, making them &quot;multiple argument functions&quot; by
-defining another lambda in the body for another, like this:</p>
+We can even chain lambda functions, making them &quot;multiple argument functions&quot; by
+defining another lambda in the body of another, like this:</p>
 <pre><code class="language-hs">three = (\num1 -&gt; \num2 -&gt; num1 + num2) 1 2
 </code></pre>
 <p>Just as before, we evaluate functions by substituting the function argument with
@@ -663,8 +684,8 @@ which try to work well in many domains.</p>
 <li>HTML - for defining web pages</li>
 </ul>
 <p>An <em>embedded</em> domain specific language is a little language which is
-embedded inside another programming language, making the
-a program written in the EDSL a valid program in the language it was written in.</p>
+embedded inside another programming language, making a program written in
+the EDSL a valid program in the language it was written in.</p>
 <p>The little HTML library we've been writing can be considered an EDSL.
 It is used specifically for building web pages (by returning html strings),
 and is valid Haskell code!</p>
@@ -678,9 +699,9 @@ including syntax highlighting and various tools available for the language.</p>
 <p>The drawback of embedding domain specific languages is that we have to adhere
 the rules of the programming language we embed in, such as syntactic and semantic rules.</p>
 <p>Some languages alleviate this drawback by providing meta-programming capabilities
-in the form of macros or other features. And while Haskell does provide such
-capabilities as well, it is also expressive and concise enough that many EDSLs
-do not need them.</p>
+in the form of macros or other features to extend the language.
+And while Haskell does provide such capabilities as well, it is also expressive and concise
+enough that many EDSLs do not need them.</p>
 <p>Instead, many Haskell EDSLs use a pattern called <em>the combinator pattern</em>:
 They define <em>primitives</em> and <em>combinators</em> -
 primitives are basic building blocks of the language,
@@ -3458,7 +3479,7 @@ the same <strong>description</strong> of a program. This helps us keep purity an
 to also run it has to be <em>combined into</em> the <code>main</code> expression - let's see what that means.</p>
 <h2 id="combining-io-expressions"><a class="header" href="#combining-io-expressions">Combining IO expressions</a></h2>
 <p>Just like our <code>Html</code> type, the IO interface provides <strong>combinators</strong> for composing
-small <code>IO</code> operations into bigger ones, this interface also makes sure that the order
+small <code>IO</code> operations into bigger ones. This interface also makes sure that the order
 of operations is well defined!</p>
 <p>Note that, just like with <code>&lt;&gt;</code> we've defined for <code>Html</code>, the combinators for <code>IO</code>
 are implemented as <strong>type-class instances</strong> rather than specialized variants
@@ -4423,6 +4444,9 @@ with the same versions (and the same flag settings) they will not need to be rei
 <p>Running the project: <code>stack exec</code> will run the executable.</p>
 <pre><code class="language-sh">cabal v2-run hs-blog-gen -- &lt;program options&gt;
 </code></pre>
+<p>We can also run <code>ghci</code> with our project loaded:</p>
+<pre><code class="language-sh">cabal v2-repl
+</code></pre>
 <h3 id="for-stack"><a class="header" href="#for-stack">For stack:</a></h3>
 <p>Building the project - on the first run, stack will install the right GHC for this project
 which is specified according to the <code>resolver</code> field in the <code>stack.yaml</code> file,
@@ -4434,6 +4458,9 @@ require reinstallation.</p>
 </code></pre>
 <p>Running the project: <code>stack exec</code> will run the executable.</p>
 <pre><code class="language-sh">stack exec hs-blog-gen -- &lt;program options&gt;
+</code></pre>
+<p>Or run <code>ghci</code>:</p>
+<pre><code class="language-sh">stack ghci
 </code></pre>
 <h3 id="build-artifacts"><a class="header" href="#build-artifacts">Build artifacts</a></h3>
 <p>Both stack and cabal create build artifacts that we will not want to track using

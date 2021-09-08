@@ -158,8 +158,8 @@ which try to work well in many domains.</p>
 <li>HTML - for defining web pages</li>
 </ul>
 <p>An <em>embedded</em> domain specific language is a little language which is
-embedded inside another programming language, making the
-a program written in the EDSL a valid program in the language it was written in.</p>
+embedded inside another programming language, making a program written in
+the EDSL a valid program in the language it was written in.</p>
 <p>The little HTML library we've been writing can be considered an EDSL.
 It is used specifically for building web pages (by returning html strings),
 and is valid Haskell code!</p>
@@ -173,9 +173,9 @@ including syntax highlighting and various tools available for the language.</p>
 <p>The drawback of embedding domain specific languages is that we have to adhere
 the rules of the programming language we embed in, such as syntactic and semantic rules.</p>
 <p>Some languages alleviate this drawback by providing meta-programming capabilities
-in the form of macros or other features. And while Haskell does provide such
-capabilities as well, it is also expressive and concise enough that many EDSLs
-do not need them.</p>
+in the form of macros or other features to extend the language.
+And while Haskell does provide such capabilities as well, it is also expressive and concise
+enough that many EDSLs do not need them.</p>
 <p>Instead, many Haskell EDSLs use a pattern called <em>the combinator pattern</em>:
 They define <em>primitives</em> and <em>combinators</em> -
 primitives are basic building blocks of the language,

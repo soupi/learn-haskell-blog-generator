@@ -151,11 +151,12 @@
 </code></pre>
 <p>Note that:</p>
 <ol>
-<li>We cannot write naked expressions without binding them to a name</li>
+<li>We cannot write expressions without binding them to a name</li>
 <li>Names must start with a lowercase letter</li>
 <li>We cannot use the same name more than once in a file</li>
 </ol>
-<p>A source file containing a definition of the name <code>main</code> is treated as an executable, and the expression <code>main</code> is bound to is the entry point to the program.</p>
+<p>A source file containing a definition of the name <code>main</code> can be treated as an executable,
+and the expression <code>main</code> is bound to is the entry point to the program.</p>
 <p>Let's create a new Haskell source file called <code>hello.hs</code>, and write the following line there:</p>
 <pre><code class="language-hs">main = putStrLn &quot;&lt;html&gt;&lt;body&gt;Hello, world!&lt;/body&gt;&lt;/html&gt;&quot;
 </code></pre>
@@ -173,7 +174,8 @@
 <li><code>hello</code> - A native executable file</li>
 </ol>
 <p>and then run <code>hello</code>.</p>
-<p>Or, alternatively, interpret the source file using the command line program <code>runghc</code>, like this: <code>runghc hello.hs</code> which will run the program without compiling it or creating any files.</p>
+<p>Or, alternatively, interpret the source file using the command line program <code>runghc</code>,
+like this: <code>runghc hello.hs</code>. This will run the program without compiling it or creating any files.</p>
 <pre><code class="language-sh">&gt; runghc hello.hs
 &lt;html&gt;&lt;body&gt;Hello, world!&lt;/body&gt;&lt;/html&gt;
 </code></pre>
@@ -190,12 +192,13 @@
 <p>If you want to learn more about the core Haskell tools, <a href="https://gilmi.me/blog/post/2021/08/14/hs-core-tools">you can read this article</a>. But what's described above is enough for now.</p>
 </blockquote>
 <h2 id="more-bindings"><a class="header" href="#more-bindings">More bindings</a></h2>
-<p>We can define the html string passed to <code>putStrLn</code> in a new name instead. Change the content of file <code>hello.hs</code> we defined above to:</p>
+<p>We can define the html string passed to <code>putStrLn</code> in a new name instead of passing
+it directly to <code>putStrLn</code>. Change the content of file <code>hello.hs</code> we defined above to:</p>
 <pre><code class="language-hs">main = putStrLn myhtml
 
 myhtml = &quot;&lt;html&gt;&lt;body&gt;Hello, world!&lt;/body&gt;&lt;/html&gt;&quot;
 </code></pre>
-<p><strong>Note</strong>: the order in which we declare the bindings does not matter. Try reversing the order of definitions and see for yourself.</p>
+<p><strong>Note</strong>: the order in which we declare the bindings does not matter.</p>
 
                     </main>
 

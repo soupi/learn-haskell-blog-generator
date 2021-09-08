@@ -637,6 +637,9 @@ with the same versions (and the same flag settings) they will not need to be rei
 <p>Running the project: <code>stack exec</code> will run the executable.</p>
 <pre><code class="language-sh">cabal v2-run hs-blog-gen -- &lt;program options&gt;
 </code></pre>
+<p>We can also run <code>ghci</code> with our project loaded:</p>
+<pre><code class="language-sh">cabal v2-repl
+</code></pre>
 <h3 id="for-stack"><a class="header" href="#for-stack">For stack:</a></h3>
 <p>Building the project - on the first run, stack will install the right GHC for this project
 which is specified according to the <code>resolver</code> field in the <code>stack.yaml</code> file,
@@ -648,6 +651,9 @@ require reinstallation.</p>
 </code></pre>
 <p>Running the project: <code>stack exec</code> will run the executable.</p>
 <pre><code class="language-sh">stack exec hs-blog-gen -- &lt;program options&gt;
+</code></pre>
+<p>Or run <code>ghci</code>:</p>
+<pre><code class="language-sh">stack ghci
 </code></pre>
 <h3 id="build-artifacts"><a class="header" href="#build-artifacts">Build artifacts</a></h3>
 <p>Both stack and cabal create build artifacts that we will not want to track using

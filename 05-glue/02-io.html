@@ -270,7 +270,7 @@ the same <strong>description</strong> of a program. This helps us keep purity an
 to also run it has to be <em>combined into</em> the <code>main</code> expression - let's see what that means.</p>
 <h2 id="combining-io-expressions"><a class="header" href="#combining-io-expressions">Combining IO expressions</a></h2>
 <p>Just like our <code>Html</code> type, the IO interface provides <strong>combinators</strong> for composing
-small <code>IO</code> operations into bigger ones, this interface also makes sure that the order
+small <code>IO</code> operations into bigger ones. This interface also makes sure that the order
 of operations is well defined!</p>
 <p>Note that, just like with <code>&lt;&gt;</code> we've defined for <code>Html</code>, the combinators for <code>IO</code>
 are implemented as <strong>type-class instances</strong> rather than specialized variants
