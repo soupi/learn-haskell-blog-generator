@@ -4688,7 +4688,7 @@ that function and get a new function of the type <code>Parser a -&gt; Parser b</
 fmap :: (a -&gt; b) -&gt; IO a -&gt; IO b
 </code></pre>
 <p><code>fmap</code> is a type class function like <code>&lt;&gt;</code> and <code>show</code>, it belongs
-to the type class <a href="https://hackage.haskell.org/package/base-4.14.1.0/docs/Data-Functor.html#t:Functor"><code>Functor</code></a>:</p>
+to the type class <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Functor.html#t:Functor"><code>Functor</code></a>:</p>
 <pre><code class="language-hs">class Functor f where
   fmap :: (a -&gt; b) -&gt; f a -&gt; f b
 </code></pre>
@@ -4741,10 +4741,12 @@ equation in each law, then the law holds.</p>
 <p>Functor is a very important type class, and many types implement this interface.
 As we know, <code>IO</code>, <code>Maybe</code>, <code>[]</code> and <code>Parser</code> all have the kind <code>* -&gt; *</code>,
 and all allows us to map over their &quot;payload&quot; type.</p>
+<blockquote>
 <p>Often people try to look for analogies and metaphors to what a type class mean,
 but type classes with funny names like <code>Functor</code> don't usually have an
-analogy or a methapor that fits them so well. It is easier to give up
+analogy or a methapor that fits them in all cases. It is easier to give up
 on the metaphor and think about it as it is - an interface with laws.</p>
+</blockquote>
 <p>We can use <code>fmap</code> on <code>Parser</code> to make a parser that returns <code>FilePath</code>
 return a <code>SingleInput</code> or <code>SingleOutput</code> instead:</p>
 <pre><code class="language-hs">pInputFile :: Parser SingleInput
@@ -4781,7 +4783,7 @@ we want to <em>combine</em> them as <code>Options</code>. Again, if we only had
 Does a function that can lift a binary function to work
 on <code>Parser</code>s instead? One with this type signature:</p>
 <pre><code>???
-  :: (       SingleInput -&gt;        SingleOutput -&gt;        Options)
+  :: (SingleInput -&gt; SingleOutput -&gt; Options)
   -&gt; (Parser SingleInput -&gt; Parser SingleOutput -&gt; Parser Options)
 </code></pre>
 <p>Yes. This function is called <code>liftA2</code> and it is from the <code>Applicative</code>
@@ -4792,26 +4794,26 @@ primary functions:</p>
   liftA2 :: (a -&gt; b -&gt; c) -&gt; f a -&gt; f b -&gt; f c 
   (&lt;*&gt;) :: f (a -&gt; b) -&gt; f a -&gt; f b
 </code></pre>
-<p><a href="https://hackage.haskell.org/package/base-4.14.1.0/docs/Control-Applicative.html#t:Applicative"><code>Applicative</code></a>
+<p><a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Applicative.html#t:Applicative"><code>Applicative</code></a>
 is another very popular type class with many instances.</p>
 <p>Just like any <code>Monoid</code> as a <code>Semigroup</code>, any <code>Applicative</code>
 is a <code>Functor</code>. This means that any type that wants to implement
 the <code>Applicative</code> interface should also implement the <code>Functor</code> interface.</p>
 <p>Beyond what a regular functor can do, which is to lift a function over
 a certain <code>f</code>, applicative functors allow us to apply a function to
-multiple instances of a certain <code>f</code>, as well as &quot;lift&quot; any value into an <code>f a</code>.</p>
+<em>multiple instances</em> of a certain <code>f</code>, as well as &quot;lift&quot; any value into an <code>f a</code>.</p>
 <p>You should already be familiar with <code>pure</code>, we've seen it when we
-talked about <code>IO</code>. For <code>IO</code>, <code>pure</code> let us create an <code>IO</code> action
+talked about <code>IO</code>. For <code>IO</code>, <code>pure</code> lets us create an <code>IO</code> action
 that would return a specific value without doing IO.
 With <code>pure</code> for <code>Parser</code>, we can create a <code>Parser</code> that when run
 will return a specific value as output. </p>
 <p><code>liftA2</code> and <code>&lt;*&gt;</code> are two functions that can be implemented in
-terms of one another. <code>&lt;*&gt;</code> is actually the more useful between
-the two, because when combined with <code>fmap</code>, it can be used
-to apply a function with many arguments over many values of the
+terms of one another. <code>&lt;*&gt;</code> is actually the more useful one between
+the two. Because when combined with <code>fmap</code> (or rather the infix version <code>&lt;$&gt;</code>),
+it can be used to apply a function with many arguments over many values of the
 same type which is an instance of an applicative functor.</p>
 <p>To combine our two parsers to one, we can use either <code>liftA2</code> or
-<code>&lt;*&gt;</code> and <code>fmap</code> (or more specifically the infix version <code>&lt;$&gt;</code>):</p>
+a combination of <code>&lt;$&gt;</code> and <code>&lt;*&gt;</code>:</p>
 <pre><code class="language-hs">-- with liftA2
 pConvertSingle :: Parser Options
 pConvertSingle =
@@ -4854,9 +4856,11 @@ ConvertSingle &lt;$&gt; pInputFile :: Parser (SingleOutput -&gt; Options)
 as we want. This is because two things: currying and parametric polymorphism:
 Because functions in Haskell take exactly one argument and return exactly one,
 any multiple argument function can be represented as <code>a -&gt; b</code>.</p>
+<blockquote>
 <p>You can find the laws for the applicative functors in this article called
 <a href="https://wiki.haskell.org/Typeclassopedia#Laws_2">Typeclassopedia</a>, which
 talks about various useful type classes and their laws.</p>
+</blockquote>
 <p>Applicatives are a very important concept and will appear in various
 parsers interface (not just for command-line arguments, but also json
 parsers and general parsers), I/O, concurrency, non-determinism, and more.
@@ -4864,7 +4868,7 @@ The reason this library is called optparse-applicative is because
 it uses the <code>Applicative</code> interface as the main API for
 constructing parsers.</p>
 <hr />
-<p>Exercise: create a similar interface for the <code>ConvertDir</code> constructor of <code>Options</code>.</p>
+<p><strong>Exercise</strong>: create a similar interface for the <code>ConvertDir</code> constructor of <code>Options</code>.</p>
 <details><summary>Solution</summary>
 <pre><code class="language-hs">pInputDir :: Parser FilePath
 pInputDir =
@@ -4893,88 +4897,130 @@ pConvertDir =
 <h4 id="alternative"><a class="header" href="#alternative">Alternative</a></h4>
 <p>One thing we forgot about is that each input and output for
 <code>ConvertSingle</code> could also potentially use the standard input instead.
-Up until now we only offered one option: reading from or writing to a file,
-but we'd like to offer the alternative standard i/o. We can do that by using
-the function <code>&lt;|&gt;</code> from the <code>Alternative</code> typeclass, which <code>Parser</code> implements:</p>
+Up until now we only offered one option: reading from or writing to a file
+by specifying the flags <code>--input</code> and <code>--output</code>.
+However, we'd like to make these flags optional, and when they are
+not specified, use the alternative standard i/o. We can do that by using
+the function <code>optional</code> from <code>Control.Applicative</code>:</p>
+<pre><code class="language-hs">optional :: Alternative f =&gt; f a -&gt; f (Maybe a)
+</code></pre>
+<p><code>optional</code> works on types which implement instances of the
+<a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Applicative.html#t:Alternative"><code>Alternative</code></a> type class:</p>
 <pre><code class="language-hs">class Applicative f =&gt; Alternative f where 
   (&lt;|&gt;) :: f a -&gt; f a -&gt; f a
   empty :: f a 
 </code></pre>
 <p><code>Alternative</code> looks very similar to the <code>Monoid</code> typeclass,
 but it works on applicative functors. This type class isn't
-very common and is mostly used for parsing libraries,
-but it provides us with an interface to combine two <code>Parser</code>s.
-If the first one fails to parse, we try the other.</p>
-<p>We can create new parsers <code>pStdin</code> and <code>pStdout</code>:</p>
-<pre><code class="language-hs">pStdin :: Parser SingleInput
-pStdin =
-  flag' Stdin
-    ( help &quot;Standard input&quot;
-    )
-
-pStdout :: Parser SingleOutput
-pStdout =
-  flag' Stdout
-    ( help &quot;Standard output&quot;
-    )
-</code></pre>
-<p>Create new unifying parsers for <code>SingleInput</code> and <code>SingleOutput</code>:</p>
+very common and is mostly used for parsing libraries as far as I know.
+It provides us with an interface to combine two <code>Parser</code>s -
+if the first one fails to parse, we try the other.
+It also provide other useful functions such as <code>optional</code>,
+which will help us with our case:</p>
 <pre><code class="language-hs">pSingleInput :: Parser SingleInput
 pSingleInput =
-  pInputFile &lt;|&gt; pStdin
+  fromMaybe Stdin &lt;$&gt; optional pInputFile
 
 pSingleOutput :: Parser SingleOutput
 pSingleOutput =
-  pOutputFile &lt;|&gt; pStdout
+  fromMaybe Stdout &lt;$&gt; optional pOutputFile
 </code></pre>
-<p>And use those for <code>pConvertSingle</code> instead:</p>
+<p>Note that with <code>fromMaybe :: a -&gt; Maybe a -&gt; a</code> we can extract
+the <code>a</code> out of the <code>Maybe</code> by supplying a value for the <code>Nothing</code> case.</p>
+<p>Now we can use these more appropriate functions in <code>pConvertSingle</code> instead:</p>
 <pre><code class="language-hs">pConvertSingle :: Parser Options
 pConvertSingle =
-  ConvertDir &lt;$&gt; pSingleInput &lt;*&gt; pSingleOutput
+  ConvertSingle &lt;$&gt; pSingleInput &lt;*&gt; pSingleOutput
 </code></pre>
-<p>Our interface is still incomplete, we should still combine
-<code>pConvertSingle</code> and <code>pConvertDir</code> and offer them as alternative
-options for our interface.</p>
+<h4 id="commands-and-subparsers"><a class="header" href="#commands-and-subparsers">Commands and subparsers</a></h4>
+<p>We currently have two possible operations in our interface,
+convert a single source, or convert a directory. A nice interface for
+selecting the right operation would be via commands.
+If the user would like to convert a single source, they can use
+<code>convert</code>, for a directory, <code>convert-dir</code>.</p>
+<p>We can create a a parser with commands with the <code>subparser</code> and <code>command</code>
+functions:</p>
+<pre><code class="language-hs">subparser :: Mod CommandFields a -&gt; Parser a
+
+command :: String -&gt; ParserInfo a -&gt; Mod CommandFields a
+</code></pre>
+<p><code>subparser</code> takes <em>command modifiers</em> (which can be constructed
+with the <code>command</code> function) as input, and produces a <code>Parser</code>.
+<code>command</code> takes the command name (in our case &quot;convert&quot; or &quot;convert-dir&quot;)
+and a <code>ParserInfo a</code>, and produces a command modifier. As we've seen
+before these modifiers have a <code>Monoid</code> instance and they can be
+composed, meaning that we can append multiple commands to serve as alternatives.</p>
+<p>A <code>ParserInfo a</code> can be constructed with the <code>info</code> function:</p>
+<pre><code class="language-hs">info :: Parser a -&gt; InfoMod a -&gt; ParserInfo a
+</code></pre>
+<p>This function wraps a <code>Parser</code> with some additional information
+such as a helper message, description, and more, so that the program
+itself and each sub command can print some additional information.</p>
+<p>Let's see how to construct a <code>ParserInfo</code>:</p>
+<pre><code class="language-hs">pConvertSingleInfo :: ParserInfo Options
+pConvertSingleInfo =
+  info
+    (helper &lt;*&gt; pConvertSingle)
+    (progDesc &quot;Convert a single markup source to html&quot;)
+</code></pre>
+<p>Note that <code>helper</code> adds a helper output screen in case the parser fails.</p>
+<p>Let's also build a command:</p>
+<pre><code class="language-hs">pConvertSingleCommand :: Mod CommandFields Options
+pConvertSingleCommand =
+  command &quot;convert&quot; pConvertSingleInfo
+</code></pre>
+<p>Try creating a <code>Parser Options</code> combining the two options with <code>subparser</code>.</p>
+<details><summary>Solution</summary>
 <pre><code class="language-hs">pOptions :: Parser Options
-pOptions = pConvertSingle &lt;|&gt; pConvertDir
+pOptions =
+  subparser
+    ( command
+      &quot;convert&quot;
+      ( info
+        (helper &lt;*&gt; pConvertSingle)
+        (progDesc &quot;Convert a single markup source to html&quot;)
+      )
+      &lt;&gt; command
+      &quot;convert-dir&quot;
+      ( info
+        (helper &lt;*&gt; pConvertDir)
+        (progDesc &quot;Convert a directory of markup files to html&quot;)
+      )
+    )
 </code></pre>
+</details>
 <h4 id="parserinfo"><a class="header" href="#parserinfo">ParserInfo</a></h4>
-<p>When we finished building a parser, we should wrap it up in a <code>ParserInfo</code>
-that adds some extra information to the parser (such as a helper message,
-program description, and more depending on what we'd like to add),
-and make it ready to run. The optparse-applicative tutorial suggests something like this:</p>
+<p>Since we finished building a parser, we should wrap it up in a <code>ParserInfo</code>
+and add some information to it to make it ready to run.</p>
 <pre><code class="language-hs">opts :: ParserInfo Options
 opts =
-  info (pOptions &lt;**&gt; helper)
+  info (helper &lt;*&gt; pOptions)
     ( fullDesc
       &lt;&gt; header &quot;hs-blog-gen - a static blog generator&quot;
       &lt;&gt; progDesc &quot;Convert markup files or directories to html&quot;
     )
 </code></pre>
-<p>Here, <code>info</code> generates a <code>ParserInfo</code> for a parser with additional information
-to print, and, <code>helper</code> adds a helper output screen in case the parser fails.</p>
 <h3 id="running-a-parser"><a class="header" href="#running-a-parser">Running a parser</a></h3>
 <p><code>optparse-applicative</code> provides non-<code>IO</code> interface to parse arguments,
 but the most convenient way to use it is to let it take care of fetching
 program arguments, try to parse them, and throw errors and help messages in case
 it fails. This can be done with the function <code>execParser :: ParserInfo a -&gt; IO a</code>.</p>
-<p>Right after <code>main</code> start, we can run a parser and take the result using <code>&lt;-</code>.</p>
-<pre><code class="language-hs">main :: IO ()
-main = do
-  options &lt;- execParser opts
-  -- ... rest of the program
-</code></pre>
-<p>Let's see our program up until now in <code>app/Main.hs</code>:</p>
-<pre><code class="language-hs">-- | Entry point for the hs-blog-gen program
+<p>We can place all this options parsing stuff in a new module
+and then import it from <code>app/Main.hs</code>. Let's do that,
+here's what we have up until now:</p>
+<details><summary>app/OptParse.hs</summary>
+<pre><code class="language-hs">-- | Command-line options parsing
 
-module Main where
+module OptParse
+  ( Options(..)
+  , SingleInput(..)
+  , SingleOutput(..)
+  , parse
+  )
+  where
 
+import Data.Maybe (fromMaybe)
 import Options.Applicative
-
-main :: IO ()
-main = do
-  options &lt;- execParser opts
-  error &quot;not implemented yet&quot;
 
 ------------------------------------------------
 -- * Our command-line options model
@@ -5000,6 +5046,10 @@ data SingleOutput
 ------------------------------------------------
 -- * Parser
 
+-- | Parse command-line options
+parse :: IO Options
+parse = execParser opts
+
 opts :: ParserInfo Options
 opts =
   info (pOptions &lt;**&gt; helper)
@@ -5010,7 +5060,21 @@ opts =
 
 -- | Parser for all options
 pOptions :: Parser Options
-pOptions = pConvertSingle &lt;|&gt; pConvertDir
+pOptions =
+  subparser
+    ( command
+      &quot;convert&quot;
+      ( info
+        (helper &lt;*&gt; pConvertSingle)
+        (progDesc &quot;Convert a single markup source to html&quot;)
+      )
+      &lt;&gt; command
+      &quot;convert-dir&quot;
+      ( info
+        (helper &lt;*&gt; pConvertDir)
+        (progDesc &quot;Convert a directory of markup files to html&quot;)
+      )
+    )
 
 ------------------------------------------------
 -- * Single source to sink conversion parser
@@ -5018,17 +5082,17 @@ pOptions = pConvertSingle &lt;|&gt; pConvertDir
 -- | Parser for single source to sink option
 pConvertSingle :: Parser Options
 pConvertSingle =
-  ConvertDir &lt;$&gt; pSingleInput &lt;*&gt; pSingleOutput
+  ConvertSingle &lt;$&gt; pSingleInput &lt;*&gt; pSingleOutput
 
 -- | Parser for single input source
 pSingleInput :: Parser SingleInput
 pSingleInput =
-  pInputFile &lt;|&gt; pStdin
+  fromMaybe Stdin &lt;$&gt; optional pInputFile
 
 -- | Parser for single output sink
 pSingleOutput :: Parser SingleOutput
 pSingleOutput =
-  pOutputFile &lt;|&gt; pStdout
+  fromMaybe Stdout &lt;$&gt; optional pOutputFile
 
 -- | Input file parser
 pInputFile :: Parser SingleInput
@@ -5038,35 +5102,21 @@ pInputFile = fmap InputFile parser
       strOption
         ( long &quot;input&quot;
           &lt;&gt; short 'i'
-          &lt;&gt; metavar &quot;FILENAME&quot;
+          &lt;&gt; metavar &quot;FILE&quot;
           &lt;&gt; help &quot;Input file&quot;
         )
 
 -- | Output file parser
 pOutputFile :: Parser SingleOutput
-pOutputFile = OutputFile &lt;$&gt; parser -- fmap and &lt;$&gt; are the same
+pOutputFile = OutputFile &lt;$&gt; parser
   where
     parser =
       strOption
         ( long &quot;output&quot;
           &lt;&gt; short 'o'
-          &lt;&gt; metavar &quot;FILENAME&quot;
+          &lt;&gt; metavar &quot;FILE&quot;
           &lt;&gt; help &quot;Output file&quot;
         )
-
--- | stdin parser
-pStdin :: Parser SingleInput
-pStdin =
-  flag' Stdin
-    ( help &quot;Standard input&quot;
-    )
-
--- | stdout parser
-pStdout :: Parser SingleOutput
-pStdout =
-  flag' Stdout
-    ( help &quot;Standard output&quot;
-    )
 
 ------------------------------------------------
 -- * Directory conversion parser
@@ -5081,7 +5131,7 @@ pInputDir =
   strOption
     ( long &quot;input&quot;
       &lt;&gt; short 'i'
-      &lt;&gt; metavar &quot;DIRECTORYNAME&quot;
+      &lt;&gt; metavar &quot;DIRECTORY&quot;
       &lt;&gt; help &quot;Input directory&quot;
     )
 
@@ -5091,16 +5141,17 @@ pOutputDir =
   strOption
     ( long &quot;output&quot;
       &lt;&gt; short 'o'
-      &lt;&gt; metavar &quot;DIRECTORYNAME&quot;
+      &lt;&gt; metavar &quot;DIRECTORY&quot;
       &lt;&gt; help &quot;Output directory&quot;
     )
 </code></pre>
-<h3 id="pattern-matching-on-the-command-options"><a class="header" href="#pattern-matching-on-the-command-options">Pattern matching on the command options</a></h3>
+</details>
+<h3 id="pattern-matching-on-options"><a class="header" href="#pattern-matching-on-options">Pattern matching on Options</a></h3>
 <p>After running the command-line arguments parser, we can pattern match
 on our model and call the right functions. Currently, our program
 does not expose this kind of API. So let's go to our <code>src/HsBlog.hs</code>
 module and change the API. We can delete <code>main</code> from that file and
-add two functions instead:</p>
+add two new functions instead:</p>
 <pre><code class="language-hs">convertSingle :: Html.Title -&gt; Handle -&gt; Handle -&gt; IO ()
 
 convertDirectory :: FilePath -&gt; FilePath -&gt; IO ()
@@ -5120,55 +5171,18 @@ convertSingle title input output = do
 get the files in a directory,
 do something <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Foldable.html#v:for_">for_</a> each file, and so on.
 The API from the
-<a href="https://hackage.haskell.org/package/directory-1.3.7.0/docs/System-Directory.html"><code>directory</code></a> can help us do that. Make sure to add the dependency to the cabal file
-in the <code>library</code> section.</p>
+<a href="https://hackage.haskell.org/package/directory-1.3.7.0/docs/System-Directory.html"><code>directory</code></a> can help us do that.</p>
+<p>Try doing that if you'd like!</p>
 <hr />
 <p>In <code>app/Main.hs</code>, we will need to pattern match on the <code>Options</code> and
-prepare to call the right functions from <code>HsBlog</code>:</p>
-<p>Add:</p>
-<pre><code class="language-hs">import System.IO
-</code></pre>
-<p>And:</p>
-<pre><code class="language-hs">run :: Options -&gt; IO ()
-run options =
-  case options of
-    ConvertDir input output -&gt;
-      convertDirectory input output
-
-    ConvertSingle input output -&gt; do
-      (title, inputHandle) &lt;-
-        case input of
-          Stdin -&gt;
-            pure (&quot;&quot;, stdin)
-          InputFile file -&gt;
-            (,) file &lt;$&gt; openFile file ReadMode
-
-      outputHandle &lt;-
-        case output of
-          Stdout -&gt; pure stdout
-          OutputFile file -&gt; do
-            exists &lt;- doesFileExist file
-            shouldOpenFile &lt;-
-              if exists
-                then confirm
-                else pure True
-            if shouldOpenFile
-              then
-                openFile file WriteMode
-              else
-                exitFailure
-
-      convertSingle title inputHandle outputHandle
-      hClose inputHandle
-      hClose outputHandle
-</code></pre>
+prepare to call the right functions from <code>HsBlog</code>.</p>
 <p>Let's look at our full <code>app/Main.hs</code> and <code>src/HsBlog.hs</code>:</p>
 <details><summary>app/Main.hs</summary>
 <pre><code class="language-hs">-- | Entry point for the hs-blog-gen program
 
 module Main where
 
-import Options.Applicative
+import OptParse
 import HsBlog
 
 import System.Exit (exitFailure)
@@ -5177,12 +5191,7 @@ import System.IO
 
 main :: IO ()
 main = do
-  options &lt;- execParser opts
-  run options
-
--- | Run the generator
-run :: Options -&gt; IO ()
-run options =
+  options &lt;- parse
   case options of
     ConvertDir input output -&gt;
       convertDirectory input output
@@ -5213,126 +5222,6 @@ run options =
       convertSingle title inputHandle outputHandle
       hClose inputHandle
       hClose outputHandle
-
-------------------------------------------------
--- * Our command-line options model
-
--- | Model
-data Options
-  = ConvertSingle SingleInput SingleOutput
-  | ConvertDir FilePath FilePath
-  deriving Show
-
--- | A single input source
-data SingleInput
-  = Stdin
-  | InputFile FilePath
-  deriving Show
-
--- | A single output sink
-data SingleOutput
-  = Stdout
-  | OutputFile FilePath
-  deriving Show
-
-------------------------------------------------
--- * Parser
-
-opts :: ParserInfo Options
-opts =
-  info (pOptions &lt;**&gt; helper)
-    ( fullDesc
-      &lt;&gt; header &quot;hs-blog-gen - a static blog generator&quot;
-      &lt;&gt; progDesc &quot;Convert markup files or directories to html&quot;
-    )
-
--- | Parser for all options
-pOptions :: Parser Options
-pOptions = pConvertSingle &lt;|&gt; pConvertDir
-
-------------------------------------------------
--- * Single source to sink conversion parser
-
--- | Parser for single source to sink option
-pConvertSingle :: Parser Options
-pConvertSingle =
-  ConvertDir &lt;$&gt; pInputDir &lt;*&gt; pOutputDir
-
--- | Parser for single input source
-pSingleInput :: Parser SingleInput
-pSingleInput =
-  pInputFile &lt;|&gt; pStdin
-
--- | Parser for single output sink
-pSingleOutput :: Parser SingleOutput
-pSingleOutput =
-  pOutputFile &lt;|&gt; pStdout
-
--- | Input file parser
-pInputFile :: Parser SingleInput
-pInputFile = fmap InputFile parser
-  where
-    parser =
-      strOption
-        ( long &quot;input&quot;
-          &lt;&gt; short 'i'
-          &lt;&gt; metavar &quot;FILENAME&quot;
-          &lt;&gt; help &quot;Input file&quot;
-        )
-
--- | Output file parser
-pOutputFile :: Parser SingleOutput
-pOutputFile = OutputFile &lt;$&gt; parser -- fmap and &lt;$&gt; are the same
-  where
-    parser =
-      strOption
-        ( long &quot;output&quot;
-          &lt;&gt; short 'o'
-          &lt;&gt; metavar &quot;FILENAME&quot;
-          &lt;&gt; help &quot;Output file&quot;
-        )
-
--- | stdin parser
-pStdin :: Parser SingleInput
-pStdin =
-  flag' Stdin
-    ( help &quot;Standard input&quot;
-    )
-
--- | stdout parser
-pStdout :: Parser SingleOutput
-pStdout =
-  flag' Stdout
-    ( help &quot;Standard output&quot;
-    )
-
-------------------------------------------------
--- * Directory conversion parser
-
-pConvertDir :: Parser Options
-pConvertDir =
-  ConvertDir &lt;$&gt; pInputDir &lt;*&gt; pOutputDir
-
--- | Parser for input directory
-pInputDir :: Parser FilePath
-pInputDir =
-  strOption
-    ( long &quot;input&quot;
-      &lt;&gt; short 'i'
-      &lt;&gt; metavar &quot;DIRECTORYNAME&quot;
-      &lt;&gt; help &quot;Input directory&quot;
-    )
-
--- | Parser for output directory
-pOutputDir :: Parser FilePath
-pOutputDir =
-  strOption
-    ( long &quot;output&quot;
-      &lt;&gt; short 'o'
-      &lt;&gt; metavar &quot;DIRECTORYNAME&quot;
-      &lt;&gt; help &quot;Output directory&quot;
-    )
-
 
 ------------------------------------------------
 -- * Utilities
@@ -5376,6 +5265,39 @@ process :: Html.Title -&gt; String -&gt; String
 process title = Html.render . convert title . Markup.parse
 </code></pre>
 </details>
+<p>We need to make a few small changes to the cabal file.</p>
+<p>First, we need to add the dependency <code>directory</code> to the <code>executable</code>,
+because we use the library <code>System.Directory</code> in <code>Main</code>.</p>
+<p>Second, we need to list <code>OptParse</code> in the list of modules in
+the <code>executable</code>. Below <code>main-is: Main.hs</code>, add:</p>
+<pre><code class="language-cabal">  other-modules:
+    OptParse
+</code></pre>
+<h2 id="summary-5"><a class="header" href="#summary-5">Summary</a></h2>
+<p>We've learned about a new fancy library called <code>optparse-applicative</code>
+and used it to create a fancier command-line interface in a declarative way.
+See the result of running <code>hs-blog-gen --help</code>:</p>
+<pre><code>hs-blog-gen - a static blog generator
+
+Usage: hs-blog-gen COMMAND
+  Convert markup files or directories to html
+
+Available options:
+  -h,--help                Show this help text
+
+Available commands:
+  convert                  Convert a single markup source to html
+  convert-dir              Convert a directory of markup files to html
+</code></pre>
+<p>Along the way we've learned two powerful new abstractions, <code>Functor</code>
+and <code>Applicative</code>. As well as revisted an abstraction we we're familiar
+with called <code>Monoid</code>. With this library we've seen (another) example
+of the usefulness of these abstractions for constructing APIs and EDSLs.</p>
+<p>We will continue to meet these abstractions in the rest of the book.</p>
+<hr />
+<p><strong>Exercise</strong>: Add another flag named <code>--replace</code> to indicate that
+if the output file or directory already exists, it's okay to replace them.</p>
+<hr />
 <div style="break-before: page; page-break-before: always;"></div><h1 id="where-to-go-next"><a class="header" href="#where-to-go-next">Where to go next?</a></h1>
 <p>Haskell is an incredibly rich and deep programming language.
 New cutting-edge techniques, concepts and features are still being discovered
