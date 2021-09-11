@@ -4661,10 +4661,10 @@ have a shortend flag name, we don't have to add it.</p>
 a good step in the right direction, but it is not exactly what we need
 for a <code>SingleConvert</code>. We need a <code>Parser SingleInput</code> and a
 <code>Parser SingleOutput</code>. If we had a <code>FilePath</code>, we could convert
-it into <code>SingleInput</code> by using the <code>FileInput</code> constructor.
-Remember, <code>FileInput</code> is also a function:</p>
-<pre><code class="language-hs">FileInput :: FilePath -&gt; SingleInput
-FileOutput :: FilePath -&gt; SingleOutput
+it into <code>SingleInput</code> by using the <code>InputFile</code> constructor.
+Remember, <code>InputFile</code> is also a function:</p>
+<pre><code class="language-hs">InputFile :: FilePath -&gt; SingleInput
+OutputFile :: FilePath -&gt; SingleOutput
 </code></pre>
 <p>However, to convert a parser, we need functions with these types:</p>
 <pre><code class="language-hs">f :: Parser FilePath -&gt; Parser SingleInput
@@ -4748,7 +4748,7 @@ on the metaphor and think about it as it is - an interface with laws.</p>
 <p>We can use <code>fmap</code> on <code>Parser</code> to make a parser that returns <code>FilePath</code>
 return a <code>SingleInput</code> or <code>SingleOutput</code> instead:</p>
 <pre><code class="language-hs">pInputFile :: Parser SingleInput
-pInputFile = fmap FileInput parser
+pInputFile = fmap InputFile parser
   where
     parser =
       strOption
@@ -4759,7 +4759,7 @@ pInputFile = fmap FileInput parser
         )
 
 pOutputFile :: Parser SingleOutput
-pOutputFile = FileOutput &lt;$&gt; parser -- fmap and &lt;$&gt; are the same
+pOutputFile = OutputFile &lt;$&gt; parser -- fmap and &lt;$&gt; are the same
   where
     parser =
       strOption
@@ -4906,7 +4906,7 @@ very common and is mostly used for parsing libraries,
 but it provides us with an interface to combine two <code>Parser</code>s.
 If the first one fails to parse, we try the other.</p>
 <p>We can create new parsers <code>pStdin</code> and <code>pStdout</code>:</p>
-<pre><code class="language-hs">pStdIn :: Parser SingleInput
+<pre><code class="language-hs">pStdin :: Parser SingleInput
 pStdin =
   flag' Stdin
     ( help &quot;Standard input&quot;
@@ -4923,9 +4923,9 @@ pStdout =
 pSingleInput =
   pInputFile &lt;|&gt; pStdin
 
-pSingleOutput :: Parser SingleInput
+pSingleOutput :: Parser SingleOutput
 pSingleOutput =
-  pInputFile &lt;|&gt; pStdout
+  pOutputFile &lt;|&gt; pStdout
 </code></pre>
 <p>And use those for <code>pConvertSingle</code> instead:</p>
 <pre><code class="language-hs">pConvertSingle :: Parser Options
@@ -5026,13 +5026,13 @@ pSingleInput =
   pInputFile &lt;|&gt; pStdin
 
 -- | Parser for single output sink
-pSingleOutput :: Parser SingleInput
+pSingleOutput :: Parser SingleOutput
 pSingleOutput =
-  pInputFile &lt;|&gt; pStdout
+  pOutputFile &lt;|&gt; pStdout
 
 -- | Input file parser
 pInputFile :: Parser SingleInput
-pInputFile = fmap FileInput parser
+pInputFile = fmap InputFile parser
   where
     parser =
       strOption
@@ -5044,7 +5044,7 @@ pInputFile = fmap FileInput parser
 
 -- | Output file parser
 pOutputFile :: Parser SingleOutput
-pOutputFile = FileOutput &lt;$&gt; parser -- fmap and &lt;$&gt; are the same
+pOutputFile = OutputFile &lt;$&gt; parser -- fmap and &lt;$&gt; are the same
   where
     parser =
       strOption
@@ -5055,7 +5055,7 @@ pOutputFile = FileOutput &lt;$&gt; parser -- fmap and &lt;$&gt; are the same
         )
 
 -- | stdin parser
-pStdIn :: Parser SingleInput
+pStdin :: Parser SingleInput
 pStdin =
   flag' Stdin
     ( help &quot;Standard input&quot;
@@ -5139,15 +5139,24 @@ run options =
       (title, inputHandle) &lt;-
         case input of
           Stdin -&gt;
-            (,) &quot;&quot; &lt;$&gt; stdin
+            pure (&quot;&quot;, stdin)
           InputFile file -&gt;
             (,) file &lt;$&gt; openFile file ReadMode
 
       outputHandle &lt;-
         case output of
-          Stdout -&gt; stdout
-          OutputFile file -&gt;
-            openFile file WriteMode
+          Stdout -&gt; pure stdout
+          OutputFile file -&gt; do
+            exists &lt;- doesFileExist file
+            shouldOpenFile &lt;-
+              if exists
+                then confirm
+                else pure True
+            if shouldOpenFile
+              then
+                openFile file WriteMode
+              else
+                exitFailure
 
       convertSingle title inputHandle outputHandle
       hClose inputHandle
@@ -5162,10 +5171,14 @@ module Main where
 import Options.Applicative
 import HsBlog
 
+import System.Exit (exitFailure)
+import System.Directory (doesFileExist)
+import System.IO
+
 main :: IO ()
 main = do
   options &lt;- execParser opts
-  error &quot;not implemented yet&quot;
+  run options
 
 -- | Run the generator
 run :: Options -&gt; IO ()
@@ -5178,15 +5191,24 @@ run options =
       (title, inputHandle) &lt;-
         case input of
           Stdin -&gt;
-            (,) &quot;&quot; &lt;$&gt; stdin
+            pure (&quot;&quot;, stdin)
           InputFile file -&gt;
             (,) file &lt;$&gt; openFile file ReadMode
 
       outputHandle &lt;-
         case output of
-          Stdout -&gt; stdout
-          OutputFile file -&gt;
-            openFile file WriteMode
+          Stdout -&gt; pure stdout
+          OutputFile file -&gt; do
+            exists &lt;- doesFileExist file
+            shouldOpenFile &lt;-
+              if exists
+                then confirm
+                else pure True
+            if shouldOpenFile
+              then
+                openFile file WriteMode
+              else
+                exitFailure
 
       convertSingle title inputHandle outputHandle
       hClose inputHandle
@@ -5234,7 +5256,7 @@ pOptions = pConvertSingle &lt;|&gt; pConvertDir
 -- | Parser for single source to sink option
 pConvertSingle :: Parser Options
 pConvertSingle =
-  ConvertDir &lt;$&gt; pSingleInput &lt;*&gt; pSingleOutput
+  ConvertDir &lt;$&gt; pInputDir &lt;*&gt; pOutputDir
 
 -- | Parser for single input source
 pSingleInput :: Parser SingleInput
@@ -5242,13 +5264,13 @@ pSingleInput =
   pInputFile &lt;|&gt; pStdin
 
 -- | Parser for single output sink
-pSingleOutput :: Parser SingleInput
+pSingleOutput :: Parser SingleOutput
 pSingleOutput =
-  pInputFile &lt;|&gt; pStdout
+  pOutputFile &lt;|&gt; pStdout
 
 -- | Input file parser
 pInputFile :: Parser SingleInput
-pInputFile = fmap FileInput parser
+pInputFile = fmap InputFile parser
   where
     parser =
       strOption
@@ -5260,7 +5282,7 @@ pInputFile = fmap FileInput parser
 
 -- | Output file parser
 pOutputFile :: Parser SingleOutput
-pOutputFile = FileOutput &lt;$&gt; parser -- fmap and &lt;$&gt; are the same
+pOutputFile = OutputFile &lt;$&gt; parser -- fmap and &lt;$&gt; are the same
   where
     parser =
       strOption
@@ -5271,7 +5293,7 @@ pOutputFile = FileOutput &lt;$&gt; parser -- fmap and &lt;$&gt; are the same
         )
 
 -- | stdin parser
-pStdIn :: Parser SingleInput
+pStdin :: Parser SingleInput
 pStdin =
   flag' Stdin
     ( help &quot;Standard input&quot;
@@ -5310,6 +5332,21 @@ pOutputDir =
       &lt;&gt; metavar &quot;DIRECTORYNAME&quot;
       &lt;&gt; help &quot;Output directory&quot;
     )
+
+
+------------------------------------------------
+-- * Utilities
+
+-- | Confirm user action
+confirm :: IO Bool
+confirm =
+  putStrLn &quot;Are you sure? (y/n)&quot; *&gt;
+    getLine &gt;&gt;= \answer -&gt;
+      case answer of
+        &quot;y&quot; -&gt; pure True
+        &quot;n&quot; -&gt; pure False
+        _ -&gt; putStrLn &quot;Invalid response. use y or n&quot; *&gt;
+          confirm
 </code></pre>
 </details>
 <details><summary>src/HsBlog.hs</summary>
@@ -5325,8 +5362,6 @@ import qualified HsBlog.Markup as Markup
 import qualified HsBlog.Html as Html
 import HsBlog.Convert (convert)
 
-import System.Directory (doesFileExist)
-import System.Environment (getArgs)
 import System.IO
 
 convertSingle :: Html.Title -&gt; Handle -&gt; Handle -&gt; IO ()
@@ -5339,24 +5374,6 @@ convertDirectory = error &quot;Not implemented&quot;
 
 process :: Html.Title -&gt; String -&gt; String
 process title = Html.render . convert title . Markup.parse
-
-confirm :: IO Bool
-confirm =
-  putStrLn &quot;Are you sure? (y/n)&quot; *&gt;
-    getLine &gt;&gt;= \answer -&gt;
-      case answer of
-        &quot;y&quot; -&gt; pure True
-        &quot;n&quot; -&gt; pure False
-        _ -&gt; putStrLn &quot;Invalid response. use y or n&quot; *&gt;
-          confirm
-
-whenIO :: IO Bool -&gt; IO () -&gt; IO ()
-whenIO cond action =
-  cond &gt;&gt;= \result -&gt;
-    if result
-      then action
-      else pure ()
-
 </code></pre>
 </details>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="where-to-go-next"><a class="header" href="#where-to-go-next">Where to go next?</a></h1>
