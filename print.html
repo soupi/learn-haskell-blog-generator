@@ -3946,6 +3946,9 @@ without breaking purity.</p>
 <p>We have also achieved a major milestone. With this chapter, we implemented
 enough pieces that we can finally run our program on a single document
 and get an html rendered result!</p>
+<blockquote>
+<p>You can view the code we have until now <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/code-after-io">here</a>.</p>
+</blockquote>
 <p>However, our command-line interface is still sub-par. We want to render a blog
 with multiple articles, create a landing page, and more. We still have more to do
 to be able to call our program a blog generator.</p>
@@ -4512,6 +4515,11 @@ our package manager will download and install the required package for us!</p>
 
 4 directories, 10 files
 </code></pre>
+<blockquote>
+<p>You can view the git commit of
+<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/64fcc688c05faf01bff9a39b7e7e70871175b84f">the changes we've made</a>
+and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/code-after-optparse">code up until now</a>.</p>
+</blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="fancy-options-parsing"><a class="header" href="#fancy-options-parsing">Fancy options parsing</a></h1>
 <p>We'd like to define a nicer interface for our program. And while we could manage something
 ourselves with <code>getArgs</code> and pattern matching, using a library for this case is easier.
@@ -5183,7 +5191,7 @@ prepare to call the right functions from <code>HsBlog</code>.</p>
 module Main where
 
 import OptParse
-import HsBlog
+import qualified HsBlog
 
 import System.Exit (exitFailure)
 import System.Directory (doesFileExist)
@@ -5194,7 +5202,7 @@ main = do
   options &lt;- parse
   case options of
     ConvertDir input output -&gt;
-      convertDirectory input output
+      HsBlog.convertDirectory input output
 
     ConvertSingle input output -&gt; do
       (title, inputHandle) &lt;-
@@ -5219,7 +5227,7 @@ main = do
               else
                 exitFailure
 
-      convertSingle title inputHandle outputHandle
+      HsBlog.convertSingle title inputHandle outputHandle
       hClose inputHandle
       hClose outputHandle
 
@@ -5298,6 +5306,11 @@ of the usefulness of these abstractions for constructing APIs and EDSLs.</p>
 <p><strong>Exercise</strong>: Add another flag named <code>--replace</code> to indicate that
 if the output file or directory already exists, it's okay to replace them.</p>
 <hr />
+<blockquote>
+<p>You can view the git commit of
+<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/a4269bf6631a9270dc0b87a1560897cb86185add">the changes we've made</a>
+and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/code-after-optparse">code up until now</a>.</p>
+</blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="where-to-go-next"><a class="header" href="#where-to-go-next">Where to go next?</a></h1>
 <p>Haskell is an incredibly rich and deep programming language.
 New cutting-edge techniques, concepts and features are still being discovered

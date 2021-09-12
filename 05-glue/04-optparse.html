@@ -814,7 +814,7 @@ prepare to call the right functions from <code>HsBlog</code>.</p>
 module Main where
 
 import OptParse
-import HsBlog
+import qualified HsBlog
 
 import System.Exit (exitFailure)
 import System.Directory (doesFileExist)
@@ -825,7 +825,7 @@ main = do
   options &lt;- parse
   case options of
     ConvertDir input output -&gt;
-      convertDirectory input output
+      HsBlog.convertDirectory input output
 
     ConvertSingle input output -&gt; do
       (title, inputHandle) &lt;-
@@ -850,7 +850,7 @@ main = do
               else
                 exitFailure
 
-      convertSingle title inputHandle outputHandle
+      HsBlog.convertSingle title inputHandle outputHandle
       hClose inputHandle
       hClose outputHandle
 
@@ -929,6 +929,11 @@ of the usefulness of these abstractions for constructing APIs and EDSLs.</p>
 <p><strong>Exercise</strong>: Add another flag named <code>--replace</code> to indicate that
 if the output file or directory already exists, it's okay to replace them.</p>
 <hr />
+<blockquote>
+<p>You can view the git commit of
+<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/a4269bf6631a9270dc0b87a1560897cb86185add">the changes we've made</a>
+and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/code-after-optparse">code up until now</a>.</p>
+</blockquote>
 
                     </main>
 
