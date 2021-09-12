@@ -1,0 +1,51 @@
+cabal-version:       2.4
+
+name:                hs-blog
+version:             0.1.0.0
+synopsis:            A custom blog generator from markup files
+description:         This package provides a static blog generator
+                     from a custom markup format to HTML.
+                     It defines a parsing for this custom markup format
+                     as well as an html pretty printer EDSL.
+
+                     It is used as the example project in the online book
+                     'Learn Haskell Blog Generator'. See the README for
+                     more details.
+homepage:            https://github.com/soupi/learn-haskell-blog-generator
+bug-reports:         https://github.com/soupi/learn-haskell-blog-generator/issues
+license:             BSD-3-Clause
+license-file:        LICENSE.txt
+author:              Gil Mizrahi
+maintainer:          gilmi@posteo.net
+category:            Learning, Web
+extra-doc-files:
+  README.md
+
+common common-settings
+  default-language: Haskell2010
+  ghc-options:
+    -Wall
+
+library
+  import: common-settings
+  hs-source-dirs: src
+  build-depends:
+      base
+    , directory
+  exposed-modules:
+    HsBlog
+      HsBlog.Convert
+      HsBlog.Html
+        HsBlog.Html.Internal
+      HsBlog.Markup
+  -- other-modules:
+
+executable hs-blog-gen
+  import: common-settings
+  hs-source-dirs: app
+  main-is: Main.hs
+  build-depends:
+      base
+    , hs-blog
+  ghc-options:
+    -O
