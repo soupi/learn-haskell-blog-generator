@@ -1,4 +1,7 @@
+dist/
+dist-newstyle/
 .stack-work/
 *~
-
 output/
+*.o
+*.hi
