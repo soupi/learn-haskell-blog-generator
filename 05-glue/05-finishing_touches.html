@@ -356,6 +356,31 @@ such as the first header and paragraph). Our output should be an <code>Html</cod
 <p>We need to implement the following function:</p>
 <pre><code class="language-hs">buildIndex :: [(FilePath, Markup)] -&gt; Html
 </code></pre>
+<details><summary>Solution</summary>
+<pre><code class="language-hs">buildIndex :: [(FilePath, Markup.Document)] -&gt; Html.Html
+buildIndex files =
+  let
+    previews =
+      map
+        ( \(file, doc) -&gt;
+          case doc of
+            Markup.Header 1 header : article -&gt;
+              Html.h_ 3 (Html.link_ file (Html.txt_ header))
+                &lt;&gt; foldMap convertStructure (take 3 article)
+                &lt;&gt; Html.p_ (Html.link_ file (Html.txt_ &quot;...&quot;))
+            _ -&gt;
+              Html.h_ 3 (Html.link_ file (Html.txt_ file))
+        )
+        files
+  in
+    Html.html_
+      &quot;Blog&quot;
+      ( Html.h1_ (Html.link_ &quot;index.html&quot; (Html.txt_ &quot;Blog&quot;))
+        &lt;&gt; Html.h_ 2 (Html.txt_ &quot;Posts&quot;)
+        &lt;&gt; mconcat previews
+      )
+</code></pre>
+</details>
 <h2 id="processing-directories"><a class="header" href="#processing-directories">Processing directories</a></h2>
 <p>As was hinted in the last chapter, we are going to use the
 <a href="https://hackage.haskell.org/package/directory-1.3.7.0/docs/System-Directory.html"><code>directory</code></a>
