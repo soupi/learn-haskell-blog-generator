@@ -388,10 +388,307 @@ package to complete our task. We need to:</p>
 <ul>
 <li>Create the output directory</li>
 <li>Grab all file names in a directory</li>
-<li>Filter them according to their extension, we want to process <code>txt</code> file and copy other files without modification</li>
-<li>We want to parse each text file, build an index of the result, convert the files to html, and write everything
-to the target directory</li>
+<li>Filter them according to their extension, we want to process <code>txt</code> file and
+copy other files without modification</li>
+<li>We want to parse each text file, build an index of the result,
+convert the files to html, and write everything to the target directory</li>
 </ul>
+<p>While our parsing function can't really fail, trying to read or write a file
+to the filesystem can fail in several way. It would be nice if our silly little
+static blog generator was robust enough that it wouldn't fail completely if one
+single file gave it some trouble. This is a good oportunity to learn about
+error handling in Haskell, both in uneffectful code and for I/O code.</p>
+<h3 id="handling-errors-with-either"><a class="header" href="#handling-errors-with-either">Handling errors with Either</a></h3>
+<p>There are quite a few ways to indicate and handle errors in Haskell.
+We are going to look at one solution: using the type
+<a href="https://hackage.haskell.org/package/base-4.12.0.0/docs/Data-Either.html">Either</a>.
+Either is defined like this:</p>
+<pre><code class="language-hs">data Either a b
+  = Left a
+  | Right b
+</code></pre>
+<p>Simply put, a value of type <code>Either a b</code> can contain either a value of type <code>a</code>,
+or a value of type <code>b</code>.
+We can tell them apart from the contructor used.</p>
+<pre><code class="language-hs">Left True :: Either Bool b
+Right 'a' :: Either a Char
+</code></pre>
+<p>Using this type, we can represent computations that may fail by using the
+<code>Left</code> constructor to indicate failure with some error value attached,
+and the <code>Right</code> constructor with one type to represent success with the
+expected result.</p>
+<p>Since <code>Either</code> is polymorphic, we can use any two types to represent
+failure and success. It is often useful to describe the failure modes
+using an ADT.</p>
+<p>For example, let's say that we want to parse a <code>Char</code> as a decimal digit
+to an <code>Int</code>. This operation could fail if the Character is not a digit.
+We can represent this error a data type:</p>
+<pre><code class="language-hs">data ParseDigitError
+  = NotADigit Char
+  deriving Show
+</code></pre>
+<p>And our parsing function can have the type:</p>
+<pre><code class="language-hs">parseDigit :: Char -&gt; Either ParseDigitError Int
+</code></pre>
+<p>Now when we implement our parsing function we can return <code>Left</code> on an error
+describing the problem, and <code>Right</code> with the parsed value on successful parsing:</p>
+<pre><code class="language-hs">parseDigit :: Char -&gt; Either ParseDigitError Int
+parseDigit c =
+  case c of
+    '0' -&gt; Right 0
+    '1' -&gt; Right 1
+    '2' -&gt; Right 2
+    '3' -&gt; Right 3
+    '4' -&gt; Right 4
+    '5' -&gt; Right 5
+    '6' -&gt; Right 6
+    '7' -&gt; Right 7
+    '8' -&gt; Right 8
+    '9' -&gt; Right 9
+    _ -&gt; Left (NotADigit c)
+</code></pre>
+<p><code>Either a</code> is also an instance of <code>Functor</code> and <code>Applicative</code>,
+so we have some combinators to work with if we want to combine these
+kind of computations.</p>
+<p>For example, if we had three characters and we wanted to try and parse
+each of them and then find the maximum between them, we could use the
+applicative interface:</p>
+<pre><code class="language-hs">max3chars :: Char -&gt; Char -&gt; Char -&gt; Either ParseDigitError Int
+max3chars x y z =
+  (\a b c -&gt; max a (max b c))
+    &lt;$&gt; parseDigit x
+    &lt;*&gt; parseDigit y
+    &lt;*&gt; parseDigit z
+</code></pre>
+<p>The <code>Functor</code> and <code>Applicative</code> interfaces of <code>Either a</code> allow us to
+apply functions on the payload values of <code>Either a</code> types (where the <code>a</code> is the
+same between all of applied values them) and <strong>delay</strong> the error handling to a
+later phase. Semantically, the first Either in order that returns a <code>Left</code>
+will be the return value. We can see how this works in the implementation
+of the applicative instance:</p>
+<pre><code class="language-hs">instance Applicative (Either e) where
+    pure          = Right
+    Left  e &lt;*&gt; _ = Left e
+    Right f &lt;*&gt; r = fmap f r
+</code></pre>
+<p>At some point, someone who will actually want to <strong>inspect</strong> the result
+and see if we got an error (with the <code>Left</code> constructor) or the expected value
+(with the <code>Right</code> constructor) by pattern matching on the result.</p>
+<h4 id="multiple-errors"><a class="header" href="#multiple-errors">Multiple errors</a></h4>
+<p>Note, since <code>Either</code> has the kind <code>* -&gt; * -&gt; *</code> (it takes two type
+parameters) <code>Either</code> cannot be an instance of <code>Functor</code> and <code>Applicative</code>,
+instances for these type classes can only be implemented for types that have the
+kind <code>* -&gt; *</code>.
+Remember that when we look at a type class function signature like:</p>
+<pre><code class="language-hs">fmap :: Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+</code></pre>
+<p>And we want to implement it for a specific type (in place of the <code>f</code>),
+we need to be able to <em>substitute</em> the <code>f</code> with the target type. If we'd try
+to do it with <code>Either</code> we'll get:</p>
+<pre><code class="language-hs">fmap :: (a -&gt; b) -&gt; Either a -&gt; Either b
+</code></pre>
+<p>And neither <code>Either a</code> or <code>Either b</code> are <em>saturated</em>, so this won't type check.
+For the same reason if we'll try to substitute <code>f</code> with, say, <code>Int</code>, we'll get:</p>
+<pre><code class="language-hs">fmap :: (a -&gt; b) -&gt; Int a -&gt; Int b
+</code></pre>
+<p>Which also doesn't make sense.</p>
+<p>So while we can't use <code>Either</code>, we can use <code>Either e</code>, which has the kind
+<code>* -&gt; *</code>. Now let's try substituting <code>f</code> with <code>Either e</code> in this signature:</p>
+<pre><code class="language-hs">liftA2 :: Applicative =&gt; (a -&gt; b -&gt; c) -&gt; f a -&gt; f b -&gt; f c
+</code></pre>
+<p>And we'll get:</p>
+<pre><code class="language-hs">liftA2 :: (a -&gt; b -&gt; c) -&gt; Either e a -&gt; Either e b -&gt; Either e c
+</code></pre>
+<p>What this teaches us is that we can only use the applicative interface to
+combine two <code>Either</code> <strong>with the same type for the <code>Left</code> constructor</strong>.</p>
+<p>So what can we do if we have two functions that can return different errors?
+There are a few approaches, the most prominent ones are:</p>
+<ol>
+<li>Make them return the same error type. Write an ADT that holds all possible
+error descriptions. This can work in some cases but isn't always ideal
+because for example a user calling <code>parseDigit</code> shouldn't be force to
+handle a possible case that the input might be an empty string.</li>
+<li>Use a specialized error type for each type, and when they are composed together,
+map the error type of each function to a more general error type. This can
+be done with the function <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Bifunctor.html#v:first"><code>first</code></a> from the <code>Bifunctor</code> type class.</li>
+</ol>
+<h4 id="monadic-interface"><a class="header" href="#monadic-interface">Monadic interface</a></h4>
+<p>The applicative interface allows us to lift a function on to work on multiple
+<code>Either</code> values (or other applicative functor instances such as <code>IO</code> and <code>Parser</code>). 
+But more often than not, we'd like to be able to use a value from one computation
+that might return an error in another computation that might return an error.</p>
+<p>For example, a compiler such has GHC operates in stages, such as lexical analysis,
+parsing, typechecking, and so on. Each stage depends on the output of the stage
+before it, and each stage might fail. We can write the types for these functions:</p>
+<pre><code class="language-hs">tokenize :: String -&gt; Either Error [Token]
+
+parse :: [Token] -&gt; Either Error AST
+
+typcheck :: AST -&gt; Either Error TypedAST
+</code></pre>
+<p>We want to compose these functions so that they work in a chain. The output of <code>tokenize</code>
+goes to <code>parse</code>, the output of <code>parse</code> goes into to <code>typecheck</code>.</p>
+<p>We know that we can lift a function over an <code>Either</code> (and other functors),
+we could also lift a function that returns an <code>Either</code>:</p>
+<pre><code class="language-hs">-- reminder the type of fmap
+fmap :: Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
+-- specialized for `Either Error`
+fmap :: (a -&gt; b) -&gt; Either Error a -&gt; Either Error b
+
+-- here, `a` is [Token] and `b` is `Either Error AST`:
+
+fmap parse (tokenize string) :: Either Error (Either Error AST)
+</code></pre>
+<p>While this code compiles, it isn't great, because we are building
+layers of <code>Either Error</code> and we can't use this trick again with
+<code>typecheck</code>! <code>typecheck</code> expects an <code>AST</code>, but if we try to fmap it
+on <code>fmap parse (tokenize string)</code>, the <code>a</code> will be <code>Either Error AST</code>
+instead.</p>
+<p>What we would really like is to flatten this structure instead of build it.
+If we look at the kind of values <code>Either Error (Either Error AST)</code> could have,
+it looks something like this:</p>
+<ul>
+<li><code>Left &lt;error&gt;</code></li>
+<li><code>Right (Left error)</code></li>
+<li><code>Right (Right &lt;ast&gt;)</code></li>
+</ul>
+<hr />
+<p><strong>Exercise</strong>: What if we just used pattern matching for this instead? How would this look like?</p>
+<details><summary>Solution</summary>
+<pre><code class="language-hs">case tokenize string of
+  Left err -&gt;
+    Left err
+  Right tokens -&gt;
+    case parse tokens of
+      Left err -&gt;
+        Left err
+      Right ast -&gt;
+        typecheck ast
+</code></pre>
+<p>If we run into an error in a stage, we return that error and stop. If we succeed, we
+use the value on the next stage.</p>
+</details>
+<hr />
+<p>Flattening this structure for <code>Either</code> is very similar to that last part - the body
+of the <code>Right tokens</code> case:</p>
+<pre><code class="language-hs">flatten :: Either e (Either e a) -&gt; Either e a
+flatten e =
+  case e of
+    Left l -&gt; Left l
+    Right x -&gt; x
+</code></pre>
+<p>Because we have this function, we can now use it on the output of
+<code>fmap parse (tokenize string) :: Either Error (Either Error AST)</code>
+from before:</p>
+<pre><code>flatten (fmap parse (tokenize string)) :: Either Error AST
+</code></pre>
+<p>And now we can use this function again to compose with <code>typecheck</code>:</p>
+<pre><code>flatten (fmap typecheck (flatten (fmap parse (tokenize string)))) :: Either Error TypedAST
+</code></pre>
+<p>This <code>flatten</code> + <code>fmap</code> combination looks like a reccuring pattern which
+we can combine into a function:</p>
+<pre><code class="language-hs">flatMap :: (a -&gt; Either e b) -&gt; Either a -&gt; Either b
+flatMap func val = flatten (fmap func val)
+</code></pre>
+<p>And now we can write the code this way:</p>
+<pre><code class="language-hs">flatMap typecheck (flatMap parse (tokenize string)) :: Either Error TypedAST
+
+-- Or using backticks syntax to convert the function to infix form:
+typecheck `flatMap` parse `flatMap` tokenize string
+
+-- Or create a custom infix operator: (=&lt;&lt;) = flatMap
+typeCheck =&lt;&lt; parse =&lt;&lt; tokenize string
+</code></pre>
+<p>This function, <code>flatten</code> (and <code>flatMap</code> as well), have different names in Haskell.
+They are called <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Monad.html#v:join"><code>join</code></a>
+and <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Monad.html#v:-61--60--60-"><code>=&lt;&lt;</code></a> (pronounced &quot;reverse bind&quot;),
+and they are the essence of another incredibly useful abstraction in Haskell.</p>
+<p>If we have a type that can implement:</p>
+<ol>
+<li>The <code>Functor</code> interface, specifically the <code>fmap</code> function</li>
+<li>The <code>Applicative</code> interface, most importantly the <code>pure</code> function</li>
+<li>This <code>join</code> function</li>
+</ol>
+<p>They can implement an instance of the <code>Monad</code> type class.</p>
+<p>With functors, we were able to &quot;lift&quot; a function to work over the type implementing the functor type class:</p>
+<pre><code class="language-hs">fmap :: (a -&gt; b) -&gt; f a -&gt; f b
+</code></pre>
+<p>With applicative functors we were able to &quot;lift&quot; a function of multiple arguments
+over multiple values of a type implementing the applicative functor type class,
+and also lift a value into that type:</p>
+<pre><code class="language-hs">pure :: a -&gt; f a
+
+liftA2 :: (a -&gt; b -&gt; c) -&gt; f a -&gt; f b -&gt; f c
+</code></pre>
+<p>With monads we can now flatten (or, &quot;join&quot; in Haskell terminology) types that implement
+the <code>Monad</code> interface:</p>
+<pre><code class="language-hs">join :: m (m a) -&gt; m a
+
+-- this is =&lt;&lt; with the arguments reversed, pronounced &quot;bind&quot;
+(&gt;&gt;=) :: m a -&gt; (a -&gt; m b) -&gt; m b
+</code></pre>
+<p>With <code>&gt;&gt;=</code> we can write our compilation pipeline from before in a left-to-right
+manner, which seems to be more popular for monads:</p>
+<pre><code class="language-hs">tokenize string &gt;&gt;= parse &gt;&gt;= typecheck
+</code></pre>
+<p>We have already run into this function before when we talked about <code>IO</code>. Yes,
+<code>IO</code> also implements the <code>Monad</code> interface. The monadic interface for <code>IO</code>
+helped us with creating an proper ordering of effects.</p>
+<p>The essence of the <code>Monad</code> interface is the <code>join</code>/<code>&gt;&gt;=</code> functions, and as we've seen
+we can implement <code>&gt;&gt;=</code> in terms of <code>join</code>, we can also implement <code>&gt;&gt;=</code> in terms
+of <code>join</code> (try it!).</p>
+<p>The monadic interface can mean very different things for different types. For <code>IO</code> this
+is ordering of effects, for <code>Either</code> it is early cutoff, for <code>Shake</code>
+(from the <a href="https://shakebuild.com">shake build system</a>) this means dynamic dependencies,
+for <a href="https://hackage.haskell.org/package/logict-0.7.1.0"><code>Logic</code></a> this means backtracking computation.</p>
+<p>Again, don't worry about analogies and metaphors, focus on the API and the <a href="https://wiki.haskell.org/Monad_laws">laws</a>.</p>
+<blockquote>
+<p>Hey, did you check the monad laws? left identity, right identity and associativity? We've already
+discussed a type class with exactly these laws - the <code>Monoid</code> type class. Maybe this is related
+to the famous quote about monads beings just monoids in something something... Seriously writing
+this is the first time I've made this connection myself!</p>
+</blockquote>
+<h5 id="do-notation"><a class="header" href="#do-notation">Do notation?</a></h5>
+<p>Remember <a href="02-io.html#do-notation">do notation</a>? Turns out it works for any type that is
+an instance of <code>Monad</code>. How cool is that? Instead of writing:</p>
+<pre><code class="language-hs">pipeline :: String -&gt; Either Error TypedAST
+pipeline string =
+  tokenize string &gt;&gt;= \tokens -&gt;
+    parse tokens &gt;&gt;= \ast -&gt;
+      typecheck ast
+</code></pre>
+<p>We can write:</p>
+<pre><code class="language-hs">pipeline :: String -&gt; Either Error TypedAST
+pipeline string = do
+  tokens &lt;- tokenize string
+  ast &lt;- parse tokens
+  typecheck ast
+</code></pre>
+<p>And it will work! Still, in this particular case <code>tokenize string &gt;&gt;= parse &gt;&gt;= typecheck</code>
+is so concise it can only be beat by using
+<a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Monad.html#v:-62--61--62-">&gt;=&gt;</a></p>
+<pre><code class="language-hs">&gt;=&gt; :: Monad m =&gt; (a -&gt; m b) -&gt; (b -&gt; m c) -&gt; a -&gt; m c
+
+-- compare with function composition:
+(.) ::            (a -&gt;   b) -&gt; (b -&gt;   c) -&gt; a -&gt;   c
+</code></pre>
+<pre><code class="language-hs">pipeline = tokenize &gt;=&gt; parse &gt;=&gt; typecheck
+</code></pre>
+<p>This ability of Haskell's to create very concise code using great abstractions makes it
+great once one is familiarity with the abstractions, knowing the monad abstractions,
+we are now already familiar with the core composition API of many libraries - for example:</p>
+<ul>
+<li><a href="https://hackage.haskell.org/package/stm">Concurrent</a>
+and <a href="https://hackage.haskell.org/package/async">asynchronous programming</a></li>
+<li><a href="https://gilmi.me/blog/post/2020/12/05/scotty-bulletin-board">Web programming</a></li>
+<li><a href="http://hspec.github.io/">Testing</a></li>
+<li><a href="https://hackage.haskell.org/package/mtl-2.2.2/docs/Control-Monad-State-Lazy.html#g:2">Emulating stateful computation</a></li>
+<li><a href="https://hackage.haskell.org/package/transformers-0.6.0.2/docs/Control-Monad-Trans-Reader.html#g:1">sharing environment between computations</a></li>
+<li>and many more.</li>
+</ul>
+<h4 id="either-with-io"><a class="header" href="#either-with-io">Either with IO?</a></h4>
+<h5 id="exceptt"><a class="header" href="#exceptt">ExceptT</a></h5>
+<h3 id="exceptions"><a class="header" href="#exceptions">Exceptions</a></h3>
 
                     </main>
 
