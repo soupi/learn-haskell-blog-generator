@@ -155,12 +155,34 @@ you readers have reached the bar of productivity, and you can now go and start
 working on your own projects with Haskell. I highly encourage you to do so.
 In my opinion, writing useful Haskell projects is the best method to solidify
 what you currently know, and identify what you still need to learn.</p>
-<p>You could extend this project and add new features or serve the blog over HTTP using
+<h2 id="extending-this-project"><a class="header" href="#extending-this-project">Extending this project</a></h2>
+<p>If you'd like to extend this project, here are a few ideas for you:</p>
+<ol>
+<li><strong>Serve over HTTP</strong> - You can use a web library such as
 <a href="https://www.youtube.com/watch?v=mz5_HmLGRXc">wai</a> or
-<a href="https://gilmi.me/blog/post/2020/12/05/scotty-bulletin-board">scotty</a>,
-you could rewrite it and use real-world <a href="https://hackage.haskell.org/package/blaze-html">html package</a>
-and <a href="https://hackage.haskell.org/package/cheapskate">markdown parser</a>, or
-try a completely different project you are passionate about.</p>
+<a href="https://gilmi.me/blog/post/2020/12/05/scotty-bulletin-board">scotty</a>
+to serve this blog over HTTP instead of generating it statically</li>
+<li><strong>Rewrite it with libraries</strong> - you could rewrite it and use a real-world
+<a href="https://hackage.haskell.org/package/blaze-html">html package</a>
+and <a href="https://hackage.haskell.org/package/cheapskate">markdown parser</a></li>
+<li><strong>Add features</strong>
+<ol>
+<li>You could add a metadata block at the top of each article
+which would include the title, publish date and tags of a blog post,
+and use them when generating HTML, index page and even tags pages</li>
+<li>You could add html pages templating using
+<a href="https://hackage.haskell.org/package/mustache">mustache</a> or similar,
+and use that to generate a nice and customizable structure to the page</li>
+<li>You could add support for links and images in our markup language parser</li>
+<li>Add support for configuration via files which would include things like
+the blog title, description, or other meta information for things like
+<a href="https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/abouts-cards">twitter cards</a></li>
+</ol>
+</li>
+</ol>
+<p>Or anything else you can think about, consider this project your playground and
+do whatever you like with it!</p>
+<h2 id="other-resources"><a class="header" href="#other-resources">Other resources</a></h2>
 <p>At some point you are likely to run into new concepts, techniques,
 or even just a feeling of &quot;I feel like this could be done better&quot;.
 I'd like to point you in the right direction so you can find additional information
