@@ -177,7 +177,8 @@ or even just say &quot;got here&quot;, from anywhere at the code.</p>
 <p>After finding something that does not match our assumptions, such as unexpected input or output
 of a function, we try to think what piece of code could be responsible for the disreprency, or even use
 trace debugging again to pinpoint the exact location, and try to use &quot;equational reasoning&quot; to
-evaluate the offending code that betrayed our expectations.</p>
+evaluate the offending code that betrayed our expectations. If it's easy to do, we try running
+the function in <code>ghci</code> with different inputs to check our assumptions as well.</p>
 <p>Because Haskell focuses on immutability, composibility and using types to eliminate many
 classes of possible errors, &quot;local reasoning&quot; becomes possible, and trace debugging
 becomes a viable strategy for debugging Haskell programs.</p>

@@ -184,6 +184,7 @@ meters and feet can both be numbers, but we don't want to accidently
 add feets to meters without any conversion.</p>
 <p>To get this actually working well, we'll need a bit more than just
 newtypes. In the next chapter we'll introduce modules and smart constructors.</p>
+<hr />
 <p>For now, let's create a couple of types for our use case.
 We want two separate types to represent:</p>
 <ol>
@@ -198,6 +199,7 @@ We want two separate types to represent:</p>
 newtype Structure = Structure String
 </code></pre>
 </details>
+<hr />
 <h2 id="type"><a class="header" href="#type"><code>type</code></a></h2>
 <p>A <code>type</code> definition looks really similar - the only difference is that
 we have no constructor:</p>
@@ -340,6 +342,7 @@ Haskell called type classes, we will instead create a new function
 and call it <code>append_</code>, and cover type classes later.</p>
 <p><code>append_</code> should take two <code>Structure</code>s, and return a third <code>Structure</code>,
 appending the inner <code>String</code> in the first <code>Structure</code> to the second and wrapping the result back in <code>Structure</code>.</p>
+<hr />
 <p>Try implementing <code>append_</code>.</p>
 <details>
   <summary>Solution</summary>
@@ -348,10 +351,12 @@ append_ (Structure a) (Structure b) =
   Structure (a &lt;&gt; b)
 </code></pre>
 </details>
+<hr />
 <h2 id="converting-back-an-html-to-string"><a class="header" href="#converting-back-an-html-to-string">Converting back an <code>Html</code> to <code>String</code></a></h2>
 <p>After constructing a valid <code>Html</code> value, we want to be able to
 print it to the output so we can display it in our browser.
 For that, we need to write a function that takes an <code>Html</code> and converts it to a <code>String</code>, which we can then pass to <code>putStrLn</code>.</p>
+<hr />
 <p>Implement the <code>render</code> function.</p>
 <details>
   <summary>Solution</summary>
@@ -361,7 +366,9 @@ render html =
     Html str -&gt; str
 </code></pre>
 </details>
+<hr />
 <h2 id="the-rest-of-the-owl"><a class="header" href="#the-rest-of-the-owl">The rest of the owl</a></h2>
+<hr />
 <p>Try changing the code we wrote in previous chapters to use the new types we created.</p>
 <p><strong>Tips</strong>: we can combine <code>makeHtml</code> and <code>html_</code>, and remove <code>body_</code> <code>head_</code> and <code>title_</code>
 by calling <code>el</code> directly in <code>html_</code>, which can now have the type <code>Title -&gt; Structure -&gt; Html</code>. This will make our html EDSL less flexible but more compact.</p>
@@ -369,7 +376,7 @@ by calling <code>el</code> directly in <code>html_</code>, which can now have th
 pass those to <code>html_</code>, and there is value in doing that, but I've chose
 to keep the API a bit simple for now, we can always refactor later!</p>
 <details>
-  <summary> <b>Solution</b> </summary>
+  <summary>Solution</summary>
 <pre><code class="language-hs">-- hello.hs
 
 main :: IO ()
@@ -430,6 +437,7 @@ render html =
     Html str -&gt; str
 </code></pre>
 </details>
+<hr />
 <p>All of this is nice and fun. And indeed now we can't write <code>&quot;Hello&quot;</code>
 where we'd expect either a paragraph or a header, but we can still
 write <code>Structure &quot;hello&quot;</code> and get something that isn't a
