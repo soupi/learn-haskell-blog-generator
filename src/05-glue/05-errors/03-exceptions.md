@@ -1,0 +1,218 @@
+# Exceptions
+
+The [Control.Exception](https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html)
+provides us with the ability to
+[throw](https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html#v:throwIO)
+exceptions from `IO` code,
+[`catch`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html#g:5)
+Haskell exceptions in `IO` code, and even convert them to `IO (Either ...)`
+with the function [`try`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html#g:7):
+
+```hs
+throwIO :: Exception e => e -> IO a
+
+catch
+  :: Exception e
+  => IO a         -- The computation to run
+  -> (e -> IO a)  -- Handler to invoke if an exception is raised
+  -> IO a
+
+try :: Exception e => IO a -> IO (Either e a)
+```
+
+The important part of these type signatures is the
+[`Exception`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html#t:Exception)
+type class. By making a type an instance of the `Exception` type class, we can throw it
+and catch it in `IO` code:
+
+```hs
+{-# language LambdaCase #-}
+
+import Control.Exception
+import System.IO
+
+data MyException
+  = ErrZero
+  | ErrOdd Int
+  deriving Show
+
+instance Exception MyException
+
+sayDiv2 :: Int -> IO ()
+sayDiv2 n
+  | n == 0 = throwIO ErrZero
+  | n `mod` 2 /= 0 = throwIO (ErrOdd n)
+  | otherwise = print (n `div` 2)
+
+main :: IO ()
+main =
+  catch
+    ( do
+      putStrLn "Going to print a number now."
+      sayDiv2 7
+      putStrLn "Did you like it?"
+    )
+    ( \case
+      ErrZero ->
+        hPutStrLn stderr "Error: we don't support dividing zeroes for some reason"
+      ErrOdd n ->
+        hPutStrLn stderr ("Error: " <> show n <> " is odd and cannot be divided")
+    )
+```
+
+> Note: we are using two new things here: guards, and the `LambdaCase` language extension.
+>
+> 1. Guards as seen in `sayDiv2` are just a nicer syntax around `if-then-else` expressions.
+>    Using guards we can have multiple `if` branches and finally use the `else` branch
+>    by using `otherwise`. After each guard `|` is a condition, after the condition there's
+>    a `=` and then the expression (the part after `then` in an `if` expression).
+>
+> 2. LambdaCase as seen in `catch`, is just a syntactic sugar to save a few characters,
+>    instead of writing `\e -> case e of`, we can write `\case`.
+
+This example, of course, is an example that would work much better using `Either` and separating
+the division and printing à la functional core, imperative shell. But as an example it works.
+We have created a custom exception and handle it specifically outside an `IO` block.
+However, we have not handled exceptions that might be raised by `putStrLn`.
+What if, for example, for some reason we close the `stdout` handle before this block:
+
+```hs
+main :: IO ()
+main = do
+  hClose stdout
+  catch
+    ( do
+      putStrLn "Going to print a number now."
+      sayDiv2 7
+      putStrLn "Did you like it?"
+    )
+    ( \case
+      ErrZero ->
+        hPutStrLn stderr "Error: we don't support dividing zeroes for some reason"
+      ErrOdd n ->
+        hPutStrLn stderr ("Error: " <> show n <> " is odd and cannot be divided")
+    )
+```
+
+Our program will crash with an error:
+
+```
+ghc: <stdout>: hFlush: illegal operation (handle is closed)
+```
+
+First, how do we know which exception we should handle? Some functions documentation
+will include this, but unfortunately `putStrLn` does not. We could guess from the
+[list of instances](https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html#i:Exception)
+the `Exception` type class has, I think
+[`IOException`](https://hackage.haskell.org/package/base-4.15.0.0/docs/GHC-IO-Exception.html#t:IOException) fits. Now, how can we handle this case as well? We can chain catches:
+
+```hs
+-- need to add these at the top
+
+{-# language ScopedTypeVariables #-}
+
+import GHC.IO.Exception (IOException(..))
+
+main :: IO ()
+main = do
+  hClose stdout
+  catch
+    ( catch
+      ( do
+        putStrLn "Going to print a number now."
+        sayDiv2 7
+        putStrLn "Did you like it?"
+      )
+      ( \case
+        ErrZero ->
+          hPutStrLn stderr "Error: we don't support dividing zeroes for some reason"
+        ErrOdd n ->
+          hPutStrLn stderr ("Error: " <> show n <> " is odd and cannot be divided")
+      )
+    )
+    ( \(e :: IOException) ->
+      -- we can check if the error was an illegal operation on the stderr handle
+      if ioe_handle e /= Just stderr && ioe_type e /= IllegalOperation
+        then pure () -- we can't write to stderr because it is closed
+        else hPutStrLn stderr (displayException e)
+    )
+```
+
+> We use the `ScopedTypeVariables` to be able to specify types inside let expressions,
+> lambdas, pattern matching and more.
+
+Or we could use the convenient function
+[`catches`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html#v:catches)
+to pass a list of exception
+[handlers](https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html#t:Handler):
+
+```hs
+main :: IO ()
+main = do
+  hClose stdout
+  catches
+    ( do
+      putStrLn "Going to print a number now."
+      sayDiv2 7
+      putStrLn "Did you like it?"
+    )
+    [ Handler $ \case
+      ErrZero ->
+        hPutStrLn stderr "Error: we don't support dividing zeroes for some reason"
+      ErrOdd n ->
+        hPutStrLn stderr ("Error: " <> show n <> " is odd and cannot be divided")
+    
+    , Handler $ \(e :: IOException) ->
+      -- we can check if the error was an illegal operation on the stderr handle
+      if ioe_handle e /= Just stderr && ioe_type e /= IllegalOperation
+        then pure () -- we can't write to stderr because it is closed
+        else hPutStrLn stderr (displayException e)
+    ]
+```
+
+> As an aside, `Handler` uses a concept called
+> [existentially quantified types](https://en.m.wikibooks.org/wiki/Haskell/Existentially_quantified_types)
+> to hide inside it a function that takes an arbitrary type that implements `Exception`.
+> This is why we can encode a seemingly heterogeneous list of functions that handle exceptions
+> for `catches` to take as input.
+> This pattern is rarely useful, but I've included it here to avoid confusion.
+
+And if we wanted to catch any all all exceptions, we'd catch `SomeException`:
+
+```hs
+main :: IO ()
+main = do
+  hClose stdout
+  catch
+    ( do
+      putStrLn "Going to print a number now."
+      sayDiv2 7
+      putStrLn "Did you like it?"
+    )
+    ( \(SomeException e) ->
+      hPutStrLn stderr (show e)
+    )
+```
+
+This could also go in `catches` as the last element in the list if we wanted specialized
+handling for other scenarios.
+
+A couple more functions worth knowing are
+[`bracket`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html#v:bracket)
+and [`finally`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html#v:finally).
+These functions can help us handle resource acquisition more safely when errors are present.
+
+## Summary
+
+Exceptions are useful and often necessary when we work with `IO` and want to make sure
+our program is handling errors gracefully. They have an advantage over `Either` in that
+we can easily compose functions that may throw errors of different types, but also have
+a disadvantage of not encoding types as return values, and therefore does not force us
+to handle them.
+
+For Haskell, the language designers have made a choice for us by designing `IO` to
+use exceptions instead of `Either`. And this is what I would recommend to use for
+handling your own effectful computations. However, I think that `Either` is more
+fitting for uneffectful code, because it forces us to acknowledge and handle errors
+(eventually) thus making our programs more robust. And also because we can only
+catch exceptions in `IO` code.

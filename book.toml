@@ -1,0 +1,9 @@
+[book]
+title = "Learning Haskell by building a static blog generator"
+description = "A step by step guide to learning Haskell by building a simple static blog generator"
+authors = ["Gil Mizrahi"]
+language = "en"
+multilingual = false
+src = "src"
+git-repository-url = "https://github.com/soupi/learn-haskell-blog-generator"
+git-repository-icon = "fa-github"

@@ -1,0 +1,454 @@
+# Testing
+
+We want to add some testing to our blog generator. At the very least
+a few regression tests to make sure that if we extend or change our markup parsing code,
+HTML generation code, or translation from markup to HTML code, and make a mistake, we'll
+have a safety web alerting us of issues.
+
+We will use the [hspec](https://hspec.github.io/) testing framework to write our tests.
+There are other very common testing frameworks in Haskell, for example
+[tasty](https://hackage.haskell.org/package/tasty), but I like `hspec`'s documentation,
+so we'll use that.
+
+## Initial setup
+
+### Cabal file additions
+
+We're going to define a new section in our `hs-blog-gen.cabal` file for our new test suite.
+Like `library` and `executable`, this section is called `test-suite`.
+
+There interface for how to define a test suite is describe in the
+[Cabal documentation](https://cabal.readthedocs.io/en/3.4/cabal-package.html?highlight=exitcode#test-suites).
+We are going to use the `exitcode-stdio-1.0` interface. Let's go over the different settings.
+
+```cabal
+test-suite hs-blog-gen-test
+  import: common-settings
+  type: exitcode-stdio-1.0
+  hs-source-dirs: test
+  main-is: Spec.hs
+
+  -- other-modules:
+  build-depends:
+      base
+    , hspec
+    , hspec-discover
+    , raw-strings-qq
+    , hs-blog
+  ghc-options:
+    -O -threaded -rtsopts -with-rtsopts=-N
+  build-tool-depends:
+    hspec-discover:hspec-discover
+```
+
+- `hs-source-dirs: test` - The directory of the source file for the test suite
+- `main-is: Spec.hs` - The entry point source file to the test suite
+- `build-depends` - The packages we are going to use:
+  - [`base`](https://hackage.haskell.org/package/base) -
+    The standard library for Haskell, as we've used before
+  - [`hspec`](https://hackage.haskell.org/package/hspec) -
+    The test framework we are going to use
+  - [`hspec-discover`](https://hackage.haskell.org/package/hspec-discover) -
+    Automatic discovery of hspec tests
+  - [`raw-strings-qq`](https://hackage.haskell.org/package/raw-strings-qq) -
+    Syntax for writing raw string literals
+  - `hs-blog` - Our library
+- [`ghc-options`](https://cabal.readthedocs.io/en/3.4/cabal-package.html?highlight=ghc-options#pkg-field-ghc-options) -
+    Extra options and flags for GHC
+  - [`-O`](https://downloads.haskell.org/ghc/latest/docs/html/users_guide/using-optimisation.html#options-optimise) -
+    Compile with optimizations
+  - [`-threaded`](https://downloads.haskell.org/ghc/latest/docs/html/users_guide/phases.html#ghc-flag--threaded) -
+    Use the multi-core runtime instead of single-core runtime. The multi-core
+    runtime is generally a bit slower in my experience, but when writing code that actually uses
+    multiple cores (such as a test framework that runs tests in parallel) it can gives a good
+    performance boost.
+  - [`-rtsopts`](https://downloads.haskell.org/ghc/latest/docs/html/users_guide/phases.html#ghc-flag--rtsopts[=%E2%9F%A8none|some|all|ignore|ignoreAll%E2%9F%A9]) -
+    lets us manipulate the Haskell runtime system by passing command-line arguments to our application
+  - [`-with-rtsopts=-N`](https://downloads.haskell.org/ghc/latest/docs/html/users_guide/phases.html?highlight=rtsopts#ghc-flag--with-rtsopts=%E2%9F%A8opts%E2%9F%A9) -
+    Set specific default options for the program at link-time.
+    Specifically, [`-N`](https://downloads.haskell.org/ghc/latest/docs/html/users_guide/using-concurrent.html#rts-flag--N%20%E2%9F%A8x%E2%9F%A9)
+    Sets the number of cores to use in our program.
+- [`build-tool-depends`](https://cabal.readthedocs.io/en/3.4/cabal-package.html#pkg-field-build-tool-depends) -
+  Uses a specific executable from a package dependency in aids of building the package.
+  In this case, we are using the `hspec-discover` executable from the
+  [`hspec-discover`](https://hackage.haskell.org/package/hspec-discover) package, which
+  goes over the source directory for the tests, finds all of the spec files,
+  and creates an entry point for the program that will run all the tests it discovered.
+
+
+### Hspec discovery
+
+In order for `hspec-discover` to work, we need to add the following
+to the "main" file of the test suite, for us this is `test/Spec.hs`:
+
+```hs
+{-# OPTIONS_GHC -F -pgmF hspec-discover #-}
+```
+
+Now we can run the tests using `stack test` or `cabal v2-test` (your choice).
+Because we haven't defined any tests, our output is:
+
+```sh
+Finished in 0.0000 seconds
+0 examples, 0 failures
+```
+
+When we add new hspec tests (Which their filename much end with `Spec` and must expose the test `spec`),
+`hspec-discover` will run them automatically (though we will still need add them
+to the `other-modules` section in the cabal file).
+
+## Writing tests
+
+Let's start writing our first test. We'll create a new module to test
+markup parsing. We'll call it `MarkupParsingSpec.hs`. We'll need
+the following imports as well:
+
+```hs
+module MarkupParsingSpec where
+
+import Test.Hspec
+import HsBlog.Markup
+```
+
+`hspec` provides us with a monadic interface for describing, composing and
+nesting test specifications (typed `Spec`). Using the `describe` function we can
+describe a group of tests, using the `it` function we can add a new test,
+and using a function like `shouldBe` we can compare two values and make
+sure they are equal. If they are, the test will pass, and if not, it will fail
+with a descriptive error. Let's try it and write a test that obviously fails!
+
+```hs
+spec :: Spec
+spec = do
+  describe "Markup parsing tests" $ do
+    it "empty" $
+      shouldBe
+        (parse "")
+        [Header 1 "bug"]
+```
+
+After adding the module to the `other-modules` list in the cabal file:
+
+```hs
+  other-modules:
+    MarkupParsingSpec
+```
+
+And running the tests, we get this output:
+
+```hs
+MarkupParsing
+  Markup parsing tests
+    empty FAILED [1]
+
+Failures:
+
+  test/MarkupParsingSpec.hs:10:7: 
+  1) MarkupParsing, Markup parsing tests, empty
+       expected: [Header 1 "bug"]
+        but got: []
+
+  To rerun use: --match "/MarkupParsing/Markup parsing tests/empty/"
+
+Randomized with seed 763489823
+
+Finished in 0.0004 seconds
+1 example, 1 failure
+```
+
+The output describes which tests are running in a hierarchy tree (module, group and test),
+whether it passed or failed, and if it failed, what was the output and what it expected.
+
+We can fix this by matching the expected output:
+
+```hs
+      shouldBe
+        (parse "")
+        []
+```
+
+Now, running the tests will produce:
+
+```hs
+MarkupParsing
+  Markup parsing tests
+    empty
+
+Finished in 0.0001 seconds
+1 example, 0 failures
+```
+
+We can add a few more tests:
+
+```hs
+    it "paragraph" $
+      shouldBe
+        (parse "hello world")
+        [Paragraph "hello world"]
+
+    it "header 1" $
+      shouldBe
+        (parse "* Header 1")
+        [Header 1 "Header 1"]
+
+    it "code" $
+      shouldBe
+        (parse "> main = putStrLn \"hello world!\"")
+        [CodeBlock ["main = putStrLn \"hello world!\""]]
+```
+
+Running the tests:
+
+```sh
+MarkupParsing
+  Markup parsing tests
+    Test empty
+    paragraph
+    header 1
+    code
+
+Finished in 0.0003 seconds
+4 examples, 0 failures
+```
+
+This is the gist of writing unit tests with `hspec`. It's important to note
+that we can nest `Spec`s that are declared with `describe` to create trees,
+and of course refactor and move things to different functions and modules
+to make are test suite better organized.
+
+For example, we can write our tests like this:
+
+```hs
+spec :: Spec
+spec = do
+  describe "Markup parsing tests" $ do
+    simple
+
+simple :: Spec
+simple = do
+  describe "simple" $ do
+    it "empty" $
+      shouldBe
+        (parse "")
+        []
+
+    it "paragraph" $
+      shouldBe
+        (parse "hello world")
+        [Paragraph "hello world"]
+
+    it "header 1" $
+      shouldBe
+        (parse "* Header 1")
+        [Header 1 "Header 1"]
+
+    it "code" $
+      shouldBe
+        (parse "> main = putStrLn \"hello world!\"")
+        [CodeBlock ["main = putStrLn \"hello world!\""]]
+```
+
+Also, there are other "expectations" such as `shouldBe` we can use when writing tests.
+They are described in the [hspec tutorial](https://hspec.github.io/expectations.html)
+and can be found in the
+[haddock documentation](https://hackage.haskell.org/package/hspec-expectations-0.8.2/docs/Test-Hspec-Expectations.html) as well.
+
+### Raw strings
+
+If we want to write multi-line strings, or avoid escaping string like we did in the "code"
+test, we can use a library called
+[raw-strings-qq](https://hackage.haskell.org/package/raw-strings-qq)
+that uses a language extension called
+[`QuasiQuotes`](https://downloads.haskell.org/ghc/latest/docs/html/users_guide/exts/template_haskell.html#extension-QuasiQuotes).
+`QuasiQuotes` is a meta-programming extension that provides a mechanism to extend the syntax for Haskell.
+
+A quasi-quote has the form `[quoter| string |]`, where the quoter is the name
+of the function providing the syntax we wish to use, and the string is our input.
+
+In our case, we user the quoter `r`, and write any string we want, with multi-lines
+and unescaped strings! We could use this to write the tests
+[we previously wrote](04-markup/01-data_type.html#exercises):
+
+```hs
+{-# language QuasiQuotes #-}
+
+...
+
+import Text.RawString.QQ
+
+...
+
+example3 :: String
+example3 = [r|
+Remember that multiple lines with no separation
+are grouped together to a single paragraph
+but list items remain separate.
+
+# Item 1 of a list
+# Item 2 of the same list
+|]
+```
+
+And add multi-line tests:
+
+```hs
+spec :: Spec
+spec = do
+  describe "Markup parsing tests" $ do
+    simple
+    multiline
+
+
+multiline :: Spec
+multiline = do
+  describe "Multi-line tests" $ do
+    it "example3" $
+      shouldBe
+        (parse example3)
+        example3Result
+        
+
+example3 :: String
+example3 = [r|
+Remember that multiple lines with no separation
+are grouped together to a single paragraph
+but list items remain separate.
+
+# Item 1 of a list
+# Item 2 of the same list
+|]
+
+example3Result :: Document
+example3Result =
+  [ Paragraph "Remember that multiple lines with no separation are grouped together to a single paragraph but list items remain separate."
+  , OrderedList
+    [ "Item 1 of a list"
+    , "Item 2 of the same list"
+    ]
+  ]
+```
+
+Running the tests:
+
+```hs
+MarkupParsing
+  Markup parsing tests
+    simple
+      Test empty
+      paragraph
+      header 1
+      code
+    Multi-line tests
+      example3
+
+Finished in 0.0004 seconds
+5 examples, 0 failures
+```
+
+---
+
+**Exercise**: Add a test for the fourth example described in the
+[previous exercises](04-markup/01-data_type.html#exercises).
+
+
+<details><summary>Solution</summary>
+
+```hs
+multiline :: Spec
+multiline = do
+  describe "Multi-line tests" $ do
+    it "example3" $
+      shouldBe
+        (parse example3)
+        example3Result
+
+    it "example4" $
+      shouldBe
+        (parse example4)
+        example4Result
+        
+
+example4 :: String
+example4 = [r|
+* Compiling programs with ghc
+
+Running ghc invokes the Glasgow Haskell Compiler (GHC),
+and can be used to compile Haskell modules and programs into native
+executables and libraries.
+
+Create a new Haskell source file named hello.hs, and write
+the following code in it:
+
+> main = putStrLn "Hello, Haskell!"
+
+Now, we can compile the program by invoking ghc with the file name:
+
+> ➜ ghc hello.hs
+> [1 of 1] Compiling Main             ( hello.hs, hello.o )
+> Linking hello ...
+
+GHC created the following files:
+
+- hello.hi - Haskell interface file
+- hello.o - Object file, the output of the compiler before linking
+- hello (or hello.exe on Microsoft Windows) - A native runnable executable.
+
+GHC will produce an executable when the source file satisfies both conditions:
+
+# Defines the main function in the source file
+# Defines the module name to be Main, or does not have a module declaration
+
+Otherwise, it will only produce the .o and .hi files.
+|]
+
+example4Result :: Document
+example4Result =
+  [ Header 1 "Compiling programs with ghc"
+  , Paragraph "Running ghc invokes the Glasgow Haskell Compiler (GHC), and can be used to compile Haskell modules and programs into native executables and libraries."
+  , Paragraph "Create a new Haskell source file named hello.hs, and write the following code in it:"
+  , CodeBlock
+    [ "main = putStrLn \"Hello, Haskell!\""
+    ]
+  , Paragraph "Now, we can compile the program by invoking ghc with the file name:"
+  , CodeBlock
+    [ "➜ ghc hello.hs"
+    , "[1 of 1] Compiling Main             ( hello.hs, hello.o )"
+    , "Linking hello ..."
+    ]
+  , Paragraph "GHC created the following files:"
+  , UnorderedList
+    [ "hello.hi - Haskell interface file"
+    , "hello.o - Object file, the output of the compiler before linking"
+    , "hello (or hello.exe on Microsoft Windows) - A native runnable executable."
+    ]
+  , Paragraph "GHC will produce an executable when the source file satisfies both conditions:"
+  , OrderedList
+    [ "Defines the main function in the source file"
+    , "Defines the module name to be Main, or does not have a module declaration"
+    ]
+  , Paragraph "Otherwise, it will only produce the .o and .hi files."
+  ]
+```
+
+</details>
+
+
+---
+
+## Summary
+
+This chapter has been just the tip of the iceberg of the Haskell testing landscape.
+We haven't talked about
+[property testing](https://www.scs.stanford.edu/16wi-cs240h/slides/testing.html) or
+[golden testing](https://ro-che.info/articles/2017-12-04-golden-tests),
+testing expected failure, testing IO code, inspection testing, benchmarking, and more.
+There's just too much to cover!
+
+My hope is that this chapter
+provided you with the basics of how to start writing tests for your own projects.
+Please consult the tutorial for your chosen testing framework, and read more about
+this very important subject on your own.
+
+> You can view the git commit of
+> [the changes we've made](https://github.com/soupi/learn-haskell-blog-generator/commit/24bf572ba566cfc442dfc9e462f38366ca95b96b)
+> and the [final version of the code](https://github.com/soupi/learn-haskell-blog-generator/tree/code-after-testing).
