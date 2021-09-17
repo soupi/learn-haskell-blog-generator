@@ -32,7 +32,7 @@ There are probably more, but here are a few possible pros:
   There are other tutorials like this. The most notable ones are
   [Beginning Haskell](https://www.apress.com/gp/book/9781430262510#otherversion=9781430262503)
   and [Haskell via Sokoban](https://haskell-via-sokoban.nomeata.de/).
-- It's **on the internet**, which means corrections are easy to make.
+- It's **online**, which means corrections are easy to make.
 - It's **free**.
 
 ### Cons
