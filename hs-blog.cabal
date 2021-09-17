@@ -57,3 +57,23 @@ executable hs-blog-gen
     , hs-blog
   ghc-options:
     -O
+
+test-suite hs-blog-gen-test
+  import: common-settings
+  type: exitcode-stdio-1.0
+  hs-source-dirs: test
+  main-is: Spec.hs
+
+  other-modules:
+    MarkupParsingSpec
+  build-depends:
+      base
+    , hspec
+    , hspec-discover
+    , raw-strings-qq
+    , hs-blog
+  ghc-options:
+    -O -threaded -rtsopts -with-rtsopts=-N
+  build-tool-depends:
+    hspec-discover:hspec-discover == 2.*
+
