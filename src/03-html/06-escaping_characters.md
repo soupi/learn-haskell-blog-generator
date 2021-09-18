@@ -2,8 +2,8 @@
 
 Now that `Html` has its own source file and module, and creating
 HTML code can be done only via the functions we exported,
-we can also handle user input that may contain characters we
-that may conflict with our meta language HTML,
+we can also handle user input that may contain characters
+that may conflict with our meta language, HTML,
 such as `<` and `>` which are used for creating HTML tags.
 
 We can convert these characters into different strings that HTML can handle.
@@ -31,22 +31,24 @@ escape =
 
 In `escape` we see a few new things:
 
-1. let expressions - we can define local names using this syntax:
+1. Let expressions: we can define local names using this syntax:
 
-```hs
-let
-  <name> = <expression>
-in
-  <expression>
-```
+   ```hs
+   let
+     <name> = <expression>
+   in
+     <expression>
+   ```
 
-This will make <name> available as a variable in the second <expression>.
+   This will make `<name>` available as a variable `in` the second `<expression>`.
 
-2. Pattern matching with multiple patterns - we match on different
+2. Pattern matching with multiple patterns: we match on different
    characters and convert them to a string. Note that `_` is a "catch
    all" pattern that will always succeed.
 
 3. Two new functions: `map` and `concat`, we'll talk about these more in depth
+
+4. That the syntax highlighting broke a bit for this snippet for some reason. Don't worry about it.
 
 ## Linked lists briefly
 
@@ -58,7 +60,8 @@ they have their own special syntax:
    - `[Char]` - a list of characters
    - `[String]` - a list of strings
    - `[[String]]` - a list of a list of strings
-2. An expression representing a empty list is written like this: `[]`
+   - `[a]` - a list of any single type (all elements must be of the same type)
+2. A value representing a empty list is written like this: `[]`
 3. Prepending an element to a list is done with the operator `:` (pronounced cons) which is right-associative (like `->`).
    For example: `1 : []`, or `1 : 2 : 3 : []`.
 4. The above lists can also be written like this: `[1]` and `[1, 2, 3]`.
@@ -66,23 +69,24 @@ they have their own special syntax:
 Also, Strings are linked lists of characters - String is defined as:
 `type String = [Char]`, so we can use them the same way we use lists.
 
----
-
-Do note, however, that linked lists, despite their convenience, are often
-not the right tool for the job. They are not particularity space efficient
-and are slow for appending, random access and more. That also makes `String`
-a lot less efficient than it could be. And I generally recommend using a
-different string type, `Text`, instead, which is available in an external package.
-We will talk about lists, `Text`, and other data structures in the future!
-
----
+> Do note, however, that linked lists, despite their convenience, are often
+> not the right tool for the job. They are not particularity space efficient
+> and are slow for appending, random access and more. That also makes `String`
+> a lot less efficient than it could be. And I generally recommend using a
+> different string type, `Text`, instead, which is available in an external package.
+> We will talk about lists, `Text`, and other data structures in the future!
 
 We can implement our own operations on lists by using pattern matching and recursion.
 And we'll touch on this subject later when talking about ADTs.
 
-For now, we will use the various functions found in the [Data.List](https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-List.html) module. Specifically, [map](https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-List.html#v:map) and [concat](https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-List.html#v:concat).
+For now, we will use the various functions found in the
+[Data.List](https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-List.html) module.
+Specifically, [map](https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-List.html#v:map)
+and [concat](https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-List.html#v:concat).
 
-`map` applying a function to each of the elements in a list. Its type signature is:
+### `map`
+
+Using `map` we can apply a function to each of the elements in a list. Its type signature is:
 
 ```hs
 map :: (a -> b) -> [a] -> [b]
@@ -104,7 +108,11 @@ However, note that the `escapeChar` has the type `Char -> String`,
 so the result type of `map escapeChar ['<','h','1','>']` is `[String]`,
 and what we really want is a `String` and not `[String]`.
 
-This is where `concat` enters the picture. `concat` has the type
+This is where `concat` enters the picture to help us flatten the list.
+
+### `concat`
+
+`concat` has the type:
 
 ```hs
 concat :: [[a]] -> [a]
@@ -115,9 +123,9 @@ In our case in will flatten `[String]` into `String`, remember that this works
 because `String` is a **type alias** for `[Char]`, so we actually have
 `[[Char]] -> [Char]`.
 
----
-
 ## Escaping
+
+---
 
 The user of our library can currently only supply strings in a few places:
 
@@ -170,7 +178,7 @@ module Html
   , append_
   , render
   )
-where
+  where
 
 -- * Types
 
@@ -242,6 +250,6 @@ escape =
 Trying constructing an invalid HTML in `hello.hs` to see if this works or not!
 
 Now we can use our tiny HTML library safely. But what if the user
-wants to use our library with something we didn't think about, for
+wants to use our library with a valid use case we didn't think about, for
 example adding unordered lists? We are completely blocking them from
 extending our library. We'll talk about this next.

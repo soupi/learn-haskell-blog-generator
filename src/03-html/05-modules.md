@@ -19,12 +19,13 @@ A module declaration looks like this:
 module <module-name>
   ( <export-list>
   )
-where
+  where
 ```
 
 The export list can be omitted if you want to export everything
 defined in the module, but we don't. We will list exactly the
-functions and type we want to export.
+functions and type we want to export. This will give us control
+on how people can use our tiny library.
 
 We will create a new source file named `Html.hs` and add the following
 module declaration code at the top of the file:
@@ -40,12 +41,12 @@ module Html
   , append_
   , render
   )
-where
+  where
 ```
 
 Note that we do not export:
 
-1. the constructors for our new types, only the types themselves.
+1. The constructors for our new types, only the types themselves.
    If we wanted to export the constructors as well we would've written
    `Html(Html)` or `Html(..)`. This way the user cannot create their own
    `Structure` simply by writing `Structure "Hello"`.
@@ -147,7 +148,7 @@ module Html
   , append_
   , render
   )
-where
+  where
 
 newtype Html
   = Html String
