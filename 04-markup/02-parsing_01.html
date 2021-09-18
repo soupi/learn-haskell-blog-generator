@@ -147,7 +147,7 @@ written by a user and convert it to the <code>Document</code> type we defined
 in the previous chapter.</p>
 <p>Our strategy is to take the string of markup text, and:</p>
 <ol>
-<li>Split it to a list where each element is a separate line, and</li>
+<li>Split it to a list where each element represents a separate line, and</li>
 <li>Go over the list line by line and process it, remembering
 information from previous lines if necessary</li>
 </ol>
@@ -175,7 +175,7 @@ or mutable variables. Instead, we use <strong>recursion</strong>.</p>
 <p>Consider the following contrived example: let's say that
 we want to write an algorithm for adding two natural numbers together,
 and we don't have a standard operation to do that (+), but we do
-have two operations we could do for each number: <code>increment</code>
+have two operations we could use on each number: <code>increment</code>
 and <code>decrement</code>.</p>
 <p>A solution we could come up with is to slowly &quot;pass&quot; one number
 to the other number iteratively, by incrementing one, and decrementing the other.
@@ -201,7 +201,7 @@ And we do that until the number we decrement reaches 0.</p>
         then sum (increment n) (decrement m)
         else n
 </code></pre>
-<p><strong>In order to emulate iteration with mutable state, we call the function again
+<p><strong>In Haskell, in order to emulate iteration with mutable state, we call the function again
 with the values we want the variables to have in the next iteration.</strong></p>
 <h3 id="evaluation-of-recursion"><a class="header" href="#evaluation-of-recursion">Evaluation of recursion</a></h3>
 <p>Recursion commonly has a bad reputation for being slow and possibly unsafe compared to loops.
@@ -209,14 +209,14 @@ This is because in imperative languages, calling a function often requires creat
 a new call stack.</p>
 <p>However, functional languages (and Haskell in particular) play by different
 rules and implement a feature called tail call elimination - when the result of a function call
-is the result of this function (this is called tail position), we can just drop the current function
+is the result of the function (this is called tail position), we can just drop the current
 stack frame and then allocate one for the function we call, so we don't require <code>N</code> stack frames
 for <code>N</code> iterations.</p>
 <p>This is of course only one way to do tail call elimination and other
 strategies exists, such as translating code like our recursive <code>sum</code> above to the iteration version.</p>
 <h4 id="laziness"><a class="header" href="#laziness">Laziness</a></h4>
-<p>Haskell plays by slightly different rules because it uses a lazy evaluation strategy
-instead of the much more common strict evaluation strategy. An evaluation strategy
+<p>Haskell plays by slightly different rules because it uses a <em>lazy evaluation strategy</em>
+instead of the much more common strict evaluation strategy. An <em>evaluation strategy</em>
 refers to &quot;when do we evaluate a computation&quot;. In a strict language the answer is simple:
 <em>we evaluate the arguments of a function before entering a function</em>.</p>
 <p>So for example the evaluation of <code>sum (increment 3) (decrement 2)</code> using strict evaluation
@@ -249,7 +249,7 @@ so it will be evaluated. But:</p>
 <p>In the case above we don't actually need <code>five</code>, so we don't evaluate it!</p>
 <p>But then if we know we need <code>sum (increment 2) (decrement 3)</code>,
 do we use strict evaluation now? The answer is no - because we might not need
-them to complete the computation. For example in this case:</p>
+to evaluate the arguments to complete the computation. For example in this case:</p>
 <pre><code class="language-hs">const a b = a
 
 main =
@@ -260,7 +260,7 @@ main =
 <p><code>const</code> ignores the second argument and returns the first, so we don't actually need
 to calculate <code>decrement 3</code> in order to provide an answer to the computation and in
 turn output an answer to the screen.</p>
-<p>So in lazy evaluation we will evaluate expressions when we need to (they are required
+<p>With the lazy evaluation strategy we will evaluate expressions when we need to (when they are required
 in order to do something for the user), and we evaluate from the outside in - first
 we enter functions, and then we evaluate the arguments when we need to (usually when the thing
 we want to evaluate appears in some control flow such as the condition of an <code>if</code> expression
@@ -436,17 +436,17 @@ main =
 <p>In general, when trying to solve problems recursively, it is useful to think
 about the problem in three parts:</p>
 <ol>
-<li>Finding the <strong>base case</strong> (the most simple cases - the ones I already know how to answer)</li>
+<li>Finding the <strong>base case</strong> (the most simple cases - the ones we already know how to answer)</li>
 <li>Figuring out how to <strong>reduce</strong> the problem to something simpler (so it gets closer to the base case)</li>
-<li><strong>Mitigating the difference</strong> between the reduced version and the solution I need to provide</li>
+<li><strong>Mitigating the difference</strong> between the reduced version and the solution we need to provide</li>
 </ol>
-<p>The reduce and mitigate steps together are usually called the recursive step.</p>
+<p>The reduce and mitigate steps together are usually called the <em>recursive step</em>.</p>
 <p>Let's take a look at another example problem: generating a list of a particular size
 with a specific value in place of every element.</p>
 <p>In Haskell, this function would have the following signature:</p>
 <pre><code class="language-hs">replicate :: Int -&gt; a -&gt; [a]
 </code></pre>
-<p>Here are a few examples using in:</p>
+<p>Here are a few usage examples of <code>replicate</code>:</p>
 <pre><code class="language-hs">ghci&gt; replicate 4 True
 [True,True,True,True]
 ghci&gt; replicate 0 True
@@ -456,12 +456,13 @@ ghci&gt; replicate (-13) True
 </code></pre>
 <p>How would we implement this function recursively? How would describe it in three steps above?</p>
 <ol>
-<li><strong>Base case</strong>: the cases I already know how to generate are the cases where the length
+<li><strong>Base case</strong>: the cases we already know how to generate are the cases where the length
 of the list is zero (or less) - we just return an empty list.</li>
-<li><strong>Reduce</strong>: while I don't know how to generate a list of size <code>N</code> (where <code>N</code> is positive),
-if I knew the solution for <code>N-1</code> I could:</li>
+<li><strong>Reduce</strong>: while we might not know how to generate a list of size <code>N</code> (where <code>N</code> is positive),
+if we knew the solution for <code>N-1</code> we could:</li>
 <li><strong>Mitigate</strong>: Add another element to the solution for <code>N-1</code> using the <code>:</code> (cons) operator.</li>
 </ol>
+<hr />
 <p>Try to write this in Haskell!</p>
 <details>
 <summary>Solution</summary>
@@ -480,6 +481,7 @@ replicate n x =
     --       +--- mitigation
 </code></pre>
 </details>
+<hr />
 <h3 id="mutual-recursion"><a class="header" href="#mutual-recursion">Mutual recursion</a></h3>
 <p>When solving functions recursively we usually call the same function again,
 but that doesn't have to be the case. It is possible to reduce our problem
@@ -488,23 +490,24 @@ If, in turn, that function will (or another function in that call chain)
 call our function again, we have a <strong>mutual recursive</strong> solution.</p>
 <p>For example, let's write two functions, one that checks whether a natural number
 is even or not, and one that checks whether a number is odd or not
-by only decrementing it.</p>
+only by decrementing it.</p>
 <pre><code class="language-hs">even :: Int -&gt; Bool
 
 odd :: Int -&gt; Bool
 </code></pre>
 <p>Let's start with <code>even</code>, how should we solve this recursively?</p>
 <ol>
-<li><strong>Base case</strong>: I know the answer for <code>0</code> - it is <code>True</code>.</li>
-<li><strong>Reduction</strong>: I don't know the answer for a general <code>N</code>, but I could check whether <code>N - 1</code> is odd,</li>
+<li><strong>Base case</strong>: We know the answer for <code>0</code> - it is <code>True</code>.</li>
+<li><strong>Reduction</strong>: We might not know the answer for a general <code>N</code>, but we could check whether <code>N - 1</code> is odd,</li>
 <li><strong>Mitigation</strong>: if <code>N - 1</code> is odd, then <code>N</code> is even! if it isn't odd, then <code>N</code> isn't even.</li>
 </ol>
 <p>What about <code>odd</code>?</p>
 <ol>
-<li><strong>Base case</strong>: I know the answer for <code>0</code> - it is <code>False</code>.</li>
-<li><strong>Reduction</strong>: I don't know the answer for a general <code>N</code>, but I could check whether <code>N - 1</code> is even,</li>
+<li><strong>Base case</strong>: We know the answer for <code>0</code> - it is <code>False</code>.</li>
+<li><strong>Reduction</strong>: We might not know the answer for a general <code>N</code>, but we could check whether <code>N - 1</code> is even,</li>
 <li><strong>Mitigation</strong>: if <code>N - 1</code> is even, then <code>N</code> is odd! if it isn't even, then <code>N</code> isn't odd.</li>
 </ol>
+<hr />
 <p>Try writing this in Haskell!</p>
 <details>
 <summary>Solution</summary>
@@ -526,6 +529,7 @@ odd n =
 
 </code></pre>
 </details>
+<hr />
 <h2 id="partial-functions"><a class="header" href="#partial-functions">Partial functions</a></h2>
 <p>because we didn't handle negative cases in the example above, our functions will loop forever
 when a negative value is passed as input. A function that does not return a result for some value
@@ -536,10 +540,13 @@ unexpected behaviour at runtime, so we want to <strong>avoid using</strong> part
 as well as <strong>avoid writing</strong> partial functions.</p>
 <p>The best way to avoid writing partial functions is by covering all inputs!
 In the situation above, it is definitely possible to handle negative numbers
-as well, so we should do that!</p>
-<p>There are cases where we can't possibly cover all inputs, but it is sometimes
-possible to mitigate that by restricting the inputs further using the type system.</p>
-<p>For example, the <code>head :: [a] -&gt; a</code> function in <code>Prelude</code> promises
+as well, so we should do that! Or, instead, we could require that our functions
+accept a <code>Natural</code> instead of an <code>Int</code>, and then the type system would've stopped
+us from using these functions with values that we did not handle.</p>
+<p>There are cases where we can't possibly cover all inputs, in these cases it is important
+to re-examine the code and see if we could further restrict the inputs using types to
+mitigate these issues.</p>
+<p>For example, the <code>head :: [a] -&gt; a</code> function from <code>Prelude</code> promises
 to return the first element (the head) of a list, but we know that lists
 could possibly be empty, so how can this function deliver on its promise?</p>
 <p>Unfortunately, it can't. But there exists a different function that can:
@@ -557,7 +564,8 @@ for example, using <code>Maybe</code>, as we'll see in a future chapter.</p>
 <p>Let's get back to the task at hand.</p>
 <p>As stated previously, our strategy for parsing the markup text is:</p>
 <ol>
-<li>Split the string to a list where each element is a separate line (which we can do with <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Prelude.html#v:lines"><code>lines</code></a>), and</li>
+<li>Split the string to a list where each element is a separate line
+(which we can do with <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Prelude.html#v:lines"><code>lines</code></a>), and</li>
 <li>Go over the list line by line and process it, remembering
 information from previous lines if necessary</li>
 </ol>

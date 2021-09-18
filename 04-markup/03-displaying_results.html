@@ -157,24 +157,41 @@ of our <code>Document</code> type. There are a few ways to do that:</p>
 you see what is called a <strong>type class constraint</strong> on the type <code>a</code>. What
 we say in this signature, is that the function <code>show</code> can work on any
 type that is a member of the type class <code>Show</code>.</p>
-<p>Type classes is a feature in Haskell that allows us to declare common
+<p>Type classes is a feature in Haskell that allows us to declare a common
 interface for different types. In our case, Haskell's standard library
-defines the type class <code>Show</code> in the following (this is a simplified
+defines the type class <code>Show</code> in the following way (this is a simplified
 version but good enough for our purposes):</p>
 <pre><code class="language-hs">class Show a where
   show :: a -&gt; String
 </code></pre>
-<p>This means that we have now declared a common interface for Haskell
-types that want it. Any time that wants to implement it needs to
-define an <em>instance</em> for the type class. For example:</p>
+<p>A type class declaration describes a common interface for Haskell types.
+<code>show</code> is an overloaded function that will work for any type that is an <em>instance</em>
+of the type class <code>Show</code>.
+We can define an instance of a type class manually like this:</p>
 <pre><code class="language-hs">instance Show Bool where
   show x =
     case x of
       True -&gt; &quot;True&quot;
       False -&gt; &quot;False&quot;
 </code></pre>
-<p>If all the types we use while defining our data type already implement
-this, we can automatically derive it by adding <code>deriving Show</code> at the
+<p>Defining an instance means providing an implementation for the interface for a specific type.
+When we call the function <code>show</code> on a data type, the compiler will search the instance of
+the type it inferred, and use the implementation provided in the instance declaration.</p>
+<pre><code class="language-hs">ghci&gt; show True
+&quot;True&quot;
+ghci&gt; show 187
+&quot;187&quot;
+ghci&gt; show &quot;Hello&quot;
+&quot;\&quot;Hello\&quot;&quot;
+</code></pre>
+<p>As can be seen above, the <code>show</code> function converts a value to its textual representation.
+Which is why <code>&quot;Hello&quot;</code> includes the quotes as well. The <code>Show</code> type class is usually
+used for debugging purposes.</p>
+<h2 id="deriving-instances"><a class="header" href="#deriving-instances">Deriving instances</a></h2>
+<p>It is also possible to automatically generate implementations of a few selected
+type classes. Fortunately, <code>Show</code> is one of them.</p>
+<p>If all the types we use in the definition of our data type already implement
+an instance of <code>Show</code>, we can <em>automatically derive</em> it by adding <code>deriving Show</code> at the
 end of the data definition.</p>
 <pre><code class="language-hs">data Structure
   = Header Natural String
@@ -195,11 +212,15 @@ standard output.</p>
 a <code>Show</code> instance, we can now print <code>Document</code>s, because they are just
 aliases for <code>[Structure]</code>. Try it!</p>
 <p>There are many type classes Haskellers use everyday. A couple more are
-<code>Eq</code> for equality and <code>Ord</code> for ordering.</p>
+<code>Eq</code> for equality and <code>Ord</code> for ordering. These are also special type classes
+that can be derived automatically.</p>
+<h2 id="laws"><a class="header" href="#laws">Laws</a></h2>
 <p>Type classes often come with &quot;rules&quot; or &quot;laws&quot; that instances should satisfy,
 the purpose of these laws is to provide <em>predictable behaviour</em> across
 instances, so that when we run into a new instance we can be confident
-that it will behave in a certain expected way.</p>
+that it will behave in a certain expected way, and we can write code
+that works generically for all instances of a type class while expecting
+them to adhere to these rules.</p>
 <p>As an example, let's look at the <code>Semigroup</code> type class:</p>
 <pre><code class="language-hs">class Semigroup a where
   (&lt;&gt;) :: a -&gt; a -&gt; a
@@ -217,18 +238,20 @@ meaning that these two sides should evaluate to the same result:</p>
 <p>Unfortunately the Haskell type system cannot &quot;prove&quot; that instances
 satisfy these laws, but as a community we often shun unlawful instances.</p>
 <p>Many data types (together with their respective operations) can
-form a <code>Semigroup</code> (or any other type class), and instances
-don't even have to look similar or have a common analogy/metaphor.</p>
+form a <code>Semigroup</code>, and instances
+don't even have to look similar or have a common analogy/metaphor
+(and this is true for many other type classes as well).</p>
 <p><strong>Type classes are often just <em>interfaces</em> with <em>laws</em></strong> (or expected behaviour if you will).
 Approaching them with this mindset can be very liberating!</p>
-<p>To put it in a differently, <strong>type classes can be used to create abstractions</strong> -
+<p>To put it a differently, <strong>type classes can be used to create abstractions</strong> -
 interfaces with laws/expected behaviour where we don't actually care about the
 concrete details of the underlying type, just that it <em>implements a certain
-API and behaves as expected</em>.</p>
-<p>We have <a href="02_04-safer_construction.html#appending-htmlstructure">previously</a>
-created a function that looks like this for our <code>Html</code> EDSL!
+API and behaves in a certain way</em>.</p>
+<p>Regarding <code>Semigroup</code> have <a href="02_04-safer_construction.html#appending-htmlstructure">previously</a>
+created a function that looks like <code>&lt;&gt;</code> for our <code>Html</code> EDSL!
 We can add a <code>Semigroup</code> instance for our <code>Structure</code> data type
 and have a nicer to use API!</p>
+<hr />
 <p>Exercise: Please do this and remove the <code>append_</code> function from the API.</p>
 <details>
   <summary>Solution</summary>
@@ -246,6 +269,7 @@ append_ c1 c2 =
 as type class instances are exported automatically.</p>
 <p>You will also need replace the usage of <code>append_</code> with <code>&lt;&gt;</code> in <code>hello.hs</code>.</p>
 </details>
+<hr />
 
                     </main>
 
