@@ -1759,13 +1759,13 @@ escape =
 <div style="break-before: page; page-break-before: always;"></div><h1 id="custom-markup-language"><a class="header" href="#custom-markup-language">Custom markup language</a></h1>
 <p>In this chapter we will define our own simple markup language
 and parse documents written in this language into Haskell data structures.</p>
-<p>Our simple markup language will contain the following features:</p>
+<p>Our markup language will contain the following features:</p>
 <ul>
-<li>Headers - prefix by a number of <code>*</code> characters</li>
-<li>Paragraphs - a group of lines without empty lines in between</li>
-<li>Unordered lists - a group of lines each prefixed with <code>- </code></li>
-<li>Unordered lists - a group of lines each prefixed with <code># </code></li>
-<li>Code blocks - a group of lines each prefixed with <code>&gt; </code></li>
+<li>Headers: prefix by a number of <code>*</code> characters</li>
+<li>Paragraphs: a group of lines without empty lines in between</li>
+<li>Unordered lists: a group of lines each prefixed with <code>- </code></li>
+<li>Unordered lists: a group of lines each prefixed with <code># </code></li>
+<li>Code blocks: a group of lines each prefixed with <code>&gt; </code></li>
 </ul>
 <p>Here's a sample document which we will use as an example:</p>
 <pre><code class="language-org">* Compiling programs with ghc
@@ -2882,10 +2882,10 @@ parseLines context txts =
             maybe id (:) context (parseLines Nothing rest) -- (3)
           else
             case context of
-              Nothing -&gt;
-                parseLines (Just (Paragraph line)) rest
               Just (Paragraph paragraph) -&gt;
                 parseLines (Just (Paragraph (unwords [paragraph, line]))) rest -- (4), (5)
+              _ -&gt;
+                maybe id (:) context (parseLines (Just (Paragraph line)) rest)
 
 trim :: String -&gt; String
 trim = unwords . words
@@ -2955,10 +2955,10 @@ parseLines context txts =
             maybe id (:) context (parseLines Nothing rest)
           else
             case context of
-              Nothing -&gt;
-                parseLines (Just (Paragraph line)) rest
               Just (Paragraph paragraph) -&gt;
                 parseLines (Just (Paragraph (unwords [paragraph, line]))) rest
+              _ -&gt;
+                maybe id (:) context (parseLines (Just (Paragraph line)) rest)
 
 trim :: String -&gt; String
 trim = unwords . words
@@ -3041,10 +3041,10 @@ parseLines context txts =
             maybe id (:) context (parseLines Nothing rest)
           else
             case context of
-              Nothing -&gt;
-                parseLines (Just (Paragraph line)) rest
               Just (Paragraph paragraph) -&gt;
                 parseLines (Just (Paragraph (unwords [paragraph, line]))) rest
+              _ -&gt;
+                maybe id (:) context (parseLines (Just (Paragraph line)) rest)
 
 trim :: String -&gt; String
 trim = unwords . words
@@ -4547,7 +4547,7 @@ our package manager will download and install the required package for us!</p>
 </code></pre>
 <blockquote>
 <p>You can view the git commit of
-<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/64fcc688c05faf01bff9a39b7e7e70871175b84f">the changes we've made</a>
+<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/88dc72a016203db5e0d3367b16a252baf3b1b188">the changes we've made</a>
 and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/code-after-optparse">code up until now</a>.</p>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="fancy-options-parsing"><a class="header" href="#fancy-options-parsing">Fancy options parsing</a></h1>
@@ -5331,7 +5331,7 @@ if the output file or directory already exists, it's okay to replace them.</p>
 <hr />
 <blockquote>
 <p>You can view the git commit of
-<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/a4269bf6631a9270dc0b87a1560897cb86185add">the changes we've made</a>
+<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/f16c200668030f3bd4c22f9ec1db76f93727d3e1">the changes we've made</a>
 and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/code-after-optparse">code up until now</a>.</p>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="handling-errors-and-multiple-files"><a class="header" href="#handling-errors-and-multiple-files">Handling errors and multiple files</a></h1>
@@ -6803,7 +6803,7 @@ We saw how to stack an <code>Either</code>-like monad transformer, <code>ExceptT
 <p>We are almost done. Only a couple more things left to do with this project. Let's go!</p>
 <blockquote>
 <p>You can view the git commit of
-<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/3f7c14f33d6a2b670e5defa3fc5afbddfebd4207">the changes we've made</a>
+<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/145e68ee65dae19062eeccf58a976ac0ed4cef01">the changes we've made</a>
 and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/code-after-multiple-files">code up until now</a>.</p>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="passing-environment-variables"><a class="header" href="#passing-environment-variables">Passing environment variables</a></h1>
@@ -7170,7 +7170,7 @@ arsenal and I wanted to demonstrate it.</p>
 and it's often better to try and get away with simpler techniques if we can.</p>
 <blockquote>
 <p>You can view the git commit of
-<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/18fae5a3b8cbdb26232eef01da4f4967c94c6787">the changes we've made</a>
+<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/82f500fe3c495395a7b984c068636ed1b7ee0dd9">the changes we've made</a>
 and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/code-after-reader">code up until now</a>.</p>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="testing"><a class="header" href="#testing">Testing</a></h1>
@@ -7560,7 +7560,7 @@ Please consult the tutorial for your chosen testing framework, and read more abo
 this very important subject on your own.</p>
 <blockquote>
 <p>You can view the git commit of
-<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/24bf572ba566cfc442dfc9e462f38366ca95b96b">the changes we've made</a>
+<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/7d62f8a0c65d5ca017be372fd5803865dba7555d">the changes we've made</a>
 and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/code-after-testing">final version of the code</a>.</p>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="where-to-go-next"><a class="header" href="#where-to-go-next">Where to go next</a></h1>

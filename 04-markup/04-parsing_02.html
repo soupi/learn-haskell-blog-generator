@@ -289,10 +289,10 @@ parseLines context txts =
             maybe id (:) context (parseLines Nothing rest) -- (3)
           else
             case context of
-              Nothing -&gt;
-                parseLines (Just (Paragraph line)) rest
               Just (Paragraph paragraph) -&gt;
                 parseLines (Just (Paragraph (unwords [paragraph, line]))) rest -- (4), (5)
+              _ -&gt;
+                maybe id (:) context (parseLines (Just (Paragraph line)) rest)
 
 trim :: String -&gt; String
 trim = unwords . words
@@ -362,10 +362,10 @@ parseLines context txts =
             maybe id (:) context (parseLines Nothing rest)
           else
             case context of
-              Nothing -&gt;
-                parseLines (Just (Paragraph line)) rest
               Just (Paragraph paragraph) -&gt;
                 parseLines (Just (Paragraph (unwords [paragraph, line]))) rest
+              _ -&gt;
+                maybe id (:) context (parseLines (Just (Paragraph line)) rest)
 
 trim :: String -&gt; String
 trim = unwords . words
@@ -448,10 +448,10 @@ parseLines context txts =
             maybe id (:) context (parseLines Nothing rest)
           else
             case context of
-              Nothing -&gt;
-                parseLines (Just (Paragraph line)) rest
               Just (Paragraph paragraph) -&gt;
                 parseLines (Just (Paragraph (unwords [paragraph, line]))) rest
+              _ -&gt;
+                maybe id (:) context (parseLines (Just (Paragraph line)) rest)
 
 trim :: String -&gt; String
 trim = unwords . words
