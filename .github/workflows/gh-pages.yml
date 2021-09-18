@@ -8,16 +8,16 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
 
       - name: Setup mdBook
-        uses: peaceiris/actions-mdbook@v1
-        with:
-          mdbook-version: 'latest'
-
-      - run: mdbook build
+        shell: bash
+        run: |
+          wget https://gilmi.me/static/misc/mymdbook
+          chmod +x mymdbook
+          ./mymdbook build
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
