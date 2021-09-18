@@ -112,7 +112,7 @@ need to extract it out of the type. We do this using pattern matching.
 Pattern matching can be used in two ways, in case expressions and in
 function definitions.
 
-1. case expressions are kinda beefed up switch expressions and look like this:
+1. case expressions are kind of beefed up switch expressions and look like this:
 
 ```hs
 case <expression> of
@@ -122,12 +122,12 @@ case <expression> of
 ```
 
 The `<expression>` is the thing we want to unpack, and the `pattern`
-is it's concrete shape. For example:
+is its concrete shape. For example:
 
 ```hs
 getStructureString :: Structure -> String
-getStructureString myhbc =
-  case myhbc of
+getStructureString struct =
+  case struct of
     Structure str -> str
 ```
 

@@ -23,7 +23,7 @@ The little HTML library we've been writing can be considered an EDSL.
 It is used specifically for building web pages (by returning HTML strings),
 and is valid Haskell code!
 
-In Haskell we frequently create and use EDSLs to express domains specific
+In Haskell we frequently create and use EDSLs to express domain specific
 logic. We have EDSLs for concurrency, command-line options parsing, JSON and HTML,
 Creating build systems, writing tests, and many more.
 

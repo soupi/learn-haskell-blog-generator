@@ -58,7 +58,7 @@ getBluePart color =
     RGB _ _ blue -> blue
 ```
 
-In `getBluePart` we deconstruct a composite value into it's part and extract the third component
+In `getBluePart` we deconstruct a composite value into its part and extract the third component
 representing the blue value in a color represented by red, green and blue components (RGB).
 
 Note that `blue` is the name we give to the third component so it will be bound
