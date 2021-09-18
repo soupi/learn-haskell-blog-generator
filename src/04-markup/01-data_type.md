@@ -31,7 +31,7 @@ data <Type-name> <type-args>
 It looks really similar to `newtype`, but there are two important
 differences:
 
-1. In the <types> part we can write many types (Like `Int`, `String`, or `Bool`).
+1. In the `<types>` part we can write many types (Like `Int`, `String`, or `Bool`).
    For `newtype`s we can only write one.
 2. We can have alternative structures using `|`, `newtype`s have no
    alternatives.
@@ -39,7 +39,7 @@ differences:
 This is because `newtype`s is used to provide a type safe __alias__,  and `data`
 is used to build a new **composite** type that can potentially have *alternatives*.
 
-Let's see a couple of examples of data types:
+Let's see a few of examples of data types:
 
 1. Bool
 
@@ -50,8 +50,8 @@ Let's see a couple of examples of data types:
    ```
    
    We created a new data type named `Bool` with the possible values `True` or `False`.
-   In this case we only have *constructor* alternatives and none of the alternatives
-   carriers additional values, this is similar to enums in other languages.
+   In this case we only have *constructor* alternatives and none of the constructors
+   carry additional values, this is similar to enums in other languages.
 
 2. Person
 
@@ -116,8 +116,20 @@ Let's see a couple of examples of data types:
    32
    ```
    
-   Unfortunately, this also means that if we defined a different data type with the field
-   `age`, the functions which GHC needs to generate will clash.
+   We even have special syntax for updating specific fields in a record. Of course,
+   we do not update records in place - we generate a new value instead.
+   
+   ```hs
+   ghci> gil = Person { name = "Gil", age = 32 }
+   ghci> age (gil { age = 33 })
+   33
+   ghci> age gil
+   32
+   ```
+   
+   Unfortunately, having specialized functions for each field also means that if we
+   defined a different data type with the field `age`, the functions which GHC needs
+   to generate will clash.
    
    The easiest way to solve this is to give fields unique names, for example
    by adding a prefix:
