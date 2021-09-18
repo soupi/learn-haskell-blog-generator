@@ -1,6 +1,6 @@
 # Testing
 
-We want to add some testing to our blog generator. At the very least
+We want to add some tests to our blog generator. At the very least
 a few regression tests to make sure that if we extend or change our markup parsing code,
 HTML generation code, or translation from markup to HTML code, and make a mistake, we'll
 have a safety web alerting us of issues.
@@ -17,7 +17,7 @@ so we'll use that.
 We're going to define a new section in our `hs-blog-gen.cabal` file for our new test suite.
 Like `library` and `executable`, this section is called `test-suite`.
 
-There interface for how to define a test suite is describe in the
+The interfaces for how to define a test suite is describe in the
 [Cabal documentation](https://cabal.readthedocs.io/en/3.4/cabal-package.html?highlight=exitcode#test-suites).
 We are going to use the `exitcode-stdio-1.0` interface. Let's go over the different settings.
 
@@ -157,9 +157,9 @@ Finished in 0.0004 seconds
 ```
 
 The output describes which tests are running in a hierarchy tree (module, group and test),
-whether it passed or failed, and if it failed, what was the output and what it expected.
+whether the tests passed or failed, and if they failed, what was the output and what the expected output was.
 
-We can fix this by matching the expected output:
+We can fix our test by matching the expected output:
 
 ```hs
       shouldBe
@@ -248,7 +248,7 @@ simple = do
         [CodeBlock ["main = putStrLn \"hello world!\""]]
 ```
 
-Also, there are other "expectations" such as `shouldBe` we can use when writing tests.
+Also, there are other "expectations" like `shouldBe` we can use when writing tests.
 They are described in the [hspec tutorial](https://hspec.github.io/expectations.html)
 and can be found in the
 [haddock documentation](https://hackage.haskell.org/package/hspec-expectations-0.8.2/docs/Test-Hspec-Expectations.html) as well.
@@ -258,7 +258,7 @@ and can be found in the
 If we want to write multi-line strings, or avoid escaping string like we did in the "code"
 test, we can use a library called
 [raw-strings-qq](https://hackage.haskell.org/package/raw-strings-qq)
-that uses a language extension called
+which uses a language extension called
 [`QuasiQuotes`](https://downloads.haskell.org/ghc/latest/docs/html/users_guide/exts/template_haskell.html#extension-QuasiQuotes).
 `QuasiQuotes` is a meta-programming extension that provides a mechanism to extend the syntax for Haskell.
 
@@ -441,7 +441,7 @@ This chapter has been just the tip of the iceberg of the Haskell testing landsca
 We haven't talked about
 [property testing](https://www.scs.stanford.edu/16wi-cs240h/slides/testing.html) or
 [golden testing](https://ro-che.info/articles/2017-12-04-golden-tests),
-testing expected failure, testing IO code, inspection testing, benchmarking, and more.
+testing expected failures, testing IO code, inspection testing, benchmarking, and more.
 There's just too much to cover!
 
 My hope is that this chapter
