@@ -6,19 +6,19 @@ with GHC. Because of that we didn't really need to do anything more fancy
 than `runghc` to run our program. However, we want to start using
 external libraries which are not included with GHC in our programs.
 
-External packages can be downloaded from [Hackage](https://hackage.haskell.org/),
-Haskell's central package archive, [Stackage](https://www.stackage.org/),
+External packages can be downloaded from [Hackage](https://hackage.haskell.org/) -
+Haskell's central package archive, [Stackage](https://www.stackage.org/) -
 a subset of Hackage packages that are known to work together, or even
-from remote git repositories. Usually Haskellers uses a **package manager** to
+from remote git repositories. Usually Haskellers use a **package manager** to
 download and manage packages for different projects. The most popular package
 managers for Haskell are [cabal](https://cabal.readthedocs.io) and
 [stack](https://haskellstack.org).
 
-The main difference between the two tools is their philosophy.
-`cabal` tries to be a more minimalist tool that handles building Haskell projects
-and package management using the whole of Hackage and uses complicated algorithms
+A major difference between the two tools is their philosophy.
+`cabal` tries to be a more minimalist tool that handles building Haskell projects,
+doing package management using the whole of Hackage, and uses complicated algorithms
 to make sure packages work together.
-`stack` tries to be a more maximal tool that handles installing the right GHC
+`stack` tries to be a more maximalistic tool that handles installing the right GHC
 for each project, provide integration with external tools like hoogle,
 and lets the user choose which 'set' of packages (including their versions) they want to use.
 
@@ -98,7 +98,7 @@ The first part should be fairly straightforward from the comments, maybe except 
   [More info on different versions](https://cabal.readthedocs.io/en/3.4/file-format-changelog.html?highlight=cabal-version).
 - `name`: The name of your library and package. Must match with the .cabal filename. Usually starts with a lowercase. [Check if your package name is already taken on Hackage](https://hackage.haskell.org/packages/search?terms=name).
 - `version`: Some Haskell packages use [semver](https://semver.org/), most use [PvP](https://pvp.haskell.org/).
-- `license`: Most Haskell packages use [BSD-3-Clause](https://choosealicense.com/licenses/bsd-3-clause/). [Neil Mitchell blogged about this](https://neilmitchell.blogspot.com/2018/08/licensing-my-haskell-packages.html). You can find more licenses you might want to use at [choosealicense.com](https://choosealicense.com).
+- `license`: Most Haskell packages use [BSD-3-Clause](https://choosealicense.com/licenses/bsd-3-clause/). [Neil Mitchell blogged about this](https://neilmitchell.blogspot.com/2018/08/licensing-my-haskell-packages.html). You can find more licenses if you'd like at [choosealicense.com](https://choosealicense.com).
 - `extra-doc-files`: Include extra doc files here, such as `README` or `CHANGELOG`.
 
 Let's fill this with the metadata of our project:
@@ -210,7 +210,9 @@ a different source directory. This means we will need to move the files around
 a bit and change the `module` name in each file and the `import` statements. This is to avoid
 conflict with other packages that a user might import.
 
-Do this now!
+---
+
+Do this now.
 
 <details><summary>Solution</summary>
 
@@ -261,6 +263,8 @@ Do this now!
 
 </details>
 
+---
+
 ### Executable
 
 We have separated our code to two sections: a library and an executable, why?
@@ -293,6 +297,8 @@ executable hs-blog-gen
 
 We can write many executables descriptions. In this case we only need one.
 
+---
+
 **Exercise**: Add a new file: `app/Main.hs` which imports `HsBlog` and runs `main`.
 
 <details><summary>Solution</summary>
@@ -309,6 +315,8 @@ main = HsBlog.main
 ```
 
 </details>
+
+---
 
 ### Test-suites
 
@@ -456,7 +464,7 @@ For additional options and configurations, please consult the relevant user guid
 
 ## Usage
 
-Now, instead of manually running `runghc Main.hs`, we will now use either `stack`
+Now, instead of manually running `runghc Main.hs`, we will use either `stack`
 or `cabal` to build and run our program and package (I mostly use stack, but up to you).
 
 ### For cabal:
