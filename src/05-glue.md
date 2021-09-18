@@ -13,4 +13,3 @@ While doing so, we will learn:
 
 - How to work with IO
 - How to import external libraries to process whole directories and create a simple command-line interface
-- How to use a testing framework to write automated tests
