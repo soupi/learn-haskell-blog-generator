@@ -6,7 +6,7 @@ in the previous chapter.
 
 Our strategy is to take the string of markup text, and:
 
-1. Split it to a list where each element is a separate line, and
+1. Split it to a list where each element represents a separate line, and
 2. Go over the list line by line and process it, remembering
    information from previous lines if necessary
 
@@ -40,7 +40,7 @@ Instead of loops, in Haskell we use recursion to model iteration.
 Consider the following contrived example: let's say that
 we want to write an algorithm for adding two natural numbers together,
 and we don't have a standard operation to do that (+), but we do
-have two operations we could do for each number: `increment`
+have two operations we could use on each number: `increment`
 and `decrement`.
 
 A solution we could come up with is to slowly "pass" one number
@@ -74,7 +74,7 @@ sum n m =
         else n
 ```
 
-__In order to emulate iteration with mutable state, we call the function again
+__In Haskell, in order to emulate iteration with mutable state, we call the function again
 with the values we want the variables to have in the next iteration.__
 
 ### Evaluation of recursion
@@ -85,7 +85,7 @@ a new call stack.
 
 However, functional languages (and Haskell in particular) play by different
 rules and implement a feature called tail call elimination - when the result of a function call
-is the result of this function (this is called tail position), we can just drop the current function
+is the result of the function (this is called tail position), we can just drop the current
 stack frame and then allocate one for the function we call, so we don't require `N` stack frames
 for `N` iterations.
 
@@ -94,8 +94,8 @@ strategies exists, such as translating code like our recursive `sum` above to th
 
 #### Laziness
 
-Haskell plays by slightly different rules because it uses a lazy evaluation strategy
-instead of the much more common strict evaluation strategy. An evaluation strategy
+Haskell plays by slightly different rules because it uses a *lazy evaluation strategy*
+instead of the much more common strict evaluation strategy. An *evaluation strategy*
 refers to "when do we evaluate a computation". In a strict language the answer is simple:
 _we evaluate the arguments of a function before entering a function_.
 
@@ -138,7 +138,7 @@ In the case above we don't actually need `five`, so we don't evaluate it!
 
 But then if we know we need `sum (increment 2) (decrement 3)`,
 do we use strict evaluation now? The answer is no - because we might not need
-them to complete the computation. For example in this case:
+to evaluate the arguments to complete the computation. For example in this case:
 
 ```hs
 const a b = a
@@ -153,7 +153,7 @@ main =
 to calculate `decrement 3` in order to provide an answer to the computation and in
 turn output an answer to the screen.
 
-So in lazy evaluation we will evaluate expressions when we need to (they are required
+With the lazy evaluation strategy we will evaluate expressions when we need to (when they are required
 in order to do something for the user), and we evaluate from the outside in - first
 we enter functions, and then we evaluate the arguments when we need to (usually when the thing
 we want to evaluate appears in some control flow such as the condition of an `if` expression
@@ -399,11 +399,11 @@ Which when run will print `Yes.` to the screen.
 In general, when trying to solve problems recursively, it is useful to think
 about the problem in three parts:
 
-1. Finding the **base case** (the most simple cases - the ones I already know how to answer)
+1. Finding the **base case** (the most simple cases - the ones we already know how to answer)
 2. Figuring out how to **reduce** the problem to something simpler (so it gets closer to the base case)
-3. **Mitigating the difference** between the reduced version and the solution I need to provide
+3. **Mitigating the difference** between the reduced version and the solution we need to provide
 
-The reduce and mitigate steps together are usually called the recursive step.
+The reduce and mitigate steps together are usually called the *recursive step*.
 
 Let's take a look at another example problem: generating a list of a particular size
 with a specific value in place of every element.
@@ -414,7 +414,7 @@ In Haskell, this function would have the following signature:
 replicate :: Int -> a -> [a]
 ```
 
-Here are a few examples using in:
+Here are a few usage examples of `replicate`:
 
 ```hs
 ghci> replicate 4 True
@@ -427,11 +427,13 @@ ghci> replicate (-13) True
 
 How would we implement this function recursively? How would describe it in three steps above?
 
-1. **Base case**: the cases I already know how to generate are the cases where the length
+1. **Base case**: the cases we already know how to generate are the cases where the length
    of the list is zero (or less) - we just return an empty list.
-2. **Reduce**: while I don't know how to generate a list of size `N` (where `N` is positive),
-   if I knew the solution for `N-1` I could:
+2. **Reduce**: while we might not know how to generate a list of size `N` (where `N` is positive),
+   if we knew the solution for `N-1` we could:
 3. **Mitigate**: Add another element to the solution for `N-1` using the `:` (cons) operator.
+
+---
 
 Try to write this in Haskell!
 
@@ -456,6 +458,8 @@ replicate n x =
 
 </details>
 
+---
+
 ### Mutual recursion
 
 When solving functions recursively we usually call the same function again,
@@ -466,7 +470,7 @@ call our function again, we have a **mutual recursive** solution.
 
 For example, let's write two functions, one that checks whether a natural number
 is even or not, and one that checks whether a number is odd or not
-by only decrementing it.
+only by decrementing it.
 
 ```hs
 even :: Int -> Bool
@@ -476,15 +480,17 @@ odd :: Int -> Bool
 
 Let's start with `even`, how should we solve this recursively?
 
-1. **Base case**: I know the answer for `0` - it is `True`.
-2. **Reduction**: I don't know the answer for a general `N`, but I could check whether `N - 1` is odd,
+1. **Base case**: We know the answer for `0` - it is `True`.
+2. **Reduction**: We might not know the answer for a general `N`, but we could check whether `N - 1` is odd,
 3. **Mitigation**: if `N - 1` is odd, then `N` is even! if it isn't odd, then `N` isn't even.
 
 What about `odd`?
 
-1. **Base case**: I know the answer for `0` - it is `False`.
-2. **Reduction**: I don't know the answer for a general `N`, but I could check whether `N - 1` is even,
+1. **Base case**: We know the answer for `0` - it is `False`.
+2. **Reduction**: We might not know the answer for a general `N`, but we could check whether `N - 1` is even,
 3. **Mitigation**: if `N - 1` is even, then `N` is odd! if it isn't even, then `N` isn't odd.
+
+---
 
 Try writing this in Haskell!
 
@@ -512,6 +518,8 @@ odd n =
 
 </details>
 
+---
+
 ## Partial functions
 
 because we didn't handle negative cases in the example above, our functions will loop forever
@@ -525,12 +533,15 @@ as well as **avoid writing** partial functions.
 
 The best way to avoid writing partial functions is by covering all inputs!
 In the situation above, it is definitely possible to handle negative numbers
-as well, so we should do that!
+as well, so we should do that! Or, instead, we could require that our functions
+accept a `Natural` instead of an `Int`, and then the type system would've stopped
+us from using these functions with values that we did not handle.
 
-There are cases where we can't possibly cover all inputs, but it is sometimes
-possible to mitigate that by restricting the inputs further using the type system.
+There are cases where we can't possibly cover all inputs, in these cases it is important
+to re-examine the code and see if we could further restrict the inputs using types to
+mitigate these issues.
 
-For example, the `head :: [a] -> a` function in `Prelude` promises
+For example, the `head :: [a] -> a` function from `Prelude` promises
 to return the first element (the head) of a list, but we know that lists
 could possibly be empty, so how can this function deliver on its promise?
 
@@ -554,7 +565,8 @@ Let's get back to the task at hand.
 
 As stated previously, our strategy for parsing the markup text is:
 
-1. Split the string to a list where each element is a separate line (which we can do with [`lines`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Prelude.html#v:lines)), and
+1. Split the string to a list where each element is a separate line
+   (which we can do with [`lines`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Prelude.html#v:lines)), and
 2. Go over the list line by line and process it, remembering
    information from previous lines if necessary
 

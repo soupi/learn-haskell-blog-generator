@@ -20,9 +20,9 @@ you see what is called a __type class constraint__ on the type `a`. What
 we say in this signature, is that the function `show` can work on any
 type that is a member of the type class `Show`.
 
-Type classes is a feature in Haskell that allows us to declare common
+Type classes is a feature in Haskell that allows us to declare a common
 interface for different types. In our case, Haskell's standard library
-defines the type class `Show` in the following (this is a simplified
+defines the type class `Show` in the following way (this is a simplified
 version but good enough for our purposes):
 
 ```hs
@@ -30,9 +30,10 @@ class Show a where
   show :: a -> String
 ```
 
-This means that we have now declared a common interface for Haskell
-types that want it. Any time that wants to implement it needs to
-define an *instance* for the type class. For example:
+A type class declaration describes a common interface for Haskell types.
+`show` is an overloaded function that will work for any type that is an *instance*
+of the type class `Show`.
+We can define an instance of a type class manually like this:
 
 ```hs
 instance Show Bool where
@@ -42,8 +43,30 @@ instance Show Bool where
       False -> "False"
 ```
 
-If all the types we use while defining our data type already implement
-this, we can automatically derive it by adding `deriving Show` at the
+Defining an instance means providing an implementation for the interface for a specific type.
+When we call the function `show` on a data type, the compiler will search the instance of
+the type it inferred, and use the implementation provided in the instance declaration.
+
+```hs
+ghci> show True
+"True"
+ghci> show 187
+"187"
+ghci> show "Hello"
+"\"Hello\""
+```
+
+As can be seen above, the `show` function converts a value to its textual representation.
+Which is why `"Hello"` includes the quotes as well. The `Show` type class is usually
+used for debugging purposes.
+
+## Deriving instances
+
+It is also possible to automatically generate implementations of a few selected
+type classes. Fortunately, `Show` is one of them.
+
+If all the types we use in the definition of our data type already implement
+an instance of `Show`, we can *automatically derive* it by adding `deriving Show` at the
 end of the data definition.
 
 ```hs
@@ -72,12 +95,17 @@ a `Show` instance, we can now print `Document`s, because they are just
 aliases for `[Structure]`. Try it!
 
 There are many type classes Haskellers use everyday. A couple more are
-`Eq` for equality and `Ord` for ordering.
+`Eq` for equality and `Ord` for ordering. These are also special type classes
+that can be derived automatically.
+
+## Laws
 
 Type classes often come with "rules" or "laws" that instances should satisfy,
 the purpose of these laws is to provide *predictable behaviour* across
 instances, so that when we run into a new instance we can be confident
-that it will behave in a certain expected way.
+that it will behave in a certain expected way, and we can write code
+that works generically for all instances of a type class while expecting
+them to adhere to these rules.
 
 As an example, let's look at the `Semigroup` type class:
 
@@ -107,21 +135,24 @@ Unfortunately the Haskell type system cannot "prove" that instances
 satisfy these laws, but as a community we often shun unlawful instances.
 
 Many data types (together with their respective operations) can
-form a `Semigroup` (or any other type class), and instances
-don't even have to look similar or have a common analogy/metaphor.
+form a `Semigroup`, and instances
+don't even have to look similar or have a common analogy/metaphor
+(and this is true for many other type classes as well).
 
 **Type classes are often just _interfaces_ with _laws_** (or expected behaviour if you will).
 Approaching them with this mindset can be very liberating!
 
-To put it in a differently, **type classes can be used to create abstractions** -
+To put it a differently, **type classes can be used to create abstractions** -
 interfaces with laws/expected behaviour where we don't actually care about the
 concrete details of the underlying type, just that it *implements a certain
-API and behaves as expected*.
+API and behaves in a certain way*.
 
-We have [previously](02_04-safer_construction.html#appending-htmlstructure)
-created a function that looks like this for our `Html` EDSL!
+Regarding `Semigroup` have [previously](02_04-safer_construction.html#appending-htmlstructure)
+created a function that looks like `<>` for our `Html` EDSL!
 We can add a `Semigroup` instance for our `Structure` data type
 and have a nicer to use API!
+
+---
 
 Exercise: Please do this and remove the `append_` function from the API.
 
@@ -150,3 +181,5 @@ as type class instances are exported automatically.
 You will also need replace the usage of `append_` with `<>` in `hello.hs`.
 
 </details>
+
+---
