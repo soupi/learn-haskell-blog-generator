@@ -4,35 +4,35 @@
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
         <title>Fancy options parsing - Learning Haskell by building a static blog generator</title>
-                
-
         <!-- Custom HTML head -->
-        
-
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="A step by step guide to learning Haskell by building a simple static blog generator">
+        <meta name="description" content="A project-oriented online book about Haskell">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
 
-                <link rel="icon" href="../favicon.svg">
-                        <link rel="shortcut icon" href="../favicon.png">
-                <link rel="stylesheet" href="../css/variables.css">
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:title" content="Learning Haskell by building a static blog generator">
+        <meta name="twitter:description" content="A project-oriented online book about Haskell">
+        <meta name="twitter:site" content="@_gilmi">
+        <meta name="twitter:image" content="https://gilmi.me/static/misc/blog-stuff/gilmi.jpg">
+        <meta name="twitter:image-alt" content="gilmi's avatar, a simply drawn koala hanging on a branch">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
         <link rel="stylesheet" href="../css/general.css">
         <link rel="stylesheet" href="../css/chrome.css">
-                <link rel="stylesheet" href="../css/print.css" media="print">
-        
+        <link rel="stylesheet" href="../css/print.css" media="print">
         <!-- Fonts -->
         <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
-                <link rel="stylesheet" href="../fonts/fonts.css">
-        
+        <link rel="stylesheet" href="../fonts/fonts.css">
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="../highlight.css">
         <link rel="stylesheet" href="../tomorrow-night.css">
         <link rel="stylesheet" href="../ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
-        
-            </head>
+    </head>
     <body>
         <!-- Provide site root to javascript -->
         <script type="text/javascript">
@@ -82,14 +82,14 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="../01-about.html"><strong aria-hidden="true">1.</strong> About this book</a></li><li class="chapter-item expanded "><a href="../02-hello.html"><strong aria-hidden="true">2.</strong> Hello world</a></li><li class="chapter-item expanded "><a href="../03-html_printer.html"><strong aria-hidden="true">3.</strong> Building an HTML printer library</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../03-html/01-html_content.html"><strong aria-hidden="true">3.1.</strong> Flexible HTML content (functions)</a></li><li class="chapter-item expanded "><a href="../03-html/02-type_signatures.html"><strong aria-hidden="true">3.2.</strong> Adding type signatures</a></li><li class="chapter-item expanded "><a href="../03-html/03-edsls.html"><strong aria-hidden="true">3.3.</strong> Embedded Domain Specific Languages</a></li><li class="chapter-item expanded "><a href="../03-html/04-safer_construction.html"><strong aria-hidden="true">3.4.</strong> Safer HTML construction with types</a></li><li class="chapter-item expanded "><a href="../03-html/05-modules.html"><strong aria-hidden="true">3.5.</strong> Preventing incorrect use with modules</a></li><li class="chapter-item expanded "><a href="../03-html/06-escaping_characters.html"><strong aria-hidden="true">3.6.</strong> Escaping characters</a></li><li class="chapter-item expanded "><a href="../03-html/07-internal_modules.html"><strong aria-hidden="true">3.7.</strong> Exposing internal functionality (Internal modules)</a></li><li class="chapter-item expanded "><a href="../03-html/08-exercises.html"><strong aria-hidden="true">3.8.</strong> Exercises</a></li><li class="chapter-item expanded "><a href="../03-html/09-summary.html"><strong aria-hidden="true">3.9.</strong> Summary</a></li></ol></li><li class="chapter-item expanded "><a href="../04-markup.html"><strong aria-hidden="true">4.</strong> Custom markup language</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../04-markup/01-data_type.html"><strong aria-hidden="true">4.1.</strong> Representing the markup language as a Haskell data type</a></li><li class="chapter-item expanded "><a href="../04-markup/02-parsing_01.html"><strong aria-hidden="true">4.2.</strong> Parsing markup part 01 (Recursion)</a></li><li class="chapter-item expanded "><a href="../04-markup/03-displaying_results.html"><strong aria-hidden="true">4.3.</strong> Displaying the parsing results (type classes)</a></li><li class="chapter-item expanded "><a href="../04-markup/04-parsing_02.html"><strong aria-hidden="true">4.4.</strong> Parsing markup part 02 (Pattern matching)</a></li></ol></li><li class="chapter-item expanded "><a href="../05-glue.html"><strong aria-hidden="true">5.</strong> Gluing things together</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../05-glue/01-markup_to_html.html"><strong aria-hidden="true">5.1.</strong> Converting Markup to HTML</a></li><li class="chapter-item expanded "><a href="../05-glue/02-io.html"><strong aria-hidden="true">5.2.</strong> Working with IO</a></li><li class="chapter-item expanded "><a href="../05-glue/03-project.html"><strong aria-hidden="true">5.3.</strong> Defining a project description</a></li><li class="chapter-item expanded "><a href="../05-glue/04-optparse.html" class="active"><strong aria-hidden="true">5.4.</strong> Fancy options parsing</a></li><li class="chapter-item expanded "><a href="../05-glue/05-multiple_files.html"><strong aria-hidden="true">5.5.</strong> Handling errors and multiple files</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../05-glue/05-errors/01-either.html"><strong aria-hidden="true">5.5.1.</strong> Handling errors with Either</a></li><li class="chapter-item expanded "><a href="../05-glue/05-errors/02-except.html"><strong aria-hidden="true">5.5.2.</strong> Either with IO?</a></li><li class="chapter-item expanded "><a href="../05-glue/05-errors/03-exceptions.html"><strong aria-hidden="true">5.5.3.</strong> Exceptions</a></li><li class="chapter-item expanded "><a href="../05-glue/05-errors/04-implementation.html"><strong aria-hidden="true">5.5.4.</strong> Lets code already!</a></li><li class="chapter-item expanded "><a href="../05-glue/05-errors/05-summary.html"><strong aria-hidden="true">5.5.5.</strong> Summary</a></li></ol></li><li class="chapter-item expanded "><a href="../05-glue/06-environment.html"><strong aria-hidden="true">5.6.</strong> Passing an environment</a></li></ol></li><li class="chapter-item expanded "><a href="../06-testing.html"><strong aria-hidden="true">6.</strong> Writing tests</a></li><li class="chapter-item expanded "><a href="../07-next.html"><strong aria-hidden="true">7.</strong> Where to go next</a></li><li class="chapter-item expanded "><a href="../08-faq.html"><strong aria-hidden="true">8.</strong> Frequently asked questions</a></li></ol>            </div>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../01-about.html"><strong aria-hidden="true">1.</strong> About this book</a></li><li class="chapter-item expanded "><a href="../02-hello.html"><strong aria-hidden="true">2.</strong> Hello world</a></li><li class="chapter-item expanded "><a href="../03-html_printer.html"><strong aria-hidden="true">3.</strong> Building an HTML printer library</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../03-html/01-html_content.html"><strong aria-hidden="true">3.1.</strong> Flexible HTML content (functions)</a></li><li class="chapter-item expanded "><a href="../03-html/02-type_signatures.html"><strong aria-hidden="true">3.2.</strong> Adding type signatures</a></li><li class="chapter-item expanded "><a href="../03-html/03-edsls.html"><strong aria-hidden="true">3.3.</strong> Embedded Domain Specific Languages</a></li><li class="chapter-item expanded "><a href="../03-html/04-safer_construction.html"><strong aria-hidden="true">3.4.</strong> Safer HTML construction with types</a></li><li class="chapter-item expanded "><a href="../03-html/05-modules.html"><strong aria-hidden="true">3.5.</strong> Preventing incorrect use with modules</a></li><li class="chapter-item expanded "><a href="../03-html/06-escaping_characters.html"><strong aria-hidden="true">3.6.</strong> Escaping characters</a></li><li class="chapter-item expanded "><a href="../03-html/07-internal_modules.html"><strong aria-hidden="true">3.7.</strong> Exposing internal functionality (Internal modules)</a></li><li class="chapter-item expanded "><a href="../03-html/08-exercises.html"><strong aria-hidden="true">3.8.</strong> Exercises</a></li><li class="chapter-item expanded "><a href="../03-html/09-summary.html"><strong aria-hidden="true">3.9.</strong> Summary</a></li></ol></li><li class="chapter-item expanded "><a href="../04-markup.html"><strong aria-hidden="true">4.</strong> Custom markup language</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../04-markup/01-data_type.html"><strong aria-hidden="true">4.1.</strong> Representing the markup language as a Haskell data type</a></li><li class="chapter-item expanded "><a href="../04-markup/02-parsing_01.html"><strong aria-hidden="true">4.2.</strong> Parsing markup part 01 (Recursion)</a></li><li class="chapter-item expanded "><a href="../04-markup/03-displaying_results.html"><strong aria-hidden="true">4.3.</strong> Displaying the parsing results (type classes)</a></li><li class="chapter-item expanded "><a href="../04-markup/04-parsing_02.html"><strong aria-hidden="true">4.4.</strong> Parsing markup part 02 (Pattern matching)</a></li></ol></li><li class="chapter-item expanded "><a href="../05-glue.html"><strong aria-hidden="true">5.</strong> Gluing things together</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../05-glue/01-markup_to_html.html"><strong aria-hidden="true">5.1.</strong> Converting Markup to HTML</a></li><li class="chapter-item expanded "><a href="../05-glue/02-io.html"><strong aria-hidden="true">5.2.</strong> Working with IO</a></li><li class="chapter-item expanded "><a href="../05-glue/03-project.html"><strong aria-hidden="true">5.3.</strong> Defining a project description</a></li><li class="chapter-item expanded "><a href="../05-glue/04-optparse.html" class="active"><strong aria-hidden="true">5.4.</strong> Fancy options parsing</a></li><li class="chapter-item expanded "><a href="../05-glue/05-multiple_files.html"><strong aria-hidden="true">5.5.</strong> Handling errors and multiple files</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../05-glue/05-errors/01-either.html"><strong aria-hidden="true">5.5.1.</strong> Handling errors with Either</a></li><li class="chapter-item expanded "><a href="../05-glue/05-errors/02-except.html"><strong aria-hidden="true">5.5.2.</strong> Either with IO?</a></li><li class="chapter-item expanded "><a href="../05-glue/05-errors/03-exceptions.html"><strong aria-hidden="true">5.5.3.</strong> Exceptions</a></li><li class="chapter-item expanded "><a href="../05-glue/05-errors/04-implementation.html"><strong aria-hidden="true">5.5.4.</strong> Lets code already!</a></li><li class="chapter-item expanded "><a href="../05-glue/05-errors/05-summary.html"><strong aria-hidden="true">5.5.5.</strong> Summary</a></li></ol></li><li class="chapter-item expanded "><a href="../05-glue/06-environment.html"><strong aria-hidden="true">5.6.</strong> Passing an environment</a></li></ol></li><li class="chapter-item expanded "><a href="../06-testing.html"><strong aria-hidden="true">6.</strong> Writing tests</a></li><li class="chapter-item expanded "><a href="../07-next.html"><strong aria-hidden="true">7.</strong> Where to go next</a></li><li class="chapter-item expanded "><a href="../08-faq.html"><strong aria-hidden="true">8.</strong> Frequently asked questions</a></li></ol>
+            </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
 
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                
                 <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky bordered">
                     <div class="left-buttons">
@@ -106,22 +106,21 @@
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
                         </ul>
-                                                <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
                             <i class="fa fa-search"></i>
                         </button>
-                                            </div>
+                    </div>
 
                     <h1 class="menu-title">Learning Haskell by building a static blog generator</h1>
 
                     <div class="right-buttons">
-                                                <a href="../print.html" title="Print this book" aria-label="Print this book">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
-                                                                        
                     </div>
                 </div>
 
-                                <div id="search-wrapper" class="hidden">
+                <div id="search-wrapper" class="hidden">
                     <form id="searchbar-outer" class="searchbar-outer">
                         <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
                     </form>
@@ -131,7 +130,6 @@
                         </ul>
                     </div>
                 </div>
-                
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
                 <script type="text/javascript">
                     document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
@@ -932,49 +930,38 @@ and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/code
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                                                    <a rel="prev" href="../05-glue/03-project.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../05-glue/03-project.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
-                        
-                                                    <a rel="next" href="../05-glue/05-multiple_files.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="../05-glue/05-multiple_files.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
-                        
                         <div style="clear: both"></div>
                     </nav>
                 </div>
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                                    <a rel="prev" href="../05-glue/03-project.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../05-glue/03-project.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
-                
-                                    <a rel="next" href="../05-glue/05-multiple_files.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next" href="../05-glue/05-multiple_files.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
-                            </nav>
+            </nav>
 
         </div>
 
-        
-        
-        
-                <script type="text/javascript">
+        <script type="text/javascript">
             window.playground_copyable = true;
         </script>
-        
-        
-                <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
         <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
         <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
-        
         <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
         <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
         <script src="../book.js" type="text/javascript" charset="utf-8"></script>
 
         <!-- Custom JS scripts -->
-        
-        
     </body>
 </html>
