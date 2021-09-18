@@ -217,7 +217,7 @@ need to extract it out of the type. We do this using pattern matching.</p>
 <p>Pattern matching can be used in two ways, in case expressions and in
 function definitions.</p>
 <ol>
-<li>case expressions are kinda beefed up switch expressions and look like this:</li>
+<li>case expressions are kind of beefed up switch expressions and look like this:</li>
 </ol>
 <pre><code class="language-hs">case &lt;expression&gt; of
   &lt;pattern&gt; -&gt; &lt;expression&gt;
@@ -225,10 +225,10 @@ function definitions.</p>
   &lt;pattern&gt; -&gt; &lt;expression&gt;
 </code></pre>
 <p>The <code>&lt;expression&gt;</code> is the thing we want to unpack, and the <code>pattern</code>
-is it's concrete shape. For example:</p>
+is its concrete shape. For example:</p>
 <pre><code class="language-hs">getStructureString :: Structure -&gt; String
-getStructureString myhbc =
-  case myhbc of
+getStructureString struct =
+  case struct of
     Structure str -&gt; str
 </code></pre>
 <p>This way we can extract the String out of <code>Structure</code> and return
@@ -247,7 +247,7 @@ arguments:</li>
 <pre><code class="language-hs">getStructureString :: Structure -&gt; String
 getStructureString (Structure str) = str
 </code></pre>
-<p>Using the types we created, we can change the HTML functions we defined before,
+<p>Using the types we created, we can change the HTML functions we've defined before,
 namely <code>html_</code>, <code>body_</code>, <code>p_</code>, etc, to operate on these types instead of <code>String</code>s.</p>
 <p>But first let's meet another operator that will make our code more concise.</p>
 <h2 id="chaining-functions"><a class="header" href="#chaining-functions">Chaining functions</a></h2>
@@ -269,16 +269,18 @@ something of the type <code>b</code>, and returns something of the type <code>c<
 a <em>lowercase letter</em> are <strong>type variables</strong>.
 Think of them as similar to regular variables. Just like
 <code>content</code> could be any string, like <code>&quot;hello&quot;</code> or <code>&quot;world&quot;</code>, a type variable
-can be any type: <code>Bool</code>, <code>String</code>, <code>String -&gt; String</code>, etc.</p>
+can be any type: <code>Bool</code>, <code>String</code>, <code>String -&gt; String</code>, etc.
+This abilitiy is called <em>parametric polymorphism</em> (other languages often call this generics).</p>
 <p>The catch is that type variables must match in a signature, so if for
 example we write a function with the type signature <code>a -&gt; a</code>, the
 input type and the return type <strong>must</strong> match, but it could be
 any type - we cannot know what it is. So the only way to implement a
 function with that signature is:</p>
-<pre><code class="language-hs">mysteryFunction :: a -&gt; a
-mysteryFunction x = x
+<pre><code class="language-hs">id :: a -&gt; a
+id x = x
 </code></pre>
-<p>If we tried any other way, for example returning some made up value
+<p><code>id</code>, short for the identity function, returns the exact value it received.
+If we tried any other way, for example returning some made up value
 like <code>&quot;hello&quot;</code>, or try to use <code>x</code> like a value of a type we know like
 writing <code>x + x</code>, the type checker will complain.</p>
 <p>Also, remember that <code>-&gt;</code> is right associative? This signature is equivalent to:</p>
@@ -286,7 +288,7 @@ writing <code>x + x</code>, the type checker will complain.</p>
 </code></pre>
 <p>Doesn't it look like a function that takes two functions and returns a
 third function that is the composition of the two?</p>
-<p>We can now use this operator to change or HTML functions. Let's start
+<p>We can now use this operator to change our HTML functions. Let's start
 with one example: <code>p_</code>.</p>
 <p>Before, we had:</p>
 <pre><code class="language-hs">p_ :: String -&gt; String
@@ -308,7 +310,7 @@ functions here are:</p>
 <li><code>Structure . el &quot;p&quot; :: String -&gt; Structure</code></li>
 <li><code>(.) :: (b -&gt; c) -&gt; (a -&gt; b) -&gt; (a -&gt; c)</code></li>
 </ul>
-<p>When we try to figure out if an expression type check, we try to match
+<p>When we try to figure out if an expression type checks, we try to match
 the types and see if they work. If they are the same type, all is
 well. If one of them is a type variable and the other isn't we write
 down that the type variable should now be the concrete type, and see
@@ -332,6 +334,29 @@ match with the type of the first argument of <code>.</code> which is <code>b -&g
 <p>We keep doing this process until we come to the conclusion that there
 aren't any types that don't match (we don't have two different
 concrete types that are supposed to be equivalent).</p>
+<blockquote>
+<p><strong>Note</strong>: If we use a <em>parametrically polymorphic</em> function more than once,
+or use different functions that have similar type variable names,
+the type variables don't have to match in all instances simply because the share a name.
+Each instance has its own unique set of type variables. For example:</p>
+<pre><code class="language-hs">id :: a -&gt; a
+ord :: Char -&gt; Int
+chr :: Int -&gt; Char
+
+incrementChar :: Char -&gt; Char
+incrementChar c = chr (ord (id c) + id 1)
+</code></pre>
+<p>In the snippet above, we use <code>id</code> twice (for no good reason other than for demonstration purposes).
+The first <code>id</code> takes a <code>Char</code> as an argument, and its <code>a</code> is equivalent to <code>Char</code>.
+The second <code>id</code> takes an <code>Int</code> as an argument, and its <em>distinct</em> <code>a</code> is equivalent to <code>Int</code>.</p>
+<p>This unfortunately only applies to functions defined at the top-level. If we'd define a local function
+to be passed as an argument to <code>incrementChar</code> with the same type signature as <code>id</code>,
+the types must match in all uses. So this code:</p>
+<pre><code class="language-hs">incrementChar :: (a -&gt; a) -&gt; Char -&gt; Char
+incrementChar func c = chr (ord (func c) + func 1)
+</code></pre>
+<p>Will not type check.</p>
+</blockquote>
 <h2 id="appending-structure"><a class="header" href="#appending-structure">Appending Structure</a></h2>
 <p>Before when we wanted to create richer HTML content and appended
 nodes to one another, we used the append (<code>&lt;&gt;</code>) operator.

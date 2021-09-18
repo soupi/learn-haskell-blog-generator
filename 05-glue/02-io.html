@@ -214,7 +214,7 @@ and then when we try to evaluate <code>-</code>, it requires to evaluate the two
 in order from left to right, so we first evaluate <code>result2</code>.</p>
 <p>Evaluating <code>result2</code>, with substitution, means to replace occurrences of <code>n</code>
 with the input <code>2</code>, and then evaluate the top level function (<code>+</code>), it is a
-primitive function, we then evaluate it's arguments, <code>readIntFromStdin</code>
+primitive function, we then evaluate its arguments, <code>readIntFromStdin</code>
 and then <code>n</code>, at this point <em>we are reading the first integer from the stdin</em>.</p>
 <p>After calculating the result, we can move to evaluate <code>result1</code>, in which,
 during evaluation, <em>will read the second integer from stdin</em>, this is the
