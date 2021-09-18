@@ -173,9 +173,7 @@ function from which module we are referring.</p>
 because qualified names can be a bit verbose and noisy. I usually prefer them,
 but up to you. For more information about imports,
 see this <a href="https://wiki.haskell.org/Import">wiki article</a>.</p>
-<p>In this case we don't <em>have</em> to you qualified imports, but I think they make
-the code a bit clearer.</p>
-<h2 id="converting-markupstructure-to-htmlstructure"><a class="header" href="#converting-markupstructure-to-htmlstructure">Converting Markup.Structure to Html.Structure</a></h2>
+<h2 id="converting-markupstructure-to-htmlstructure"><a class="header" href="#converting-markupstructure-to-htmlstructure">Converting <code>Markup.Structure</code> to <code>Html.Structure</code></a></h2>
 <p>Converting a markup structure to an HTML structure is mostly straightforward
 at this point, we need to pattern match on the markup structure and use
 the relevant HTML API.</p>
@@ -266,6 +264,7 @@ HTML structure.</p>
 <pre><code class="language-hs">empty_ :: Structure
 empty_ = Structure &quot;&quot;
 </code></pre>
+<hr />
 <p>Now we can write our recursive function. Try it!</p>
 <details><summary>Solution</summary>
 <pre><code class="language-hs">concatStructure :: [Structure] -&gt; Structure
@@ -275,6 +274,7 @@ concatStructure list =
     x : xs -&gt; x &lt;&gt; concatStructure list
 </code></pre>
 </details>
+<hr />
 <p>Remember the <code>&lt;&gt;</code> function we implemented as an instance of the <code>Semigroup</code>
 type class? We said that <code>Semigroup</code> is an <strong>abstraction</strong> for things
 that implements <code>(&lt;&gt;) :: a -&gt; a -&gt; a</code>, where  <code>&lt;&gt;</code> is associative
@@ -311,7 +311,7 @@ together with <code>0</code> form a monoid.</p>
 <ol>
 <li>A monoid is a more specific abstraction over semigroup, it builds on it
 by adding a new condition (the existence of an identity member)</li>
-<li>This abstraction can we useful! We can write a general <code>concatStructure</code>
+<li>This abstraction can be useful! We can write a general <code>concatStructure</code>
 that could work for any monoid</li>
 </ol>
 <p>And indeed, there exists a type class in <code>base</code> called <code>Monoid</code> which has
@@ -319,10 +319,12 @@ that could work for any monoid</li>
 <pre><code class="language-hs">class Semigroup a =&gt; Monoid a where
   mempty :: a
 </code></pre>
-<p>(Note: this is actually a simplified version. The
+<blockquote>
+<p>Note: this is actually a simplified version. The
 <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Prelude.html#t:Monoid">actual</a>
 is a bit more complicated because of backwards compatibility and performance reasons.
-<code>Semigroup</code> was actually introduced in Haskell after <code>Monoid</code>!)</p>
+<code>Semigroup</code> was actually introduced in Haskell after <code>Monoid</code>!</p>
+</blockquote>
 <p>We could add an instance of <code>Monoid</code> for our markup <code>Structure</code> data type:</p>
 <pre><code class="language-hs">instance Monoid a where
   mempty = empty_
@@ -339,6 +341,7 @@ mconcat list =
 </code></pre>
 <p>Pretty much the same way as our <code>concatStructure</code>, but it works for any <code>Monoid</code>!
 Abstractions are useful and help us reuse code!</p>
+<blockquote>
 <p>Side note: integers with <code>+</code> and <code>0</code> aren't actually an instance of <code>Monoid</code> in Haskell.
 This is because integers can also form a monoid with <code>*</code> and <code>1</code>! But <strong>there can only
 be one instance per type</strong>. Instead, two other <code>newtype</code>s exist that provide that
@@ -353,6 +356,7 @@ ghci&gt; getProduct (Product 2 &lt;&gt; Product 3)
 ghci&gt; getProduct $ mconcat $ map Product [1..5]
 120
 </code></pre>
+</blockquote>
 <h2 id="another-abstraction"><a class="header" href="#another-abstraction">Another abstraction?</a></h2>
 <p>We've used <code>map</code> and then <code>mconcat</code> twice now. Surely there has to be a function
 that unifies this pattern. And indeed, it is called
@@ -389,7 +393,7 @@ foldMap
 and think &quot;this 'map' we are talking about isn't specific for lists, maybe
 that's another abstraction?&quot;, yes. It is actually a very important and
 fundamental abstraction called <code>Functor</code>.
-But I think we had enough abstractions for today.
+But I think we had enough abstractions for this chapter.
 We'll cover it in a later chapter!</p>
 <h2 id="finishing-our-conversion-module"><a class="header" href="#finishing-our-conversion-module">Finishing our conversion module</a></h2>
 <p>Let's finish our code by writing <code>convert</code>:</p>
@@ -431,6 +435,7 @@ convertStructure structure =
 <li>Qualified imports</li>
 <li>Ways to handle errors</li>
 <li>The <code>Monoid</code> type class and abstraction</li>
+<li>The <code>Foldable</code> type class and abstraction</li>
 </ul>
 <p>Next, we are going to glue our functionality together and learn about
 I/O in Haskell!</p>
