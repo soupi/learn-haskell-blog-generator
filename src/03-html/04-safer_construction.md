@@ -153,7 +153,7 @@ getStructureString :: Structure -> String
 getStructureString (Structure str) = str
 ```
 
-Using the types we created, we can change the HTML functions we defined before,
+Using the types we created, we can change the HTML functions we've defined before,
 namely `html_`, `body_`, `p_`, etc, to operate on these types instead of `String`s.
 
 But first let's meet another operator that will make our code more concise.
@@ -185,6 +185,7 @@ a _lowercase letter_ are **type variables**.
 Think of them as similar to regular variables. Just like
 `content` could be any string, like `"hello"` or `"world"`, a type variable
 can be any type: `Bool`, `String`, `String -> String`, etc.
+This abilitiy is called *parametric polymorphism* (other languages often call this generics).
 
 The catch is that type variables must match in a signature, so if for
 example we write a function with the type signature `a -> a`, the
@@ -193,10 +194,11 @@ any type - we cannot know what it is. So the only way to implement a
 function with that signature is:
 
 ```hs
-mysteryFunction :: a -> a
-mysteryFunction x = x
+id :: a -> a
+id x = x
 ```
 
+`id`, short for the identity function, returns the exact value it received.
 If we tried any other way, for example returning some made up value
 like `"hello"`, or try to use `x` like a value of a type we know like
 writing `x + x`, the type checker will complain.
@@ -210,7 +212,7 @@ Also, remember that `->` is right associative? This signature is equivalent to:
 Doesn't it look like a function that takes two functions and returns a
 third function that is the composition of the two?
 
-We can now use this operator to change or HTML functions. Let's start
+We can now use this operator to change our HTML functions. Let's start
 with one example: `p_`.
 
 Before, we had:
@@ -240,7 +242,7 @@ functions here are:
 - `Structure . el "p" :: String -> Structure`
 - `(.) :: (b -> c) -> (a -> b) -> (a -> c)`
 
-When we try to figure out if an expression type check, we try to match
+When we try to figure out if an expression type checks, we try to match
 the types and see if they work. If they are the same type, all is
 well. If one of them is a type variable and the other isn't we write
 down that the type variable should now be the concrete type, and see
@@ -265,6 +267,35 @@ match with the type of the first argument of `.` which is `b -> c`, so
 We keep doing this process until we come to the conclusion that there
 aren't any types that don't match (we don't have two different
 concrete types that are supposed to be equivalent).
+
+> **Note**: If we use a *parametrically polymorphic* function more than once,
+> or use different functions that have similar type variable names,
+> the type variables don't have to match in all instances simply because the share a name.
+> Each instance has its own unique set of type variables. For example:
+> 
+> ```hs
+> id :: a -> a
+> ord :: Char -> Int
+> chr :: Int -> Char
+> 
+> incrementChar :: Char -> Char
+> incrementChar c = chr (ord (id c) + id 1)
+> ```
+> 
+> In the snippet above, we use `id` twice (for no good reason other than for demonstration purposes).
+> The first `id` takes a `Char` as an argument, and its `a` is equivalent to `Char`.
+> The second `id` takes an `Int` as an argument, and its *distinct* `a` is equivalent to `Int`.
+> 
+> This unfortunately only applies to functions defined at the top-level. If we'd define a local function
+> to be passed as an argument to `incrementChar` with the same type signature as `id`,
+> the types must match in all uses. So this code:
+> 
+> ```hs
+> incrementChar :: (a -> a) -> Char -> Char
+> incrementChar func c = chr (ord (func c) + func 1)
+> ```
+> 
+> Will not type check.
 
 ## Appending Structure
 
