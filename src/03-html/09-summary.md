@@ -52,7 +52,7 @@ module Html
   , append_
   , render
   )
-where
+  where
 
 import Html.Internal
 ```
