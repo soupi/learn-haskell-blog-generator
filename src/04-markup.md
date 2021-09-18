@@ -3,13 +3,13 @@
 In this chapter we will define our own simple markup language
 and parse documents written in this language into Haskell data structures.
 
-Our simple markup language will contain the following features:
+Our markup language will contain the following features:
 
-- Headers - prefix by a number of `*` characters
-- Paragraphs - a group of lines without empty lines in between
-- Unordered lists - a group of lines each prefixed with `- `
-- Unordered lists - a group of lines each prefixed with `# `
-- Code blocks - a group of lines each prefixed with `> `
+- Headers: prefix by a number of `*` characters
+- Paragraphs: a group of lines without empty lines in between
+- Unordered lists: a group of lines each prefixed with `- `
+- Unordered lists: a group of lines each prefixed with `# `
+- Code blocks: a group of lines each prefixed with `> `
 
 Here's a sample document which we will use as an example:
 
