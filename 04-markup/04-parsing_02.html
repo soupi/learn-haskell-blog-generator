@@ -168,7 +168,7 @@ module under the name
 <code>data</code>, we can use pattern matching.</p>
 <h2 id="pattern-matching"><a class="header" href="#pattern-matching">Pattern Matching</a></h2>
 <p>We've already seen pattern matching a few times.
-It is an incredibly versatile feature of Haskell, we can use it to do two things main things:</p>
+It is an incredibly versatile feature of Haskell, we can use it to do two main things:</p>
 <ol>
 <li>Deconstruct complex values</li>
 <li>Control flow</li>
@@ -228,12 +228,17 @@ ansiColorToVGA ansicolor =
 <li>We try to match patterns from the top down, it is possible for patterns to overlap with one another and the top one will win</li>
 <li>If the value we try to match does not match any of the patterns listed, an error will be thrown at runtime</li>
 </ol>
-<p>We can ask GHC to notify when we accidentally written overlapping patterns,
+<p>We can ask GHC to notify us when we accidentally write overlapping patterns,
 or when we haven't listed enough patterns to match all possible values,
-by passing the flag <code>-Wall</code> to <code>ghc</code> or <code>runghc</code>!</p>
-<p><strong>My recommendation is to always use -Wall!</strong></p>
+by passing the flag <code>-Wall</code> to <code>ghc</code> or <code>runghc</code>.</p>
+<p><strong>My recommendation is to always use <code>-Wall</code></strong>!</p>
+<blockquote>
 <p>As an aside, while it is possible to use pattern matching in function definitions by defining a function
-multiple types, <a href="https://twitter.com/_gilmi/status/1257225601079029760">I personally don't like that feature very much</a>, but if you want to use it instead of case expressions, it is possible.</p>
+multiple types, <a href="https://twitter.com/_gilmi/status/1257225601079029760">I personally don't like that feature very much</a>
+and I would encourage you to avoid it,
+but if you want to use it instead of case expressions, it is possible.</p>
+</blockquote>
+<hr />
 <p>Exercises:</p>
 <ol>
 <li>Create a function <code>isBright :: AnsiColor -&gt; Bool</code> that checks whether a color is bright or not</li>
@@ -241,6 +246,7 @@ multiple types, <a href="https://twitter.com/_gilmi/status/1257225601079029760">
 <li>Create a function <code>isEmpty :: [a] -&gt; Bool</code> that uses <code>listToMaybe</code> to check whether a list is empty or not</li>
 <li>Create a function <code>isEmpty :: [a] -&gt; Bool</code> that <em>doesn't</em> use <code>listToMaybe</code> to check whether a list is empty or not</li>
 </ol>
+<hr />
 <h2 id="parsing-with-rich-context"><a class="header" href="#parsing-with-rich-context">Parsing with rich context</a></h2>
 <p>Previously we wrote a parser that separates documents into different paragraphs.
 With new features under our belt we can now remember the exact context we are in
@@ -321,13 +327,14 @@ There are many ways to handle that, one simple way is to create a different type
   | CtxOrderedList [String]
   | CtxCodeBlock [String]
 </code></pre>
-<p>Since creating new types in Haskell is cheap, this is a very viable solution.
-With more complex type-level features we can even create a more general type that can be used in both place,
-both as a <code>Structure</code> and as a <code>Context</code>, don't worry about it for now, really. (but if one day you really need to do this, search for &quot;Higher-Kinded Data&quot; (or HKD pattern)).</p>
-<p>In this case I'm going with the approach of not worrying about it too much, because it's a very local code that can easily be fixed later if and when we see it is an issue.</p>
+<p>Since creating new types in Haskell is cheap, this is a very viable solution.</p>
+<p>In this case I'm going with the approach of not worrying about it too much,
+because it's a very local piece of code that can easily be fixed later if we'll see that its an issue.</p>
 </li>
 <li>
-<p>Anyway, if you've used <code>-Wall</code> like I've suggested, you'd get a warning from GHC saying that the <em>&quot;pattern matches are non-exhaustive&quot;</em>. This is because we did not cover all cases. So let's cover more cases:</p>
+<p>Anyway, if you've used <code>-Wall</code> like I've suggested,
+you'd get a warning from GHC saying that the <em>&quot;pattern matches are non-exhaustive&quot;</em>.
+This is because we did not cover all cases. So let's cover more cases:</p>
 </li>
 </ol>
 <pre><code class="language-hs">parse :: String -&gt; Document
@@ -370,8 +377,8 @@ parseLines context txts =
 trim :: String -&gt; String
 trim = unwords . words
 </code></pre>
-<p>Exercise: Add the <code>CodeBlock</code> and <code>OrderedList</code> cases.</p>
 <hr />
+<p>Exercise: Add the <code>CodeBlock</code> and <code>OrderedList</code> cases.</p>
 <details>
   <summary>Final module</summary>
 <pre><code class="language-hs">-- Markup.hs
@@ -466,9 +473,9 @@ use the <code>==</code> (equals) operator to compare our solutions to the result
 <p>Try it in GHCi! You can read a text file in GHCi using the following syntax:</p>
 <pre><code class="language-hs">ghci&gt; txt &lt;- readFile &quot;/tmp/sample.txt&quot;
 </code></pre>
-<p>And then compare with a hand written <code>doc</code> value from the solutions
-(after adding it to the module and loading it in GHCi):</p>
-<pre><code class="language-hs">ghci&gt; parse txt == doc
+<p>And then compare with a hand written example values from the solutions
+(after adding them to the module and loading them in GHCi):</p>
+<pre><code class="language-hs">ghci&gt; parse txt == example4
 </code></pre>
 <p>In a later chapter, we'll discuss how to use a testing framework and
 write automated tests for our parser. But first, I'd like to glue things together
