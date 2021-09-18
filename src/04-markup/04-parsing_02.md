@@ -37,7 +37,7 @@ In order to consume values of type `Maybe <something>`, and other types created 
 ## Pattern Matching
 
 We've already seen pattern matching a few times.
-It is an incredibly versatile feature of Haskell, we can use it to do two things main things:
+It is an incredibly versatile feature of Haskell, we can use it to do two main things:
 
 1. Deconstruct complex values
 2. Control flow
@@ -105,14 +105,18 @@ It's important to notice a few things here:
 2. We try to match patterns from the top down, it is possible for patterns to overlap with one another and the top one will win
 3. If the value we try to match does not match any of the patterns listed, an error will be thrown at runtime
 
-We can ask GHC to notify when we accidentally written overlapping patterns,
+We can ask GHC to notify us when we accidentally write overlapping patterns,
 or when we haven't listed enough patterns to match all possible values,
-by passing the flag `-Wall` to `ghc` or `runghc`!
+by passing the flag `-Wall` to `ghc` or `runghc`.
 
-**My recommendation is to always use -Wall!**
+**My recommendation is to always use `-Wall`**!
 
-As an aside, while it is possible to use pattern matching in function definitions by defining a function
-multiple types, [I personally don't like that feature very much](https://twitter.com/_gilmi/status/1257225601079029760), but if you want to use it instead of case expressions, it is possible.
+> As an aside, while it is possible to use pattern matching in function definitions by defining a function
+> multiple types, [I personally don't like that feature very much](https://twitter.com/_gilmi/status/1257225601079029760)
+> and I would encourage you to avoid it,
+> but if you want to use it instead of case expressions, it is possible.
+
+---
 
 Exercises:
 
@@ -120,6 +124,8 @@ Exercises:
 2. Use [this table](https://en.wikipedia.org/wiki/ANSI_escape_code#3-bit_and_4-bit) to write `ansiToUbuntu`.
 3. Create a function `isEmpty :: [a] -> Bool` that uses `listToMaybe` to check whether a list is empty or not
 3. Create a function `isEmpty :: [a] -> Bool` that *doesn't* use `listToMaybe` to check whether a list is empty or not
+
+---
 
 ## Parsing with rich context
 
@@ -210,12 +216,13 @@ trim = unwords . words
    ```
 
    Since creating new types in Haskell is cheap, this is a very viable solution.
-   With more complex type-level features we can even create a more general type that can be used in both place,
-   both as a `Structure` and as a `Context`, don't worry about it for now, really. (but if one day you really need to do this, search for "Higher-Kinded Data" (or HKD pattern)).
 
-   In this case I'm going with the approach of not worrying about it too much, because it's a very local code that can easily be fixed later if and when we see it is an issue.
+   In this case I'm going with the approach of not worrying about it too much,
+   because it's a very local piece of code that can easily be fixed later if we'll see that its an issue.
 
-5. Anyway, if you've used `-Wall` like I've suggested, you'd get a warning from GHC saying that the *"pattern matches are non-exhaustive"*. This is because we did not cover all cases. So let's cover more cases:
+5. Anyway, if you've used `-Wall` like I've suggested,
+   you'd get a warning from GHC saying that the *"pattern matches are non-exhaustive"*.
+   This is because we did not cover all cases. So let's cover more cases:
 
 
 ```hs
@@ -260,9 +267,9 @@ trim :: String -> String
 trim = unwords . words
 ```
 
-Exercise: Add the `CodeBlock` and `OrderedList` cases.
-
 ---
+
+Exercise: Add the `CodeBlock` and `OrderedList` cases.
 
 <details>
   <summary>Final module</summary>
@@ -367,11 +374,11 @@ Try it in GHCi! You can read a text file in GHCi using the following syntax:
 ghci> txt <- readFile "/tmp/sample.txt"
 ```
 
-And then compare with a hand written `doc` value from the solutions
-(after adding it to the module and loading it in GHCi):
+And then compare with a hand written example values from the solutions
+(after adding them to the module and loading them in GHCi):
 
 ```hs
-ghci> parse txt == doc
+ghci> parse txt == example4
 ```
 
 In a later chapter, we'll discuss how to use a testing framework and
