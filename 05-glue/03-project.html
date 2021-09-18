@@ -147,18 +147,18 @@
 with GHC. Because of that we didn't really need to do anything more fancy
 than <code>runghc</code> to run our program. However, we want to start using
 external libraries which are not included with GHC in our programs.</p>
-<p>External packages can be downloaded from <a href="https://hackage.haskell.org/">Hackage</a>,
-Haskell's central package archive, <a href="https://www.stackage.org/">Stackage</a>,
+<p>External packages can be downloaded from <a href="https://hackage.haskell.org/">Hackage</a> -
+Haskell's central package archive, <a href="https://www.stackage.org/">Stackage</a> -
 a subset of Hackage packages that are known to work together, or even
-from remote git repositories. Usually Haskellers uses a <strong>package manager</strong> to
+from remote git repositories. Usually Haskellers use a <strong>package manager</strong> to
 download and manage packages for different projects. The most popular package
 managers for Haskell are <a href="https://cabal.readthedocs.io">cabal</a> and
 <a href="https://haskellstack.org">stack</a>.</p>
-<p>The main difference between the two tools is their philosophy.
-<code>cabal</code> tries to be a more minimalist tool that handles building Haskell projects
-and package management using the whole of Hackage and uses complicated algorithms
+<p>A major difference between the two tools is their philosophy.
+<code>cabal</code> tries to be a more minimalist tool that handles building Haskell projects,
+doing package management using the whole of Hackage, and uses complicated algorithms
 to make sure packages work together.
-<code>stack</code> tries to be a more maximal tool that handles installing the right GHC
+<code>stack</code> tries to be a more maximalistic tool that handles installing the right GHC
 for each project, provide integration with external tools like hoogle,
 and lets the user choose which 'set' of packages (including their versions) they want to use.</p>
 <p>If you've installed Haskell using GHCup, you most likely have <code>cabal</code> installed.
@@ -229,7 +229,7 @@ executable hs-blog-gen
 <a href="https://cabal.readthedocs.io/en/3.4/file-format-changelog.html?highlight=cabal-version">More info on different versions</a>.</li>
 <li><code>name</code>: The name of your library and package. Must match with the .cabal filename. Usually starts with a lowercase. <a href="https://hackage.haskell.org/packages/search?terms=name">Check if your package name is already taken on Hackage</a>.</li>
 <li><code>version</code>: Some Haskell packages use <a href="https://semver.org/">semver</a>, most use <a href="https://pvp.haskell.org/">PvP</a>.</li>
-<li><code>license</code>: Most Haskell packages use <a href="https://choosealicense.com/licenses/bsd-3-clause/">BSD-3-Clause</a>. <a href="https://neilmitchell.blogspot.com/2018/08/licensing-my-haskell-packages.html">Neil Mitchell blogged about this</a>. You can find more licenses you might want to use at <a href="https://choosealicense.com">choosealicense.com</a>.</li>
+<li><code>license</code>: Most Haskell packages use <a href="https://choosealicense.com/licenses/bsd-3-clause/">BSD-3-Clause</a>. <a href="https://neilmitchell.blogspot.com/2018/08/licensing-my-haskell-packages.html">Neil Mitchell blogged about this</a>. You can find more licenses if you'd like at <a href="https://choosealicense.com">choosealicense.com</a>.</li>
 <li><code>extra-doc-files</code>: Include extra doc files here, such as <code>README</code> or <code>CHANGELOG</code>.</li>
 </ul>
 <p>Let's fill this with the metadata of our project:</p>
@@ -326,7 +326,8 @@ These can also be generated using cabal with the <code>cabal gen-bounds</code> c
 a different source directory. This means we will need to move the files around
 a bit and change the <code>module</code> name in each file and the <code>import</code> statements. This is to avoid
 conflict with other packages that a user might import.</p>
-<p>Do this now!</p>
+<hr />
+<p>Do this now.</p>
 <details><summary>Solution</summary>
 <ol>
 <li>
@@ -370,6 +371,7 @@ import HsBlog.Html.Internal
 </li>
 </ol>
 </details>
+<hr />
 <h3 id="executable"><a class="header" href="#executable">Executable</a></h3>
 <p>We have separated our code to two sections: a library and an executable, why?</p>
 <p>First, libraries can be used by others. if we publish our code and someone wants to
@@ -396,6 +398,7 @@ a thin executable over it.</p>
     -O
 </code></pre>
 <p>We can write many executables descriptions. In this case we only need one.</p>
+<hr />
 <p><strong>Exercise</strong>: Add a new file: <code>app/Main.hs</code> which imports <code>HsBlog</code> and runs <code>main</code>.</p>
 <details><summary>Solution</summary>
 <pre><code class="language-hs">-- app/Main.hs
@@ -408,6 +411,7 @@ main :: IO ()
 main = HsBlog.main
 </code></pre>
 </details>
+<hr />
 <h3 id="test-suites"><a class="header" href="#test-suites">Test-suites</a></h3>
 <p><code>test-suite</code> defines a target for running package tests. We will get back to it
 in a later chapter.</p>
@@ -531,7 +535,7 @@ packages:
 </code></pre>
 <p>For additional options and configurations, please consult the relevant user guides.</p>
 <h2 id="usage"><a class="header" href="#usage">Usage</a></h2>
-<p>Now, instead of manually running <code>runghc Main.hs</code>, we will now use either <code>stack</code>
+<p>Now, instead of manually running <code>runghc Main.hs</code>, we will use either <code>stack</code>
 or <code>cabal</code> to build and run our program and package (I mostly use stack, but up to you).</p>
 <h3 id="for-cabal"><a class="header" href="#for-cabal">For cabal:</a></h3>
 <p>Building the project - on the first run, cabal will download the package dependencies
