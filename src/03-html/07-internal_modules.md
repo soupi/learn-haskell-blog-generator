@@ -1,17 +1,17 @@
 # Exposing internal functionality (Internal modules)
 
 When a user runs into trouble with using a library the best course of
-actions usually are to open an issue in the repository or submit a pull
+action usually is to open an issue in the repository or submit a pull
 request, but sometimes the user needs things to work *now*.
 
 We admit that we are not perfect and can't think of all use cases for our
 library. Sometimes the restrictions we add are too great and may limit
 the usage of advanced users that know how things work under the hood and
-need certain functionality to present in our library.
+need certain functionality to use our library.
 
 For that we can expose internal modules to provide some flexibility for
 advanced users. Internal modules are not a language concept but
-rather a (fairly common) design pattern in Haskell.
+rather a (fairly common) design pattern (or idiom) in Haskell.
 
 Internal modules are simply modules named `Internal`.
 These modules are considered risky to use by convention.
@@ -55,7 +55,7 @@ module Html
   , append_
   , render
   )
-where
+  where
 ```
 
 Now, users of our library can still import `Html` and safely use our library,
@@ -78,7 +78,7 @@ module Html
   , append_
   , render
   )
-where
+  where
 
 import Html.Internal
 ```
