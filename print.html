@@ -7142,7 +7142,7 @@ and it's often better to try and get away with simpler techniques if we can.</p>
 and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/code-after-reader">code up until now</a>.</p>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="testing"><a class="header" href="#testing">Testing</a></h1>
-<p>We want to add some testing to our blog generator. At the very least
+<p>We want to add some tests to our blog generator. At the very least
 a few regression tests to make sure that if we extend or change our markup parsing code,
 HTML generation code, or translation from markup to HTML code, and make a mistake, we'll
 have a safety web alerting us of issues.</p>
@@ -7154,7 +7154,7 @@ so we'll use that.</p>
 <h3 id="cabal-file-additions"><a class="header" href="#cabal-file-additions">Cabal file additions</a></h3>
 <p>We're going to define a new section in our <code>hs-blog-gen.cabal</code> file for our new test suite.
 Like <code>library</code> and <code>executable</code>, this section is called <code>test-suite</code>.</p>
-<p>There interface for how to define a test suite is describe in the
+<p>The interfaces for how to define a test suite is describe in the
 <a href="https://cabal.readthedocs.io/en/3.4/cabal-package.html?highlight=exitcode#test-suites">Cabal documentation</a>.
 We are going to use the <code>exitcode-stdio-1.0</code> interface. Let's go over the different settings.</p>
 <pre><code class="language-cabal">test-suite hs-blog-gen-test
@@ -7276,8 +7276,8 @@ Finished in 0.0004 seconds
 1 example, 1 failure
 </code></pre>
 <p>The output describes which tests are running in a hierarchy tree (module, group and test),
-whether it passed or failed, and if it failed, what was the output and what it expected.</p>
-<p>We can fix this by matching the expected output:</p>
+whether the tests passed or failed, and if they failed, what was the output and what the expected output was.</p>
+<p>We can fix our test by matching the expected output:</p>
 <pre><code class="language-hs">      shouldBe
         (parse &quot;&quot;)
         []
@@ -7350,7 +7350,7 @@ simple = do
         (parse &quot;&gt; main = putStrLn \&quot;hello world!\&quot;&quot;)
         [CodeBlock [&quot;main = putStrLn \&quot;hello world!\&quot;&quot;]]
 </code></pre>
-<p>Also, there are other &quot;expectations&quot; such as <code>shouldBe</code> we can use when writing tests.
+<p>Also, there are other &quot;expectations&quot; like <code>shouldBe</code> we can use when writing tests.
 They are described in the <a href="https://hspec.github.io/expectations.html">hspec tutorial</a>
 and can be found in the
 <a href="https://hackage.haskell.org/package/hspec-expectations-0.8.2/docs/Test-Hspec-Expectations.html">haddock documentation</a> as well.</p>
@@ -7358,7 +7358,7 @@ and can be found in the
 <p>If we want to write multi-line strings, or avoid escaping string like we did in the &quot;code&quot;
 test, we can use a library called
 <a href="https://hackage.haskell.org/package/raw-strings-qq">raw-strings-qq</a>
-that uses a language extension called
+which uses a language extension called
 <a href="https://downloads.haskell.org/ghc/latest/docs/html/users_guide/exts/template_haskell.html#extension-QuasiQuotes"><code>QuasiQuotes</code></a>.
 <code>QuasiQuotes</code> is a meta-programming extension that provides a mechanism to extend the syntax for Haskell.</p>
 <p>A quasi-quote has the form <code>[quoter| string |]</code>, where the quoter is the name
@@ -7520,7 +7520,7 @@ example4Result =
 We haven't talked about
 <a href="https://www.scs.stanford.edu/16wi-cs240h/slides/testing.html">property testing</a> or
 <a href="https://ro-che.info/articles/2017-12-04-golden-tests">golden testing</a>,
-testing expected failure, testing IO code, inspection testing, benchmarking, and more.
+testing expected failures, testing IO code, inspection testing, benchmarking, and more.
 There's just too much to cover!</p>
 <p>My hope is that this chapter
 provided you with the basics of how to start writing tests for your own projects.
