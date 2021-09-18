@@ -44,10 +44,7 @@ because qualified names can be a bit verbose and noisy. I usually prefer them,
 but up to you. For more information about imports,
 see this [wiki article](https://wiki.haskell.org/Import).
 
-In this case we don't *have* to you qualified imports, but I think they make
-the code a bit clearer.
-
-## Converting Markup.Structure to Html.Structure
+## Converting `Markup.Structure` to `Html.Structure`
 
 Converting a markup structure to an HTML structure is mostly straightforward
 at this point, we need to pattern match on the markup structure and use
@@ -170,6 +167,8 @@ empty_ :: Structure
 empty_ = Structure ""
 ```
 
+---
+
 Now we can write our recursive function. Try it!
 
 <details><summary>Solution</summary>
@@ -183,6 +182,8 @@ concatStructure list =
 ```
 
 </details>
+
+---
 
 Remember the `<>` function we implemented as an instance of the `Semigroup`
 type class? We said that `Semigroup` is an **abstraction** for things
@@ -232,7 +233,7 @@ We learn new things from this:
 
 1. A monoid is a more specific abstraction over semigroup, it builds on it
    by adding a new condition (the existence of an identity member)
-2. This abstraction can we useful! We can write a general `concatStructure`
+2. This abstraction can be useful! We can write a general `concatStructure`
    that could work for any monoid
 
 And indeed, there exists a type class in `base` called `Monoid` which has
@@ -243,10 +244,10 @@ class Semigroup a => Monoid a where
   mempty :: a
 ```
 
-(Note: this is actually a simplified version. The
-[actual](https://hackage.haskell.org/package/base-4.15.0.0/docs/Prelude.html#t:Monoid)
-is a bit more complicated because of backwards compatibility and performance reasons.
-`Semigroup` was actually introduced in Haskell after `Monoid`!)
+> Note: this is actually a simplified version. The
+> [actual](https://hackage.haskell.org/package/base-4.15.0.0/docs/Prelude.html#t:Monoid)
+> is a bit more complicated because of backwards compatibility and performance reasons.
+> `Semigroup` was actually introduced in Haskell after `Monoid`!
 
 We could add an instance of `Monoid` for our markup `Structure` data type:
 
@@ -275,22 +276,22 @@ mconcat list =
 Pretty much the same way as our `concatStructure`, but it works for any `Monoid`!
 Abstractions are useful and help us reuse code!
 
-Side note: integers with `+` and `0` aren't actually an instance of `Monoid` in Haskell.
-This is because integers can also form a monoid with `*` and `1`! But **there can only
-be one instance per type**. Instead, two other `newtype`s exist that provide that
-functionality, [Sum](https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Monoid.html#t:Sum)
-and [Product](https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Monoid.html#t:Product).
-See how they can be used in `ghci`:
-
-```hs
-ghci> import Data.Monoid
-ghci> Product 2 <> Product 3 -- note, Product is a data constructor
-Product {getProduct = 6}
-ghci> getProduct (Product 2 <> Product 3)
-6
-ghci> getProduct $ mconcat $ map Product [1..5]
-120
-```
+> Side note: integers with `+` and `0` aren't actually an instance of `Monoid` in Haskell.
+> This is because integers can also form a monoid with `*` and `1`! But **there can only
+> be one instance per type**. Instead, two other `newtype`s exist that provide that
+> functionality, [Sum](https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Monoid.html#t:Sum)
+> and [Product](https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Monoid.html#t:Product).
+> See how they can be used in `ghci`:
+> 
+> ```hs
+> ghci> import Data.Monoid
+> ghci> Product 2 <> Product 3 -- note, Product is a data constructor
+> Product {getProduct = 6}
+> ghci> getProduct (Product 2 <> Product 3)
+> 6
+> ghci> getProduct $ mconcat $ map Product [1..5]
+> 120
+> ```
 
 ## Another abstraction?
 
@@ -337,7 +338,7 @@ True to its name, it really "maps" before it "folds". You might pause here
 and think "this 'map' we are talking about isn't specific for lists, maybe
 that's another abstraction?", yes. It is actually a very important and
 fundamental abstraction called `Functor`.
-But I think we had enough abstractions for today.
+But I think we had enough abstractions for this chapter.
 We'll cover it in a later chapter!
 
 ## Finishing our conversion module
@@ -388,6 +389,7 @@ We learned about:
 - Qualified imports
 - Ways to handle errors
 - The `Monoid` type class and abstraction
+- The `Foldable` type class and abstraction
 
 Next, we are going to glue our functionality together and learn about
 I/O in Haskell!
