@@ -666,5 +666,5 @@ We've made some change to our project directory, and it should now look like thi
 ```
 
 > You can view the git commit of
-> [the changes we've made](https://github.com/soupi/learn-haskell-blog-generator/commit/64fcc688c05faf01bff9a39b7e7e70871175b84f)
+> [the changes we've made](https://github.com/soupi/learn-haskell-blog-generator/commit/88dc72a016203db5e0d3367b16a252baf3b1b188)
 > and the [code up until now](https://github.com/soupi/learn-haskell-blog-generator/tree/code-after-optparse).

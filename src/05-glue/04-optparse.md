@@ -938,5 +938,5 @@ if the output file or directory already exists, it's okay to replace them.
 ---
 
 > You can view the git commit of
-> [the changes we've made](https://github.com/soupi/learn-haskell-blog-generator/commit/a4269bf6631a9270dc0b87a1560897cb86185add)
+> [the changes we've made](https://github.com/soupi/learn-haskell-blog-generator/commit/f16c200668030f3bd4c22f9ec1db76f93727d3e1)
 > and the [code up until now](https://github.com/soupi/learn-haskell-blog-generator/tree/code-after-optparse).
