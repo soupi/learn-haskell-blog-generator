@@ -146,8 +146,8 @@
                         <h1 id="escaping-characters"><a class="header" href="#escaping-characters">Escaping characters</a></h1>
 <p>Now that <code>Html</code> has its own source file and module, and creating
 HTML code can be done only via the functions we exported,
-we can also handle user input that may contain characters we
-that may conflict with our meta language HTML,
+we can also handle user input that may contain characters
+that may conflict with our meta language, HTML,
 such as <code>&lt;</code> and <code>&gt;</code> which are used for creating HTML tags.</p>
 <p>We can convert these characters into different strings that HTML can handle.</p>
 <p>See <a href="https://stackoverflow.com/questions/7381974/which-characters-need-to-be-escaped-in-html">Stack overflow question</a>
@@ -169,22 +169,25 @@ escape =
 </code></pre>
 <p>In <code>escape</code> we see a few new things:</p>
 <ol>
-<li>let expressions - we can define local names using this syntax:</li>
-</ol>
+<li>
+<p>Let expressions: we can define local names using this syntax:</p>
 <pre><code class="language-hs">let
   &lt;name&gt; = &lt;expression&gt;
 in
   &lt;expression&gt;
 </code></pre>
-<p>This will make <name> available as a variable in the second <expression>.</p>
-<ol start="2">
+<p>This will make <code>&lt;name&gt;</code> available as a variable <code>in</code> the second <code>&lt;expression&gt;</code>.</p>
+</li>
 <li>
-<p>Pattern matching with multiple patterns - we match on different
+<p>Pattern matching with multiple patterns: we match on different
 characters and convert them to a string. Note that <code>_</code> is a &quot;catch
 all&quot; pattern that will always succeed.</p>
 </li>
 <li>
 <p>Two new functions: <code>map</code> and <code>concat</code>, we'll talk about these more in depth</p>
+</li>
+<li>
+<p>That the syntax highlighting broke a bit for this snippet for some reason. Don't worry about it.</p>
 </li>
 </ol>
 <h2 id="linked-lists-briefly"><a class="header" href="#linked-lists-briefly">Linked lists briefly</a></h2>
@@ -197,27 +200,32 @@ they have their own special syntax:</p>
 <li><code>[Char]</code> - a list of characters</li>
 <li><code>[String]</code> - a list of strings</li>
 <li><code>[[String]]</code> - a list of a list of strings</li>
+<li><code>[a]</code> - a list of any single type (all elements must be of the same type)</li>
 </ul>
 </li>
-<li>An expression representing a empty list is written like this: <code>[]</code></li>
+<li>A value representing a empty list is written like this: <code>[]</code></li>
 <li>Prepending an element to a list is done with the operator <code>:</code> (pronounced cons) which is right-associative (like <code>-&gt;</code>).
 For example: <code>1 : []</code>, or <code>1 : 2 : 3 : []</code>.</li>
 <li>The above lists can also be written like this: <code>[1]</code> and <code>[1, 2, 3]</code>.</li>
 </ol>
 <p>Also, Strings are linked lists of characters - String is defined as:
 <code>type String = [Char]</code>, so we can use them the same way we use lists.</p>
-<hr />
+<blockquote>
 <p>Do note, however, that linked lists, despite their convenience, are often
 not the right tool for the job. They are not particularity space efficient
 and are slow for appending, random access and more. That also makes <code>String</code>
 a lot less efficient than it could be. And I generally recommend using a
 different string type, <code>Text</code>, instead, which is available in an external package.
 We will talk about lists, <code>Text</code>, and other data structures in the future!</p>
-<hr />
+</blockquote>
 <p>We can implement our own operations on lists by using pattern matching and recursion.
 And we'll touch on this subject later when talking about ADTs.</p>
-<p>For now, we will use the various functions found in the <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-List.html">Data.List</a> module. Specifically, <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-List.html#v:map">map</a> and <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-List.html#v:concat">concat</a>.</p>
-<p><code>map</code> applying a function to each of the elements in a list. Its type signature is:</p>
+<p>For now, we will use the various functions found in the
+<a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-List.html">Data.List</a> module.
+Specifically, <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-List.html#v:map">map</a>
+and <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-List.html#v:concat">concat</a>.</p>
+<h3 id="map"><a class="header" href="#map"><code>map</code></a></h3>
+<p>Using <code>map</code> we can apply a function to each of the elements in a list. Its type signature is:</p>
 <pre><code class="language-hs">map :: (a -&gt; b) -&gt; [a] -&gt; [b]
 </code></pre>
 <p>For example:</p>
@@ -229,15 +237,17 @@ And we'll touch on this subject later when talking about ADTs.</p>
 <p>However, note that the <code>escapeChar</code> has the type <code>Char -&gt; String</code>,
 so the result type of <code>map escapeChar ['&lt;','h','1','&gt;']</code> is <code>[String]</code>,
 and what we really want is a <code>String</code> and not <code>[String]</code>.</p>
-<p>This is where <code>concat</code> enters the picture. <code>concat</code> has the type</p>
+<p>This is where <code>concat</code> enters the picture to help us flatten the list.</p>
+<h3 id="concat"><a class="header" href="#concat"><code>concat</code></a></h3>
+<p><code>concat</code> has the type:</p>
 <pre><code class="language-hs">concat :: [[a]] -&gt; [a]
 </code></pre>
 <p>It flattens a list of list of something into a list of something.
 In our case in will flatten <code>[String]</code> into <code>String</code>, remember that this works
 because <code>String</code> is a <strong>type alias</strong> for <code>[Char]</code>, so we actually have
 <code>[[Char]] -&gt; [Char]</code>.</p>
-<hr />
 <h2 id="escaping"><a class="header" href="#escaping">Escaping</a></h2>
+<hr />
 <p>The user of our library can currently only supply strings in a few places:</p>
 <ol>
 <li>Page title</li>
@@ -280,7 +290,7 @@ module Html
   , append_
   , render
   )
-where
+  where
 
 -- * Types
 
@@ -349,7 +359,7 @@ escape =
 </details>
 <p>Trying constructing an invalid HTML in <code>hello.hs</code> to see if this works or not!</p>
 <p>Now we can use our tiny HTML library safely. But what if the user
-wants to use our library with something we didn't think about, for
+wants to use our library with a valid use case we didn't think about, for
 example adding unordered lists? We are completely blocking them from
 extending our library. We'll talk about this next.</p>
 

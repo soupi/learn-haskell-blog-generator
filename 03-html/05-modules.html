@@ -157,11 +157,12 @@ file names could have any name they want.</p>
 <pre><code class="language-hs">module &lt;module-name&gt;
   ( &lt;export-list&gt;
   )
-where
+  where
 </code></pre>
 <p>The export list can be omitted if you want to export everything
 defined in the module, but we don't. We will list exactly the
-functions and type we want to export.</p>
+functions and type we want to export. This will give us control
+on how people can use our tiny library.</p>
 <p>We will create a new source file named <code>Html.hs</code> and add the following
 module declaration code at the top of the file:</p>
 <pre><code class="language-hs">module Html
@@ -174,12 +175,12 @@ module declaration code at the top of the file:</p>
   , append_
   , render
   )
-where
+  where
 </code></pre>
 <p>Note that we do not export:</p>
 <ol>
 <li>
-<p>the constructors for our new types, only the types themselves.
+<p>The constructors for our new types, only the types themselves.
 If we wanted to export the constructors as well we would've written
 <code>Html(Html)</code> or <code>Html(..)</code>. This way the user cannot create their own
 <code>Structure</code> simply by writing <code>Structure &quot;Hello&quot;</code>.</p>
@@ -271,7 +272,7 @@ module Html
   , append_
   , render
   )
-where
+  where
 
 newtype Html
   = Html String
