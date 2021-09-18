@@ -170,8 +170,8 @@ Let's see a few of examples of data types:
    ```
 
     This `Tuple` definition is polymorphic, we define the structure but are able to
-    plug different types into the structure to get concrete types. This about `Tuple`
-    as just a *template* for a data type waiting to be filled, or as a **function** waiting
+    plug different types into the structure to get concrete types. You can think of `Tuple`
+    as a *template* for a data type waiting to be filled, or as a **function** waiting
     for types as input in order to return a data type. We can even take a look at the "type"
     signature of `Tuple` in `ghci` using the `:kind` command.
 
@@ -181,25 +181,20 @@ Let's see a few of examples of data types:
     Tuple :: * -> * -> *
     ```
 
-    ---
-
-    #### Quick detour: Kinds
-
-
-    The `:kind` command is called as such because the "type" of a type is called a **kind**.
-    Kinds can be one of two things, either a `*` which means a saturated (or concrete) type,
-    such as `Int` or `Person`, or an `->` of two kinds, which is, as you might have guessed,
-    a type function, taking kind and returning a kind.
-
-    Note that only types that have the kind `*` can have values. So for example while `Tuple Int`
-    is a valid Haskell concept that has the *kind* `* -> *`, and we can write code that will
-    work "generically" for all types that have a certain kind (e.g. `* -> *`), we cannot
-    construct a value that will have the kind `* -> *`. All values have types, and all
-    such types that have values has the kind `*`.
-
-    We will talk about kinds later, for now let's focus on types!
-
-    ---
+    > #### Quick detour: Kinds
+    >
+    > The `:kind` command is called as such because the "type" of a type is called a **kind**.
+    > Kinds can be one of two things, either a `*` which means a saturated (or concrete) type,
+    > such as `Int` or `Person`, or an `->` of two kinds, which is, as you might have guessed,
+    > a type function, taking kind and returning a kind.
+    >
+    > Note that only types that have the kind `*` can have values. So for example while `Tuple Int`
+    > is a valid Haskell concept that has the *kind* `* -> *`, and we can write code that will
+    > work "generically" for all types that have a certain kind (e.g. `* -> *`), we cannot
+    > construct a value that will have the kind `* -> *`. All values have types, and all
+    > types that have values have the kind `*`.
+    >
+    > We will talk more about kinds later, for now let's focus on types!
 
 4. Either
 
@@ -211,7 +206,7 @@ Let's see a few of examples of data types:
    
    Similar to Tuple but instead of having only one constructor, we have
    two. This means that we can choose which side we want. Here are a
-   couple of Values of type `Either String Int`:
+   couple of values of type `Either String Int`:
    
    ```hs
    Left "Hello"
@@ -224,7 +219,7 @@ Let's see a few of examples of data types:
    and got an error instead (The `Left` constructor with a string or a
    custom error type).
    
-Here we use it to model the different kinds of content types we have
+In our program we use `data` types to model the different kinds of content types we have
 in our markup language. We tag each structure using the data constructor
 and provide the rest of the information (the paragraph text, the list items, etc)
 in the `<types>` section of the data declaration for each constructor:
@@ -242,13 +237,13 @@ data Structure
 ```
 
 Note: `Natural` is defined in the `base` package but not exported from `Prelude`.
-Find out which module to import `Natural` from using [hoogle](https://hoogle.haskell.org).
+Find out which module to import `Natural` by using [Hoogle](https://hoogle.haskell.org).
 
 ---
 
 ### Exercises
 
-Represent the following markup documents as value of `Document`:
+Represent the following markup documents as values of `Document`:
 
 1. ```org
    Hello, world!
@@ -307,8 +302,8 @@ Solutions:
   <summary>Solution 1</summary>
 
 ```hs
-doc :: Document
-doc =
+example1 :: Document
+example1 =
   [ Paragraph "Hello, world!"
   ]
 ```
@@ -319,8 +314,8 @@ doc =
   <summary>Solution 2</summary>
 
 ```hs
-doc :: Document
-doc =
+example2 :: Document
+example2 =
   [ Header 1 "Welcome"
   , Paragraph "To this tutorial about Haskell."
   ]
@@ -332,8 +327,8 @@ doc =
   <summary>Solution 3</summary>
 
 ```hs
-doc :: Document
-doc =
+example3 :: Document
+example3 =
   [ Paragraph "Remember that multiple lines with no separation are grouped together to a single paragraph but list items remain separate."
   , OrderedList
     [ "Item 1 of a list"
@@ -348,8 +343,8 @@ doc =
   <summary>Solution 4</summary>
 
 ```hs
-doc :: Document
-doc =
+example4 :: Document
+example4 =
   [ Header 1 "Compiling programs with ghc"
   , Paragraph "Running ghc invokes the Glasgow Haskell Compiler (GHC), and can be used to compile Haskell modules and programs into native executables and libraries."
   , Paragraph "Create a new Haskell source file named hello.hs, and write the following code in it:"
@@ -414,8 +409,7 @@ data Structure
 You might ask "Why do we even need to represent the markup as a type?
 Why don't we convert it into HTML as soon as we parse it
 instead?". That's a good question and a valid strategy. The reason we
-first represent it as a Haskell type is for flexibility and
-modularity.
+first represent it as a Haskell type is for flexibility and modularity.
 
 If the parsing code is coupled with HTML generation, we lose the
 ability to pre-process the markup document. For example we might want
@@ -426,5 +420,5 @@ add other targets and not just HTML - maybe markdown format or a GUI reader?
 Parsing to an "abstract data type" (ADT) representation (one that does
 not contain the details of the language, that for example that we use '#' for
 ordered lists) gives us the freedom to do so much more than just
-converting to HTML that it's usually worth it in my opinion unless you
+conversion to HTML that it's usually worth it in my opinion unless you
 really need to optimize the process.
