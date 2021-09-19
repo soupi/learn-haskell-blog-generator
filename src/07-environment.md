@@ -1,7 +1,7 @@
 # Passing environment variables
 
 We'd like to add some sort of an environment to keep general information on
-the blog for various processing. Things like the blog name, style-sheet
+the blog for various processing. Things like the blog name, stylesheet
 location, and so on.
 
 ## Environment
@@ -25,13 +25,13 @@ defaultEnv = Env "My Blog" "style.css"
 ```
 
 After filling this record with the requested information, we can pass it as
-input to any function who needs it. This is a simple approach that can definitely
+input to any function that might need it. This is a simple approach that can definitely
 work for small projects. But sometimes when the project gets bigger and many
-nested functions needs the same information, threading the environment can get
+nested functions need the same information, threading the environment can get
 tedious.
 
 There is an alternative solution to threading the environment as input to functions,
-and that is using the [`ReaderT`](https://hackage.haskell.org/package/mtl-2.2.2/docs/Control-Monad-Reader.html#g:2) type from the `mtl` package.
+and that is using the [`ReaderT`](https://hackage.haskell.org/package/mtl-2.2.2/docs/Control-Monad-Reader.html#g:2) type from the `mtl` (or `transformers`) package.
 
 ### ReaderT
 
@@ -56,14 +56,14 @@ we don't have to pass the value around manually. And when we want to grab
 the `r` and use it, all we have to do is `ask`.
 
 For our case, this means that instead of Passing around `Env`, we can instead
-convert our functions use `ReaderT` - those that are uneffectful and don't use
+convert our functions to use `ReaderT` - those that are uneffectful and don't use
 `IO`, can return `Reader Env a` instead of `a`, and those that do can return
 `ReaderT Env IO a` instead of `IO a`.
 
 Note, as we've said before, `Functor`, `Applicative` and `Monad` all expect the type
 that implements their interface to have the kind `* -> *`.
-This means that it is `ReaderT e m` implements this interfaces, and when we compose functions with
-`<*>` or `>>=` we replace the `f` or `m` in their type signature with `ReaderT e m`.
+This means that it is `ReaderT r m` implements this interfaces, and when we compose functions with
+`<*>` or `>>=` we replace the `f` or `m` in their type signature with `ReaderT r m`.
 
 This means that like with `Either e` when we had compose functions with the same error type,
 so is with `ReaderT r m` - we have to compose functions with the same `r` type and same
@@ -104,7 +104,7 @@ txtsToRenderedHtml env txtFiles =
    map (fmap Html.render) (index : htmlPages)
 ```
 
-Note how we need to thread the `env` to the other functions that use it.
+Note how we needed to thread the `env` to the other functions that use it.
 
 After:
 
@@ -191,18 +191,18 @@ See the `let outputHtmls`part.
 
 One thing we haven't talked about yet is actually using the environment in the `convert`
 function to generate the pages we want. And actually, we don't even have the ability to add
-style-sheets to our HTML EDSL at the moment! We need to go back and extend it. Let's do all
+stylesheets to our HTML EDSL at the moment! We need to go back and extend it. Let's do all
 that now:
 
 ---
 
-Since style-sheets go in the `head` element, perhaps it's a good idea to create an additional
-`newtype` like `Structure` for `Header` information? Things like title, style-sheet,
+Since stylesheets go in the `head` element, perhaps it's a good idea to create an additional
+`newtype` like `Structure` for `Header` information? Things like title, stylesheet,
 and even meta elements can be composed together just like we did for `Structure`
 to build the `Header`!
 
 1. Do it now: extend our HTML library to include headers and add 3 functions:
-   `title_` for titles, `stylesheet_` for style-sheets, and `meta_` for meta elements
+   `title_` for titles, `stylesheet_` for stylesheets, and `meta_` for meta elements
    like [twitter cards](https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/abouts-cards).
 
    <details><summary>Solution</summary>
@@ -226,6 +226,7 @@ to build the `Header`!
        , ul_
        , ol_
        , code_
+	   , Content
        , txt_
        , img_
        , link_
@@ -233,7 +234,7 @@ to build the `Header`!
        , i_
        , render
        )
-     where
+       where
      
      import HsBlog.Html.Internal
      ```
@@ -268,7 +269,7 @@ to build the `Header`!
      
      meta_ :: String -> String -> Header
      meta_ name content =
-       Header $ "<meta name=\"" <> escape name <> "\" content=\"" <> content <> "\">"
+       Header $ "<meta name=\"" <> escape name <> "\" content=\"" <> escape content <> "\">"
      
      instance Semigroup Header where
        (<>) (Header h1) (Header h2) =
@@ -407,7 +408,7 @@ to build the `Header`!
        strOption
          ( long "style"
            <> short 'S'
-           <> metavar "FILENAME"
+           <> metavar "FILE"
            <> help "Stylesheet filename"
            <> value (eStylesheetPath defaultEnv)
            <> showDefault
@@ -458,5 +459,5 @@ It is important to weigh the benefits and costs of using advanced techniques,
 and it's often better to try and get away with simpler techniques if we can.
 
 > You can view the git commit of
-> [the changes we've made](https://github.com/soupi/learn-haskell-blog-generator/commit/442f35e96e72f9b706416f77269b59626055c7cb)
+> [the changes we've made](https://github.com/soupi/learn-haskell-blog-generator/commit/a43ca1274ff7608fd0f91acc4a6b8981ee5c8802)
 > and the [code up until now](https://github.com/soupi/learn-haskell-blog-generator/tree/code-after-reader).
