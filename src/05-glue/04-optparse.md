@@ -6,7 +6,7 @@ We are going to use a package called
 [optparse-applicative](https://hackage.haskell.org/package/optparse-applicative).
 
 `optparse-applicative` provides us with an EDSL (yes, another one) to build
-command arguments parser. Things like commands, switches, and flags can be built
+command arguments parsers. Things like commands, switches, and flags can be built
 and composed together to make a parser for command-line arguments without actually
 writing operations on strings as we did when we wrote our Markup parser, and will
 provide other benefits such as automatic generation of usage lines, help screens,
@@ -41,7 +41,7 @@ In general, there are four important things we need to do:
 1. Define our model - we want to define an ADT that describes the various options
    and commands for our program.
 
-2. Define a parser that will produce our model when run
+2. Define a parser that will produce our value of our model type when run
 
 3. Run the parser on our program arguments input
 
@@ -79,21 +79,20 @@ data SingleOutput
 > for each option we make it easier for readers of the code to understand
 > the meaning of our code.
 
-In terms of interface, we could decide that when a user uses our program
-without arguments, they would like to read from stdin and write to stdout.
-If they'd like to read from or write to a file, they can use the optional flags
-`--input FILEPATH` and `--output FILEPATH` respectively.
+In terms of interface, we could decide that when a user would like to convert
+a single input source, they would use the `convert` command, and supply the optional flags
+`--input FILEPATH` and `--output FILEPATH` to read or write from a file.
+When the user does not supply one or both flag, we will read or write from
+the standard input/output accordingly instead.
 
-If the user would like to convert a directory, they can use the `directory`
+If the user would like to convert a directory, they can use the `convert-dir`
 command and supply the two mandatory flags `--input FILEPATH` and
 `--output FILEPATH`.
-
-Feel free to change the interface as you'd like!
 
 ### Build a parser
 
 This is the most interesting part of the process. How do we build a parser
-that fit our model? What is a parser even?
+that fits our model?
 
 The `optparse-applicative` library introduces a new type called `Parser`.
 `Parser`, similar to `Maybe` and `IO`, has the kind `* -> *` - when it
@@ -124,7 +123,7 @@ inp =
   strOption
     ( long "input"
       <> short 'i'
-      <> metavar "FILENAME"
+      <> metavar "FILE"
       <> help "Input file"
     )
 
@@ -133,7 +132,7 @@ out =
   strOption
     ( long "output"
       <> short 'o'
-      <> metavar "FILENAME"
+      <> metavar "FILE"
       <> help "Output file"
     )
 ```
@@ -141,7 +140,7 @@ out =
 `strOption` is a parser builder. It is a function that takes *option
 modifiers* as an argument, and returns a parser that will parse a string.
 We can specify the type to be `FilePath` because `FilePath` is an
-alias to `String`. The parser builder describes how to part the data type,
+alias to `String`. The parser builder describes how to parse the value,
 and the modifiers describe its properties, such as the flag name,
 the shorthand of the flag name, and how it would be described in the usage
 and help messages.
@@ -249,7 +248,7 @@ mapMaybe :: (a -> b) -> Maybe a -> Maybe b
 mapMaybe func maybeX = Nothing
 ```
 
-check it yourself! It compiles and everything! But unfortunately it does
+check it yourself! It compiles and everything! But unfortunately it does not
 satisfy the first law. `fmap id = id` means that
 `mapMaybe id (Just x) == Just x`, however from the definition we can
 clearly see that `mapMaybe id (Just x) == Nothing`.
@@ -291,7 +290,7 @@ pInputFile = fmap InputFile parser
       strOption
         ( long "input"
           <> short 'i'
-          <> metavar "FILENAME"
+          <> metavar "FILE"
           <> help "Input file"
         )
 
@@ -302,7 +301,7 @@ pOutputFile = OutputFile <$> parser -- fmap and <$> are the same
       strOption
         ( long "output"
           <> short 'o'
-          <> metavar "FILENAME"
+          <> metavar "FILE"
           <> help "Output file"
         )
 ```
@@ -330,7 +329,7 @@ on `Parser`s instead? One with this type signature:
 ```
 
 Yes. This function is called `liftA2` and it is from the `Applicative`
-type class. `Applicative` (also known as an applicative functor) has three
+type class. `Applicative` (also known as applicative functor) has three
 primary functions:
 
 ```hs
@@ -343,13 +342,13 @@ class Functor f => Applicative f where
 [`Applicative`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Applicative.html#t:Applicative)
 is another very popular type class with many instances.
 
-Just like any `Monoid` as a `Semigroup`, any `Applicative`
+Just like any `Monoid` is a `Semigroup`, any `Applicative`
 is a `Functor`. This means that any type that wants to implement
 the `Applicative` interface should also implement the `Functor` interface.
 
 Beyond what a regular functor can do, which is to lift a function over
 a certain `f`, applicative functors allow us to apply a function to
-*multiple instances* of a certain `f`, as well as "lift" any value into an `f a`.
+*multiple instances* of a certain `f`, as well as "lift" any value of type `a` into an `f a`.
 
 You should already be familiar with `pure`, we've seen it when we
 talked about `IO`. For `IO`, `pure` lets us create an `IO` action
@@ -399,7 +398,7 @@ pOutputFile :: Parser SingleOutput
 ConvertSingle :: SingleInput -> SingleOutput -> Options
 
 <$> :: (a -> b) -> Parser a -> Parser b
-  -- Specifically, here `a` is `SingleInput -> SingleOutput -> Options`
+  -- Specifically, here `a` is `SingleInput`
   -- and `b` is `SingleOutput -> Options`,
 
 ConvertSingle <$> pInputFile :: Parser (SingleOutput -> Options)
@@ -421,7 +420,7 @@ any multiple argument function can be represented as `a -> b`.
 > [Typeclassopedia](https://wiki.haskell.org/Typeclassopedia#Laws_2), which
 > talks about various useful type classes and their laws.
 
-Applicatives are a very important concept and will appear in various
+Applicative functors are a very important concept and will appear in various
 parsers interface (not just for command-line arguments, but also JSON
 parsers and general parsers), I/O, concurrency, non-determinism, and more.
 The reason this library is called optparse-applicative is because
@@ -440,7 +439,7 @@ pInputDir =
   strOption
     ( long "input"
       <> short 'i'
-      <> metavar "DIRECTORYNAME"
+      <> metavar "DIRECTORY"
       <> help "Input directory"
     )
 
@@ -449,7 +448,7 @@ pOutputDir =
   strOption
     ( long "output"
       <> short 'o'
-      <> metavar "DIRECTORYNAME"
+      <> metavar "DIRECTORY"
       <> help "Output directory"
     )
 
@@ -787,7 +786,7 @@ convertSingle title input output = do
   hPutStrLn output (process title content)
 ```
 
-We will leave implement `convertDirectory` unimplemented for now and implement it in the next chapter.
+We will leave `convertDirectory` unimplemented for now and implement it in the next chapter.
 
 In `app/Main.hs`, we will need to pattern match on the `Options` and
 prepare to call the right functions from `HsBlog`.
@@ -924,7 +923,7 @@ Available commands:
 ```
 
 Along the way we've learned two powerful new abstractions, `Functor`
-and `Applicative`. As well as revisited an abstraction we we're familiar
+and `Applicative`. As well as revisited an abstraction we were familiar
 with called `Monoid`. With this library we've seen (another) example
 of the usefulness of these abstractions for constructing APIs and EDSLs.
 
@@ -932,7 +931,7 @@ We will continue to meet these abstractions in the rest of the book.
 
 ---
 
-**Exercise**: Add another flag named `--replace` to indicate that
+**Bonus exercise**: Add another flag named `--replace` to indicate that
 if the output file or directory already exists, it's okay to replace them.
 
 ---
