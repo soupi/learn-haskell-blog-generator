@@ -6783,7 +6783,7 @@ and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/code
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="passing-environment-variables"><a class="header" href="#passing-environment-variables">Passing environment variables</a></h1>
 <p>We'd like to add some sort of an environment to keep general information on
-the blog for various processing. Things like the blog name, style-sheet
+the blog for various processing. Things like the blog name, stylesheet
 location, and so on.</p>
 <h2 id="environment"><a class="header" href="#environment">Environment</a></h2>
 <p>We can represent our environment as a record data type and build it from user input.
@@ -6802,12 +6802,12 @@ defaultEnv :: Env
 defaultEnv = Env &quot;My Blog&quot; &quot;style.css&quot;
 </code></pre>
 <p>After filling this record with the requested information, we can pass it as
-input to any function who needs it. This is a simple approach that can definitely
+input to any function that might need it. This is a simple approach that can definitely
 work for small projects. But sometimes when the project gets bigger and many
-nested functions needs the same information, threading the environment can get
+nested functions need the same information, threading the environment can get
 tedious.</p>
 <p>There is an alternative solution to threading the environment as input to functions,
-and that is using the <a href="https://hackage.haskell.org/package/mtl-2.2.2/docs/Control-Monad-Reader.html#g:2"><code>ReaderT</code></a> type from the <code>mtl</code> package.</p>
+and that is using the <a href="https://hackage.haskell.org/package/mtl-2.2.2/docs/Control-Monad-Reader.html#g:2"><code>ReaderT</code></a> type from the <code>mtl</code> (or <code>transformers</code>) package.</p>
 <h3 id="readert"><a class="header" href="#readert">ReaderT</a></h3>
 <pre><code class="language-hs">newType ReaderT r m a = ReaderT (r -&gt; m a)
 </code></pre>
@@ -6825,13 +6825,13 @@ other functions when we use the <code>Applicative</code> and <code>Monad</code> 
 we don't have to pass the value around manually. And when we want to grab
 the <code>r</code> and use it, all we have to do is <code>ask</code>.</p>
 <p>For our case, this means that instead of Passing around <code>Env</code>, we can instead
-convert our functions use <code>ReaderT</code> - those that are uneffectful and don't use
+convert our functions to use <code>ReaderT</code> - those that are uneffectful and don't use
 <code>IO</code>, can return <code>Reader Env a</code> instead of <code>a</code>, and those that do can return
 <code>ReaderT Env IO a</code> instead of <code>IO a</code>.</p>
 <p>Note, as we've said before, <code>Functor</code>, <code>Applicative</code> and <code>Monad</code> all expect the type
 that implements their interface to have the kind <code>* -&gt; *</code>.
-This means that it is <code>ReaderT e m</code> implements this interfaces, and when we compose functions with
-<code>&lt;*&gt;</code> or <code>&gt;&gt;=</code> we replace the <code>f</code> or <code>m</code> in their type signature with <code>ReaderT e m</code>.</p>
+This means that it is <code>ReaderT r m</code> implements this interfaces, and when we compose functions with
+<code>&lt;*&gt;</code> or <code>&gt;&gt;=</code> we replace the <code>f</code> or <code>m</code> in their type signature with <code>ReaderT r m</code>.</p>
 <p>This means that like with <code>Either e</code> when we had compose functions with the same error type,
 so is with <code>ReaderT r m</code> - we have to compose functions with the same <code>r</code> type and same
 <code>m</code> type, so we can't mix different environment types or different underlying <code>m</code> types.</p>
@@ -6857,7 +6857,7 @@ txtsToRenderedHtml env txtFiles =
  in
    map (fmap Html.render) (index : htmlPages)
 </code></pre>
-<p>Note how we need to thread the <code>env</code> to the other functions that use it.</p>
+<p>Note how we needed to thread the <code>env</code> to the other functions that use it.</p>
 <p>After:</p>
 <pre><code class="language-hs">txtsToRenderedHtml :: [(FilePath, String)] -&gt; Reader Env [(FilePath, String)]
 txtsToRenderedHtml txtFiles = do
@@ -6920,17 +6920,17 @@ convertDirectory env inputDir outputDir = do
 <h3 id="using-env-in-our-logic-code"><a class="header" href="#using-env-in-our-logic-code">Using <code>Env</code> in our logic code</a></h3>
 <p>One thing we haven't talked about yet is actually using the environment in the <code>convert</code>
 function to generate the pages we want. And actually, we don't even have the ability to add
-style-sheets to our HTML EDSL at the moment! We need to go back and extend it. Let's do all
+stylesheets to our HTML EDSL at the moment! We need to go back and extend it. Let's do all
 that now:</p>
 <hr />
-<p>Since style-sheets go in the <code>head</code> element, perhaps it's a good idea to create an additional
-<code>newtype</code> like <code>Structure</code> for <code>Header</code> information? Things like title, style-sheet,
+<p>Since stylesheets go in the <code>head</code> element, perhaps it's a good idea to create an additional
+<code>newtype</code> like <code>Structure</code> for <code>Header</code> information? Things like title, stylesheet,
 and even meta elements can be composed together just like we did for <code>Structure</code>
 to build the <code>Header</code>!</p>
 <ol>
 <li>
 <p>Do it now: extend our HTML library to include headers and add 3 functions:
-<code>title_</code> for titles, <code>stylesheet_</code> for style-sheets, and <code>meta_</code> for meta elements
+<code>title_</code> for titles, <code>stylesheet_</code> for stylesheets, and <code>meta_</code> for meta elements
 like <a href="https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/abouts-cards">twitter cards</a>.</p>
 <details><summary>Solution</summary>
 <details><summary>src/HsBlog/Html.hs</summary>
@@ -6950,6 +6950,7 @@ module HsBlog.Html
   , ul_
   , ol_
   , code_
+  , Content
   , txt_
   , img_
   , link_
@@ -6957,7 +6958,7 @@ module HsBlog.Html
   , i_
   , render
   )
-where
+  where
 
 import HsBlog.Html.Internal
 </code></pre>
@@ -6988,7 +6989,7 @@ stylesheet_ path =
 
 meta_ :: String -&gt; String -&gt; Header
 meta_ name content =
-  Header $ &quot;&lt;meta name=\&quot;&quot; &lt;&gt; escape name &lt;&gt; &quot;\&quot; content=\&quot;&quot; &lt;&gt; content &lt;&gt; &quot;\&quot;&gt;&quot;
+  Header $ &quot;&lt;meta name=\&quot;&quot; &lt;&gt; escape name &lt;&gt; &quot;\&quot; content=\&quot;&quot; &lt;&gt; escape content &lt;&gt; &quot;\&quot;&gt;&quot;
 
 instance Semigroup Header where
   (&lt;&gt;) (Header h1) (Header h2) =
@@ -7107,7 +7108,7 @@ pStylesheet =
   strOption
     ( long &quot;style&quot;
       &lt;&gt; short 'S'
-      &lt;&gt; metavar &quot;FILENAME&quot;
+      &lt;&gt; metavar &quot;FILE&quot;
       &lt;&gt; help &quot;Stylesheet filename&quot;
       &lt;&gt; value (eStylesheetPath defaultEnv)
       &lt;&gt; showDefault
@@ -7145,7 +7146,7 @@ arsenal and I wanted to demonstrate it.</p>
 and it's often better to try and get away with simpler techniques if we can.</p>
 <blockquote>
 <p>You can view the git commit of
-<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/442f35e96e72f9b706416f77269b59626055c7cb">the changes we've made</a>
+<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/a43ca1274ff7608fd0f91acc4a6b8981ee5c8802">the changes we've made</a>
 and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/code-after-reader">code up until now</a>.</p>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="testing"><a class="header" href="#testing">Testing</a></h1>
@@ -7535,7 +7536,7 @@ Please consult the tutorial for your chosen testing framework, and read more abo
 this very important subject on your own.</p>
 <blockquote>
 <p>You can view the git commit of
-<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/b60ddfbdb876abd6ac4d47fdf57c700559d7781a">the changes we've made</a>
+<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/a6c6576747607d45e54dc4a7653190a0b38d6a6c">the changes we've made</a>
 and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/code-after-testing">final version of the code</a>.</p>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="where-to-go-next"><a class="header" href="#where-to-go-next">Where to go next</a></h1>
