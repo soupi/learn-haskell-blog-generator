@@ -162,7 +162,7 @@ before calling <code>writeFile</code>.</p>
 <p>One way to handle this is by using <strong>monad transformers</strong>. Monad transformers are a method
 to stack monad capabilities on top of one another. They are called transformers because
 <strong>they take a type that has an instance of monad as input, and return a new type that
-implements the monad interface, stacking a new capability on top of that</strong>.</p>
+implements the monad interface, stacking a new capability on top of it</strong>.</p>
 <p>For example, if we want to create a value with a type similar to <code>IO (Either Error a)</code>
 that we can compose using the monadic interface (the function <code>&gt;&gt;=</code>) with other values
 of a type similar to <code>IO (Either Error a)</code>, we can using a monad transformer
@@ -177,7 +177,14 @@ the function <code>runExceptT</code>:</p>
 <pre><code class="language-hs">runExceptT :: ExceptT e m a -&gt; m (Either e a)
 </code></pre>
 <p><code>ExceptT</code> implements the monadic interface in a way that combines the capabilities of
-<code>Either</code>, and whatever <code>m</code> it takes.</p>
+<code>Either</code>, and whatever <code>m</code> it takes. Because <code>ExceptT e m</code> has a <code>Monad</code> instance,
+a specialized version of <code>&gt;&gt;=</code> would look like this:</p>
+<pre><code class="language-hs">-- Generalized version
+(&gt;&gt;=) :: Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
+
+-- Specialized version, replace `m` with `ExceptT e m`
+(&gt;&gt;=) :: ExceptT e m a -&gt; (a -&gt; ExceptT e m b) -&gt; ExceptT e m b
+</code></pre>
 <hr />
 <p>Unsure how this works? Try to implement <code>&gt;&gt;=</code> for <code>IO (Either Error a)</code>:</p>
 <pre><code class="language-hs">bindExceptT :: IO (Either Error a) -&gt; (a -&gt; IO (Either Error b)) -&gt; IO (Either Error b)
@@ -253,8 +260,8 @@ There are many many more possible IO errors! &quot;network unreachable&quot;, &q
 &quot;cancelled thread&quot;, we cannot require a user to handle all these errors, or
 even cover them all in a data type.</p>
 <p>So what do we do?</p>
-<p>We give up on this approach <strong>for IO code</strong>, and use a different one: Exceptions,
-as we'll see in the next chapter.</p>
+<p>We give up on this approach <strong>for IO code</strong>, and use a different one: Exceptions.
+As we'll see in the next chapter.</p>
 <blockquote>
 <p>Note - when we stack <code>ExceptT</code> on top of a different type called
 <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Functor-Identity.html"><code>Identity</code></a>

@@ -219,7 +219,7 @@ and see if we got an error (with the <code>Left</code> constructor) or the expec
 (with the <code>Right</code> constructor) by pattern matching on the result.</p>
 <h2 id="applicative--traversable"><a class="header" href="#applicative--traversable">Applicative + Traversable</a></h2>
 <p>The <code>Applicative</code> interface of <code>Either</code> is very powerful, and can be combine
-with a different abstraction called
+with another abstraction called
 <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Traversable.html#g:1"><code>Traversable</code></a> -
 for data structures that can be traversed from left to right, like a linked list or a binary tree.
 With these, we can combine an unspecified amount of values such as <code>Either ParseDigitError Int</code>
@@ -260,7 +260,7 @@ ghci&gt; traverse parseDigit &quot;1a2&quot;
 Left (NotADigit 'a')
 </code></pre>
 <p>We can use <code>traverse</code> on any two types where one implements the <code>Applicative</code>
-interface, like <code>Either a</code> or <code>IO</code>, and the other implements the <code>Traversable</code>,
+interface, like <code>Either a</code> or <code>IO</code>, and the other implements the <code>Traversable</code> interface,
 like <code>[]</code> (linked lists) and <a href="https://hackage.haskell.org/package/containers-0.6.5.1/docs/Data-Map-Strict.html#t:Map"><code>Map k</code></a>
 (also known as a dictionary in other languages - a mapping from keys to values).
 For example using <code>IO</code> and <code>Map</code>. Note that we can construct a <code>Map</code> data structure
@@ -314,7 +314,7 @@ For the same reason if we'll try to substitute <code>f</code> with, say, <code>I
 <pre><code class="language-hs">liftA2 :: (a -&gt; b -&gt; c) -&gt; Either e a -&gt; Either e b -&gt; Either e c
 </code></pre>
 <p>What this teaches us is that we can only use the applicative interface to
-combine two <code>Either</code> <strong>with the same type for the <code>Left</code> constructor</strong>.</p>
+combine two <em><code>Either</code>s with the same type for the <code>Left</code> constructor</em>.</p>
 <p>So what can we do if we have two functions that can return different errors?
 There are a few approaches, the most prominent ones are:</p>
 <ol>
@@ -358,7 +358,7 @@ layers of <code>Either Error</code> and we can't use this trick again with
 <code>typecheck</code>! <code>typecheck</code> expects an <code>AST</code>, but if we try to fmap it
 on <code>fmap parse (tokenize string)</code>, the <code>a</code> will be <code>Either Error AST</code>
 instead.</p>
-<p>What we would really like is to flatten this structure instead of build it.
+<p>What we would really like is to flatten this structure instead of building it.
 If we look at the kind of values <code>Either Error (Either Error AST)</code> could have,
 it looks something like this:</p>
 <ul>
@@ -445,22 +445,20 @@ the <code>Monad</code> interface:</p>
 manner, which seems to be more popular for monads:</p>
 <pre><code class="language-hs">tokenize string &gt;&gt;= parse &gt;&gt;= typecheck
 </code></pre>
-<p>We have already run into this function before when we talked about <code>IO</code>. Yes,
+<p>We have already met this function before when we talked about <code>IO</code>. Yes,
 <code>IO</code> also implements the <code>Monad</code> interface. The monadic interface for <code>IO</code>
-helped us with creating an proper ordering of effects.</p>
+helped us with creating a proper ordering of effects.</p>
 <p>The essence of the <code>Monad</code> interface is the <code>join</code>/<code>&gt;&gt;=</code> functions, and as we've seen
-we can implement <code>&gt;&gt;=</code> in terms of <code>join</code>, we can also implement <code>&gt;&gt;=</code> in terms
-of <code>join</code> (try it!).</p>
+we can implement <code>&gt;&gt;=</code> in terms of <code>join</code>, we can also implement <code>join</code> in terms
+of <code>&gt;&gt;=</code> (try it!).</p>
 <p>The monadic interface can mean very different things for different types. For <code>IO</code> this
-is ordering of effects, for <code>Either</code> it is early cutoff, for <code>Shake</code>
-(from the <a href="https://shakebuild.com">shake build system</a>) this means dynamic dependencies,
-for <a href="https://hackage.haskell.org/package/logict-0.7.1.0"><code>Logic</code></a> this means backtracking computation.</p>
+is ordering of effects, for <code>Either</code> it is early cutoff,
+for <a href="https://hackage.haskell.org/package/logict-0.7.1.0"><code>Logic</code></a> this means backtracking computation, etc.</p>
 <p>Again, don't worry about analogies and metaphors, focus on the API and the <a href="https://wiki.haskell.org/Monad_laws">laws</a>.</p>
 <blockquote>
 <p>Hey, did you check the monad laws? left identity, right identity and associativity? We've already
 discussed a type class with exactly these laws - the <code>Monoid</code> type class. Maybe this is related
-to the famous quote about monads beings just monoids in something something... Seriously writing
-this is the first time I've made this connection myself!</p>
+to the famous quote about monads beings just monoids in something something...</p>
 </blockquote>
 <h3 id="do-notation"><a class="header" href="#do-notation">Do notation?</a></h3>
 <p>Remember <a href="02-io.html#do-notation">do notation</a>? Turns out it works for any type that is
@@ -479,7 +477,7 @@ pipeline string = do
   typecheck ast
 </code></pre>
 <p>And it will work! Still, in this particular case <code>tokenize string &gt;&gt;= parse &gt;&gt;= typecheck</code>
-is so concise it can only be beat by using
+is so concise it can only be beaten by using
 <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Monad.html#v:-62--61--62-">&gt;=&gt;</a></p>
 <pre><code class="language-hs">&gt;=&gt; :: Monad m =&gt; (a -&gt; m b) -&gt; (b -&gt; m c) -&gt; a -&gt; m c
 
@@ -489,7 +487,7 @@ is so concise it can only be beat by using
 <pre><code class="language-hs">pipeline = tokenize &gt;=&gt; parse &gt;=&gt; typecheck
 </code></pre>
 <p>This ability of Haskell's to create very concise code using great abstractions makes it
-great once one is familiarity with the abstractions, knowing the monad abstractions,
+great once one is familiar with the abstractions. Knowing the monad abstraction,
 we are now already familiar with the core composition API of many libraries - for example:</p>
 <ul>
 <li><a href="https://hackage.haskell.org/package/stm">Concurrent</a>
@@ -505,9 +503,10 @@ and <a href="https://hackage.haskell.org/package/async">asynchronous programming
 <ol>
 <li>We encode possible errors using types, and we <strong>force users to acknowledge and handle</strong> them, thus
 making our code more resilient to crashes and bad behaviour.</li>
-<li>The <code>Functor</code>, <code>Applicative</code> and <code>Monad</code> interfaces provides us with mechanisms for
+<li>The <code>Functor</code>, <code>Applicative</code> and <code>Monad</code> interfaces provide us with mechanisms for
 <strong>composing</strong> functions that might fail (almost) effortlessly - reducing boilerplate while
-maintaining strong guarantees about our code!</li>
+maintaining strong guarantees about our code, and delaying the need to handle errors until
+it is appropriate.</li>
 </ol>
 
                     </main>

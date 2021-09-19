@@ -5639,7 +5639,7 @@ and see if we got an error (with the <code>Left</code> constructor) or the expec
 (with the <code>Right</code> constructor) by pattern matching on the result.</p>
 <h2 id="applicative--traversable"><a class="header" href="#applicative--traversable">Applicative + Traversable</a></h2>
 <p>The <code>Applicative</code> interface of <code>Either</code> is very powerful, and can be combine
-with a different abstraction called
+with another abstraction called
 <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Traversable.html#g:1"><code>Traversable</code></a> -
 for data structures that can be traversed from left to right, like a linked list or a binary tree.
 With these, we can combine an unspecified amount of values such as <code>Either ParseDigitError Int</code>
@@ -5680,7 +5680,7 @@ ghci&gt; traverse parseDigit &quot;1a2&quot;
 Left (NotADigit 'a')
 </code></pre>
 <p>We can use <code>traverse</code> on any two types where one implements the <code>Applicative</code>
-interface, like <code>Either a</code> or <code>IO</code>, and the other implements the <code>Traversable</code>,
+interface, like <code>Either a</code> or <code>IO</code>, and the other implements the <code>Traversable</code> interface,
 like <code>[]</code> (linked lists) and <a href="https://hackage.haskell.org/package/containers-0.6.5.1/docs/Data-Map-Strict.html#t:Map"><code>Map k</code></a>
 (also known as a dictionary in other languages - a mapping from keys to values).
 For example using <code>IO</code> and <code>Map</code>. Note that we can construct a <code>Map</code> data structure
@@ -5734,7 +5734,7 @@ For the same reason if we'll try to substitute <code>f</code> with, say, <code>I
 <pre><code class="language-hs">liftA2 :: (a -&gt; b -&gt; c) -&gt; Either e a -&gt; Either e b -&gt; Either e c
 </code></pre>
 <p>What this teaches us is that we can only use the applicative interface to
-combine two <code>Either</code> <strong>with the same type for the <code>Left</code> constructor</strong>.</p>
+combine two <em><code>Either</code>s with the same type for the <code>Left</code> constructor</em>.</p>
 <p>So what can we do if we have two functions that can return different errors?
 There are a few approaches, the most prominent ones are:</p>
 <ol>
@@ -5778,7 +5778,7 @@ layers of <code>Either Error</code> and we can't use this trick again with
 <code>typecheck</code>! <code>typecheck</code> expects an <code>AST</code>, but if we try to fmap it
 on <code>fmap parse (tokenize string)</code>, the <code>a</code> will be <code>Either Error AST</code>
 instead.</p>
-<p>What we would really like is to flatten this structure instead of build it.
+<p>What we would really like is to flatten this structure instead of building it.
 If we look at the kind of values <code>Either Error (Either Error AST)</code> could have,
 it looks something like this:</p>
 <ul>
@@ -5865,22 +5865,20 @@ the <code>Monad</code> interface:</p>
 manner, which seems to be more popular for monads:</p>
 <pre><code class="language-hs">tokenize string &gt;&gt;= parse &gt;&gt;= typecheck
 </code></pre>
-<p>We have already run into this function before when we talked about <code>IO</code>. Yes,
+<p>We have already met this function before when we talked about <code>IO</code>. Yes,
 <code>IO</code> also implements the <code>Monad</code> interface. The monadic interface for <code>IO</code>
-helped us with creating an proper ordering of effects.</p>
+helped us with creating a proper ordering of effects.</p>
 <p>The essence of the <code>Monad</code> interface is the <code>join</code>/<code>&gt;&gt;=</code> functions, and as we've seen
-we can implement <code>&gt;&gt;=</code> in terms of <code>join</code>, we can also implement <code>&gt;&gt;=</code> in terms
-of <code>join</code> (try it!).</p>
+we can implement <code>&gt;&gt;=</code> in terms of <code>join</code>, we can also implement <code>join</code> in terms
+of <code>&gt;&gt;=</code> (try it!).</p>
 <p>The monadic interface can mean very different things for different types. For <code>IO</code> this
-is ordering of effects, for <code>Either</code> it is early cutoff, for <code>Shake</code>
-(from the <a href="https://shakebuild.com">shake build system</a>) this means dynamic dependencies,
-for <a href="https://hackage.haskell.org/package/logict-0.7.1.0"><code>Logic</code></a> this means backtracking computation.</p>
+is ordering of effects, for <code>Either</code> it is early cutoff,
+for <a href="https://hackage.haskell.org/package/logict-0.7.1.0"><code>Logic</code></a> this means backtracking computation, etc.</p>
 <p>Again, don't worry about analogies and metaphors, focus on the API and the <a href="https://wiki.haskell.org/Monad_laws">laws</a>.</p>
 <blockquote>
 <p>Hey, did you check the monad laws? left identity, right identity and associativity? We've already
 discussed a type class with exactly these laws - the <code>Monoid</code> type class. Maybe this is related
-to the famous quote about monads beings just monoids in something something... Seriously writing
-this is the first time I've made this connection myself!</p>
+to the famous quote about monads beings just monoids in something something...</p>
 </blockquote>
 <h3 id="do-notation-1"><a class="header" href="#do-notation-1">Do notation?</a></h3>
 <p>Remember <a href="06-errors_and_files/02-io.html#do-notation">do notation</a>? Turns out it works for any type that is
@@ -5899,7 +5897,7 @@ pipeline string = do
   typecheck ast
 </code></pre>
 <p>And it will work! Still, in this particular case <code>tokenize string &gt;&gt;= parse &gt;&gt;= typecheck</code>
-is so concise it can only be beat by using
+is so concise it can only be beaten by using
 <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Monad.html#v:-62--61--62-">&gt;=&gt;</a></p>
 <pre><code class="language-hs">&gt;=&gt; :: Monad m =&gt; (a -&gt; m b) -&gt; (b -&gt; m c) -&gt; a -&gt; m c
 
@@ -5909,7 +5907,7 @@ is so concise it can only be beat by using
 <pre><code class="language-hs">pipeline = tokenize &gt;=&gt; parse &gt;=&gt; typecheck
 </code></pre>
 <p>This ability of Haskell's to create very concise code using great abstractions makes it
-great once one is familiarity with the abstractions, knowing the monad abstractions,
+great once one is familiar with the abstractions. Knowing the monad abstraction,
 we are now already familiar with the core composition API of many libraries - for example:</p>
 <ul>
 <li><a href="https://hackage.haskell.org/package/stm">Concurrent</a>
@@ -5925,9 +5923,10 @@ and <a href="https://hackage.haskell.org/package/async">asynchronous programming
 <ol>
 <li>We encode possible errors using types, and we <strong>force users to acknowledge and handle</strong> them, thus
 making our code more resilient to crashes and bad behaviour.</li>
-<li>The <code>Functor</code>, <code>Applicative</code> and <code>Monad</code> interfaces provides us with mechanisms for
+<li>The <code>Functor</code>, <code>Applicative</code> and <code>Monad</code> interfaces provide us with mechanisms for
 <strong>composing</strong> functions that might fail (almost) effortlessly - reducing boilerplate while
-maintaining strong guarantees about our code!</li>
+maintaining strong guarantees about our code, and delaying the need to handle errors until
+it is appropriate.</li>
 </ol>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="either-with-io"><a class="header" href="#either-with-io">Either with IO?</a></h1>
 <p>When we create <code>IO</code> actions that may require I/O we risk running into all kinds of errors.
@@ -5950,7 +5949,7 @@ before calling <code>writeFile</code>.</p>
 <p>One way to handle this is by using <strong>monad transformers</strong>. Monad transformers are a method
 to stack monad capabilities on top of one another. They are called transformers because
 <strong>they take a type that has an instance of monad as input, and return a new type that
-implements the monad interface, stacking a new capability on top of that</strong>.</p>
+implements the monad interface, stacking a new capability on top of it</strong>.</p>
 <p>For example, if we want to create a value with a type similar to <code>IO (Either Error a)</code>
 that we can compose using the monadic interface (the function <code>&gt;&gt;=</code>) with other values
 of a type similar to <code>IO (Either Error a)</code>, we can using a monad transformer
@@ -5965,7 +5964,14 @@ the function <code>runExceptT</code>:</p>
 <pre><code class="language-hs">runExceptT :: ExceptT e m a -&gt; m (Either e a)
 </code></pre>
 <p><code>ExceptT</code> implements the monadic interface in a way that combines the capabilities of
-<code>Either</code>, and whatever <code>m</code> it takes.</p>
+<code>Either</code>, and whatever <code>m</code> it takes. Because <code>ExceptT e m</code> has a <code>Monad</code> instance,
+a specialized version of <code>&gt;&gt;=</code> would look like this:</p>
+<pre><code class="language-hs">-- Generalized version
+(&gt;&gt;=) :: Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
+
+-- Specialized version, replace `m` with `ExceptT e m`
+(&gt;&gt;=) :: ExceptT e m a -&gt; (a -&gt; ExceptT e m b) -&gt; ExceptT e m b
+</code></pre>
 <hr />
 <p>Unsure how this works? Try to implement <code>&gt;&gt;=</code> for <code>IO (Either Error a)</code>:</p>
 <pre><code class="language-hs">bindExceptT :: IO (Either Error a) -&gt; (a -&gt; IO (Either Error b)) -&gt; IO (Either Error b)
@@ -6041,8 +6047,8 @@ There are many many more possible IO errors! &quot;network unreachable&quot;, &q
 &quot;cancelled thread&quot;, we cannot require a user to handle all these errors, or
 even cover them all in a data type.</p>
 <p>So what do we do?</p>
-<p>We give up on this approach <strong>for IO code</strong>, and use a different one: Exceptions,
-as we'll see in the next chapter.</p>
+<p>We give up on this approach <strong>for IO code</strong>, and use a different one: Exceptions.
+As we'll see in the next chapter.</p>
 <blockquote>
 <p>Note - when we stack <code>ExceptT</code> on top of a different type called
 <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Functor-Identity.html"><code>Identity</code></a>
@@ -6053,7 +6059,7 @@ because it has a more appropriate name and better API for error handling than <c
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="exceptions"><a class="header" href="#exceptions">Exceptions</a></h1>
 <p>The <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html">Control.Exception</a>
-provides us with the ability to
+module provides us with the ability to
 <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html#v:throwIO">throw</a>
 exceptions from <code>IO</code> code,
 <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html#g:5"><code>catch</code></a>
@@ -6103,7 +6109,7 @@ main =
       ErrZero -&gt;
         hPutStrLn stderr &quot;Error: we don't support dividing zeroes for some reason&quot;
       ErrOdd n -&gt;
-        hPutStrLn stderr (&quot;Error: &quot; &lt;&gt; show n &lt;&gt; &quot; is odd and cannot be divided&quot;)
+        hPutStrLn stderr (&quot;Error: &quot; &lt;&gt; show n &lt;&gt; &quot; is odd and cannot be divided by 2&quot;)
     )
 </code></pre>
 <blockquote>
@@ -6112,18 +6118,19 @@ main =
 <li>
 <p>Guards as seen in <code>sayDiv2</code> are just a nicer syntax around <code>if-then-else</code> expressions.
 Using guards we can have multiple <code>if</code> branches and finally use the <code>else</code> branch
-by using <code>otherwise</code>. After each guard <code>|</code> is a condition, after the condition there's
+by using <code>otherwise</code>. After each guard (<code>|</code>) there's a condition, after the condition there's
 a <code>=</code> and then the expression (the part after <code>then</code> in an <code>if</code> expression).</p>
 </li>
 <li>
 <p>LambdaCase as seen in <code>catch</code>, is just a syntactic sugar to save a few characters,
-instead of writing <code>\e -&gt; case e of</code>, we can write <code>\case</code>.</p>
+instead of writing <code>\e -&gt; case e of</code>, we can write <code>\case</code>. It requires enabling the
+<code>LambdaCase</code> extension.</p>
 </li>
 </ol>
 </blockquote>
 <p>This example, of course, is an example that would work much better using <code>Either</code> and separating
-the division and printing à la functional core, imperative shell. But as an example it works.
-We have created a custom exception and handle it specifically outside an <code>IO</code> block.
+the division and printing à la 'functional core, imperative shell'. But as an example it works.
+We have created a custom exception and handled it specifically outside an <code>IO</code> block.
 However, we have not handled exceptions that might be raised by <code>putStrLn</code>.
 What if, for example, for some reason we close the <code>stdout</code> handle before this block:</p>
 <pre><code class="language-hs">main :: IO ()
@@ -6139,7 +6146,7 @@ main = do
       ErrZero -&gt;
         hPutStrLn stderr &quot;Error: we don't support dividing zeroes for some reason&quot;
       ErrOdd n -&gt;
-        hPutStrLn stderr (&quot;Error: &quot; &lt;&gt; show n &lt;&gt; &quot; is odd and cannot be divided&quot;)
+        hPutStrLn stderr (&quot;Error: &quot; &lt;&gt; show n &lt;&gt; &quot; is odd and cannot be divided by 2&quot;)
     )
 </code></pre>
 <p>Our program will crash with an error:</p>
@@ -6170,7 +6177,7 @@ main = do
         ErrZero -&gt;
           hPutStrLn stderr &quot;Error: we don't support dividing zeroes for some reason&quot;
         ErrOdd n -&gt;
-          hPutStrLn stderr (&quot;Error: &quot; &lt;&gt; show n &lt;&gt; &quot; is odd and cannot be divided&quot;)
+          hPutStrLn stderr (&quot;Error: &quot; &lt;&gt; show n &lt;&gt; &quot; is odd and cannot be divided by 2&quot;)
       )
     )
     ( \(e :: IOException) -&gt;
@@ -6201,7 +6208,7 @@ main = do
       ErrZero -&gt;
         hPutStrLn stderr &quot;Error: we don't support dividing zeroes for some reason&quot;
       ErrOdd n -&gt;
-        hPutStrLn stderr (&quot;Error: &quot; &lt;&gt; show n &lt;&gt; &quot; is odd and cannot be divided&quot;)
+        hPutStrLn stderr (&quot;Error: &quot; &lt;&gt; show n &lt;&gt; &quot; is odd and cannot be divided by 2&quot;)
     
     , Handler $ \(e :: IOException) -&gt;
       -- we can check if the error was an illegal operation on the stderr handle
@@ -6263,7 +6270,7 @@ convert the files to HTML, and write everything to the target directory</li>
 <blockquote>
 <p>Note: I did not write this code immediately in the final form it was presented.
 It was an iterative process of writing code, refactoring, splitting functions, changing
-type signatures, and more. When reaching a coding problem, start small and simple,
+type signatures, and more. When solving a coding problem, start small and simple,
 do the thing that works, and refactor it when it makes sense and makes the code clearer
 and more modular. In Haskell we pride ourselves in our ability to refactor code and improve
 it over time, and that principle holds when writing new software as well!</p>
@@ -6284,7 +6291,7 @@ module HsBlog.Directory
 <a href="https://hackage.haskell.org/package/directory-1.3.7.0/docs/System-Directory.html">directory</a>
 and <a href="https://hackage.haskell.org/package/filepath-1.4.2.1/docs/System-FilePath.html">filepath</a>
 libraries to manipulate directories, files and filepaths.
-We'll use the new abstractions we've learned <code>Traversable</code> and <code>Monad</code> and the concepts
+We'll use the new abstractions we've learned, <code>Traversable</code> and <code>Monad</code>, and the concepts
 and types we've learned about: <code>Either</code>, <code>IO</code> and exceptions.</p>
 <p>For all of that, we need quite a few imports:</p>
 <pre><code class="language-hs">import qualified HsBlog.Markup as Markup
@@ -6313,11 +6320,12 @@ import System.Directory
   , copyFile
   )
 </code></pre>
-<p>If you are unsure what a specific function we're using does, look it up at good,
+<p>If you are unsure what a specific function we're using does, look it up at
+<a href="https://hoogle.haskell.org/">Hoogle</a>,
 read the type signature and the documentation, and play around with it in <code>ghci</code>.</p>
 <h2 id="converting-a-directory"><a class="header" href="#converting-a-directory">Converting a directory</a></h2>
 <p>We can start by describing the high-level function <code>convertDirectory</code> which
-encapsulates many smaller functions, each responsible on doing a specific thing.
+encapsulates many smaller functions, each responsible for doing a specific thing.
 <code>convertDirectory</code> is quite imperative looking, and looks like a different way to
 describe the steps of completing our task:</p>
 <pre><code class="language-hs">-- | Copy files from one directory to another, converting '.txt' files to
@@ -6404,7 +6412,7 @@ take specifically <code>[FilePath]</code> and return <code>IO [(FilePath, Either
 But after running into other use cases where I could use it (<code>writeFiles</code> and <code>copyFiles</code>)
 I refactored out the <code>action</code>, the input type and the return type.</p>
 </blockquote>
-<p>This function uses exceptions to catch any error that might be thrown, and encoding
+<p>This function uses exceptions to catch any error that might be thrown, and encodes
 both the failure and success cases in the type system using <code>Either</code>, delaying
 the handling of exceptions to the caller of the function while making sure it won't
 be forgotten!</p>
@@ -6491,11 +6499,11 @@ toOutputMarkupFile (file, content) =
 convertFile :: (FilePath, Markup.Document) -&gt; (FilePath, Html.Html)
 convertFile (file, doc) = (file, convert file doc)
 </code></pre>
-<p>One possibly surprising thing about this could could be the <code>map (fmap Html.render)</code>
+<p>One possibly surprising thing about this code could be the <code>map (fmap Html.render)</code>
 part. We can use <code>fmap</code> on the tuple because it is a <code>Functor</code> on the second
 argument, just like <code>Either</code>!</p>
 <h3 id="copyfiles-and-writefiles"><a class="header" href="#copyfiles-and-writefiles"><code>copyFiles</code> and <code>writeFiles</code></a></h3>
-<p>The only thing left to do after the processing is complete is to write the directory
+<p>The only thing left to do after the processing is completed is to write the directory
 content after processing to the newly created directory:</p>
 <pre><code class="language-hs">-- | Copy files to a directory, recording errors to stderr.
 copyFiles :: FilePath -&gt; [FilePath] -&gt; IO ()

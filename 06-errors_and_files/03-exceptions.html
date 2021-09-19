@@ -143,7 +143,7 @@
                     <main>
                         <h1 id="exceptions"><a class="header" href="#exceptions">Exceptions</a></h1>
 <p>The <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html">Control.Exception</a>
-provides us with the ability to
+module provides us with the ability to
 <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html#v:throwIO">throw</a>
 exceptions from <code>IO</code> code,
 <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html#g:5"><code>catch</code></a>
@@ -193,7 +193,7 @@ main =
       ErrZero -&gt;
         hPutStrLn stderr &quot;Error: we don't support dividing zeroes for some reason&quot;
       ErrOdd n -&gt;
-        hPutStrLn stderr (&quot;Error: &quot; &lt;&gt; show n &lt;&gt; &quot; is odd and cannot be divided&quot;)
+        hPutStrLn stderr (&quot;Error: &quot; &lt;&gt; show n &lt;&gt; &quot; is odd and cannot be divided by 2&quot;)
     )
 </code></pre>
 <blockquote>
@@ -202,18 +202,19 @@ main =
 <li>
 <p>Guards as seen in <code>sayDiv2</code> are just a nicer syntax around <code>if-then-else</code> expressions.
 Using guards we can have multiple <code>if</code> branches and finally use the <code>else</code> branch
-by using <code>otherwise</code>. After each guard <code>|</code> is a condition, after the condition there's
+by using <code>otherwise</code>. After each guard (<code>|</code>) there's a condition, after the condition there's
 a <code>=</code> and then the expression (the part after <code>then</code> in an <code>if</code> expression).</p>
 </li>
 <li>
 <p>LambdaCase as seen in <code>catch</code>, is just a syntactic sugar to save a few characters,
-instead of writing <code>\e -&gt; case e of</code>, we can write <code>\case</code>.</p>
+instead of writing <code>\e -&gt; case e of</code>, we can write <code>\case</code>. It requires enabling the
+<code>LambdaCase</code> extension.</p>
 </li>
 </ol>
 </blockquote>
 <p>This example, of course, is an example that would work much better using <code>Either</code> and separating
-the division and printing à la functional core, imperative shell. But as an example it works.
-We have created a custom exception and handle it specifically outside an <code>IO</code> block.
+the division and printing à la 'functional core, imperative shell'. But as an example it works.
+We have created a custom exception and handled it specifically outside an <code>IO</code> block.
 However, we have not handled exceptions that might be raised by <code>putStrLn</code>.
 What if, for example, for some reason we close the <code>stdout</code> handle before this block:</p>
 <pre><code class="language-hs">main :: IO ()
@@ -229,7 +230,7 @@ main = do
       ErrZero -&gt;
         hPutStrLn stderr &quot;Error: we don't support dividing zeroes for some reason&quot;
       ErrOdd n -&gt;
-        hPutStrLn stderr (&quot;Error: &quot; &lt;&gt; show n &lt;&gt; &quot; is odd and cannot be divided&quot;)
+        hPutStrLn stderr (&quot;Error: &quot; &lt;&gt; show n &lt;&gt; &quot; is odd and cannot be divided by 2&quot;)
     )
 </code></pre>
 <p>Our program will crash with an error:</p>
@@ -260,7 +261,7 @@ main = do
         ErrZero -&gt;
           hPutStrLn stderr &quot;Error: we don't support dividing zeroes for some reason&quot;
         ErrOdd n -&gt;
-          hPutStrLn stderr (&quot;Error: &quot; &lt;&gt; show n &lt;&gt; &quot; is odd and cannot be divided&quot;)
+          hPutStrLn stderr (&quot;Error: &quot; &lt;&gt; show n &lt;&gt; &quot; is odd and cannot be divided by 2&quot;)
       )
     )
     ( \(e :: IOException) -&gt;
@@ -291,7 +292,7 @@ main = do
       ErrZero -&gt;
         hPutStrLn stderr &quot;Error: we don't support dividing zeroes for some reason&quot;
       ErrOdd n -&gt;
-        hPutStrLn stderr (&quot;Error: &quot; &lt;&gt; show n &lt;&gt; &quot; is odd and cannot be divided&quot;)
+        hPutStrLn stderr (&quot;Error: &quot; &lt;&gt; show n &lt;&gt; &quot; is odd and cannot be divided by 2&quot;)
     
     , Handler $ \(e :: IOException) -&gt;
       -- we can check if the error was an illegal operation on the stderr handle
