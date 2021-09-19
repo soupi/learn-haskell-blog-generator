@@ -1,7 +1,7 @@
 # Handling errors and multiple files
 
 We have left an unimplemented function last chapter,
-There are a few more things left for us to do to actually call our program a static blog generator.
+and there are a few more things left for us to do to actually call our program a static blog generator.
 We still need to process multiple files in a directory and create an index landing page with links to other pages.
 
 ## Links in HTML
@@ -175,6 +175,7 @@ module HsBlog.Html
   , ul_
   , ol_
   , code_
+  , Context
   , txt_
   , img_
   , link_
@@ -182,7 +183,7 @@ module HsBlog.Html
   , i_
   , render
   )
-where
+  where
 
 import HsBlog.Html.Internal
 ```
@@ -276,9 +277,7 @@ buildIndex files =
 
 ## Processing directories
 
-As was hinted in the last chapter, we are going to use the
-[`directory`](https://hackage.haskell.org/package/directory-1.3.7.0/docs/System-Directory.html)
-package to complete our task. We need to:
+Our general strategy for processing whole directories is going to be:
 
 - Create the output directory
 - Grab all file names in a directory
