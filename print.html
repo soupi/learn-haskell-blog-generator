@@ -5304,7 +5304,7 @@ and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/code
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="handling-errors-and-multiple-files"><a class="header" href="#handling-errors-and-multiple-files">Handling errors and multiple files</a></h1>
 <p>We have left an unimplemented function last chapter,
-There are a few more things left for us to do to actually call our program a static blog generator.
+and there are a few more things left for us to do to actually call our program a static blog generator.
 We still need to process multiple files in a directory and create an index landing page with links to other pages.</p>
 <h2 id="links-in-html"><a class="header" href="#links-in-html">Links in HTML</a></h2>
 <p>Our HTML EDSL currently does not support links or other content modifiers such as bold and italics.
@@ -5465,6 +5465,7 @@ module HsBlog.Html
   , ul_
   , ol_
   , code_
+  , Context
   , txt_
   , img_
   , link_
@@ -5472,7 +5473,7 @@ module HsBlog.Html
   , i_
   , render
   )
-where
+  where
 
 import HsBlog.Html.Internal
 </code></pre>
@@ -5544,9 +5545,7 @@ buildIndex files =
 </details>
 <hr />
 <h2 id="processing-directories"><a class="header" href="#processing-directories">Processing directories</a></h2>
-<p>As was hinted in the last chapter, we are going to use the
-<a href="https://hackage.haskell.org/package/directory-1.3.7.0/docs/System-Directory.html"><code>directory</code></a>
-package to complete our task. We need to:</p>
+<p>Our general strategy for processing whole directories is going to be:</p>
 <ul>
 <li>Create the output directory</li>
 <li>Grab all file names in a directory</li>
@@ -6771,7 +6770,7 @@ We saw how to stack an <code>Either</code>-like monad transformer, <code>ExceptT
 <p>We are almost done. Only a couple more things left to do with this project. Let's go!</p>
 <blockquote>
 <p>You can view the git commit of
-<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/97f11d0690a70d874314de4f711fb2be12c95fe4">the changes we've made</a>
+<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/360f6ec23381fb274316125d6a6115912f5dedec">the changes we've made</a>
 and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/code-after-multiple-files">code up until now</a>.</p>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="passing-environment-variables"><a class="header" href="#passing-environment-variables">Passing environment variables</a></h1>
@@ -7138,7 +7137,7 @@ arsenal and I wanted to demonstrate it.</p>
 and it's often better to try and get away with simpler techniques if we can.</p>
 <blockquote>
 <p>You can view the git commit of
-<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/e3347dcaa4391b5c29d0d44facdc8a1d3ddccb7a">the changes we've made</a>
+<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/442f35e96e72f9b706416f77269b59626055c7cb">the changes we've made</a>
 and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/code-after-reader">code up until now</a>.</p>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="testing"><a class="header" href="#testing">Testing</a></h1>
@@ -7528,7 +7527,7 @@ Please consult the tutorial for your chosen testing framework, and read more abo
 this very important subject on your own.</p>
 <blockquote>
 <p>You can view the git commit of
-<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/9c3a368ad283bbd1d1326d23f26235679b17a5d4">the changes we've made</a>
+<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/b60ddfbdb876abd6ac4d47fdf57c700559d7781a">the changes we've made</a>
 and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/code-after-testing">final version of the code</a>.</p>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="where-to-go-next"><a class="header" href="#where-to-go-next">Where to go next</a></h1>

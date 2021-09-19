@@ -143,7 +143,7 @@
                     <main>
                         <h1 id="handling-errors-and-multiple-files"><a class="header" href="#handling-errors-and-multiple-files">Handling errors and multiple files</a></h1>
 <p>We have left an unimplemented function last chapter,
-There are a few more things left for us to do to actually call our program a static blog generator.
+and there are a few more things left for us to do to actually call our program a static blog generator.
 We still need to process multiple files in a directory and create an index landing page with links to other pages.</p>
 <h2 id="links-in-html"><a class="header" href="#links-in-html">Links in HTML</a></h2>
 <p>Our HTML EDSL currently does not support links or other content modifiers such as bold and italics.
@@ -304,6 +304,7 @@ module HsBlog.Html
   , ul_
   , ol_
   , code_
+  , Context
   , txt_
   , img_
   , link_
@@ -311,7 +312,7 @@ module HsBlog.Html
   , i_
   , render
   )
-where
+  where
 
 import HsBlog.Html.Internal
 </code></pre>
@@ -383,9 +384,7 @@ buildIndex files =
 </details>
 <hr />
 <h2 id="processing-directories"><a class="header" href="#processing-directories">Processing directories</a></h2>
-<p>As was hinted in the last chapter, we are going to use the
-<a href="https://hackage.haskell.org/package/directory-1.3.7.0/docs/System-Directory.html"><code>directory</code></a>
-package to complete our task. We need to:</p>
+<p>Our general strategy for processing whole directories is going to be:</p>
 <ul>
 <li>Create the output directory</li>
 <li>Grab all file names in a directory</li>
