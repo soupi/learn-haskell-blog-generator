@@ -105,7 +105,7 @@ and see if we got an error (with the `Left` constructor) or the expected value
 ## Applicative + Traversable
 
 The `Applicative` interface of `Either` is very powerful, and can be combine
-with a different abstraction called
+with another abstraction called
 [`Traversable`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Traversable.html#g:1) -
 for data structures that can be traversed from left to right, like a linked list or a binary tree.
 With these, we can combine an unspecified amount of values such as `Either ParseDigitError Int`
@@ -153,7 +153,7 @@ Left (NotADigit 'a')
 ```
 
 We can use `traverse` on any two types where one implements the `Applicative`
-interface, like `Either a` or `IO`, and the other implements the `Traversable`,
+interface, like `Either a` or `IO`, and the other implements the `Traversable` interface,
 like `[]` (linked lists) and [`Map k`](https://hackage.haskell.org/package/containers-0.6.5.1/docs/Data-Map-Strict.html#t:Map)
 (also known as a dictionary in other languages - a mapping from keys to values).
 For example using `IO` and `Map`. Note that we can construct a `Map` data structure
@@ -228,7 +228,7 @@ liftA2 :: (a -> b -> c) -> Either e a -> Either e b -> Either e c
 ```
 
 What this teaches us is that we can only use the applicative interface to
-combine two `Either` **with the same type for the `Left` constructor**.
+combine two *`Either`s with the same type for the `Left` constructor*.
 
 So what can we do if we have two functions that can return different errors?
 There are a few approaches, the most prominent ones are:
@@ -283,7 +283,7 @@ layers of `Either Error` and we can't use this trick again with
 on `fmap parse (tokenize string)`, the `a` will be `Either Error AST`
 instead.
 
-What we would really like is to flatten this structure instead of build it.
+What we would really like is to flatten this structure instead of building it.
 If we look at the kind of values `Either Error (Either Error AST)` could have,
 it looks something like this:
 
@@ -408,25 +408,23 @@ manner, which seems to be more popular for monads:
 tokenize string >>= parse >>= typecheck
 ```
 
-We have already run into this function before when we talked about `IO`. Yes,
+We have already met this function before when we talked about `IO`. Yes,
 `IO` also implements the `Monad` interface. The monadic interface for `IO`
-helped us with creating an proper ordering of effects.
+helped us with creating a proper ordering of effects.
 
 The essence of the `Monad` interface is the `join`/`>>=` functions, and as we've seen
-we can implement `>>=` in terms of `join`, we can also implement `>>=` in terms
-of `join` (try it!).
+we can implement `>>=` in terms of `join`, we can also implement `join` in terms
+of `>>=` (try it!).
 
 The monadic interface can mean very different things for different types. For `IO` this
-is ordering of effects, for `Either` it is early cutoff, for `Shake`
-(from the [shake build system](https://shakebuild.com)) this means dynamic dependencies,
-for [`Logic`](https://hackage.haskell.org/package/logict-0.7.1.0) this means backtracking computation.
+is ordering of effects, for `Either` it is early cutoff,
+for [`Logic`](https://hackage.haskell.org/package/logict-0.7.1.0) this means backtracking computation, etc.
 
 Again, don't worry about analogies and metaphors, focus on the API and the [laws](https://wiki.haskell.org/Monad_laws).
 
 > Hey, did you check the monad laws? left identity, right identity and associativity? We've already
 > discussed a type class with exactly these laws - the `Monoid` type class. Maybe this is related
-> to the famous quote about monads beings just monoids in something something... Seriously writing
-> this is the first time I've made this connection myself!
+> to the famous quote about monads beings just monoids in something something...
 
 ### Do notation?
 
@@ -452,7 +450,7 @@ pipeline string = do
 ```
 
 And it will work! Still, in this particular case `tokenize string >>= parse >>= typecheck`
-is so concise it can only be beat by using
+is so concise it can only be beaten by using
 [>=>](https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Monad.html#v:-62--61--62-)
 
 ```hs
@@ -467,7 +465,7 @@ pipeline = tokenize >=> parse >=> typecheck
 ```
 
 This ability of Haskell's to create very concise code using great abstractions makes it
-great once one is familiarity with the abstractions, knowing the monad abstractions,
+great once one is familiar with the abstractions. Knowing the monad abstraction,
 we are now already familiar with the core composition API of many libraries - for example:
 
 - [Concurrent](https://hackage.haskell.org/package/stm)
@@ -484,6 +482,7 @@ Using `Either` for error handling is useful for two reasons:
 
 1. We encode possible errors using types, and we **force users to acknowledge and handle** them, thus
    making our code more resilient to crashes and bad behaviour.
-2. The `Functor`, `Applicative` and `Monad` interfaces provides us with mechanisms for
+2. The `Functor`, `Applicative` and `Monad` interfaces provide us with mechanisms for
    **composing** functions that might fail (almost) effortlessly - reducing boilerplate while
-   maintaining strong guarantees about our code!
+   maintaining strong guarantees about our code, and delaying the need to handle errors until
+   it is appropriate.
