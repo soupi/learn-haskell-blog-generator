@@ -12,7 +12,7 @@ This was a long info dump. Let's practice what we've learned. We want to:
 
 > Note: I did not write this code immediately in the final form it was presented.
 > It was an iterative process of writing code, refactoring, splitting functions, changing
-> type signatures, and more. When reaching a coding problem, start small and simple,
+> type signatures, and more. When solving a coding problem, start small and simple,
 > do the thing that works, and refactor it when it makes sense and makes the code clearer
 > and more modular. In Haskell we pride ourselves in our ability to refactor code and improve
 > it over time, and that principle holds when writing new software as well!
@@ -37,7 +37,7 @@ In this module we are going to use the
 [directory](https://hackage.haskell.org/package/directory-1.3.7.0/docs/System-Directory.html)
 and [filepath](https://hackage.haskell.org/package/filepath-1.4.2.1/docs/System-FilePath.html)
 libraries to manipulate directories, files and filepaths.
-We'll use the new abstractions we've learned `Traversable` and `Monad` and the concepts
+We'll use the new abstractions we've learned, `Traversable` and `Monad`, and the concepts
 and types we've learned about: `Either`, `IO` and exceptions.
 
 For all of that, we need quite a few imports:
@@ -70,13 +70,14 @@ import System.Directory
   )
 ```
 
-If you are unsure what a specific function we're using does, look it up at good,
+If you are unsure what a specific function we're using does, look it up at
+[Hoogle](https://hoogle.haskell.org/),
 read the type signature and the documentation, and play around with it in `ghci`.
 
 ## Converting a directory
 
 We can start by describing the high-level function `convertDirectory` which
-encapsulates many smaller functions, each responsible on doing a specific thing.
+encapsulates many smaller functions, each responsible for doing a specific thing.
 `convertDirectory` is quite imperative looking, and looks like a different way to
 describe the steps of completing our task:
 
@@ -179,7 +180,7 @@ from other than the result of the function.
 > But after running into other use cases where I could use it (`writeFiles` and `copyFiles`)
 > I refactored out the `action`, the input type and the return type.
 
-This function uses exceptions to catch any error that might be thrown, and encoding
+This function uses exceptions to catch any error that might be thrown, and encodes
 both the failure and success cases in the type system using `Either`, delaying
 the handling of exceptions to the caller of the function while making sure it won't
 be forgotten!
@@ -288,13 +289,13 @@ convertFile :: (FilePath, Markup.Document) -> (FilePath, Html.Html)
 convertFile (file, doc) = (file, convert file doc)
 ```
 
-One possibly surprising thing about this could could be the `map (fmap Html.render)`
+One possibly surprising thing about this code could be the `map (fmap Html.render)`
 part. We can use `fmap` on the tuple because it is a `Functor` on the second
 argument, just like `Either`!
 
 ### `copyFiles` and `writeFiles`
 
-The only thing left to do after the processing is complete is to write the directory
+The only thing left to do after the processing is completed is to write the directory
 content after processing to the newly created directory:
 
 ```hs

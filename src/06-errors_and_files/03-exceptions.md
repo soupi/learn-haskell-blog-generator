@@ -1,7 +1,7 @@
 # Exceptions
 
 The [Control.Exception](https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html)
-provides us with the ability to
+module provides us with the ability to
 [throw](https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html#v:throwIO)
 exceptions from `IO` code,
 [`catch`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html#g:5)
@@ -56,7 +56,7 @@ main =
       ErrZero ->
         hPutStrLn stderr "Error: we don't support dividing zeroes for some reason"
       ErrOdd n ->
-        hPutStrLn stderr ("Error: " <> show n <> " is odd and cannot be divided")
+        hPutStrLn stderr ("Error: " <> show n <> " is odd and cannot be divided by 2")
     )
 ```
 
@@ -64,15 +64,16 @@ main =
 >
 > 1. Guards as seen in `sayDiv2` are just a nicer syntax around `if-then-else` expressions.
 >    Using guards we can have multiple `if` branches and finally use the `else` branch
->    by using `otherwise`. After each guard `|` is a condition, after the condition there's
+>    by using `otherwise`. After each guard (`|`) there's a condition, after the condition there's
 >    a `=` and then the expression (the part after `then` in an `if` expression).
 >
 > 2. LambdaCase as seen in `catch`, is just a syntactic sugar to save a few characters,
->    instead of writing `\e -> case e of`, we can write `\case`.
+>    instead of writing `\e -> case e of`, we can write `\case`. It requires enabling the
+>    `LambdaCase` extension.
 
 This example, of course, is an example that would work much better using `Either` and separating
-the division and printing à la functional core, imperative shell. But as an example it works.
-We have created a custom exception and handle it specifically outside an `IO` block.
+the division and printing à la 'functional core, imperative shell'. But as an example it works.
+We have created a custom exception and handled it specifically outside an `IO` block.
 However, we have not handled exceptions that might be raised by `putStrLn`.
 What if, for example, for some reason we close the `stdout` handle before this block:
 
@@ -90,7 +91,7 @@ main = do
       ErrZero ->
         hPutStrLn stderr "Error: we don't support dividing zeroes for some reason"
       ErrOdd n ->
-        hPutStrLn stderr ("Error: " <> show n <> " is odd and cannot be divided")
+        hPutStrLn stderr ("Error: " <> show n <> " is odd and cannot be divided by 2")
     )
 ```
 
@@ -127,7 +128,7 @@ main = do
         ErrZero ->
           hPutStrLn stderr "Error: we don't support dividing zeroes for some reason"
         ErrOdd n ->
-          hPutStrLn stderr ("Error: " <> show n <> " is odd and cannot be divided")
+          hPutStrLn stderr ("Error: " <> show n <> " is odd and cannot be divided by 2")
       )
     )
     ( \(e :: IOException) ->
@@ -160,7 +161,7 @@ main = do
       ErrZero ->
         hPutStrLn stderr "Error: we don't support dividing zeroes for some reason"
       ErrOdd n ->
-        hPutStrLn stderr ("Error: " <> show n <> " is odd and cannot be divided")
+        hPutStrLn stderr ("Error: " <> show n <> " is odd and cannot be divided by 2")
     
     , Handler $ \(e :: IOException) ->
       -- we can check if the error was an illegal operation on the stderr handle

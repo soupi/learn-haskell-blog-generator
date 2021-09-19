@@ -29,7 +29,7 @@ before calling `writeFile`.
 One way to handle this is by using **monad transformers**. Monad transformers are a method
 to stack monad capabilities on top of one another. They are called transformers because
 **they take a type that has an instance of monad as input, and return a new type that
-implements the monad interface, stacking a new capability on top of that**.
+implements the monad interface, stacking a new capability on top of it**.
 
 For example, if we want to create a value with a type similar to `IO (Either Error a)`
 that we can compose using the monadic interface (the function `>>=`) with other values
@@ -51,7 +51,16 @@ runExceptT :: ExceptT e m a -> m (Either e a)
 ```
 
 `ExceptT` implements the monadic interface in a way that combines the capabilities of
-`Either`, and whatever `m` it takes.
+`Either`, and whatever `m` it takes. Because `ExceptT e m` has a `Monad` instance,
+a specialized version of `>>=` would look like this:
+
+```hs
+-- Generalized version
+(>>=) :: Monad m => m a -> (a -> m b) -> m b
+
+-- Specialized version, replace `m` with `ExceptT e m`
+(>>=) :: ExceptT e m a -> (a -> ExceptT e m b) -> ExceptT e m b
+```
 
 ---
 
@@ -160,8 +169,8 @@ even cover them all in a data type.
 
 So what do we do?
 
-We give up on this approach **for IO code**, and use a different one: Exceptions,
-as we'll see in the next chapter.
+We give up on this approach **for IO code**, and use a different one: Exceptions.
+As we'll see in the next chapter.
 
 > Note - when we stack `ExceptT` on top of a different type called
 > [`Identity`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Functor-Identity.html)
