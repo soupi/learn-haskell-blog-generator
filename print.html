@@ -4524,7 +4524,7 @@ ourselves with <code>getArgs</code> and pattern matching, using a library for th
 We are going to use a package called
 <a href="https://hackage.haskell.org/package/optparse-applicative">optparse-applicative</a>.</p>
 <p><code>optparse-applicative</code> provides us with an EDSL (yes, another one) to build
-command arguments parser. Things like commands, switches, and flags can be built
+command arguments parsers. Things like commands, switches, and flags can be built
 and composed together to make a parser for command-line arguments without actually
 writing operations on strings as we did when we wrote our Markup parser, and will
 provide other benefits such as automatic generation of usage lines, help screens,
@@ -4555,7 +4555,7 @@ but we will cover a few important things to pay attention to in this chapter.</p
 and commands for our program.</p>
 </li>
 <li>
-<p>Define a parser that will produce our model when run</p>
+<p>Define a parser that will produce our value of our model type when run</p>
 </li>
 <li>
 <p>Run the parser on our program arguments input</p>
@@ -4592,17 +4592,17 @@ in each context. By creating a new type with properly named constructors
 for each option we make it easier for readers of the code to understand
 the meaning of our code.</p>
 </blockquote>
-<p>In terms of interface, we could decide that when a user uses our program
-without arguments, they would like to read from stdin and write to stdout.
-If they'd like to read from or write to a file, they can use the optional flags
-<code>--input FILEPATH</code> and <code>--output FILEPATH</code> respectively.</p>
-<p>If the user would like to convert a directory, they can use the <code>directory</code>
+<p>In terms of interface, we could decide that when a user would like to convert
+a single input source, they would use the <code>convert</code> command, and supply the optional flags
+<code>--input FILEPATH</code> and <code>--output FILEPATH</code> to read or write from a file.
+When the user does not supply one or both flag, we will read or write from
+the standard input/output accordingly instead.</p>
+<p>If the user would like to convert a directory, they can use the <code>convert-dir</code>
 command and supply the two mandatory flags <code>--input FILEPATH</code> and
 <code>--output FILEPATH</code>.</p>
-<p>Feel free to change the interface as you'd like!</p>
 <h3 id="build-a-parser"><a class="header" href="#build-a-parser">Build a parser</a></h3>
 <p>This is the most interesting part of the process. How do we build a parser
-that fit our model? What is a parser even?</p>
+that fits our model?</p>
 <p>The <code>optparse-applicative</code> library introduces a new type called <code>Parser</code>.
 <code>Parser</code>, similar to <code>Maybe</code> and <code>IO</code>, has the kind <code>* -&gt; *</code> - when it
 is supplied with a saturated (or concrete) type such as <code>Int</code>, <code>Bool</code> or
@@ -4627,7 +4627,7 @@ inp =
   strOption
     ( long &quot;input&quot;
       &lt;&gt; short 'i'
-      &lt;&gt; metavar &quot;FILENAME&quot;
+      &lt;&gt; metavar &quot;FILE&quot;
       &lt;&gt; help &quot;Input file&quot;
     )
 
@@ -4636,14 +4636,14 @@ out =
   strOption
     ( long &quot;output&quot;
       &lt;&gt; short 'o'
-      &lt;&gt; metavar &quot;FILENAME&quot;
+      &lt;&gt; metavar &quot;FILE&quot;
       &lt;&gt; help &quot;Output file&quot;
     )
 </code></pre>
 <p><code>strOption</code> is a parser builder. It is a function that takes <em>option
 modifiers</em> as an argument, and returns a parser that will parse a string.
 We can specify the type to be <code>FilePath</code> because <code>FilePath</code> is an
-alias to <code>String</code>. The parser builder describes how to part the data type,
+alias to <code>String</code>. The parser builder describes how to parse the value,
 and the modifiers describe its properties, such as the flag name,
 the shorthand of the flag name, and how it would be described in the usage
 and help messages.</p>
@@ -4727,7 +4727,7 @@ Here's one very simple (and wrong) implementation:</p>
 <pre><code class="language-hs">mapMaybe :: (a -&gt; b) -&gt; Maybe a -&gt; Maybe b
 mapMaybe func maybeX = Nothing
 </code></pre>
-<p>check it yourself! It compiles and everything! But unfortunately it does
+<p>check it yourself! It compiles and everything! But unfortunately it does not
 satisfy the first law. <code>fmap id = id</code> means that
 <code>mapMaybe id (Just x) == Just x</code>, however from the definition we can
 clearly see that <code>mapMaybe id (Just x) == Nothing</code>.</p>
@@ -4762,7 +4762,7 @@ pInputFile = fmap InputFile parser
       strOption
         ( long &quot;input&quot;
           &lt;&gt; short 'i'
-          &lt;&gt; metavar &quot;FILENAME&quot;
+          &lt;&gt; metavar &quot;FILE&quot;
           &lt;&gt; help &quot;Input file&quot;
         )
 
@@ -4773,7 +4773,7 @@ pOutputFile = OutputFile &lt;$&gt; parser -- fmap and &lt;$&gt; are the same
       strOption
         ( long &quot;output&quot;
           &lt;&gt; short 'o'
-          &lt;&gt; metavar &quot;FILENAME&quot;
+          &lt;&gt; metavar &quot;FILE&quot;
           &lt;&gt; help &quot;Output file&quot;
         )
 </code></pre>
@@ -4793,7 +4793,7 @@ on <code>Parser</code>s instead? One with this type signature:</p>
   -&gt; (Parser SingleInput -&gt; Parser SingleOutput -&gt; Parser Options)
 </code></pre>
 <p>Yes. This function is called <code>liftA2</code> and it is from the <code>Applicative</code>
-type class. <code>Applicative</code> (also known as an applicative functor) has three
+type class. <code>Applicative</code> (also known as applicative functor) has three
 primary functions:</p>
 <pre><code class="language-hs">class Functor f =&gt; Applicative f where
   pure :: a -&gt; f a
@@ -4802,12 +4802,12 @@ primary functions:</p>
 </code></pre>
 <p><a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Applicative.html#t:Applicative"><code>Applicative</code></a>
 is another very popular type class with many instances.</p>
-<p>Just like any <code>Monoid</code> as a <code>Semigroup</code>, any <code>Applicative</code>
+<p>Just like any <code>Monoid</code> is a <code>Semigroup</code>, any <code>Applicative</code>
 is a <code>Functor</code>. This means that any type that wants to implement
 the <code>Applicative</code> interface should also implement the <code>Functor</code> interface.</p>
 <p>Beyond what a regular functor can do, which is to lift a function over
 a certain <code>f</code>, applicative functors allow us to apply a function to
-<em>multiple instances</em> of a certain <code>f</code>, as well as &quot;lift&quot; any value into an <code>f a</code>.</p>
+<em>multiple instances</em> of a certain <code>f</code>, as well as &quot;lift&quot; any value of type <code>a</code> into an <code>f a</code>.</p>
 <p>You should already be familiar with <code>pure</code>, we've seen it when we
 talked about <code>IO</code>. For <code>IO</code>, <code>pure</code> lets us create an <code>IO</code> action
 that would return a specific value without doing IO.
@@ -4846,7 +4846,7 @@ pOutputFile :: Parser SingleOutput
 ConvertSingle :: SingleInput -&gt; SingleOutput -&gt; Options
 
 &lt;$&gt; :: (a -&gt; b) -&gt; Parser a -&gt; Parser b
-  -- Specifically, here `a` is `SingleInput -&gt; SingleOutput -&gt; Options`
+  -- Specifically, here `a` is `SingleInput`
   -- and `b` is `SingleOutput -&gt; Options`,
 
 ConvertSingle &lt;$&gt; pInputFile :: Parser (SingleOutput -&gt; Options)
@@ -4867,7 +4867,7 @@ any multiple argument function can be represented as <code>a -&gt; b</code>.</p>
 <a href="https://wiki.haskell.org/Typeclassopedia#Laws_2">Typeclassopedia</a>, which
 talks about various useful type classes and their laws.</p>
 </blockquote>
-<p>Applicatives are a very important concept and will appear in various
+<p>Applicative functors are a very important concept and will appear in various
 parsers interface (not just for command-line arguments, but also JSON
 parsers and general parsers), I/O, concurrency, non-determinism, and more.
 The reason this library is called optparse-applicative is because
@@ -4881,7 +4881,7 @@ pInputDir =
   strOption
     ( long &quot;input&quot;
       &lt;&gt; short 'i'
-      &lt;&gt; metavar &quot;DIRECTORYNAME&quot;
+      &lt;&gt; metavar &quot;DIRECTORY&quot;
       &lt;&gt; help &quot;Input directory&quot;
     )
 
@@ -4890,7 +4890,7 @@ pOutputDir =
   strOption
     ( long &quot;output&quot;
       &lt;&gt; short 'o'
-      &lt;&gt; metavar &quot;DIRECTORYNAME&quot;
+      &lt;&gt; metavar &quot;DIRECTORY&quot;
       &lt;&gt; help &quot;Output directory&quot;
     )
 
@@ -5172,7 +5172,7 @@ convertSingle title input output = do
   content &lt;- hGetContents input
   hPutStrLn output (process title content)
 </code></pre>
-<p>We will leave implement <code>convertDirectory</code> unimplemented for now and implement it in the next chapter.</p>
+<p>We will leave <code>convertDirectory</code> unimplemented for now and implement it in the next chapter.</p>
 <p>In <code>app/Main.hs</code>, we will need to pattern match on the <code>Options</code> and
 prepare to call the right functions from <code>HsBlog</code>.</p>
 <p>Let's look at our full <code>app/Main.hs</code> and <code>src/HsBlog.hs</code>:</p>
@@ -5289,12 +5289,12 @@ Available commands:
   convert-dir              Convert a directory of markup files to html
 </code></pre>
 <p>Along the way we've learned two powerful new abstractions, <code>Functor</code>
-and <code>Applicative</code>. As well as revisited an abstraction we we're familiar
+and <code>Applicative</code>. As well as revisited an abstraction we were familiar
 with called <code>Monoid</code>. With this library we've seen (another) example
 of the usefulness of these abstractions for constructing APIs and EDSLs.</p>
 <p>We will continue to meet these abstractions in the rest of the book.</p>
 <hr />
-<p><strong>Exercise</strong>: Add another flag named <code>--replace</code> to indicate that
+<p><strong>Bonus exercise</strong>: Add another flag named <code>--replace</code> to indicate that
 if the output file or directory already exists, it's okay to replace them.</p>
 <hr />
 <blockquote>
