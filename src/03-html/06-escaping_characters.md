@@ -123,6 +123,103 @@ In our case in will flatten `[String]` into `String`, remember that this works
 because `String` is a **type alias** for `[Char]`, so we actually have
 `[[Char]] -> [Char]`.
 
+## GHCi
+
+One way we can quickly see our code in action is using the interactive development environment **GHCi**.
+Running `ghci` will open an interactive prompt where Haskell expressions can be written and
+evaluated. This is called a "Read-Evaluate-Print Loop" (for short - REPL).
+
+For example:
+
+```
+ghci> 1 + 1
+2
+ghci> putStrLn "Hello, world!"
+Hello, world!
+```
+
+We can define new names:
+
+```
+ghci> double x = x + x
+ghci> double 2
+4
+```
+
+We can write multi-line code by surrounding it with `:{` and `:}`:
+
+```
+ghci> :{
+| escape :: String -> String
+| escape =
+|   let
+|     escapeChar c =
+|       case c of
+|         '<' -> "&lt;"
+|         '>' -> "&gt;"
+|         '&' -> "&amp;"
+|         '"' -> "&quot;"
+|         '\'' -> "&#39;"
+|         _ -> [c]
+|   in
+|     concat . map escapeChar
+| :}
+
+ghci> escape "<html>"
+"&lt;html&gt;"
+
+```
+
+We can import Haskell source files using the `:load` command (`:l` for short):
+
+```
+ghci> :load Html/Internal.hs
+[1 of 1] Compiling Html.Internal    ( Html/Internal.hs, interpreted )
+Ok, one module loaded.
+ghci> escape "\""
+"&quot;"
+
+```
+
+As well as import library modules:
+
+```
+ghci> import Data.Bits
+ghci> shiftL 32 1
+64
+ghci> clearBit 33 0
+32
+```
+
+We can even ask what the type of an expression is using the `:type` command
+(`:t` for short):
+
+```
+λ> :type escape
+escape :: String -> String
+```
+
+To exit `ghci`, use the `:quit` command (or `:q` for short)
+
+```
+ghci> :quit
+Leaving GHCi.
+```
+
+GHCi is a very useful tool for quick experiments and exploration.
+And it can be used to quickly test what our code does.
+
+We've seen a couple of examples of that above - passing the string `"<html>"` to our
+`escape` function returns the string `"&lt;html&gt;"`, which can be rendered by
+a browser as `<html>` instead of the browser considering it as an HTML tag.
+
+If you are having a hard time figuring out what a particular function does, consider
+testing it in GHCi - pass it different inputs, and see if it matches your expectations.
+Concrete examples of running code can aid a lot in understanding it!
+
+> If you'd like to learn more about GHCi, you can find a more thorough introduction in the
+> [GHC user guide](https://downloads.haskell.org/~ghc/9.0.1/docs/html/users_guide/ghci.html).
+
 ## Escaping
 
 ---
