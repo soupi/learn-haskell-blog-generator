@@ -1,6 +1,11 @@
 # Hello, world!
 
-In this chapter we will create a simple HTML hello world.
+In this chapter we will create a simple HTML hello world and use the Haskell tool-chain
+to run it.
+
+> If you haven't installed a Haskell tool-chain yet, visit
+> [haskell.org/downloads](https://haskell.org/downloads) for instructions on how to download
+> and install a Haskell tool-chain.
 
 A Haskell source file is composed of definitions.
 
