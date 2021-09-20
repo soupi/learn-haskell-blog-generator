@@ -244,6 +244,78 @@ and what we really want is a <code>String</code> and not <code>[String]</code>.<
 In our case in will flatten <code>[String]</code> into <code>String</code>, remember that this works
 because <code>String</code> is a <strong>type alias</strong> for <code>[Char]</code>, so we actually have
 <code>[[Char]] -&gt; [Char]</code>.</p>
+<h2 id="ghci"><a class="header" href="#ghci">GHCi</a></h2>
+<p>One way we can quickly see our code in action is using the interactive development environment <strong>GHCi</strong>.
+Running <code>ghci</code> will open an interactive prompt where Haskell expressions can be written and
+evaluated. This is called a &quot;Read-Evaluate-Print Loop&quot; (for short - REPL).</p>
+<p>For example:</p>
+<pre><code>ghci&gt; 1 + 1
+2
+ghci&gt; putStrLn &quot;Hello, world!&quot;
+Hello, world!
+</code></pre>
+<p>We can define new names:</p>
+<pre><code>ghci&gt; double x = x + x
+ghci&gt; double 2
+4
+</code></pre>
+<p>We can write multi-line code by surrounding it with <code>:{</code> and <code>:}</code>:</p>
+<pre><code>ghci&gt; :{
+| escape :: String -&gt; String
+| escape =
+|   let
+|     escapeChar c =
+|       case c of
+|         '&lt;' -&gt; &quot;&amp;lt;&quot;
+|         '&gt;' -&gt; &quot;&amp;gt;&quot;
+|         '&amp;' -&gt; &quot;&amp;amp;&quot;
+|         '&quot;' -&gt; &quot;&amp;quot;&quot;
+|         '\'' -&gt; &quot;&amp;#39;&quot;
+|         _ -&gt; [c]
+|   in
+|     concat . map escapeChar
+| :}
+
+ghci&gt; escape &quot;&lt;html&gt;&quot;
+&quot;&amp;lt;html&amp;gt;&quot;
+
+</code></pre>
+<p>We can import Haskell source files using the <code>:load</code> command (<code>:l</code> for short):</p>
+<pre><code>ghci&gt; :load Html/Internal.hs
+[1 of 1] Compiling Html.Internal    ( Html/Internal.hs, interpreted )
+Ok, one module loaded.
+ghci&gt; escape &quot;\&quot;&quot;
+&quot;&amp;quot;&quot;
+
+</code></pre>
+<p>As well as import library modules:</p>
+<pre><code>ghci&gt; import Data.Bits
+ghci&gt; shiftL 32 1
+64
+ghci&gt; clearBit 33 0
+32
+</code></pre>
+<p>We can even ask what the type of an expression is using the <code>:type</code> command
+(<code>:t</code> for short):</p>
+<pre><code>λ&gt; :type escape
+escape :: String -&gt; String
+</code></pre>
+<p>To exit <code>ghci</code>, use the <code>:quit</code> command (or <code>:q</code> for short)</p>
+<pre><code>ghci&gt; :quit
+Leaving GHCi.
+</code></pre>
+<p>GHCi is a very useful tool for quick experiments and exploration.
+And it can be used to quickly test what our code does.</p>
+<p>We've seen a couple of examples of that above - passing the string <code>&quot;&lt;html&gt;&quot;</code> to our
+<code>escape</code> function returns the string <code>&quot;&amp;lt;html&amp;gt;&quot;</code>, which can be rendered by
+a browser as <code>&lt;html&gt;</code> instead of the browser considering it as an HTML tag.</p>
+<p>If you are having a hard time figuring out what a particular function does, consider
+testing it in GHCi - pass it different inputs, and see if it matches your expectations.
+Concrete examples of running code can aid a lot in understanding it!</p>
+<blockquote>
+<p>If you'd like to learn more about GHCi, you can find a more thorough introduction in the
+<a href="https://downloads.haskell.org/%7Eghc/9.0.1/docs/html/users_guide/ghci.html">GHC user guide</a>.</p>
+</blockquote>
 <h2 id="escaping"><a class="header" href="#escaping">Escaping</a></h2>
 <hr />
 <p>The user of our library can currently only supply strings in a few places:</p>
