@@ -52,11 +52,11 @@ becomes a viable strategy for debugging Haskell programs.
 ### How to understand type errors
 
 GHC type errors are often not the most friendly errors messages, but they mean well! They are just
-trying to help inconsistencies found in our code - often with regards to type usage, the help us
+trying to help us find inconsistencies in our code - often with regards to type usage, they help us
 avoid making errors.
 
-When you run into an error message, start by reading the messages themselves carefully
-until you get used to them, and then the offending error hinted by the error message.
+When you run into error messages, start by reading the messages themselves carefully
+until you get used to them, and then the offending code hinted by the error message.
 As you gain experience, it is likely that the most important part of an error will be the location
 of the offending code, and by reading the code we can find the error without the actual error message.
 
@@ -68,8 +68,9 @@ We can even ask GHC for the expected type in a certain place by using
 
 There could be various reasons. From using inefficient algorithms or using an
 [unsuited data structure](https://github.com/soupi/haskell-study-plan#data-structures) for the task
-in terms of time complexity of the common operations,
-to laziness issues (again, the evaluation strategy!).
+in terms of time complexity of the common operations, to less efficient memory representations
+(this is another reminder to use `Text` over `String` in most cases),
+and laziness issues (again, the evaluation strategy!).
 
 The [performance section](https://github.com/soupi/haskell-study-plan#performance) in my Haskell
 study plan links to various resources on Haskell evaluation, profiling and case studies.
