@@ -7734,10 +7734,10 @@ classes of possible errors, &quot;local reasoning&quot; becomes possible, and tr
 becomes a viable strategy for debugging Haskell programs.</p>
 <h3 id="how-to-understand-type-errors"><a class="header" href="#how-to-understand-type-errors">How to understand type errors</a></h3>
 <p>GHC type errors are often not the most friendly errors messages, but they mean well! They are just
-trying to help inconsistencies found in our code - often with regards to type usage, the help us
+trying to help us find inconsistencies in our code - often with regards to type usage, they help us
 avoid making errors.</p>
-<p>When you run into an error message, start by reading the messages themselves carefully
-until you get used to them, and then the offending error hinted by the error message.
+<p>When you run into error messages, start by reading the messages themselves carefully
+until you get used to them, and then the offending code hinted by the error message.
 As you gain experience, it is likely that the most important part of an error will be the location
 of the offending code, and by reading the code we can find the error without the actual error message.</p>
 <p>Adding type signatures and annotations to test your understanding of the types also helps greatly.
@@ -7746,8 +7746,9 @@ We can even ask GHC for the expected type in a certain place by using
 <h3 id="my-program-is-slow-why"><a class="header" href="#my-program-is-slow-why">My program is slow. Why?</a></h3>
 <p>There could be various reasons. From using inefficient algorithms or using an
 <a href="https://github.com/soupi/haskell-study-plan#data-structures">unsuited data structure</a> for the task
-in terms of time complexity of the common operations,
-to laziness issues (again, the evaluation strategy!).</p>
+in terms of time complexity of the common operations, to less efficient memory representations
+(this is another reminder to use <code>Text</code> over <code>String</code> in most cases),
+and laziness issues (again, the evaluation strategy!).</p>
 <p>The <a href="https://github.com/soupi/haskell-study-plan#performance">performance section</a> in my Haskell
 study plan links to various resources on Haskell evaluation, profiling and case studies.</p>
 <h2 id="design"><a class="header" href="#design">Design</a></h2>
