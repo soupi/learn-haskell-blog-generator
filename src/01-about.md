@@ -2,6 +2,12 @@
 
 > Note: This is still in alpha stage. If you find errors, [please let me know](https://github.com/soupi/learn-haskell-blog-generator/issues).
 
+<!--
+<div style="text-align: center">
+  <img src="book-logo.png" alt="book logo" style="max-width: 40%">
+</div>
+-->
+
 In this book we will implement a simple static blog generator in Haskell,
 converting documents written in our own custom markup language to HTML.
 

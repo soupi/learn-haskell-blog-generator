@@ -6,7 +6,7 @@
 
 ### How to install editor tools
 
-As fair as I know, the most recommended setup today for Haskell development is using
+As far as I know, the most recommended setup today for Haskell development is using
 VSCode or [VSCodium](https://vscodium.com/) together with the
 marketplace [Haskell extension](https://marketplace.visualstudio.com/items?itemName=haskell.haskell).
 
