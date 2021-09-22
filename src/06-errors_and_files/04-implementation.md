@@ -127,7 +127,7 @@ might want to copy as-is (such as images and style-sheets).
 -- | Returns the directory content
 getDirFilesAndContent :: FilePath -> IO DirContents
 getDirFilesAndContent inputDir = do
-  files <- listDirectory inputDir
+  files <- map (inputDir </>) <$> listDirectory inputDir
   let
     (txtFiles, otherFiles) =
       partition ((== ".txt") . takeExtension) files
@@ -407,7 +407,7 @@ convertDirectory inputDir outputDir = do
 -- | Returns the directory content
 getDirFilesAndContent :: FilePath -> IO DirContents
 getDirFilesAndContent inputDir = do
-  files <- listDirectory inputDir
+  files <- map (inputDir </>) <$> listDirectory inputDir
   let
     (txtFiles, otherFiles) =
       partition ((== ".txt") . takeExtension) files
