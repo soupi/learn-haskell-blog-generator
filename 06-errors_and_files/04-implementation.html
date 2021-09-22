@@ -249,7 +249,7 @@ might want to copy as-is (such as images and style-sheets).</p>
 <pre><code class="language-hs">-- | Returns the directory content
 getDirFilesAndContent :: FilePath -&gt; IO DirContents
 getDirFilesAndContent inputDir = do
-  files &lt;- listDirectory inputDir
+  files &lt;- map (inputDir &lt;/&gt;) &lt;$&gt; listDirectory inputDir
   let
     (txtFiles, otherFiles) =
       partition ((== &quot;.txt&quot;) . takeExtension) files
@@ -483,7 +483,7 @@ convertDirectory inputDir outputDir = do
 -- | Returns the directory content
 getDirFilesAndContent :: FilePath -&gt; IO DirContents
 getDirFilesAndContent inputDir = do
-  files &lt;- listDirectory inputDir
+  files &lt;- map (inputDir &lt;/&gt;) &lt;$&gt; listDirectory inputDir
   let
     (txtFiles, otherFiles) =
       partition ((== &quot;.txt&quot;) . takeExtension) files

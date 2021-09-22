@@ -6448,7 +6448,7 @@ might want to copy as-is (such as images and style-sheets).</p>
 <pre><code class="language-hs">-- | Returns the directory content
 getDirFilesAndContent :: FilePath -&gt; IO DirContents
 getDirFilesAndContent inputDir = do
-  files &lt;- listDirectory inputDir
+  files &lt;- map (inputDir &lt;/&gt;) &lt;$&gt; listDirectory inputDir
   let
     (txtFiles, otherFiles) =
       partition ((== &quot;.txt&quot;) . takeExtension) files
@@ -6682,7 +6682,7 @@ convertDirectory inputDir outputDir = do
 -- | Returns the directory content
 getDirFilesAndContent :: FilePath -&gt; IO DirContents
 getDirFilesAndContent inputDir = do
-  files &lt;- listDirectory inputDir
+  files &lt;- map (inputDir &lt;/&gt;) &lt;$&gt; listDirectory inputDir
   let
     (txtFiles, otherFiles) =
       partition ((== &quot;.txt&quot;) . takeExtension) files
@@ -6861,7 +6861,7 @@ We saw how to stack an <code>Either</code>-like monad transformer, <code>ExceptT
 <p>We are almost done. Only a couple more things left to do with this project. Let's go!</p>
 <blockquote>
 <p>You can view the git commit of
-<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/360f6ec23381fb274316125d6a6115912f5dedec">the changes we've made</a>
+<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/7671ed1cde0800ea59e92b98c5a9989420afe611">the changes we've made</a>
 and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/code-after-multiple-files">code up until now</a>.</p>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="passing-environment-variables"><a class="header" href="#passing-environment-variables">Passing environment variables</a></h1>
@@ -7229,7 +7229,7 @@ arsenal and I wanted to demonstrate it.</p>
 and it's often better to try and get away with simpler techniques if we can.</p>
 <blockquote>
 <p>You can view the git commit of
-<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/a43ca1274ff7608fd0f91acc4a6b8981ee5c8802">the changes we've made</a>
+<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/54e74d792c7bfad469f0644ba93b305f12b6a568">the changes we've made</a>
 and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/code-after-reader">code up until now</a>.</p>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="testing"><a class="header" href="#testing">Testing</a></h1>
@@ -7619,7 +7619,7 @@ Please consult the tutorial for your chosen testing framework, and read more abo
 this very important subject on your own.</p>
 <blockquote>
 <p>You can view the git commit of
-<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/a6c6576747607d45e54dc4a7653190a0b38d6a6c">the changes we've made</a>
+<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/59568f84b96a5e0bf0d11f1784f5e38c76ead366">the changes we've made</a>
 and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/code-after-testing">final version of the code</a>.</p>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="where-to-go-next"><a class="header" href="#where-to-go-next">Where to go next</a></h1>
