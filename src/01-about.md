@@ -33,7 +33,7 @@ There are probably more, but here are a few possible pros:
 - It's **relatively short** - most Haskell books out there are hundreds of pages long.
   This book (when exported to PDF) is roughly 150 pages long.
 - It's **project oriented**. Many Haskell books teach Haskell by teaching the underlying
-  concepts and features in a neat progression. In this book we try to build a thing,
+  concepts and features in a neat progression. In this book we try to build a program,
   and learn Haskell on the way. This will be a pro to some, and a con to others.
   There are other tutorials like this. The most notable ones are
   [Beginning Haskell](https://www.apress.com/gp/book/9781430262510#otherversion=9781430262503)

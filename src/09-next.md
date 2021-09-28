@@ -78,8 +78,8 @@ You can find my contact information [on my website](https://gilmi.me).
 
 Finally, if you liked this book, do let me know - your kind words mean a lot.
 
-If you *really* liked this book and would like to support future passion projects
-like it, you can [support me directly via Ko-fi](https://ko-fi.com/gilmi).
+> And if you *really* liked this book and would like to support future passion projects
+> like it, you can [support me directly via Ko-fi](https://ko-fi.com/gilmi).
 
 Good luck with your next Haskell project!
 
