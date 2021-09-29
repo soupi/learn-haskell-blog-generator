@@ -265,7 +265,7 @@ which uses a language extension called
 A quasi-quote has the form `[quoter| string |]`, where the quoter is the name
 of the function providing the syntax we wish to use, and the string is our input.
 
-In our case, we user the quoter `r`, and write any string we want, with multi-lines
+In our case, we use the quoter `r`, and write any string we want, with multi-lines
 and unescaped strings! We could use this to write the tests
 [we previously wrote](04-markup/01-data_type.html#exercises):
 

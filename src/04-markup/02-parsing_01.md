@@ -57,11 +57,11 @@ This can be written imperatively using a loop:
 
 ```js
 function sum(n, m) {
-    while (m /= 0) {
-        n = increment(n);
-        m = decrement(m);
-    }
-    return n;
+  while (m /= 0) {
+    n = increment(n);
+    m = decrement(m);
+  }
+  return n;
 }
 ```
 
@@ -69,9 +69,9 @@ We can write the same algorithm in Haskell without mutation using recursion:
 
 ```hs
 sum n m =
-    if m /= 0
-        then sum (increment n) (decrement m)
-        else n
+  if m /= 0
+    then sum (increment n) (decrement m)
+    else n
 ```
 
 __In Haskell, in order to emulate iteration with mutable state, we call the function again
@@ -117,9 +117,9 @@ So unless this computation is required, it won't be evaluated. For example:
 
 ```hs
 main =
-    if sum (increment 2) (decrement 3) == 5
-        then putStrLn "Yes."
-        else putStrLn "No."
+  if sum (increment 2) (decrement 3) == 5
+    then putStrLn "Yes."
+    else putStrLn "No."
 ```
 
 In the case above, we need the result of `sum (increment 2) (decrement 3)`
@@ -128,10 +128,10 @@ so it will be evaluated. But:
 
 ```hs
 main =
-    let
-        five = sum (increment 2) (decrement 3)
-    in
-        putStrLn "Not required"
+  let
+    five = sum (increment 2) (decrement 3)
+  in
+    putStrLn "Not required"
 ```
 
 In the case above we don't actually need `five`, so we don't evaluate it!
@@ -144,9 +144,9 @@ to evaluate the arguments to complete the computation. For example in this case:
 const a b = a
 
 main =
-    if const (increment 2) (decrement 3) == 3
-        then putStrLn "Yes."
-        else putStrLn "No."
+  if const (increment 2) (decrement 3) == 3
+    then putStrLn "Yes."
+    else putStrLn "No."
 ```
 
 `const` ignores the second argument and returns the first, so we don't actually need
@@ -176,14 +176,14 @@ decrement n = n - 1
 const a b = a
 
 sum n m =
-    if m /= 0
-        then sum (increment n) (decrement m)
-        else n
+  if m /= 0
+    then sum (increment n) (decrement m)
+    else n
 
 main =
-    if const (sum 3 2) (decrement 3) == 5
-        then putStrLn "Yes."
-        else putStrLn "No."
+  if const (sum 3 2) (decrement 3) == 5
+    then putStrLn "Yes."
+    else putStrLn "No."
 ```
 
 Remember that evaluation always begins from `main`.
@@ -195,24 +195,24 @@ evaluating `main`
 
 ```hs
 if const (sum 3 2) (decrement 3) == 5
-    then putStrLn "Yes."
-    else putStrLn "No."
+  then putStrLn "Yes."
+  else putStrLn "No."
 ```
 
 expanding `const`
 
 ```hs
 if sum 3 2 == 5
-    then putStrLn "Yes."
-    else putStrLn "No."
+  then putStrLn "Yes."
+  else putStrLn "No."
 ```
 
 expanding `sum`
 
 ```hs
 if (if 2 /= 0 then sum (increment 3) (decrement 2) else 3) == 5
-    then putStrLn "Yes."
-    else putStrLn "No."
+  then putStrLn "Yes."
+  else putStrLn "No."
 ```
 
 evaluating the control flow `2 /= 0`
@@ -220,166 +220,166 @@ evaluating the control flow `2 /= 0`
 
 ```hs
 if (if True then sum (increment 3) (decrement 2) else 3) == 5
-    then putStrLn "Yes."
-    else putStrLn "No."
+  then putStrLn "Yes."
+  else putStrLn "No."
 ```
 
 Choosing the `then` branch
 
 ```hs
 if (sum (increment 3) (decrement 2)) == 5
-    then putStrLn "Yes."
-    else putStrLn "No."
+  then putStrLn "Yes."
+  else putStrLn "No."
 ```
 
 expanding `sum`
 
 ```hs
 if
-    ( if decrement 2 /= 0
-        then sum
-            (increment (increment 3))
-            (decrement (decrement 2))
-        else (increment 3)
-    ) == 5
-    then putStrLn "Yes."
-    else putStrLn "No."
+  ( if decrement 2 /= 0
+    then sum
+      (increment (increment 3))
+      (decrement (decrement 2))
+    else (increment 3)
+  ) == 5
+  then putStrLn "Yes."
+  else putStrLn "No."
 ```
 
 Evaluating `decrement 2` in the control flow (notice how both places change!)
 
 ```hs
 if
-    ( if 1 /= 0
-        then sum
-            (increment (increment 3))
-            (decrement 1)
-        else (increment 3)
-    ) == 5
-    then putStrLn "Yes."
-    else putStrLn "No."
+  ( if 1 /= 0
+    then sum
+      (increment (increment 3))
+      (decrement 1)
+    else (increment 3)
+  ) == 5
+  then putStrLn "Yes."
+  else putStrLn "No."
 ```
 
 Evaluating the control flow `1 /= 0`
 
 ```hs
 if
-    ( if True
-        then sum
-            (increment (increment 3))
-            (decrement 1)
-        else (increment 3)
-    ) == 5
-    then putStrLn "Yes."
-    else putStrLn "No."
+  ( if True
+    then sum
+      (increment (increment 3))
+      (decrement 1)
+    else (increment 3)
+  ) == 5
+  then putStrLn "Yes."
+  else putStrLn "No."
 ```
 
 Choosing the `then` branch
 
 ```hs
 if
-    ( sum
-        (increment (increment 3))
-        (decrement 1)
-    ) == 5
-    then putStrLn "Yes."
-    else putStrLn "No."
+  ( sum
+    (increment (increment 3))
+    (decrement 1)
+  ) == 5
+  then putStrLn "Yes."
+  else putStrLn "No."
 ```
 
 Expanding `sum`
 
 ```hs
 if
-    ( if decrement 1 /= 0
-        then sum
-            (increment (increment (increment 3)))
-            (decrement (decrement 1))
-        else increment (increment 3)
-    ) == 5
-    then putStrLn "Yes."
-    else putStrLn "No."
+  ( if decrement 1 /= 0
+    then sum
+      (increment (increment (increment 3)))
+      (decrement (decrement 1))
+    else increment (increment 3)
+  ) == 5
+  then putStrLn "Yes."
+  else putStrLn "No."
 ```
 
 Evaluating control flow `decrement 1`
 
 ```hs
 if
-    ( if 0 /= 0
-        then sum
-            (increment (increment (increment 3)))
-            (decrement 0)
-        else increment (increment 3)
-    ) == 5
-    then putStrLn "Yes."
-    else putStrLn "No."
+  ( if 0 /= 0
+    then sum
+      (increment (increment (increment 3)))
+      (decrement 0)
+    else increment (increment 3)
+  ) == 5
+  then putStrLn "Yes."
+  else putStrLn "No."
 ```
 
 Evaluating control flow `0 /= 0`
 
 ```hs
 if
-    ( if False
-        then sum
-            (increment (increment (increment 3)))
-            (decrement 0)
-        else increment (increment 3)
-    ) == 5
-    then putStrLn "Yes."
-    else putStrLn "No."
+  ( if False
+    then sum
+      (increment (increment (increment 3)))
+      (decrement 0)
+    else increment (increment 3)
+  ) == 5
+  then putStrLn "Yes."
+  else putStrLn "No."
 ```
 
 Choosing the `else` branch
 
 ```hs
 if
-    (increment (increment 3)) == 5
-    then putStrLn "Yes."
-    else putStrLn "No."
+  (increment (increment 3)) == 5
+  then putStrLn "Yes."
+  else putStrLn "No."
 ```
 
 Evaluate control flow `increment (increment 3)`
 
 ```hs
 if
-    (increment 3 + 1) == 5
-    then putStrLn "Yes."
-    else putStrLn "No."
+  (increment 3 + 1) == 5
+  then putStrLn "Yes."
+  else putStrLn "No."
 ```
 
 Evaluate in control flow `increment 3`
 
 ```hs
 if
-    (3 + 1 + 1) == 5
-    then putStrLn "Yes."
-    else putStrLn "No."
+  (3 + 1 + 1) == 5
+  then putStrLn "Yes."
+  else putStrLn "No."
 ```
 
 Evaluate in control flow `3 + 1`
 
 ```hs
 if
-    (4 + 1) == 5
-    then putStrLn "Yes."
-    else putStrLn "No."
+  (4 + 1) == 5
+  then putStrLn "Yes."
+  else putStrLn "No."
 ```
 
 Evaluate in control flow `4 + 1`
 
 ```hs
 if
-    5 == 5
-    then putStrLn "Yes."
-    else putStrLn "No."
+  5 == 5
+  then putStrLn "Yes."
+  else putStrLn "No."
 ```
 
 Evaluate in control flow `5 == 5`
 
 ```hs
 if
-    True
-    then putStrLn "Yes."
-    else putStrLn "No."
+  True
+  then putStrLn "Yes."
+  else putStrLn "No."
 ```
 
 Choosing the `then` branch
@@ -443,17 +443,17 @@ Try to write this in Haskell!
 ```hs
 replicate :: Int -> a -> [a]
 replicate n x =
-    if n <= 0        -- recognizing the base case
-        then
-            []       -- the solution for the base case
-        else
-            x : replicate (n - 1) x
-    --      --- -------------------
-    --       ^           ^
-    --       |           |
-    --       |           +-------- reduction
-    --       |
-    --       +--- mitigation
+  if n <= 0    -- recognizing the base case
+    then
+      []       -- the solution for the base case
+    else
+        x : replicate (n - 1) x
+  --   ---  -------------------
+  --    ^           ^
+  --    |           |
+  --    |           +-------- reduction
+  --    |
+  --    +--- mitigation
 ```
 
 </details>
@@ -500,19 +500,19 @@ Try writing this in Haskell!
 ```hs
 even :: Int -> Bool
 even n =
-    if n == 0
-        then
-            True
-        else
-            odd (n - 1)
+  if n == 0
+    then
+      True
+    else
+      odd (n - 1)
 
 odd :: Int -> Bool
 odd n =
-    if n == 0
-        then
-            False
-        else
-            even (n - 1)
+  if n == 0
+    then
+      False
+    else
+      even (n - 1)
 
 ```
 
