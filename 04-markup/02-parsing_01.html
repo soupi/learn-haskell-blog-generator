@@ -188,18 +188,18 @@ And we do that until the number we decrement reaches 0.</p>
 </ul>
 <p>This can be written imperatively using a loop:</p>
 <pre><code class="language-js">function sum(n, m) {
-    while (m /= 0) {
-        n = increment(n);
-        m = decrement(m);
-    }
-    return n;
+  while (m /= 0) {
+    n = increment(n);
+    m = decrement(m);
+  }
+  return n;
 }
 </code></pre>
 <p>We can write the same algorithm in Haskell without mutation using recursion:</p>
 <pre><code class="language-hs">sum n m =
-    if m /= 0
-        then sum (increment n) (decrement m)
-        else n
+  if m /= 0
+    then sum (increment n) (decrement m)
+    else n
 </code></pre>
 <p><strong>In Haskell, in order to emulate iteration with mutable state, we call the function again
 with the values we want the variables to have in the next iteration.</strong></p>
@@ -233,18 +233,18 @@ from right-to-left instead of left-to-right.</p>
 outside world, for example when writing a computation to standard output or sending it over the network.</p>
 <p>So unless this computation is required, it won't be evaluated. For example:</p>
 <pre><code class="language-hs">main =
-    if sum (increment 2) (decrement 3) == 5
-        then putStrLn &quot;Yes.&quot;
-        else putStrLn &quot;No.&quot;
+  if sum (increment 2) (decrement 3) == 5
+    then putStrLn &quot;Yes.&quot;
+    else putStrLn &quot;No.&quot;
 </code></pre>
 <p>In the case above, we need the result of <code>sum (increment 2) (decrement 3)</code>
 in order to know which message to write,
 so it will be evaluated. But:</p>
 <pre><code class="language-hs">main =
-    let
-        five = sum (increment 2) (decrement 3)
-    in
-        putStrLn &quot;Not required&quot;
+  let
+    five = sum (increment 2) (decrement 3)
+  in
+    putStrLn &quot;Not required&quot;
 </code></pre>
 <p>In the case above we don't actually need <code>five</code>, so we don't evaluate it!</p>
 <p>But then if we know we need <code>sum (increment 2) (decrement 3)</code>,
@@ -253,9 +253,9 @@ to evaluate the arguments to complete the computation. For example in this case:
 <pre><code class="language-hs">const a b = a
 
 main =
-    if const (increment 2) (decrement 3) == 3
-        then putStrLn &quot;Yes.&quot;
-        else putStrLn &quot;No.&quot;
+  if const (increment 2) (decrement 3) == 3
+    then putStrLn &quot;Yes.&quot;
+    else putStrLn &quot;No.&quot;
 </code></pre>
 <p><code>const</code> ignores the second argument and returns the first, so we don't actually need
 to calculate <code>decrement 3</code> in order to provide an answer to the computation and in
@@ -278,153 +278,153 @@ decrement n = n - 1
 const a b = a
 
 sum n m =
-    if m /= 0
-        then sum (increment n) (decrement m)
-        else n
+  if m /= 0
+    then sum (increment n) (decrement m)
+    else n
 
 main =
-    if const (sum 3 2) (decrement 3) == 5
-        then putStrLn &quot;Yes.&quot;
-        else putStrLn &quot;No.&quot;
+  if const (sum 3 2) (decrement 3) == 5
+    then putStrLn &quot;Yes.&quot;
+    else putStrLn &quot;No.&quot;
 </code></pre>
 <p>Remember that evaluation always begins from <code>main</code>.</p>
 <details>
   <summary>Solution</summary>
 <p>evaluating <code>main</code></p>
 <pre><code class="language-hs">if const (sum 3 2) (decrement 3) == 5
-    then putStrLn &quot;Yes.&quot;
-    else putStrLn &quot;No.&quot;
+  then putStrLn &quot;Yes.&quot;
+  else putStrLn &quot;No.&quot;
 </code></pre>
 <p>expanding <code>const</code></p>
 <pre><code class="language-hs">if sum 3 2 == 5
-    then putStrLn &quot;Yes.&quot;
-    else putStrLn &quot;No.&quot;
+  then putStrLn &quot;Yes.&quot;
+  else putStrLn &quot;No.&quot;
 </code></pre>
 <p>expanding <code>sum</code></p>
 <pre><code class="language-hs">if (if 2 /= 0 then sum (increment 3) (decrement 2) else 3) == 5
-    then putStrLn &quot;Yes.&quot;
-    else putStrLn &quot;No.&quot;
+  then putStrLn &quot;Yes.&quot;
+  else putStrLn &quot;No.&quot;
 </code></pre>
 <p>evaluating the control flow <code>2 /= 0</code></p>
 <pre><code class="language-hs">if (if True then sum (increment 3) (decrement 2) else 3) == 5
-    then putStrLn &quot;Yes.&quot;
-    else putStrLn &quot;No.&quot;
+  then putStrLn &quot;Yes.&quot;
+  else putStrLn &quot;No.&quot;
 </code></pre>
 <p>Choosing the <code>then</code> branch</p>
 <pre><code class="language-hs">if (sum (increment 3) (decrement 2)) == 5
-    then putStrLn &quot;Yes.&quot;
-    else putStrLn &quot;No.&quot;
+  then putStrLn &quot;Yes.&quot;
+  else putStrLn &quot;No.&quot;
 </code></pre>
 <p>expanding <code>sum</code></p>
 <pre><code class="language-hs">if
-    ( if decrement 2 /= 0
-        then sum
-            (increment (increment 3))
-            (decrement (decrement 2))
-        else (increment 3)
-    ) == 5
-    then putStrLn &quot;Yes.&quot;
-    else putStrLn &quot;No.&quot;
+  ( if decrement 2 /= 0
+    then sum
+      (increment (increment 3))
+      (decrement (decrement 2))
+    else (increment 3)
+  ) == 5
+  then putStrLn &quot;Yes.&quot;
+  else putStrLn &quot;No.&quot;
 </code></pre>
 <p>Evaluating <code>decrement 2</code> in the control flow (notice how both places change!)</p>
 <pre><code class="language-hs">if
-    ( if 1 /= 0
-        then sum
-            (increment (increment 3))
-            (decrement 1)
-        else (increment 3)
-    ) == 5
-    then putStrLn &quot;Yes.&quot;
-    else putStrLn &quot;No.&quot;
+  ( if 1 /= 0
+    then sum
+      (increment (increment 3))
+      (decrement 1)
+    else (increment 3)
+  ) == 5
+  then putStrLn &quot;Yes.&quot;
+  else putStrLn &quot;No.&quot;
 </code></pre>
 <p>Evaluating the control flow <code>1 /= 0</code></p>
 <pre><code class="language-hs">if
-    ( if True
-        then sum
-            (increment (increment 3))
-            (decrement 1)
-        else (increment 3)
-    ) == 5
-    then putStrLn &quot;Yes.&quot;
-    else putStrLn &quot;No.&quot;
+  ( if True
+    then sum
+      (increment (increment 3))
+      (decrement 1)
+    else (increment 3)
+  ) == 5
+  then putStrLn &quot;Yes.&quot;
+  else putStrLn &quot;No.&quot;
 </code></pre>
 <p>Choosing the <code>then</code> branch</p>
 <pre><code class="language-hs">if
-    ( sum
-        (increment (increment 3))
-        (decrement 1)
-    ) == 5
-    then putStrLn &quot;Yes.&quot;
-    else putStrLn &quot;No.&quot;
+  ( sum
+    (increment (increment 3))
+    (decrement 1)
+  ) == 5
+  then putStrLn &quot;Yes.&quot;
+  else putStrLn &quot;No.&quot;
 </code></pre>
 <p>Expanding <code>sum</code></p>
 <pre><code class="language-hs">if
-    ( if decrement 1 /= 0
-        then sum
-            (increment (increment (increment 3)))
-            (decrement (decrement 1))
-        else increment (increment 3)
-    ) == 5
-    then putStrLn &quot;Yes.&quot;
-    else putStrLn &quot;No.&quot;
+  ( if decrement 1 /= 0
+    then sum
+      (increment (increment (increment 3)))
+      (decrement (decrement 1))
+    else increment (increment 3)
+  ) == 5
+  then putStrLn &quot;Yes.&quot;
+  else putStrLn &quot;No.&quot;
 </code></pre>
 <p>Evaluating control flow <code>decrement 1</code></p>
 <pre><code class="language-hs">if
-    ( if 0 /= 0
-        then sum
-            (increment (increment (increment 3)))
-            (decrement 0)
-        else increment (increment 3)
-    ) == 5
-    then putStrLn &quot;Yes.&quot;
-    else putStrLn &quot;No.&quot;
+  ( if 0 /= 0
+    then sum
+      (increment (increment (increment 3)))
+      (decrement 0)
+    else increment (increment 3)
+  ) == 5
+  then putStrLn &quot;Yes.&quot;
+  else putStrLn &quot;No.&quot;
 </code></pre>
 <p>Evaluating control flow <code>0 /= 0</code></p>
 <pre><code class="language-hs">if
-    ( if False
-        then sum
-            (increment (increment (increment 3)))
-            (decrement 0)
-        else increment (increment 3)
-    ) == 5
-    then putStrLn &quot;Yes.&quot;
-    else putStrLn &quot;No.&quot;
+  ( if False
+    then sum
+      (increment (increment (increment 3)))
+      (decrement 0)
+    else increment (increment 3)
+  ) == 5
+  then putStrLn &quot;Yes.&quot;
+  else putStrLn &quot;No.&quot;
 </code></pre>
 <p>Choosing the <code>else</code> branch</p>
 <pre><code class="language-hs">if
-    (increment (increment 3)) == 5
-    then putStrLn &quot;Yes.&quot;
-    else putStrLn &quot;No.&quot;
+  (increment (increment 3)) == 5
+  then putStrLn &quot;Yes.&quot;
+  else putStrLn &quot;No.&quot;
 </code></pre>
 <p>Evaluate control flow <code>increment (increment 3)</code></p>
 <pre><code class="language-hs">if
-    (increment 3 + 1) == 5
-    then putStrLn &quot;Yes.&quot;
-    else putStrLn &quot;No.&quot;
+  (increment 3 + 1) == 5
+  then putStrLn &quot;Yes.&quot;
+  else putStrLn &quot;No.&quot;
 </code></pre>
 <p>Evaluate in control flow <code>increment 3</code></p>
 <pre><code class="language-hs">if
-    (3 + 1 + 1) == 5
-    then putStrLn &quot;Yes.&quot;
-    else putStrLn &quot;No.&quot;
+  (3 + 1 + 1) == 5
+  then putStrLn &quot;Yes.&quot;
+  else putStrLn &quot;No.&quot;
 </code></pre>
 <p>Evaluate in control flow <code>3 + 1</code></p>
 <pre><code class="language-hs">if
-    (4 + 1) == 5
-    then putStrLn &quot;Yes.&quot;
-    else putStrLn &quot;No.&quot;
+  (4 + 1) == 5
+  then putStrLn &quot;Yes.&quot;
+  else putStrLn &quot;No.&quot;
 </code></pre>
 <p>Evaluate in control flow <code>4 + 1</code></p>
 <pre><code class="language-hs">if
-    5 == 5
-    then putStrLn &quot;Yes.&quot;
-    else putStrLn &quot;No.&quot;
+  5 == 5
+  then putStrLn &quot;Yes.&quot;
+  else putStrLn &quot;No.&quot;
 </code></pre>
 <p>Evaluate in control flow <code>5 == 5</code></p>
 <pre><code class="language-hs">if
-    True
-    then putStrLn &quot;Yes.&quot;
-    else putStrLn &quot;No.&quot;
+  True
+  then putStrLn &quot;Yes.&quot;
+  else putStrLn &quot;No.&quot;
 </code></pre>
 <p>Choosing the <code>then</code> branch</p>
 <pre><code class="language-hs">putStrLn &quot;Yes.&quot;
@@ -468,17 +468,17 @@ if we knew the solution for <code>N-1</code> we could:</li>
 <summary>Solution</summary>
 <pre><code class="language-hs">replicate :: Int -&gt; a -&gt; [a]
 replicate n x =
-    if n &lt;= 0        -- recognizing the base case
-        then
-            []       -- the solution for the base case
-        else
-            x : replicate (n - 1) x
-    --      --- -------------------
-    --       ^           ^
-    --       |           |
-    --       |           +-------- reduction
-    --       |
-    --       +--- mitigation
+  if n &lt;= 0    -- recognizing the base case
+    then
+      []       -- the solution for the base case
+    else
+        x : replicate (n - 1) x
+  --   ---  -------------------
+  --    ^           ^
+  --    |           |
+  --    |           +-------- reduction
+  --    |
+  --    +--- mitigation
 </code></pre>
 </details>
 <hr />
@@ -513,19 +513,19 @@ odd :: Int -&gt; Bool
 <summary>Solution</summary>
 <pre><code class="language-hs">even :: Int -&gt; Bool
 even n =
-    if n == 0
-        then
-            True
-        else
-            odd (n - 1)
+  if n == 0
+    then
+      True
+    else
+      odd (n - 1)
 
 odd :: Int -&gt; Bool
 odd n =
-    if n == 0
-        then
-            False
-        else
-            even (n - 1)
+  if n == 0
+    then
+      False
+    else
+      even (n - 1)
 
 </code></pre>
 </details>
