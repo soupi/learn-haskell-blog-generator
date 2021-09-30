@@ -581,6 +581,9 @@ We've made some change to our project directory, and it should now look like thi
 4 directories, 10 files
 ```
 
+Note that this package format is something we could release on [Hackage](https://hackage.haskell.org/)
+for other Haskell developers to use!
+
 > You can view the git commit of
 > [the changes we've made](https://github.com/soupi/learn-haskell-blog-generator/commit/680d9f439e4e6ecefa4db304c1746928ec6379db)
 > and the [code up until now](https://github.com/soupi/learn-haskell-blog-generator/tree/code-after-optparse).
