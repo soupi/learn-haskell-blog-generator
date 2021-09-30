@@ -1517,28 +1517,48 @@ wants to use our library with a valid use case we didn't think about, for
 example adding unordered lists? We are completely blocking them from
 extending our library. We'll talk about this next.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="exposing-internal-functionality-internal-modules"><a class="header" href="#exposing-internal-functionality-internal-modules">Exposing internal functionality (Internal modules)</a></h1>
-<p>When a user runs into trouble with using a library the best course of
-action usually is to open an issue in the repository or submit a pull
-request, but sometimes the user needs things to work <em>now</em>.</p>
+<p>We have now built a very small but convenient and safe way to write
+HTML code in Haskell. This is something that we could (potentially)
+publish as a <em>library</em> and share with the world by uploading it
+to a package repository such as <a href="https://hackage.haskell.org/">Hackage</a>.
+Users who are interested in our library could use a package manager
+to include our library in their project and build their own HTML pages
+with it.</p>
+<p>It is important to note that users are building their project against
+the API that we expose to them, and the package manager don't generally
+provide access to the source code, so they can't, for example,
+modify the <code>Html</code> module (that we expose) in their project directly
+without jumping through some hoops.</p>
+<p>Because we wanted our <code>Html</code> EDSL to be safe, we <strong>hid the internal
+implementation from the user</strong>, and the only way to interact with the
+library is via the API we provide.</p>
+<p>This provides the safety we wanted to provide, but in this case it also
+<em>blocks</em> the user from extending our library <em>in their own project</em> with
+things we haven't implemented yet, such as lists or code blocks.</p>
+<p>When a user runs into trouble with using a library (such as missing features)
+the best course of action usually is to open an issue in the repository or
+submit a pull request, but sometimes the user needs things to work <em>now</em>.</p>
 <p>We admit that we are not perfect and can't think of all use cases for our
 library. Sometimes the restrictions we add are too great and may limit
 the usage of advanced users that know how things work under the hood and
-need certain functionality to use our library.</p>
+need certain functionality in order to use our library.</p>
+<h3 id="internal-modules"><a class="header" href="#internal-modules">Internal modules</a></h3>
 <p>For that we can expose internal modules to provide some flexibility for
 advanced users. Internal modules are not a language concept but
 rather a (fairly common) design pattern (or idiom) in Haskell.</p>
-<p>Internal modules are simply modules named <code>Internal</code>.
-These modules are considered risky to use by convention.
-Internal modules will export all of the functionality in a
-module, and we will add another module without the <code>Internal</code> suffix
-which will import from our internal module and only export the API
-we'd like to export.</p>
-<p>Internal modules should be considered unstable and risky to use. If
-you end up using one, make sure to open a ticket in the library after
-the storm has passed!</p>
+<p>Internal modules are simply modules named <code>&lt;something&gt;.Internal</code>,
+which export all of the functionality and implementation details in that module.</p>
+<p>Instead of writing the implementation in (for example) the <code>Html</code> module,
+we write it in the <code>Html.Internal</code> module, which will export everything.
+Then we will import that module in the <code>Html</code> module, and write an explicit export list
+to only export the API we'd like to export (as before).</p>
+<p><code>Internal</code> modules are considered unstable and risky to use by convention.
+If you end up using one yourself when using an external Haskell library,
+make sure to open a ticket in the library's repository after the storm has passed!</p>
+<h3 id="lets-make-the-changes"><a class="header" href="#lets-make-the-changes">Lets make the changes</a></h3>
 <p>We will create a new directory named <code>Html</code> and inside it a new file
 named <code>Internal.hs</code>. The name of this module should be <code>Html.Internal</code>.</p>
-<p>This module will contain all of the code that was previously in the <code>Html</code>
+<p>This module will contain all of the code we previously had in the <code>Html</code>
 module, but <strong>we will change the module declaration in <code>Html.Internal</code>
 and <em>omit</em> the export list</strong>:</p>
 <pre><code class="language-hs">-- Html/Internal.hs
@@ -1549,7 +1569,7 @@ module Html.Internal where
 </code></pre>
 <p>And now in <code>Html.hs</code>, we will remove the code that we moved to <code>Html/Internal.hs</code>
 and in its stead we'll import the internal module:</p>
-<pre><code class="language-hs">-- Hello.hs
+<pre><code class="language-hs">-- Html.hs
 
 module Html
   ( Html
@@ -1562,6 +1582,8 @@ module Html
   , render
   )
   where
+
+import Html.Internal
 </code></pre>
 <p>Now, users of our library can still import <code>Html</code> and safely use our library,
 but if they run into trouble and have a dire need to implement unordered lists
@@ -1653,6 +1675,17 @@ escape =
     concat . map escapeChar
 </code></pre>
 </details>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<p>For our particular project, <code>Internal</code> modules aren't necessary.
+Because our project and the source code for the HTML EDSL are
+part of the same project, and we have access the the <code>Html</code>
+module directly, we can always go and edit it if we want
+(and we are going to do that throughout the book).</p>
+<p>However, if we were planning to release our HTML EDSL as a <em>library</em>
+for other developers to use, it would be very nice of us
+to also expose the internal implementation as an <code>Internal</code>
+module. Just so we can save some trouble for potential users!</p>
+<p>We will see how to create a package from our source code in a later chapter.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="exercises"><a class="header" href="#exercises">Exercises</a></h1>
 <p>We need a few more features for our HTML library to be useful for
 our blog software. Add the following features to our <code>Html.Internal</code> module
@@ -1708,7 +1741,7 @@ ol_ =
 code_ = Structure . el &quot;pre&quot;
 </code></pre>
 </details>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="summary"><a class="header" href="#summary">Summary</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="summary-1"><a class="header" href="#summary-1">Summary</a></h1>
 <p>In this chapter we built a very minimal HTML EDSL.
 We will later use this library to convert our custom markup formatted text to HTML.</p>
 <p>We've also learned about:</p>
@@ -3506,7 +3539,7 @@ convertStructure structure =
     Markup.CodeBlock list -&gt;
       Html.code_ (unlines list)
 </code></pre>
-<h2 id="summary-1"><a class="header" href="#summary-1">Summary</a></h2>
+<h2 id="summary-2"><a class="header" href="#summary-2">Summary</a></h2>
 <p>We learned about:</p>
 <ul>
 <li>Qualified imports</li>
@@ -3770,7 +3803,7 @@ of <code>&gt;&gt;=</code> and <code>pure</code>:</p>
 <p>What <code>fmap</code> does is apply a function to the value to be returning
 from the <code>IO</code> operation, also known as &quot;mapping&quot; over it.</p>
 <p>(By the way, Have you noticed the similarities between <code>fmap</code> and <code>map :: (a -&gt; b) -&gt; [a] -&gt; [b]</code>?)</p>
-<h3 id="summary-2"><a class="header" href="#summary-2">Summary</a></h3>
+<h3 id="summary-3"><a class="header" href="#summary-3">Summary</a></h3>
 <p>Here's a list of <code>IO</code> combinators we ran into:</p>
 <pre><code class="language-hs">-- chaining IO operations: passing the *result* of the left IO operation
 -- as an argument to the function on the right.
@@ -4107,7 +4140,7 @@ whenIO cond action = do
 </li>
 </ol>
 <hr />
-<h2 id="summary-3"><a class="header" href="#summary-3">Summary</a></h2>
+<h2 id="summary-4"><a class="header" href="#summary-4">Summary</a></h2>
 <p>In this chapter we discussed what &quot;purely functional&quot; means,
 where the initial motivation for being purely functional came from,
 and how Haskell's I/O interface allows us to create descriptions of programs
@@ -4572,7 +4605,7 @@ still experimental</li>
 <p>It's also important to note the amount of dependencies a package has. Adding many dependencies
 will affect compilation time and code size. And it can sometimes be a good thing to consider
 when comparing packages, or considering whether a package is needed at all.</p>
-<h2 id="summary-4"><a class="header" href="#summary-4">Summary</a></h2>
+<h2 id="summary-5"><a class="header" href="#summary-5">Summary</a></h2>
 <p>We've created a package description for our library and used <code>stack</code> or/and <code>cabal</code>
 to build our program. In future chapters we'll start adding external packages,
 we'll only have to add them to the <code>build-depends</code> section in the cabal file and
@@ -4596,6 +4629,8 @@ our package manager will download and install the required package for us!</p>
 
 4 directories, 10 files
 </code></pre>
+<p>Note that this package format is something we could release on <a href="https://hackage.haskell.org/">Hackage</a>
+for other Haskell developers to use!</p>
 <blockquote>
 <p>You can view the git commit of
 <a href="https://github.com/soupi/learn-haskell-blog-generator/commit/680d9f439e4e6ecefa4db304c1746928ec6379db">the changes we've made</a>
@@ -5355,7 +5390,7 @@ the <code>executable</code>. Below <code>main-is: Main.hs</code>, add:</p>
 <pre><code class="language-cabal">  other-modules:
     OptParse
 </code></pre>
-<h2 id="summary-5"><a class="header" href="#summary-5">Summary</a></h2>
+<h2 id="summary-6"><a class="header" href="#summary-6">Summary</a></h2>
 <p>We've learned about a new fancy library called <code>optparse-applicative</code>
 and used it to create a fancier command-line interface in a declarative way.
 See the result of running <code>hs-blog-gen --help</code>:</p>
@@ -6001,7 +6036,7 @@ and <a href="https://hackage.haskell.org/package/async">asynchronous programming
 <li><a href="https://hackage.haskell.org/package/mtl-2.2.2/docs/Control-Monad-Reader.html#g:2">sharing environment between computations</a></li>
 <li>and many more.</li>
 </ul>
-<h2 id="summary-6"><a class="header" href="#summary-6">Summary</a></h2>
+<h2 id="summary-7"><a class="header" href="#summary-7">Summary</a></h2>
 <p>Using <code>Either</code> for error handling is useful for two reasons:</p>
 <ol>
 <li>We encode possible errors using types, and we <strong>force users to acknowledge and handle</strong> them, thus
@@ -6328,7 +6363,7 @@ handling for other scenarios.</p>
 <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html#v:bracket"><code>bracket</code></a>
 and <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html#v:finally"><code>finally</code></a>.
 These functions can help us handle resource acquisition more safely when errors are present.</p>
-<h2 id="summary-7"><a class="header" href="#summary-7">Summary</a></h2>
+<h2 id="summary-8"><a class="header" href="#summary-8">Summary</a></h2>
 <p>Exceptions are useful and often necessary when we work with <code>IO</code> and want to make sure
 our program is handling errors gracefully. They have an advantage over <code>Either</code> in that
 we can easily compose functions that may throw errors of different types, but also have
@@ -6618,7 +6653,7 @@ happens more than once. It might be a good candidate for refactoring. Try it!
 What do you think about the resulting code? Is it easier or more difficult to
 understand? Is it more modular or less? What are the pros and cons?</p>
 <hr />
-<h2 id="summary-8"><a class="header" href="#summary-8">Summary</a></h2>
+<h2 id="summary-9"><a class="header" href="#summary-9">Summary</a></h2>
 <p>With that, we have completed our <code>HsBlog.Directory</code> module that handles converting
 a directory safely. Note that code could probably be simplified quite a bit if we
 were fine with errors crashing the entire program altogether, but sometimes this is
@@ -6837,7 +6872,7 @@ whenIO cond action = do
 </code></pre>
 </details>
 <hr />
-<div style="break-before: page; page-break-before: always;"></div><h1 id="summary-9"><a class="header" href="#summary-9">Summary</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="summary-10"><a class="header" href="#summary-10">Summary</a></h1>
 <p>This was quite a section. Let's recount the things we've learned.</p>
 <p>We discussed several ways to handle errors in Haskell:</p>
 <ol>
@@ -7214,7 +7249,7 @@ main = do
 </li>
 </ol>
 <hr />
-<h3 id="summary-10"><a class="header" href="#summary-10">Summary</a></h3>
+<h3 id="summary-11"><a class="header" href="#summary-11">Summary</a></h3>
 <p>Which version do you like better? Manually passing arguments, or using <code>Reader</code>?</p>
 <p>To me, it is not clear that the second version with <code>Reader</code> is better than the first
 with explicit argument passing.</p>
@@ -7606,7 +7641,7 @@ example4Result =
 </code></pre>
 </details>
 <hr />
-<h2 id="summary-11"><a class="header" href="#summary-11">Summary</a></h2>
+<h2 id="summary-12"><a class="header" href="#summary-12">Summary</a></h2>
 <p>This chapter has been just the tip of the iceberg of the Haskell testing landscape.
 We haven't talked about
 <a href="https://www.scs.stanford.edu/16wi-cs240h/slides/testing.html">property testing</a> or
