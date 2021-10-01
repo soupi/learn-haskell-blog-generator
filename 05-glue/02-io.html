@@ -339,7 +339,7 @@ in fact, <code>*&gt;</code> is a slightly more generalized version of <code>&gt;
 be used instead of <code>&gt;&gt;</code>, which only still exists to avoid breaking backward
 compatibility.</p>
 <p><code>*&gt;</code> for <code>IO</code> means run the first IO operation, discard the result
-the run the second operation. It can be implemented using <code>&gt;&gt;=</code>:</p>
+then run the second operation. It can be implemented using <code>&gt;&gt;=</code>:</p>
 <pre><code>a *&gt; b = a &gt;&gt;= \_ -&gt; b
 </code></pre>
 <p>This combinator is useful when we want to run several <code>IO</code> operations one after
