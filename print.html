@@ -4285,27 +4285,6 @@ and instructed GHC to compile with <code>-Wall</code>.</p>
 </code></pre>
 <p>Later, in our targets descriptions, we can add <code>import: common-settings</code> ,
 and all of these settings will be automatically added.</p>
-<!--
-
-> #### Aside: language extensions
->
-> Haskell is a standardized language. However, GHC provides *extensions* to the language -
-> additional features that aren't covered in the 98 or 2010 standards of Haskell.
-> Features such as syntactic extensions, extensions to the type checker, and more.
-> These extensions can be added by adding `{-# language <extension-name> #-}`
-> to the top of a Haskell source file, or they can be set by *default* in the `.cabal file`.
-> 
-> As an example, we've enabled
-> [NumericUnderscores](https://ghc.gitlab.haskell.org/ghc/doc/users_guide/exts/numeric_underscores.html),
-> which allows us to add arbitrary underscores (`_`) in numeric literals for ease of reading.
-> For example, instead of writing `1000000` we can write `1_000_000`. We don't actually
-> need this at the moment, but it's nice to know about it.
-> 
-> The list of language extensions can be found in the
-> [GHC manual](https://ghc.gitlab.haskell.org/ghc/doc/users_guide/exts.html), but don't worry
-> about it just yet, we will cover more extensions later.
-
--->
 <h3 id="library"><a class="header" href="#library">Library</a></h3>
 <p>In a <code>library</code> target, we define:</p>
 <ul>
@@ -6243,6 +6222,19 @@ a <code>=</code> and then the expression (the part after <code>then</code> in an
 <p>LambdaCase as seen in <code>catch</code>, is just a syntactic sugar to save a few characters,
 instead of writing <code>\e -&gt; case e of</code>, we can write <code>\case</code>. It requires enabling the
 <code>LambdaCase</code> extension.</p>
+<h4 id="language-extensions"><a class="header" href="#language-extensions">Language extensions</a></h4>
+<p>Haskell is a standardized language. However, GHC provides <em>extensions</em> to the language -
+additional features that aren't covered in the 98 or 2010 standards of Haskell.
+Features such as syntactic extensions (like LambdaCase above), extensions to the type checker,
+and more.</p>
+<p>These extensions can be added by adding <code>{-# language &lt;extension-name&gt; #-}</code>
+to the top of a Haskell source file, or they can be set globally for an entire project by
+specifying them in the
+<a href="https://cabal.readthedocs.io/en/3.6/cabal-package.html?highlight=default-extensions#pkg-field-default-extensions">default-extensions</a>
+section in the <code>.cabal file</code>.</p>
+<p>The list of language extensions can be found in the
+<a href="https://ghc.gitlab.haskell.org/ghc/doc/users_guide/exts.html">GHC manual</a>,
+feel free to browse it, but don't worry about trying to memorize all the extensions.</p>
 </li>
 </ol>
 </blockquote>
