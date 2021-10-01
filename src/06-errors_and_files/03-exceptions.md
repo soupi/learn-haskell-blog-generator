@@ -70,6 +70,24 @@ main =
 > 2. LambdaCase as seen in `catch`, is just a syntactic sugar to save a few characters,
 >    instead of writing `\e -> case e of`, we can write `\case`. It requires enabling the
 >    `LambdaCase` extension.
+>
+>    #### Language extensions
+>
+>    Haskell is a standardized language. However, GHC provides *extensions* to the language -
+>    additional features that aren't covered in the 98 or 2010 standards of Haskell.
+>    Features such as syntactic extensions (like LambdaCase above), extensions to the type checker,
+>    and more.
+>
+>    These extensions can be added by adding `{-# language <extension-name> #-}`
+>    to the top of a Haskell source file, or they can be set globally for an entire project by
+>    specifying them in the
+>    [default-extensions](https://cabal.readthedocs.io/en/3.6/cabal-package.html?highlight=default-extensions#pkg-field-default-extensions)
+>    section in the `.cabal file`.
+>
+>    The list of language extensions can be found in the
+>    [GHC manual](https://ghc.gitlab.haskell.org/ghc/doc/users_guide/exts.html),
+>    feel free to browse it, but don't worry about trying to memorize all the extensions.
+
 
 This example, of course, is an example that would work much better using `Either` and separating
 the division and printing à la 'functional core, imperative shell'. But as an example it works.

@@ -149,28 +149,6 @@ common common-settings
 Later, in our targets descriptions, we can add `import: common-settings` ,
 and all of these settings will be automatically added.
 
-<!--
-
-> #### Aside: language extensions
->
-> Haskell is a standardized language. However, GHC provides *extensions* to the language -
-> additional features that aren't covered in the 98 or 2010 standards of Haskell.
-> Features such as syntactic extensions, extensions to the type checker, and more.
-> These extensions can be added by adding `{-# language <extension-name> #-}`
-> to the top of a Haskell source file, or they can be set by *default* in the `.cabal file`.
-> 
-> As an example, we've enabled
-> [NumericUnderscores](https://ghc.gitlab.haskell.org/ghc/doc/users_guide/exts/numeric_underscores.html),
-> which allows us to add arbitrary underscores (`_`) in numeric literals for ease of reading.
-> For example, instead of writing `1000000` we can write `1_000_000`. We don't actually
-> need this at the moment, but it's nice to know about it.
-> 
-> The list of language extensions can be found in the
-> [GHC manual](https://ghc.gitlab.haskell.org/ghc/doc/users_guide/exts.html), but don't worry
-> about it just yet, we will cover more extensions later.
-
--->
-
 ### Library
 
 In a `library` target, we define:
