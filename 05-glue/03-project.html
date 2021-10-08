@@ -226,7 +226,7 @@ executable hs-blog-gen
 <p>The first part should be fairly straightforward from the comments, maybe except for:</p>
 <ul>
 <li><code>cabal-version</code>: Defines which cabal versions can build this project. We've specified 2.4 and above.
-<a href="https://cabal.readthedocs.io/en/3.4/file-format-changelog.html?highlight=cabal-version">More info on different versions</a>.</li>
+<a href="https://cabal.readthedocs.io/en/3.6/file-format-changelog.html">More info on different versions</a>.</li>
 <li><code>name</code>: The name of your library and package. Must match with the .cabal filename. Usually starts with a lowercase. <a href="https://hackage.haskell.org/packages/search?terms=name">Check if your package name is already taken on Hackage</a>.</li>
 <li><code>version</code>: Some Haskell packages use <a href="https://semver.org/">semver</a>, most use <a href="https://pvp.haskell.org/">PvP</a>.</li>
 <li><code>license</code>: Most Haskell packages use <a href="https://choosealicense.com/licenses/bsd-3-clause/">BSD-3-Clause</a>. <a href="https://neilmitchell.blogspot.com/2018/08/licensing-my-haskell-packages.html">Neil Mitchell blogged about this</a>. You can find more licenses if you'd like at <a href="https://choosealicense.com">choosealicense.com</a>.</li>
@@ -259,7 +259,7 @@ extra-doc-files:
 <h3 id="common-settings"><a class="header" href="#common-settings">Common settings</a></h3>
 <p>Cabal package descriptions can include multiple &quot;targets&quot;: libraries, executables,
 and test suites. Since Cabal 2.2, we can use
-<a href="https://cabal.readthedocs.io/en/3.4/cabal-package.html?highlight=common#common-stanzas">common stanzas</a>
+<a href="https://cabal.readthedocs.io/en/3.6/cabal-package.html#common-stanzas">common stanzas</a>
 to group settings to be shared between different targets, so we don't have to repeat them for each target.</p>
 <p>In our case we've created a new common stanza (or block) called <code>common-settings</code> and
 defined the default language (Haskell has two standards, 98 and 2010),
@@ -354,8 +354,8 @@ import HsBlog.Html.Internal
 <h3 id="executable"><a class="header" href="#executable">Executable</a></h3>
 <p>We have separated our code to two sections: a library and an executable, why?</p>
 <p>First, libraries can be used by others. if we publish our code and someone wants to
-use it and build upon it, they can. Executables can't be imported to other projects.
-Second, we can write unit tests for libraries, which we will do soon. It is usually
+use it and build upon it, they can. Executables can't be imported by other projects.
+Second, we can write unit tests for libraries. It is usually
 benefitical to write most, if not all, of our logic as a library, and provide
 a thin executable over it.</p>
 <p>Executables' descriptions are very similar to libraries, here we define:</p>
@@ -491,7 +491,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </code></pre>
 </details>
 <h2 id="cabalproject-and-stackyaml"><a class="header" href="#cabalproject-and-stackyaml"><code>cabal.project</code> and <code>stack.yaml</code></a></h2>
-<p>The <a href="https://cabal.readthedocs.io/en/3.4/cabal-project.html">cabal.project</a> and
+<p>The <a href="https://cabal.readthedocs.io/en/3.6/cabal-project.html">cabal.project</a> and
 <a href="https://docs.haskellstack.org/en/stable/yaml_configuration/#project-specific-config">stack.yaml</a>
 files are used by <code>cabal</code> and <code>stack</code> respectively to add additional information on <em>how
 to build the package</em>. While <code>cabal.project</code> isn't necessary to use <code>cabal</code>, <code>stack.yaml</code>
@@ -519,31 +519,82 @@ or <code>cabal</code> to build and run our program and package (I mostly use sta
 <h3 id="for-cabal"><a class="header" href="#for-cabal">For cabal:</a></h3>
 <p>Building the project - on the first run, cabal will download the package dependencies
 and use the GHC on PATH to build the project.</p>
-<p>cabal caches packages between projects, so if a new project uses the same packages
-with the same versions (and the same flag settings) they will not need to be reinstalled.</p>
+<p>Cabal caches packages between projects, so if a new project uses the same packages
+with the same versions (and the same flag settings) they will not need to be reinstalled.
+<code>cabal</code> commands are usually prefixed with <code>v2-</code> to note that we want to use the new
+build system implementation.</p>
+<blockquote>
+<p>In older version of cabal, packages could be installed either globally, or in sandboxes.
+In each sandbox (and globally) there could only be one version of a package installed,
+and users would usually create different sandboxes for different projects, without caching
+packages between projects.</p>
+<p>With the new build system implementation, multiple versions of the same package can be
+installed globally, and for each project cabal will (try to) choose a specific version for each
+package dependency such that they all work together, without needing sandboxing.
+This change helps us increase sharing of built packages while avoiding conflicts and manual
+handling of sandboxes.</p>
+</blockquote>
+<p>A few important commands we should be familiar with:</p>
+<pre><code class="language-sh">cabal v2-update
+</code></pre>
+<p><a href="https://cabal.readthedocs.io/en/3.6/cabal-commands.html#cabal-v2-update"><code>v2-update</code></a>
+fetches information from remote package repositories (specifically Hackage unless specified otherwise)
+and updates the local package index which includes various information about available packages such as
+their names, versions and dependencies.</p>
+<p>Usually the first command to run before fetching package dependencies.</p>
 <pre><code class="language-sh">cabal v2-build
 </code></pre>
-<p>Running the project: <code>stack exec</code> will run the executable.</p>
-<pre><code class="language-sh">cabal v2-run hs-blog-gen -- &lt;program options&gt;
+<p><a href="https://cabal.readthedocs.io/en/3.6/cabal-commands.html#cabal-v2-build"><code>v2-build</code></a>
+compiles the various targets (such as <code>library</code> and <code>executable</code>s).
+It will also fetch and install the package dependencies when they're not already installed.</p>
+<pre><code class="language-sh">cabal v2-run hs-blog-gen -- &lt;program arguments&gt;
 </code></pre>
-<p>We can also run <code>ghci</code> with our project loaded:</p>
-<pre><code class="language-sh">cabal v2-repl
+<p><a href="https://cabal.readthedocs.io/en/3.6/cabal-commands.html#cabal-v2-run"><code>v2-run</code></a>
+Can be used to compile and then run a target (in our case our <code>executable</code> which we named <code>hs-blog-gen</code>).
+We separate arguments passed to <code>cabal</code> and arguments passed to our target program with <code>--</code>.</p>
+<pre><code class="language-sh">cabal v2-repl hs-blog
 </code></pre>
+<p><a href="https://cabal.readthedocs.io/en/3.6/cabal-commands.html#cabal-v2-repl"><code>v2-repl</code></a>
+runs <code>ghci</code> in the context of the target (in our case our <code>library</code> which we named <code>hs-blog</code>) -
+it will load the target's package dependencies and modules to be available in <code>ghci</code>.</p>
+<pre><code class="language-sh">cabal v2-clean
+</code></pre>
+<p><a href="https://cabal.readthedocs.io/en/3.6/cabal-commands.html#cabal-v2-clean"><code>v2-clean</code></a>
+Deletes the build artifacts that we built.</p>
+<p>There are more interesting commands we could use, such as <code>cabal v2-freeze</code> to generate
+a file which records the packages versions and flags we used to build this project,
+and <code>cabal v2-sdist</code> to bundle the project source to a package tarball which can be
+uploaded to Hackage. If you'd like to learn more visit the
+<a href="https://cabal.readthedocs.io/en/3.6/cabal-commands.html">Cabal user guide</a>.</p>
 <h3 id="for-stack"><a class="header" href="#for-stack">For stack:</a></h3>
 <p>Building the project - on the first run, stack will install the right GHC for this project
 which is specified according to the <code>resolver</code> field in the <code>stack.yaml</code> file,
-will download the package dependencies, and build the project.</p>
+will download the package dependencies, and compile the project.</p>
 <p>Stack caches these installations between projects that use the same resolver,
 so future projects with the same resolver and future runs of this project won't
-require reinstallation.</p>
+require reinstallation. This approach is kind of a middle ground between full packages
+sharing and sandboxes.</p>
+<p>Let's look at the (somewhat) equivalent commands for Stack:</p>
 <pre><code class="language-sh">stack build
 </code></pre>
-<p>Running the project: <code>stack exec</code> will run the executable.</p>
-<pre><code class="language-sh">stack exec hs-blog-gen -- &lt;program options&gt;
+<p><a href="https://docs.haskellstack.org/en/stable/build_command/#build-command"><code>build</code></a>
+will compile the project as described above - installing GHC and package dependencies if they are not
+installed.</p>
+<pre><code class="language-sh">stack exec hs-blog-gen -- &lt;program arguments&gt;
 </code></pre>
-<p>Or run <code>ghci</code>:</p>
-<pre><code class="language-sh">stack ghci
+<p><a href="https://docs.haskellstack.org/en/stable/GUIDE/#stack-exec"><code>exec</code></a>
+will run the executable passing the program arguments to our executable.</p>
+<pre><code class="language-sh">stack ghci hs-blog
 </code></pre>
+<p><a href="https://docs.haskellstack.org/en/stable/ghci/#ghci"><code>ghci</code></a>
+runs <code>ghci</code> in the context of our library <code>hs-blog</code> - loading the library modules
+and packages.</p>
+<pre><code class="language-sh">stack clean
+</code></pre>
+<p><a href="https://docs.haskellstack.org/en/stable/GUIDE/#cleaning-your-project"><code>clean</code></a>
+cleans up build artifacts.</p>
+<p>The <a href="https://docs.haskellstack.org/en/stable/GUIDE/">Stack user guide</a> contains more
+information about how stack works and how to use it effectively.</p>
 <h3 id="build-artifacts"><a class="header" href="#build-artifacts">Build artifacts</a></h3>
 <p>Both stack and cabal create build artifacts that we will not want to track using
 our version control. These build artifacts are found in the <code>dist</code>, <code>dist-newstyle</code>
