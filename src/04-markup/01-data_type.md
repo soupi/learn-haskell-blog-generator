@@ -406,6 +406,8 @@ data Structure
 
 ---
 
+## Translating directly?
+
 You might ask "Why do we even need to represent the markup as a type?
 Why don't we convert it into HTML as soon as we parse it
 instead?". That's a good question and a valid strategy. The reason we

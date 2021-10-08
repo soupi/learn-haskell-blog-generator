@@ -18,7 +18,7 @@ We're going to define a new section in our `hs-blog-gen.cabal` file for our new 
 Like `library` and `executable`, this section is called `test-suite`.
 
 The interfaces for how to define a test suite is describe in the
-[Cabal documentation](https://cabal.readthedocs.io/en/3.4/cabal-package.html?highlight=exitcode#test-suites).
+[Cabal documentation](https://cabal.readthedocs.io/en/3.6/cabal-package.html#test-suites).
 We are going to use the `exitcode-stdio-1.0` interface. Let's go over the different settings.
 
 ```cabal
@@ -53,7 +53,7 @@ test-suite hs-blog-gen-test
   - [`raw-strings-qq`](https://hackage.haskell.org/package/raw-strings-qq) -
     Syntax for writing raw string literals
   - `hs-blog` - Our library
-- [`ghc-options`](https://cabal.readthedocs.io/en/3.4/cabal-package.html?highlight=ghc-options#pkg-field-ghc-options) -
+- [`ghc-options`](https://cabal.readthedocs.io/en/3.6/cabal-package.html#pkg-field-ghc-options) -
     Extra options and flags for GHC
   - [`-O`](https://downloads.haskell.org/ghc/latest/docs/html/users_guide/using-optimisation.html#options-optimise) -
     Compile with optimizations
@@ -64,11 +64,11 @@ test-suite hs-blog-gen-test
     performance boost.
   - [`-rtsopts`](https://downloads.haskell.org/ghc/latest/docs/html/users_guide/phases.html#ghc-flag--rtsopts[=%E2%9F%A8none|some|all|ignore|ignoreAll%E2%9F%A9]) -
     lets us manipulate the Haskell runtime system by passing command-line arguments to our application
-  - [`-with-rtsopts=-N`](https://downloads.haskell.org/ghc/latest/docs/html/users_guide/phases.html?highlight=rtsopts#ghc-flag--with-rtsopts=%E2%9F%A8opts%E2%9F%A9) -
+  - [`-with-rtsopts=-N`](https://downloads.haskell.org/ghc/latest/docs/html/users_guide/phases.html#ghc-flag--with-rtsopts=%E2%9F%A8opts%E2%9F%A9) -
     Set specific default options for the program at link-time.
     Specifically, [`-N`](https://downloads.haskell.org/ghc/latest/docs/html/users_guide/using-concurrent.html#rts-flag--N%20%E2%9F%A8x%E2%9F%A9)
     Sets the number of cores to use in our program.
-- [`build-tool-depends`](https://cabal.readthedocs.io/en/3.4/cabal-package.html#pkg-field-build-tool-depends) -
+- [`build-tool-depends`](https://cabal.readthedocs.io/en/3.6/cabal-package.html#pkg-field-build-tool-depends) -
   Uses a specific executable from a package dependency in aids of building the package.
   In this case, we are using the `hspec-discover` executable from the
   [`hspec-discover`](https://hackage.haskell.org/package/hspec-discover) package, which
