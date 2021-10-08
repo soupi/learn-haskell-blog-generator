@@ -347,7 +347,7 @@ parseLines context txts =
     [] -&gt; maybeToList context
    
     -- Header 1 case
-    ('@' : ' ' : line) : rest -&gt;
+    ('*' : ' ' : line) : rest -&gt;
       maybe id (:) context (Header 1 (trim line) : parseLines Nothing rest)
    
     -- Unordered list case

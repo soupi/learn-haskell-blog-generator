@@ -281,12 +281,11 @@ ghci&gt; escape &quot;&lt;html&gt;&quot;
 
 </code></pre>
 <p>We can import Haskell source files using the <code>:load</code> command (<code>:l</code> for short):</p>
-<pre><code>ghci&gt; :load Html/Internal.hs
-[1 of 1] Compiling Html.Internal    ( Html/Internal.hs, interpreted )
+<pre><code>ghci&gt; :load Html.hs
+[1 of 1] Compiling Html    ( Html.hs, interpreted )
 Ok, one module loaded.
-ghci&gt; escape &quot;\&quot;&quot;
-&quot;&amp;quot;&quot;
-
+ghci&gt; render (html_ &quot;&lt;title&gt;&quot; (p_ &quot;&lt;body&gt;&quot;))
+&quot;&lt;html&gt;&lt;head&gt;&lt;title&gt;&amp;lt;title&amp;gt;&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&lt;p&gt;&amp;lt;body&amp;gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;&quot;
 </code></pre>
 <p>As well as import library modules:</p>
 <pre><code>ghci&gt; import Data.Bits
@@ -427,7 +426,7 @@ escape =
     concat . map escapeChar
 </code></pre>
 </details>
-<p>Trying constructing an invalid HTML in <code>hello.hs</code> to see if this works or not!</p>
+<p>Try constructing an invalid HTML in <code>hello.hs</code> to see if this works or not!</p>
 <p>Now we can use our tiny HTML library safely. But what if the user
 wants to use our library with a valid use case we didn't think about, for
 example adding unordered lists? We are completely blocking them from

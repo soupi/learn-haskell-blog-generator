@@ -539,7 +539,7 @@ main =
       -- With input and output file paths as program arguments
       [input, output] -&gt;
         readFile input &gt;&gt;= \content -&gt;
-          doesFileExist input &gt;&gt;= \exists -&gt;
+          doesFileExist output &gt;&gt;= \exists -&gt;
             let
               writeResult = writeFile output (process input content)
             in
@@ -696,7 +696,7 @@ main = do
     -- With input and output file paths as program arguments
     [input, output] -&gt; do
       content &lt;- readFile input
-      exists &lt;- doesFileExist input
+      exists &lt;- doesFileExist output
       let
         writeResult = writeFile output (process input content)
       if exists

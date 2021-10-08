@@ -1365,12 +1365,11 @@ ghci&gt; escape &quot;&lt;html&gt;&quot;
 
 </code></pre>
 <p>We can import Haskell source files using the <code>:load</code> command (<code>:l</code> for short):</p>
-<pre><code>ghci&gt; :load Html/Internal.hs
-[1 of 1] Compiling Html.Internal    ( Html/Internal.hs, interpreted )
+<pre><code>ghci&gt; :load Html.hs
+[1 of 1] Compiling Html    ( Html.hs, interpreted )
 Ok, one module loaded.
-ghci&gt; escape &quot;\&quot;&quot;
-&quot;&amp;quot;&quot;
-
+ghci&gt; render (html_ &quot;&lt;title&gt;&quot; (p_ &quot;&lt;body&gt;&quot;))
+&quot;&lt;html&gt;&lt;head&gt;&lt;title&gt;&amp;lt;title&amp;gt;&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&lt;p&gt;&amp;lt;body&amp;gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;&quot;
 </code></pre>
 <p>As well as import library modules:</p>
 <pre><code>ghci&gt; import Data.Bits
@@ -1511,7 +1510,7 @@ escape =
     concat . map escapeChar
 </code></pre>
 </details>
-<p>Trying constructing an invalid HTML in <code>hello.hs</code> to see if this works or not!</p>
+<p>Try constructing an invalid HTML in <code>hello.hs</code> to see if this works or not!</p>
 <p>Now we can use our tiny HTML library safely. But what if the user
 wants to use our library with a valid use case we didn't think about, for
 example adding unordered lists? We are completely blocking them from
@@ -2686,7 +2685,7 @@ odd n =
 when a negative value is passed as input. A function that does not return a result for some value
 (either by not terminating or by throwing an error) is called <strong>a partial function</strong>
 (because it only returns a result of a part of the possible inputs).</p>
-<p>partial functions are generally considered <strong>bad practice</strong> because they can have
+<p>Partial functions are generally considered <strong>bad practice</strong> because they can have
 unexpected behaviour at runtime, so we want to <strong>avoid using</strong> partial functions
 as well as <strong>avoid writing</strong> partial functions.</p>
 <p>The best way to avoid writing partial functions is by covering all inputs!
@@ -2868,7 +2867,7 @@ Approaching them with this mindset can be very liberating!</p>
 interfaces with laws/expected behaviour where we don't actually care about the
 concrete details of the underlying type, just that it <em>implements a certain
 API and behaves in a certain way</em>.</p>
-<p>Regarding <code>Semigroup</code> have <a href="04-markup/02_04-safer_construction.html#appending-htmlstructure">previously</a>
+<p>Regarding <code>Semigroup</code>, we have <a href="04-markup/02_04-safer_construction.html#appending-htmlstructure">previously</a>
 created a function that looks like <code>&lt;&gt;</code> for our <code>Html</code> EDSL!
 We can add a <code>Semigroup</code> instance for our <code>Structure</code> data type
 and have a nicer to use API!</p>
@@ -3097,7 +3096,7 @@ parseLines context txts =
     [] -&gt; maybeToList context
    
     -- Header 1 case
-    ('@' : ' ' : line) : rest -&gt;
+    ('*' : ' ' : line) : rest -&gt;
       maybe id (:) context (Header 1 (trim line) : parseLines Nothing rest)
    
     -- Unordered list case
@@ -3437,7 +3436,7 @@ is a bit more complicated because of backwards compatibility and performance rea
 <code>Semigroup</code> was actually introduced in Haskell after <code>Monoid</code>!</p>
 </blockquote>
 <p>We could add an instance of <code>Monoid</code> for our markup <code>Structure</code> data type:</p>
-<pre><code class="language-hs">instance Monoid a where
+<pre><code class="language-hs">instance Monoid Structure where
   mempty = empty_
 </code></pre>
 <p>And now, instead of using our own <code>concatStructure</code>, we can use the library function</p>
@@ -3948,7 +3947,7 @@ main =
       -- With input and output file paths as program arguments
       [input, output] -&gt;
         readFile input &gt;&gt;= \content -&gt;
-          doesFileExist input &gt;&gt;= \exists -&gt;
+          doesFileExist output &gt;&gt;= \exists -&gt;
             let
               writeResult = writeFile output (process input content)
             in
@@ -4105,7 +4104,7 @@ main = do
     -- With input and output file paths as program arguments
     [input, output] -&gt; do
       content &lt;- readFile input
-      exists &lt;- doesFileExist input
+      exists &lt;- doesFileExist output
       let
         writeResult = writeFile output (process input content)
       if exists
@@ -4667,7 +4666,7 @@ our package manager will download and install the required package for us!</p>
 for other Haskell developers to use!</p>
 <blockquote>
 <p>You can view the git commit of
-<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/680d9f439e4e6ecefa4db304c1746928ec6379db">the changes we've made</a>
+<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/9c12ee9b36ae63f9d5dfe09799c217521900a2e5">the changes we've made</a>
 and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/code-after-optparse">code up until now</a>.</p>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="fancy-options-parsing"><a class="header" href="#fancy-options-parsing">Fancy options parsing</a></h1>
@@ -5451,7 +5450,7 @@ if the output file or directory already exists, it's okay to replace them.</p>
 <hr />
 <blockquote>
 <p>You can view the git commit of
-<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/bca3390d89ceb618a1d39e8e2d67cabc1133e08f">the changes we've made</a>
+<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/44fd95e8a6376df015f4198668b27b3a707b8961">the changes we've made</a>
 and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/code-after-optparse">code up until now</a>.</p>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="handling-errors-and-multiple-files"><a class="header" href="#handling-errors-and-multiple-files">Handling errors and multiple files</a></h1>
@@ -5617,7 +5616,7 @@ module HsBlog.Html
   , ul_
   , ol_
   , code_
-  , Context
+  , Content
   , txt_
   , img_
   , link_
@@ -6390,7 +6389,7 @@ This is why we can encode a seemingly heterogeneous list of functions that handl
 for <code>catches</code> to take as input.
 This pattern is rarely useful, but I've included it here to avoid confusion.</p>
 </blockquote>
-<p>And if we wanted to catch any all all exceptions, we'd catch <code>SomeException</code>:</p>
+<p>And if we wanted to catch any exception, we'd catch <code>SomeException</code>:</p>
 <pre><code class="language-hs">main :: IO ()
 main = do
   hClose stdout
@@ -6943,7 +6942,7 @@ We saw how to stack an <code>Either</code>-like monad transformer, <code>ExceptT
 <p>We are almost done. Only a couple more things left to do with this project. Let's go!</p>
 <blockquote>
 <p>You can view the git commit of
-<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/7671ed1cde0800ea59e92b98c5a9989420afe611">the changes we've made</a>
+<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/72d99dbbad05c8a4fbce152315f45bbaabba177e">the changes we've made</a>
 and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/code-after-multiple-files">code up until now</a>.</p>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="passing-environment-variables"><a class="header" href="#passing-environment-variables">Passing environment variables</a></h1>
@@ -7311,7 +7310,7 @@ arsenal and I wanted to demonstrate it.</p>
 and it's often better to try and get away with simpler techniques if we can.</p>
 <blockquote>
 <p>You can view the git commit of
-<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/54e74d792c7bfad469f0644ba93b305f12b6a568">the changes we've made</a>
+<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/fe72df16c1af822484cec546b892526f96bf9d59">the changes we've made</a>
 and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/code-after-reader">code up until now</a>.</p>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="testing"><a class="header" href="#testing">Testing</a></h1>
@@ -7701,7 +7700,7 @@ Please consult the tutorial for your chosen testing framework, and read more abo
 this very important subject on your own.</p>
 <blockquote>
 <p>You can view the git commit of
-<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/59568f84b96a5e0bf0d11f1784f5e38c76ead366">the changes we've made</a>
+<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/dad1168229fbea91986fde6d88e4c008cd3f3a28">the changes we've made</a>
 and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/code-after-testing">final version of the code</a>.</p>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="where-to-go-next"><a class="header" href="#where-to-go-next">Where to go next</a></h1>
