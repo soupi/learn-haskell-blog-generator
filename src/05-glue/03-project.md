@@ -87,8 +87,11 @@ executable hs-blog-gen
     -O
 ```
 
-Let's break it down to a few parts, the **package metadata**, **common settings**,
-**library** and **executable**.
+Let's break it down to a few parts, the
+[package metadata](#package-metadata),
+[common settings](#common-settings),
+[library](#library) and
+[executable](#executable).
 
 ### Package metadata
 
