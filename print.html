@@ -4517,11 +4517,11 @@ is necessary in order to use <code>stack</code>. So we will cover it briefly.</p
 <ul>
 <li><code>resolver</code>: Describes which snapshot to use for packages and ghc version.
 We will choose the latest (at time of writing) on the <code>lts</code> branch: <code>lts-18.9</code>.
-Visit <a href="https://www.stackage.org/lts-18.9">this link</a> to find which packages this
-snapshot includes, what are their version, and for which GHC version is set
-for the snapshot.</li>
+Visit <a href="https://www.stackage.org/lts-18.9">this link</a> to find out which packages this
+snapshot includes, what their versions are, and which GHC version is used
+with this snapshot.</li>
 <li><code>packages</code>: Describes the location of packages we plan to build. In our case
-we have only one, in the current directory.</li>
+we have only one and it can be found in the current directory.</li>
 </ul>
 <p>We'll add <code>stack.yaml</code> to our project directory:</p>
 <pre><code class="language-yaml">resolver: lts-18.9
