@@ -147,7 +147,7 @@ interfaces with laws/expected behaviour where we don't actually care about the
 concrete details of the underlying type, just that it *implements a certain
 API and behaves in a certain way*.
 
-Regarding `Semigroup` have [previously](02_04-safer_construction.html#appending-htmlstructure)
+Regarding `Semigroup`, we have [previously](02_04-safer_construction.html#appending-htmlstructure)
 created a function that looks like `<>` for our `Html` EDSL!
 We can add a `Semigroup` instance for our `Structure` data type
 and have a nicer to use API!

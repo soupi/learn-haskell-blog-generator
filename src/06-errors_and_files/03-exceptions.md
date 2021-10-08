@@ -196,7 +196,7 @@ main = do
 > for `catches` to take as input.
 > This pattern is rarely useful, but I've included it here to avoid confusion.
 
-And if we wanted to catch any all all exceptions, we'd catch `SomeException`:
+And if we wanted to catch any exception, we'd catch `SomeException`:
 
 ```hs
 main :: IO ()

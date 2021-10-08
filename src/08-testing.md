@@ -450,5 +450,5 @@ Please consult the tutorial for your chosen testing framework, and read more abo
 this very important subject on your own.
 
 > You can view the git commit of
-> [the changes we've made](https://github.com/soupi/learn-haskell-blog-generator/commit/59568f84b96a5e0bf0d11f1784f5e38c76ead366)
+> [the changes we've made](https://github.com/soupi/learn-haskell-blog-generator/commit/dad1168229fbea91986fde6d88e4c008cd3f3a28)
 > and the [final version of the code](https://github.com/soupi/learn-haskell-blog-generator/tree/code-after-testing).

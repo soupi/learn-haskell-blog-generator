@@ -459,5 +459,5 @@ It is important to weigh the benefits and costs of using advanced techniques,
 and it's often better to try and get away with simpler techniques if we can.
 
 > You can view the git commit of
-> [the changes we've made](https://github.com/soupi/learn-haskell-blog-generator/commit/54e74d792c7bfad469f0644ba93b305f12b6a568)
+> [the changes we've made](https://github.com/soupi/learn-haskell-blog-generator/commit/fe72df16c1af822484cec546b892526f96bf9d59)
 > and the [code up until now](https://github.com/soupi/learn-haskell-blog-generator/tree/code-after-reader).

@@ -175,7 +175,7 @@ module HsBlog.Html
   , ul_
   , ol_
   , code_
-  , Context
+  , Content
   , txt_
   , img_
   , link_

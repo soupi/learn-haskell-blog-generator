@@ -527,7 +527,7 @@ when a negative value is passed as input. A function that does not return a resu
 (either by not terminating or by throwing an error) is called **a partial function**
 (because it only returns a result of a part of the possible inputs).
 
-partial functions are generally considered **bad practice** because they can have
+Partial functions are generally considered **bad practice** because they can have
 unexpected behaviour at runtime, so we want to **avoid using** partial functions
 as well as **avoid writing** partial functions.
 

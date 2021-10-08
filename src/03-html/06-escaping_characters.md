@@ -173,12 +173,11 @@ ghci> escape "<html>"
 We can import Haskell source files using the `:load` command (`:l` for short):
 
 ```
-ghci> :load Html/Internal.hs
-[1 of 1] Compiling Html.Internal    ( Html/Internal.hs, interpreted )
+ghci> :load Html.hs
+[1 of 1] Compiling Html    ( Html.hs, interpreted )
 Ok, one module loaded.
-ghci> escape "\""
-"&quot;"
-
+ghci> render (html_ "<title>" (p_ "<body>"))
+"<html><head><title>&lt;title&gt;</title></head><body><p>&lt;body&gt;</p></body></html>"
 ```
 
 As well as import library modules:
@@ -344,7 +343,7 @@ escape =
 
 </details>
 
-Trying constructing an invalid HTML in `hello.hs` to see if this works or not!
+Try constructing an invalid HTML in `hello.hs` to see if this works or not!
 
 Now we can use our tiny HTML library safely. But what if the user
 wants to use our library with a valid use case we didn't think about, for

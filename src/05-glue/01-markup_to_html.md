@@ -253,7 +253,7 @@ We could add an instance of `Monoid` for our markup `Structure` data type:
 
 
 ```hs
-instance Monoid a where
+instance Monoid Structure where
   mempty = empty_
 ```
 
