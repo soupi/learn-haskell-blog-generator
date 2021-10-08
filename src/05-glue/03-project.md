@@ -426,11 +426,11 @@ There are two important fields a `stack.yaml` file must have:
 
 - `resolver`: Describes which snapshot to use for packages and ghc version.
   We will choose the latest (at time of writing) on the `lts` branch: `lts-18.9`.
-  Visit [this link](https://www.stackage.org/lts-18.9) to find which packages this
-  snapshot includes, what are their version, and for which GHC version is set
-  for the snapshot.
+  Visit [this link](https://www.stackage.org/lts-18.9) to find out which packages this
+  snapshot includes, what their versions are, and which GHC version is used
+  with this snapshot.
 - `packages`: Describes the location of packages we plan to build. In our case
-  we have only one, in the current directory.
+  we have only one and it can be found in the current directory.
 
 We'll add `stack.yaml` to our project directory:
 
