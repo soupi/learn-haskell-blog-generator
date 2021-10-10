@@ -1,6 +1,6 @@
 # Embedded Domain Specific Languages
 
-Right out of the bat we run into a common pattern in Haskell: creating
+Right off the bat we run into a common pattern in Haskell: creating
 Embedded Domain Specific Languages (EDSLs for short).
 
 Domain specific languages (DSLs) are specialized programming languages that are

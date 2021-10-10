@@ -36,8 +36,8 @@ The two names, `<type-name>` and `<constructor>`, do not have to be the
 same, but they often are. And note that both have to start with a
 capital letter.
 
-The right-hand side of the newtype declaration describes how an
-expression of that type looks like. In our case, we expect a value of
+The right-hand side of the newtype declaration describes the shape of a
+value of that type. In our case, we expect a value of
 type `Html` to have the constructor `Html` and then an expression of
 type string, for example: `Html "hello"` or `Html ("hello " <>
 "world")`.
@@ -59,16 +59,13 @@ mix them with other, unrelated (to our domain) types. Similar as
 meters and feet can both be numbers, but we don't want to accidentally
 add feet to meters without any conversion.
 
-To get this actually working well, we'll need a bit more than just
-newtypes. In the next chapter we'll introduce modules and smart constructors.
-
 ---
 
 For now, let's create a couple of types for our use case.
 We want two separate types to represent:
 
 1. A complete Html document
-2. A type for nodes that can go inside the <body> tag
+2. A type for html structures such as headers and paragraphs that can go inside the <body> tag
 
 We want them to be distinct because we don't want to mix them together.
 
@@ -85,28 +82,9 @@ newtype Structure = Structure String
 
 ---
 
-## `type`
-
-A `type` definition looks really similar - the only difference is that
-we have no constructor:
-
-```hs
-type <type-name> = <existing-type>
-```
-
-For example in our case we can write:
-
-```hs
-type Title = String
-```
-
-`type`, on the other hand, is just a name alias. so `Title`
-and `String` are interchangeable. We can use `type`s
-to give a bit more clarity to our code.
-
 ## Using `newtype`s
 
-Back to `newtype`s. So how can we use the underlying type? We first
+In order to use the underlying type that the newtype wraps, we first
 need to extract it out of the type. We do this using pattern matching.
 
 Pattern matching can be used in two ways, in case expressions and in
@@ -114,49 +92,60 @@ function definitions.
 
 1. case expressions are kind of beefed up switch expressions and look like this:
 
-```hs
-case <expression> of
-  <pattern> -> <expression>
-  ...
-  <pattern> -> <expression>
-```
+   ```hs
+   case <expression> of
+     <pattern> -> <expression>
+     ...
+     <pattern> -> <expression>
+   ```
 
-The `<expression>` is the thing we want to unpack, and the `pattern`
-is its concrete shape. For example:
+   The `<expression>` is the thing we want to unpack, and the `pattern`
+   is its concrete shape. For example, if we wanted to extract the `String`
+   out of the type `Structure` we defined in the exercise above, we do:
 
-```hs
-getStructureString :: Structure -> String
-getStructureString struct =
-  case struct of
-    Structure str -> str
-```
+   ```hs
+   getStructureString :: Structure -> String
+   getStructureString struct =
+     case struct of
+       Structure str -> str
+   ```
 
-This way we can extract the String out of `Structure` and return
-it.
+   This way we can extract the `String` out of `Structure` and return
+   it.
 
-In later commits we'll introduce `data` declarations (which are kind of
-a struct + enum chimera), where we can define multiple constructors to
-a type. Then the multiple patterns of a case expression will make more
-sense.
+   > In later chapters we'll introduce `data` declarations (which are kind of
+   > a struct + enum chimera), where we can define multiple constructors to
+   > a type. Then the multiple patterns of a case expression will make more
+   > sense.
 
 2. Alternatively, when declaring a function, we can also use pattern matching on the
 arguments:
 
-```hs
-func <pattern> = <expression>
-```
+   ```hs
+   func <pattern> = <expression>
+   ```
 
-For example:
+   For example:
 
-```hs
-getStructureString :: Structure -> String
-getStructureString (Structure str) = str
-```
+   ```hs
+   getStructureString :: Structure -> String
+   getStructureString (Structure str) = str
+   ```
 
-Using the types we created, we can change the HTML functions we've defined before,
-namely `html_`, `body_`, `p_`, etc, to operate on these types instead of `String`s.
+   Using the types we created, we can change the HTML functions we've defined before,
+   namely `html_`, `body_`, `p_`, etc, to operate on these types instead of `String`s.
 
-But first let's meet another operator that will make our code more concise.
+   But first let's meet another operator that will make our code more concise.
+
+One very cool thing about `newtype` is that wrapping and extracting expressions doesn't actually
+have a performance cost! The compiler knows to remove any wrapping and extraction
+of the `newtype` constructor and use the underlying type.
+
+The new type and the constructor we defined are only there to help us *distinguish* between
+the type we created and the underlying type when *we write our code*, they are not
+needed *when the code is running*.
+
+`newtype`s provide us with type safety with no performance penalty!
 
 ## Chaining functions
 
@@ -230,9 +219,9 @@ p_ = Structure . el "p"
 ```
 
 The function `p_` will take an arbitrary `String` which is the content
-of the paragraph we wish to create, will wrap it in `<p>` tags,
-and then wrap it in the `Structure` constructor - producing the
-output type `Structure`.
+of the paragraph we wish to create, will wrap it in `<p>` and `</p>` tags,
+and then wrap it in the `Structure` constructor to produce the
+output type `Structure` (remember: newtype constructors can be used as functions!).
 
 Let's take a deeper look and see what are the types of the two
 functions here are:
@@ -352,18 +341,56 @@ render html =
 
 ---
 
+## `type`
+
+Let's look at one more way to give new names to types.
+
+A `type` definition looks really similar to a `newtype` definition - the only
+difference is that we reference the type name directly without a constructor:
+
+```hs
+type <type-name> = <existing-type>
+```
+
+For example in our case we can write:
+
+```hs
+type Title = String
+```
+
+`type`, in contrast with `newtype`, is just a type name alias.
+When we declare that `Title` is a *type alias* of `String`
+We mean that `Title` and `String` are interchangeable,
+and we can use one or the other whenever we want:
+
+```hs
+"hello" :: Title
+
+"hello" :: String
+```
+
+Both are valid in this case.
+
+We can sometimes use `type`s to give a bit more clarity to our code,
+but they are much less useful than `newtype`s which allow us to
+*distinguish* between two types that have the same type representation.
+
 ## The rest of the owl
 
 ---
 
 Try changing the code we wrote in previous chapters to use the new types we created.
 
-**Tips**: we can combine `makeHtml` and `html_`, and remove `body_` `head_` and `title_`
-by calling `el` directly in `html_`, which can now have the type `Title -> Structure -> Html`. This will make our HTML EDSL less flexible but more compact.
-
-We could, alternatively, create newtypes for `HtmlHead` and `HtmlBody` and
-pass those to `html_`, and there is value in doing that, but I've chose
-to keep the API a bit simple for now, we can always refactor later!
+> **Tips**
+>
+> We can combine `makeHtml` and `html_`, and remove `body_` `head_` and `title_`
+> by calling `el` directly in `html_`, which can now have the type
+> `Title -> Structure -> Html`.
+> This will make our HTML EDSL less flexible but more compact.
+>
+> Alternatively, we could create `newtype`s for `HtmlHead` and `HtmlBody` and
+> pass those to `html_`, and we might do that at later chapters, but I've chose
+> to keep the API a bit simple for now, we can always refactor later!
 
 <details>
   <summary>Solution</summary>
@@ -433,8 +460,14 @@ render html =
 
 ---
 
-All of this is nice and fun. And indeed now we can't write `"Hello"`
+## Are we safe yet?
+
+We have made some progress - now we can't write `"Hello"`
 where we'd expect either a paragraph or a header, but we can still
 write `Structure "hello"` and get something that isn't a
-paragraph or a header. Next we'll see how we can make this illegal as
-well using modules and smart constructors.
+paragraph or a header. So while we made it harder for the user
+to make mistakes by accident, we haven't really been able to **enforce
+the invariants** we wanted to enforce in our library.
+
+Next we'll see how we can make expressions such as `Structure "hello"` illegal
+as well using *modules* and *smart constructors*.

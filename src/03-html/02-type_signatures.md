@@ -106,9 +106,9 @@ everything you can do with regular values like `Int` or `String`.
 The way Haskell treats names is very similar to copy paste. anywhere
 you see `html_` in the code, you can replace it with `el "html"`. They are
 the same (this is what the equals signs say, right? That the two sides
-are the same). This property, of behind able to *substitute* the two sides of the
+are the same). This property, of being able to *substitute* the two sides of the
 equals sign with one another, is called **referential transparency**. And
-it is pretty unique to Haskell (and a few language that are very
+it is pretty unique to Haskell (and a few languages that are very
 similar to it like PureScript and Elm)! We'll talk more about this in a later chapter.
 
 ### Anonymous/lambda functions
@@ -118,7 +118,7 @@ all functions take exactly one argument,
 I'll mention that the syntax we've been using up until
 now to define function is just syntactic sugar! We can also define
 **anonymous functions** - functions without a name, anywhere we'd like.
-anonymous functions are also known as **lambda functions**.
+Anonymous functions are also known as **lambda functions**.
 This is a tribute to the original, most primitive
 functional programming language - the lambda calculus.
 
@@ -161,8 +161,8 @@ el = \tag -> \content ->
 ```
 
 Hopefully this form makes it a bit clearer why Haskell functions
-always take one argument and return another, even when we have
-syntactic sugar that might suggest otherwise.
+always take one argument, even when we have syntactic sugar that
+might suggest otherwise.
 
 I'll mention one more syntactic sugar for anonymous functions:
 We don't actually have to write multiple argument anonymous functions
