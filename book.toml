@@ -1,5 +1,5 @@
 [book]
-title = "Learning Haskell by building a static blog generator"
+title = "Learn Haskell by building a blog generator"
 description = "A project-oriented online book about Haskell"
 authors = ["Gil Mizrahi"]
 language = "en"
