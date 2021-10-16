@@ -7,3 +7,8 @@ multilingual = false
 src = "src"
 git-repository-url = "https://github.com/soupi/learn-haskell-blog-generator"
 git-repository-icon = "fa-github"
+
+[output.html]
+git-repository-url = "https://github.com/soupi/learn-haskell-blog-generator"
+git-repository-icon = "fa-github"
+
