@@ -273,8 +273,15 @@ mconcat list =
     x : xs -> x <> mconcat list
 ```
 
-Pretty much the same way as our `concatStructure`, but it works for any `Monoid`!
-Abstractions are useful and help us reuse code!
+(Notice that because `Semigroup` is a *super class* of `Monoid`,
+we can still use the `<>` (append) function from the `Semigroup` class
+without adding the `Semigroup a` constraint to the left side of `=>`.
+By adding the `Monoid a` constraint we implicitly add a `Semigroup a`
+constraint as well!)
+
+This `mconcat` function we wrote is very similar to the `concatStructure` function we wrote,
+but this one works for any `Monoid`, including `Structure`!
+Abstractions are useful and help us **reuse** code!
 
 > Side note: integers with `+` and `0` aren't actually an instance of `Monoid` in Haskell.
 > This is because integers can also form a monoid with `*` and `1`! But **there can only
