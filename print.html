@@ -3481,8 +3481,14 @@ mconcat list =
     [] -&gt; mempty
     x : xs -&gt; x &lt;&gt; mconcat list
 </code></pre>
-<p>Pretty much the same way as our <code>concatStructure</code>, but it works for any <code>Monoid</code>!
-Abstractions are useful and help us reuse code!</p>
+<p>(Notice that because <code>Semigroup</code> is a <em>super class</em> of <code>Monoid</code>,
+we can still use the <code>&lt;&gt;</code> (append) function from the <code>Semigroup</code> class
+without adding the <code>Semigroup a</code> constraint to the left side of <code>=&gt;</code>.
+By adding the <code>Monoid a</code> constraint we implicitly add a <code>Semigroup a</code>
+constraint as well!)</p>
+<p>This <code>mconcat</code> function we wrote is very similar to the <code>concatStructure</code> function we wrote,
+but this one works for any <code>Monoid</code>, including <code>Structure</code>!
+Abstractions are useful and help us <strong>reuse</strong> code!</p>
 <blockquote>
 <p>Side note: integers with <code>+</code> and <code>0</code> aren't actually an instance of <code>Monoid</code> in Haskell.
 This is because integers can also form a monoid with <code>*</code> and <code>1</code>! But <strong>there can only
