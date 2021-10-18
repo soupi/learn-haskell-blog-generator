@@ -1,15 +1,17 @@
 # Hello, world!
 
-In this chapter we will create a simple HTML hello world and use the Haskell tool-chain
-to run it.
+In this chapter we will create a simple HTML "hello world" program and use the Haskell toolchain
+to compile and run it.
 
-> If you haven't installed a Haskell tool-chain yet, visit
+> If you haven't installed a Haskell toolchain yet, visit
 > [haskell.org/downloads](https://haskell.org/downloads) for instructions on how to download
-> and install a Haskell tool-chain.
+> and install a Haskell toolchain.
+
+## A Haskell source file
 
 A Haskell source file is composed of definitions.
 
-The most common definition has the following form:
+The most common type of definitions have the following form:
 
 ```hs
 <name> = <expression>
@@ -32,8 +34,8 @@ main = putStrLn "<html><body>Hello, world!</body></html>"
 
 We've defined a new name, `main`, and bound it to the expression `putStrLn "<html><body>Hello, world!</body></html>"`.
 
-the body of `main` means calling the function `putStrLn` with the string `"<html><body>Hello, world!</body></html>"`.
-`putStrLn` takes a single string as input and prints that string to the standard output.
+the body of `main` means calling the function `putStrLn` with the string `"<html><body>Hello, world!</body></html>"`
+as input. `putStrLn` takes a single string as input and prints that string to the standard output.
 
 __Note__: we don't need parenthesis to pass arguments to functions in Haskell.
 
@@ -43,16 +45,33 @@ Running this program will result in the following text printed on the screen:
 <html><body>Hello, world!</body></html>
 ```
 
-To run this little program, we can either compile it using the command line program `ghc`, like this: `ghc hello.hs` which will create a few files:
+## Compiling programs
+
+To run this little program, we can compile it using the command line program `ghc`:
+
+```sh
+> ghc hello.hs
+[1 of 1] Compiling Main             ( hello.hs, hello.o )
+Linking hello ...
+```
+
+Invoking `ghc` with will create the following artifact files:
 
 1. `hello.o` - Object file
 2. `hello.hi` - Haskell interface file
 3. `hello` - A native executable file
 
-and then run `hello`.
+And after the compilation, we can run the `hello` executable:
 
-Or, alternatively, interpret the source file using the command line program `runghc`,
-like this: `runghc hello.hs`. This will run the program without compiling it or creating any files.
+```sh
+> ./hello
+<html><body>Hello, world!</body></html>
+```
+
+## Interpreting programs
+
+Alternatively, we can skip the compilation and creation of artifact files phase, and run the source file directly
+using the command line program `runghc`:
 
 ```sh
 > runghc hello.hs
@@ -68,15 +87,12 @@ We can also redirect the output of the program to a file and then open it in Fir
 
 This command should open Firefox and display a web page with `Hello, world!` written in it.
 
-In this tutorial we'll use `runghc` regularly, because it saves us time to run the program without compiling it.
+I recommend using `runghc` with this tutorial. While compiling produces significantly faster programs,
+intepreting programs provides us with faster feedback while we are developing and making frequent changes.
 
----
-
-__Note__: If you've installed a GHC tool-chain via stack and not GHCup, and the commands above do not work because `ghc` or `runghc` are missing, prefix the commands above with `stack exec -- `. Stack will locate the globally installed GHC and use it. For example `runghc hello.hs` becomes `stack exec -- runghc hello.hs`. See the [Stack user guide](https://docs.haskellstack.org/en/stable/GUIDE/#exec) for more details.
-
----
-
-> If you want to learn more about the core Haskell tools, [you can read this article](https://gilmi.me/blog/post/2021/08/14/hs-core-tools). But what's described above is enough for now.
+> If you want to learn more about the core Haskell tools, you can read
+> [this article](https://gilmi.me/blog/post/2021/08/14/hs-core-tools),
+> but what's described above is enough for our usage at the moment.
 
 ## More bindings
 
