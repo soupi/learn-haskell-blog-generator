@@ -200,15 +200,16 @@ learning Haskell? Maybe you could help with that!</li>
 many tutorials, books, guides and courses. You can find a few alternatives that I can
 recommend <a href="https://github.com/soupi/haskell-study-plan#about-this-guide">in this list</a>.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="hello-world"><a class="header" href="#hello-world">Hello, world!</a></h1>
-<p>In this chapter we will create a simple HTML hello world and use the Haskell tool-chain
-to run it.</p>
+<p>In this chapter we will create a simple HTML &quot;hello world&quot; program and use the Haskell toolchain
+to compile and run it.</p>
 <blockquote>
-<p>If you haven't installed a Haskell tool-chain yet, visit
+<p>If you haven't installed a Haskell toolchain yet, visit
 <a href="https://haskell.org/downloads">haskell.org/downloads</a> for instructions on how to download
-and install a Haskell tool-chain.</p>
+and install a Haskell toolchain.</p>
 </blockquote>
+<h2 id="a-haskell-source-file"><a class="header" href="#a-haskell-source-file">A Haskell source file</a></h2>
 <p>A Haskell source file is composed of definitions.</p>
-<p>The most common definition has the following form:</p>
+<p>The most common type of definitions have the following form:</p>
 <pre><code class="language-hs">&lt;name&gt; = &lt;expression&gt;
 </code></pre>
 <p>Note that:</p>
@@ -223,21 +224,31 @@ and the expression <code>main</code> is bound to is the entry point to the progr
 <pre><code class="language-hs">main = putStrLn &quot;&lt;html&gt;&lt;body&gt;Hello, world!&lt;/body&gt;&lt;/html&gt;&quot;
 </code></pre>
 <p>We've defined a new name, <code>main</code>, and bound it to the expression <code>putStrLn &quot;&lt;html&gt;&lt;body&gt;Hello, world!&lt;/body&gt;&lt;/html&gt;&quot;</code>.</p>
-<p>the body of <code>main</code> means calling the function <code>putStrLn</code> with the string <code>&quot;&lt;html&gt;&lt;body&gt;Hello, world!&lt;/body&gt;&lt;/html&gt;&quot;</code>.
-<code>putStrLn</code> takes a single string as input and prints that string to the standard output.</p>
+<p>the body of <code>main</code> means calling the function <code>putStrLn</code> with the string <code>&quot;&lt;html&gt;&lt;body&gt;Hello, world!&lt;/body&gt;&lt;/html&gt;&quot;</code>
+as input. <code>putStrLn</code> takes a single string as input and prints that string to the standard output.</p>
 <p><strong>Note</strong>: we don't need parenthesis to pass arguments to functions in Haskell.</p>
 <p>Running this program will result in the following text printed on the screen:</p>
 <pre><code>&lt;html&gt;&lt;body&gt;Hello, world!&lt;/body&gt;&lt;/html&gt;
 </code></pre>
-<p>To run this little program, we can either compile it using the command line program <code>ghc</code>, like this: <code>ghc hello.hs</code> which will create a few files:</p>
+<h2 id="compiling-programs"><a class="header" href="#compiling-programs">Compiling programs</a></h2>
+<p>To run this little program, we can compile it using the command line program <code>ghc</code>:</p>
+<pre><code class="language-sh">&gt; ghc hello.hs
+[1 of 1] Compiling Main             ( hello.hs, hello.o )
+Linking hello ...
+</code></pre>
+<p>Invoking <code>ghc</code> with will create the following artifact files:</p>
 <ol>
 <li><code>hello.o</code> - Object file</li>
 <li><code>hello.hi</code> - Haskell interface file</li>
 <li><code>hello</code> - A native executable file</li>
 </ol>
-<p>and then run <code>hello</code>.</p>
-<p>Or, alternatively, interpret the source file using the command line program <code>runghc</code>,
-like this: <code>runghc hello.hs</code>. This will run the program without compiling it or creating any files.</p>
+<p>And after the compilation, we can run the <code>hello</code> executable:</p>
+<pre><code class="language-sh">&gt; ./hello
+&lt;html&gt;&lt;body&gt;Hello, world!&lt;/body&gt;&lt;/html&gt;
+</code></pre>
+<h2 id="interpreting-programs"><a class="header" href="#interpreting-programs">Interpreting programs</a></h2>
+<p>Alternatively, we can skip the compilation and creation of artifact files phase, and run the source file directly
+using the command line program <code>runghc</code>:</p>
 <pre><code class="language-sh">&gt; runghc hello.hs
 &lt;html&gt;&lt;body&gt;Hello, world!&lt;/body&gt;&lt;/html&gt;
 </code></pre>
@@ -246,12 +257,12 @@ like this: <code>runghc hello.hs</code>. This will run the program without compi
 &gt; firefox hello.html
 </code></pre>
 <p>This command should open Firefox and display a web page with <code>Hello, world!</code> written in it.</p>
-<p>In this tutorial we'll use <code>runghc</code> regularly, because it saves us time to run the program without compiling it.</p>
-<hr />
-<p><strong>Note</strong>: If you've installed a GHC tool-chain via stack and not GHCup, and the commands above do not work because <code>ghc</code> or <code>runghc</code> are missing, prefix the commands above with <code>stack exec -- </code>. Stack will locate the globally installed GHC and use it. For example <code>runghc hello.hs</code> becomes <code>stack exec -- runghc hello.hs</code>. See the <a href="https://docs.haskellstack.org/en/stable/GUIDE/#exec">Stack user guide</a> for more details.</p>
-<hr />
+<p>I recommend using <code>runghc</code> with this tutorial. While compiling produces significantly faster programs,
+intepreting programs provides us with faster feedback while we are developing and making frequent changes.</p>
 <blockquote>
-<p>If you want to learn more about the core Haskell tools, <a href="https://gilmi.me/blog/post/2021/08/14/hs-core-tools">you can read this article</a>. But what's described above is enough for now.</p>
+<p>If you want to learn more about the core Haskell tools, you can read
+<a href="https://gilmi.me/blog/post/2021/08/14/hs-core-tools">this article</a>,
+but what's described above is enough for our usage at the moment.</p>
 </blockquote>
 <h2 id="more-bindings"><a class="header" href="#more-bindings">More bindings</a></h2>
 <p>We can define the HTML string passed to <code>putStrLn</code> in a new name instead of passing
