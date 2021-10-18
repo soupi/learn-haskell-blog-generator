@@ -43,7 +43,7 @@ It is an incredibly versatile feature of Haskell, we can use it to do two main t
 2. Control flow
 
 As we've seen when discussing
-[newtypes](https://soupi.github.io/learn-haskell-blog-generator/03-html/04-safer_construction.html#using-newtypes),
+[newtypes](../03-html/04-safer_construction.html#using-newtypes),
 we can use **case expressions** and **function definitions** to deconstruct a `newtype`,
 but we can do that for `data` types as well:
 

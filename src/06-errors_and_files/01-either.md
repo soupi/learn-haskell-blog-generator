@@ -428,7 +428,7 @@ Again, don't worry about analogies and metaphors, focus on the API and the [laws
 
 ### Do notation?
 
-Remember [do notation](02-io.html#do-notation)? Turns out it works for any type that is
+Remember [do notation](../05-glue/02-io.html#do-notation)? Turns out it works for any type that is
 an instance of `Monad`. How cool is that? Instead of writing:
 
 ```hs
