@@ -30,9 +30,10 @@
   - [Summary](./06-errors_and_files/05-summary.md)
 - [Passing an environment](./07-environment.md)
 - [Writing tests](./08-testing.md)
+- [Generating documentation](./09-documentation.md)
 
 ---
 
-[Where to go next](./09-next.md)
+[Where to go next](./10-next.md)
 
-[Frequently asked questions](./10-faq.md)
+[Frequently asked questions](./11-faq.md)
