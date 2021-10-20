@@ -65,21 +65,3 @@ build real-world projects, and even discover new techniques and concepts ourselv
 
 Remember that in a lazy language we evaluate things only when we need them.
 Maybe we can do that too with Haskell concepts!
-
-## Thank you!
-
-Thank you for reading this book. I hope you enjoyed it and found Haskell interesting.
-
-I would very much like to hear your feedback. If you'd like, you could leave your
-feedback at this book's
-[GitHub issue board](https://github.com/soupi/learn-haskell-blog-generator/issues),
-or you could reach me directly on [Twitter](https://twitter.com/_gilmi) or via email.
-You can find my contact information [on my website](https://gilmi.me).
-
-Finally, if you liked this book, do let me know - your kind words mean a lot.
-
-> And if you *really* liked this book and would like to support future passion projects
-> like it, you can [support me directly via Ko-fi](https://ko-fi.com/gilmi).
-
-Good luck with your next Haskell project!
-

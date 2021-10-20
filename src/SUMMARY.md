@@ -32,8 +32,10 @@
 - [Writing tests](./08-testing.md)
 - [Generating documentation](./09-documentation.md)
 
+- [Recap](./10-recap.md)
+
 ---
 
-[Where to go next](./10-next.md)
+[Where to go next](./11-next.md)
 
-[Frequently asked questions](./11-faq.md)
+[Frequently asked questions](./12-faq.md)
