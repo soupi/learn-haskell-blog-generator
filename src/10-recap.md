@@ -12,7 +12,7 @@ In this book we've implemented a very simple static blog generator while learnin
 - We've learned how to use [pattern matching](./04-markup/04-parsing_02.html#pattern-matching) to transform ADTs,
   and how to use [recursion](./04-markup/02-parsing_01.html#recursion-and-accumulating-information) to solve problems.
 - We've used the *functional core, imperative shell* approach to build a program that handles IO and applies
-  our domain logic to user inputs
+  our domain logic to user inputs.
 - We've learned about abstractions such as [monoids](./05-glue/01-markup_to_html.html#monoids),
   [functors](./05-glue/04-optparse.html#functor) and [monads](./06-errors_and_files/01-either.html#monadic-interface), 
   and how they can help us reuse code and convey information about shared interfaces.
