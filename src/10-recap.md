@@ -25,7 +25,7 @@ you can start building your own Haskell projects and be productive with Haskell!
 
 This is a good time to celebrate and pat yourself on the back for getting this far! Great job, you!
 
-However, if you'd like to learn even more about Haskell and continue your Haskell journey
+If you'd like to learn even more about Haskell and continue your Haskell journey
 beyond this book, check out the appendix sections [Where to go next](./11-next.md) and the [FAQ](./12-faq.md).
 
 ## Thank you!
