@@ -41,7 +41,7 @@ Documentation created:
 /tmp/learn-haskell-blog-generator/dist-newstyle/build/x86_64-linux/ghc-9.0.1/hs-blog-0.1.0.0/doc/html/hs-blog/index.html
 ```
 
-`cabal` and `haddock` will build our project and generate HTML pages for us at:
+Cabal and Haddock will build our project and generate HTML pages for us at:
 
 ```html
 ./dist-newstyle/build/<platform>/<compiler>/<package>-<version>/doc/html/<package>/
@@ -83,7 +83,7 @@ Preprocessing executable 'hs-blog-gen' for hs-blog-0.1.0.0..
 ...
 ```
 
-`stack` and `haddock` will build our project and generate HTML pages for us at:
+Stack and Haddock will build our project and generate HTML pages for us at:
 
 ```html
 ./.stack-work/dist/<platform>/Cabal-<version>/doc/html/<package>/
@@ -137,8 +137,8 @@ They can be used with both single line form (`--`) and multi-line form (`{-` and
 The placement of a comment block and the haddock marker determine to which Haskell
 definition the haddocks is attached.
 
-We can annotate a Haskell definition by prefixing a comment block with `|` *before*
-a definition, or by prefixing a comment block with `^` *after* a definition.
+We can annotate a Haskell definition by writing a comment block prefixed with `|` *before*
+the definition, or by writing a comment block prefixed with `^` *after* the definition.
 
 For example:
 
@@ -188,11 +188,13 @@ module HsBlog.Convert where
 
 As you can see, `|` and `^` can be used to document functions, function arguments,
 types, data constructors, modules, and more. They are probably the most important
-Haddock annotations to remember (and even then, `|` alone is sufficient).
+Haddock annotations to remember (and even then, `|` alone will suffice).
 
-Make sure to, at the very least, document the exported modules, types, top-level
-values and top-level functions with some high-level description of what they do.
-Your users and collaborators will thank you!
+> **Tip**: Annotate the modules, types, and the top-level definitions
+> which are exported from your project
+> with some high-level description of what they are used for (at the very least).
+>
+> Your users and collaborators will thank you!
 
 ### Section headings
 
@@ -293,18 +295,21 @@ For example, we can:
 
   For example: `__this is bold__`
 
+### More
+
+In this chapter we've covered the basics of the Haddock markup language.
+If you'd like to know more, the [Haddock markup guide](https://haskell-haddock.readthedocs.io/en/latest/markup.html)
+contains information on how to create even more interesting documentation structures, such as
+code blocks, grid tables, images and examples.
+
 ## Summary
 
-In this chapter we've briefly covered one aspect of documenting Haskell programs:
+We've briefly covered one aspect of documenting Haskell programs:
 using Haddock to generate informative API reference pages created from source code
 comments which are annotated with Haddock markup.
 
-While API references are incredibly valuable, do remember that there are other forms of
+While API references are incredibly valuable, remember that there are other forms of
 documentation that can help your users get started quickly, such as examples and tutorials.
-
-In this chapter we've covered the basics of the Haddock markup language.
-If you'd like to learn even more about Haddock markup, visit
-[the Haddock documentation](https://haskell-haddock.readthedocs.io/en/latest/markup.html).
 
 
 ---
