@@ -16,7 +16,7 @@ In this book we've implemented a very simple static blog generator while learnin
 - We've learned about abstractions such as [monoids](./05-glue/01-markup_to_html.html#monoids),
   [functors](./05-glue/04-optparse.html#functor) and [monads](./06-errors_and_files/01-either.html#monadic-interface), 
   and how they can help us reuse code and convey information about shared interfaces.
-- We've learned how to create fancy [command-line interface](./05-glue/04-optparse.html), [write tests](./08-testing.html),
+- We've learned how to create fancy [command-line interfaces](./05-glue/04-optparse.html), [write tests](./08-testing.html),
   and [generate documentation](./09-documentation.html).
 
 While Haskell is a very big and complex language, and there's always more to be learned, 
