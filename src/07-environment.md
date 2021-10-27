@@ -75,8 +75,8 @@ We're going to use a specialized version of `ReaderT` that uses a specific `m` =
 called [`Reader`](https://hackage.haskell.org/package/mtl-2.2.2/docs/Control-Monad-Reader.html#g:2).
 The `Control.Monad.Reader` provides an alias: `Reader r a = ReaderT r Identity a`.
 
-> If the idea behind `ReaderT` is still a little fuzzy to you and you want
-> to get better understanding on how `ReaderT` works,
+> If the idea behind `ReaderT` is still a bit fuzzy to you and you want
+> to get a better understanding of how `ReaderT` works,
 > try doing the following exercise:
 > 1. Choose an `Applicative` or `Monad` interface function, I recommend `liftA2`,
 >    and specialize it's type signature by replacing `f` (or `m`) with a concrete `ReaderT` type such as
