@@ -7020,37 +7020,76 @@ work for small projects. But sometimes when the project gets bigger and many
 nested functions need the same information, threading the environment can get
 tedious.</p>
 <p>There is an alternative solution to threading the environment as input to functions,
-and that is using the <a href="https://hackage.haskell.org/package/mtl-2.2.2/docs/Control-Monad-Reader.html#g:2"><code>ReaderT</code></a> type from the <code>mtl</code> (or <code>transformers</code>) package.</p>
+and that is using the
+<a href="https://hackage.haskell.org/package/mtl-2.2.2/docs/Control-Monad-Reader.html#g:2"><code>ReaderT</code></a>
+type from the <code>mtl</code> (or <code>transformers</code>) package.</p>
 <h3 id="readert"><a class="header" href="#readert">ReaderT</a></h3>
 <pre><code class="language-hs">newType ReaderT r m a = ReaderT (r -&gt; m a)
 </code></pre>
-<p><code>ReaderT</code> is another monad transformer like <code>ExceptT</code>, which means
+<p><code>ReaderT</code> is another <em>monad transformer</em> like <code>ExceptT</code>, which means
 that it also has an instance of <code>Functor</code>, <code>Applicative</code>, <code>Monad</code> and <code>MonadTrans</code>.</p>
-<p>As we can see in the definition, <code>ReaderT</code> is the same as a function that takes
+<p>As we can see in the definition, <code>ReaderT</code> is <em>a newtype</em> over a function that takes
 some value of type <code>r</code>, and returns a value of type <code>m a</code>. The <code>r</code> usually
 represents the environment we want to share between different functions that we want to
-compose together, and the <code>m</code> represents the underlying result that we return.
-This could be any type that implements <code>Monad</code> that we are familiar with.
+compose together, and the <code>m a</code> represents the underlying result that we return.
+The <code>m</code> could be any type that implements <code>Monad</code> that we are familiar with.
 Usually goes well with <code>IO</code> or <code>Identity</code>, depending if we want to share
 an environment between effectful or uneffectful computations.</p>
 <p>What <code>ReaderT</code> does is <em>carry</em> a value of type <code>r</code> and pass it around to
-other functions when we use the <code>Applicative</code> and <code>Monad</code> interface so that
+other functions when we use the <code>Applicative</code> and <code>Monad</code> interfaces so that
 we don't have to pass the value around manually. And when we want to grab
 the <code>r</code> and use it, all we have to do is <code>ask</code>.</p>
 <p>For our case, this means that instead of Passing around <code>Env</code>, we can instead
 convert our functions to use <code>ReaderT</code> - those that are uneffectful and don't use
-<code>IO</code>, can return <code>Reader Env a</code> instead of <code>a</code>, and those that do can return
-<code>ReaderT Env IO a</code> instead of <code>IO a</code>.</p>
+<code>IO</code>, can return <code>ReaderT Env Identity a</code>  instead of <code>a</code> (or the simplified version, <code>Reader Env a</code>),
+and those that are effectful can return <code>ReaderT Env IO a</code> instead of <code>IO a</code>.</p>
 <p>Note, as we've said before, <code>Functor</code>, <code>Applicative</code> and <code>Monad</code> all expect the type
 that implements their interface to have the kind <code>* -&gt; *</code>.
 This means that it is <code>ReaderT r m</code> implements this interfaces, and when we compose functions with
 <code>&lt;*&gt;</code> or <code>&gt;&gt;=</code> we replace the <code>f</code> or <code>m</code> in their type signature with <code>ReaderT r m</code>.</p>
-<p>This means that like with <code>Either e</code> when we had compose functions with the same error type,
+<p>This means that, like with <code>Either e</code> when we had compose functions with the same error type,
 so is with <code>ReaderT r m</code> - we have to compose functions with the same <code>r</code> type and same
 <code>m</code> type, so we can't mix different environment types or different underlying <code>m</code> types.</p>
 <p>We're going to use a specialized version of <code>ReaderT</code> that uses a specific <code>m</code> = <code>Identity</code>
 called <a href="https://hackage.haskell.org/package/mtl-2.2.2/docs/Control-Monad-Reader.html#g:2"><code>Reader</code></a>.
 The <code>Control.Monad.Reader</code> provides an alias: <code>Reader r a = ReaderT r Identity a</code>.</p>
+<blockquote>
+<p>If the idea behind <code>ReaderT</code> is still a little fuzzy to you and you want
+to get better understanding on how <code>ReaderT</code> works,
+try doing the following exercise:</p>
+<ol>
+<li>Choose an <code>Applicative</code> or <code>Monad</code> interface function, I recommend <code>liftA2</code>,
+and specialize it's type signature by replacing <code>f</code> (or <code>m</code>) with a concrete <code>ReaderT</code> type such as
+<code>ReaderT Int IO</code>.</li>
+<li>Unpack the <code>ReaderT</code> newtype, replacing <code>ReaderT Int IO t</code> with <code>Int -&gt; IO t</code>.</li>
+<li>Implement this specialized version of the function you've chosen</li>
+</ol>
+<details><summary>Solution for liftA2</summary>
+<pre><code class="language-hs">liftA2 :: Applicative f =&gt; (a -&gt; b -&gt; c) -&gt; f a -&gt; f b -&gt; f c
+</code></pre>
+<details><summary>Solution for (1)</summary>
+<pre><code class="language-hs">-- Specialize: replace `f` with `ReaderT Env IO`
+liftA2 :: (a -&gt; b -&gt; c) -&gt; ReaderT Env IO a -&gt; ReaderT Env IO b -&gt; ReaderT Env IO c
+</code></pre>
+</details>
+<details><summary>Solution for (2)</summary>
+<pre><code class="language-hs">-- Unpack the newtype, replacing `ReaderT Env IO a` with `Env -&gt; IO a`
+liftA2 :: (a -&gt; b -&gt; c) -&gt; (Env -&gt; IO a) -&gt; (Env -&gt; IO b) -&gt; (Env -&gt; IO c)
+</code></pre>
+</details>
+<details><summary>Solution for (3)</summary>
+<pre><code class="language-hs">specialLiftA2 :: (a -&gt; b -&gt; c) -&gt; (Env -&gt; IO a) -&gt; (Env -&gt; IO b) -&gt; (Env -&gt; IO c)
+specialLiftA2 combine funcA funcB env =
+  liftA2 combine (funcA env) (funcB env)
+</code></pre>
+<p>Notice how the job of our special <code>liftA2</code> for <code>ReaderT</code> is to supply the
+two functions with <code>env</code>, and then use the <code>liftA2</code>
+implementation of the underlying <code>m</code> type (in our case <code>IO</code>) to do the rest of the work.
+Does it look like we're adding a capability on top of a different <code>m</code>?
+That's the idea behind monad transformers.</p>
+</details>
+</details>
+</blockquote>
 <h3 id="how-to-use-reader"><a class="header" href="#how-to-use-reader">How to use Reader</a></h3>
 <h4 id="defining-a-function"><a class="header" href="#defining-a-function">Defining a function</a></h4>
 <p>Instead of defining a function like this:</p>
