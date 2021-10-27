@@ -31,7 +31,9 @@ nested functions need the same information, threading the environment can get
 tedious.
 
 There is an alternative solution to threading the environment as input to functions,
-and that is using the [`ReaderT`](https://hackage.haskell.org/package/mtl-2.2.2/docs/Control-Monad-Reader.html#g:2) type from the `mtl` (or `transformers`) package.
+and that is using the
+[`ReaderT`](https://hackage.haskell.org/package/mtl-2.2.2/docs/Control-Monad-Reader.html#g:2)
+type from the `mtl` (or `transformers`) package.
 
 ### ReaderT
 
@@ -39,39 +41,89 @@ and that is using the [`ReaderT`](https://hackage.haskell.org/package/mtl-2.2.2/
 newType ReaderT r m a = ReaderT (r -> m a)
 ```
 
-`ReaderT` is another monad transformer like `ExceptT`, which means
+`ReaderT` is another *monad transformer* like `ExceptT`, which means
 that it also has an instance of `Functor`, `Applicative`, `Monad` and `MonadTrans`.
 
-As we can see in the definition, `ReaderT` is the same as a function that takes
+As we can see in the definition, `ReaderT` is *a newtype* over a function that takes
 some value of type `r`, and returns a value of type `m a`. The `r` usually
 represents the environment we want to share between different functions that we want to
-compose together, and the `m` represents the underlying result that we return.
-This could be any type that implements `Monad` that we are familiar with.
+compose together, and the `m a` represents the underlying result that we return.
+The `m` could be any type that implements `Monad` that we are familiar with.
 Usually goes well with `IO` or `Identity`, depending if we want to share
 an environment between effectful or uneffectful computations.
 
 What `ReaderT` does is *carry* a value of type `r` and pass it around to
-other functions when we use the `Applicative` and `Monad` interface so that
+other functions when we use the `Applicative` and `Monad` interfaces so that
 we don't have to pass the value around manually. And when we want to grab
 the `r` and use it, all we have to do is `ask`.
 
 For our case, this means that instead of Passing around `Env`, we can instead
 convert our functions to use `ReaderT` - those that are uneffectful and don't use
-`IO`, can return `Reader Env a` instead of `a`, and those that do can return
-`ReaderT Env IO a` instead of `IO a`.
+`IO`, can return `ReaderT Env Identity a`  instead of `a` (or the simplified version, `Reader Env a`),
+and those that are effectful can return `ReaderT Env IO a` instead of `IO a`.
 
 Note, as we've said before, `Functor`, `Applicative` and `Monad` all expect the type
 that implements their interface to have the kind `* -> *`.
 This means that it is `ReaderT r m` implements this interfaces, and when we compose functions with
 `<*>` or `>>=` we replace the `f` or `m` in their type signature with `ReaderT r m`.
 
-This means that like with `Either e` when we had compose functions with the same error type,
+This means that, like with `Either e` when we had compose functions with the same error type,
 so is with `ReaderT r m` - we have to compose functions with the same `r` type and same
 `m` type, so we can't mix different environment types or different underlying `m` types.
 
 We're going to use a specialized version of `ReaderT` that uses a specific `m` = `Identity`
 called [`Reader`](https://hackage.haskell.org/package/mtl-2.2.2/docs/Control-Monad-Reader.html#g:2).
 The `Control.Monad.Reader` provides an alias: `Reader r a = ReaderT r Identity a`.
+
+> If the idea behind `ReaderT` is still a little fuzzy to you and you want
+> to get better understanding on how `ReaderT` works,
+> try doing the following exercise:
+> 1. Choose an `Applicative` or `Monad` interface function, I recommend `liftA2`,
+>    and specialize it's type signature by replacing `f` (or `m`) with a concrete `ReaderT` type such as
+>    `ReaderT Int IO`.
+> 2. Unpack the `ReaderT` newtype, replacing `ReaderT Int IO t` with `Int -> IO t`.
+> 3. Implement this specialized version of the function you've chosen
+>
+> <details><summary>Solution for liftA2</summary>
+>
+> ```hs
+> liftA2 :: Applicative f => (a -> b -> c) -> f a -> f b -> f c
+> ```
+>
+> <details><summary>Solution for (1)</summary>
+>
+> ```hs
+> -- Specialize: replace `f` with `ReaderT Env IO`
+> liftA2 :: (a -> b -> c) -> ReaderT Env IO a -> ReaderT Env IO b -> ReaderT Env IO c
+> ```
+>
+> </details>
+>
+> <details><summary>Solution for (2)</summary>
+>
+> ```hs
+> -- Unpack the newtype, replacing `ReaderT Env IO a` with `Env -> IO a`
+> liftA2 :: (a -> b -> c) -> (Env -> IO a) -> (Env -> IO b) -> (Env -> IO c)
+> ```
+>
+> </details>
+>
+> <details><summary>Solution for (3)</summary>
+>
+> ```hs
+> specialLiftA2 :: (a -> b -> c) -> (Env -> IO a) -> (Env -> IO b) -> (Env -> IO c)
+> specialLiftA2 combine funcA funcB env =
+>   liftA2 combine (funcA env) (funcB env)
+> ```
+>
+> Notice how the job of our special `liftA2` for `ReaderT` is to supply the
+> two functions with `env`, and then use the `liftA2`
+> implementation of the underlying `m` type (in our case `IO`) to do the rest of the work.
+> Does it look like we're adding a capability on top of a different `m`?
+> That's the idea behind monad transformers.
+>
+> </details>
+> </details>
 
 ### How to use Reader
 
