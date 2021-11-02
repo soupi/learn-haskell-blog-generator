@@ -223,43 +223,130 @@ of the paragraph we wish to create, will wrap it in `<p>` and `</p>` tags,
 and then wrap it in the `Structure` constructor to produce the
 output type `Structure` (remember: newtype constructors can be used as functions!).
 
-Let's take a deeper look and see what are the types of the two
-functions here are:
+Let's take a deeper look at the types:
 
 - `Structure :: String -> Structure`
 - `el "p" :: String -> String`
-- `Structure . el "p" :: String -> Structure`
 - `(.) :: (b -> c) -> (a -> b) -> (a -> c)`
+- `Structure . el "p" :: String -> Structure`
 
-When we try to figure out if an expression type checks, we try to match
-the types and see if they work. If they are the same type, all is
-well. If one of them is a type variable and the other isn't we write
-down that the type variable should now be the concrete type, and see
-if everything still works.
+Let's see why the expression `Structure . el "p"` type checks,
+and why its type is `String -> Structure`.
 
-So in our case we know from the type signature that the input type to
-the function `String` and the output type is `Structure`, this
-means:
+### Type checking with pen and paper
 
-1. `a` is equivalent to `String` (we write `~` to denote equivalence), and
-2. `c ~ Structure`
+If we want to figure out if and how exactly an expression type-checks,
+we can do that rather systematically. Let's look at an example
+where we try and type-check this expression:
 
-We also know that:
+```hs
+p_ = Structure . el "p"
+```
 
-3. `b ~ String` because we pass `Structure` to `.` as the first arguments, which means
-4. `String -> Structure` must
-match with the type of the first argument of `.` which is `b -> c`, so
-5. `b ~ String` which fits with our previous knowledge from (3)
-6. `-> ~ ->`
-7. `c ~ Structure` which also fits with (2)
+First, we write down the type of the outer-most function. In
+our case this is the operator `.` which has the type:
 
-We keep doing this process until we come to the conclusion that there
-aren't any types that don't match (we don't have two different
-concrete types that are supposed to be equivalent).
+```hs
+(.) :: (b -> c) -> (a -> b) -> (a -> c)
+```
+
+After that, we can try to **match** the type of the arguments we
+apply to this function with the type of the arguments from the type signature.
+
+In this case, we try to apply two arguments to `.`:
+
+1. `Structure :: String -> Structure`
+2. `el "p" :: String -> String`
+
+And luckily `.` expects two arguments with the types:
+
+1. `b -> c`
+2. `a -> b`
+
+> Note: Applying a function with more arguments than it expects is a type error.
+
+Since the `.` operator takes at least the amount of arguments we supply, we continue
+to the next phase of type-checking: matching the types of the inputs with the types
+of the expected inputs (from the type signature of the operator).
+
+When we match two types, we are checking for *equivalence* between them. There are a few
+possible scenarios here:
+
+1. When the two types are **concrete** (as oppose to type variables)
+   and **simple**, like `Int` and `Bool`,
+   we check if they are the same. If they are, they type check, if they aren't they don't and we throw an error.
+2. When the two types we match are more **complex** (for example both are functions),
+   we try to match their inputs and outputs (in case of functions). If the inputs and outputs
+   match, then the two types match.
+3. There is a special case when one of the types is a **type variable** -
+   in this case we treat the matching process like an equation and we write it down somewhere.
+   The next time we see this type variable, we *replace it with its match in the equation*.
+   Think about this like *assigning* a type *variable* with a *value*.
+
+In our case, we want to match (or check the equivalence of) these types:
+
+1. `String -> Structure` with `b -> c`
+2. `String -> String` with `a -> b`
+
+Let's do this one by one, starting with (1) - matching `String -> Structure` and `b -> c`:
+
+1. Because the two types are complex, we check that they are both functions, and match their
+   inputs and outputs: `String` with `b`, and `Structure` with `c`.
+2. because `b` is a *type variable*, we mark it down somewhere that it should be equivalent to `String`.
+   we write `b ~ String` (we use `~` to denote equivalence)
+3. We match `Structure` and `c`, same as before, we write down that `c ~ Structure`.
+
+No problem so far, lets try matching `String -> String` with `a -> b`:
+
+1. The two types are complex, we see that both are functions so we match their inputs and outputs.
+2. Matching `String` with `a` - we write down that `a ~ String`.
+3. Matching `String` with `b` - we remember that we have already wrote about `b` - looking back
+   we see that we already noted that `b ~ String`. We need to replace `b` with the type that
+   we wrote down before and check it against this type. Fortunately, the type is this equation
+   is also `String`, so matching `String` with `String` works and they type-check.
+
+So far so good. We've type-checked the expression and discovered the following things
+about the type variables in it:
+
+1. `a ~ String`
+2. `b ~ String`
+3. `c ~ Structure`
+
+Now, when asking what is the type of the expression:
+
+```hs
+p_ = Structure . el "p"
+```
+
+We say that it is the type of `.` after *replacing* the type variables using the equations we found
+and *removing* the inputs we applied to it, so we started with:
+
+```hs
+(.) :: (b -> c) -> (a -> b) -> (a -> c)
+```
+
+Then we replaced the type variables:
+
+```hs
+(.) :: (String -> Structure) -> (String -> String) -> (String -> Structure)
+```
+
+And removed the two arguments when we apply the function:
+
+```hs
+Structure . el "p" :: String -> Structure
+```
+
+And we got the type of the expression!
+
+Fortunately, Haskell is able to do this process for us. But when Haskell complains
+that our types fail to type-check and we don't understand exactly why, going through this process
+can help us understand where the types do not match, and then we can figure out how to solve it.
+
 
 > **Note**: If we use a *parametrically polymorphic* function more than once,
 > or use different functions that have similar type variable names,
-> the type variables don't have to match in all instances simply because the share a name.
+> the type variables don't have to match in all instances simply because they share a name.
 > Each instance has its own unique set of type variables. For example:
 > 
 > ```hs
@@ -284,7 +371,7 @@ concrete types that are supposed to be equivalent).
 > incrementChar func c = chr (ord (func c) + func 1)
 > ```
 > 
-> Will not type check.
+> Will not type check. Try it!
 
 ## Appending Structure
 
