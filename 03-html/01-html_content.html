@@ -179,6 +179,28 @@ to in <code>main = putStrLn myhtml</code>, we would have to wrap the expression 
 but it only takes one. This is because the above is of the form <code>&lt;name&gt; &lt;arg1&gt; &lt;arg2&gt;</code>
 in which, as we defined earlier, <code>&lt;arg1&gt;</code> and <code>&lt;arg2&gt;</code> are arguments to <code>&lt;name&gt;</code>.</p>
 <p>By using parenthesis we can group together the expressions in the right order.</p>
+<blockquote>
+<h4 id="an-aside-about-operator-precedence-and-fixity"><a class="header" href="#an-aside-about-operator-precedence-and-fixity">An aside about operator precedence and fixity</a></h4>
+<p>operators (like <code>&lt;&gt;</code>) are infix functions which take two arguments - one from each side.</p>
+<p>When there are multiple operators in the same expression without parenthesis, the operator
+<em>fixity</em> (left or right) and <em>precedence</em> (a number between 0 and 10) determines which
+operator binds more tightly.</p>
+<p>In our case <code>&lt;&gt;</code> has <em>right</em> fixity, so Haskell adds invisible parenthesis on the right side
+of <code>&lt;&gt;</code>. So for example:</p>
+<pre><code class="language-hs">&quot;&lt;html&gt;&lt;body&gt;&quot; &lt;&gt; content &lt;&gt; &quot;&lt;/body&gt;&lt;/html&gt;&quot;
+</code></pre>
+<p>is viewed by Haskell as:</p>
+<pre><code class="language-hs">&quot;&lt;html&gt;&lt;body&gt;&quot; &lt;&gt; (content &lt;&gt; &quot;&lt;/body&gt;&lt;/html&gt;&quot;)
+</code></pre>
+<p>For an example of precedence, in the expression <code>1 + 2 * 3</code>,
+the operator <code>+</code> has precedence 6, and the operator <code>*</code> has precedence 7,
+so we give precedence to <code>*</code> over <code>+</code>. Haskell will view this expression as:</p>
+<pre><code class="language-hs">1 + (2 * 3)
+</code></pre>
+<p>You might run into errors when mixing different operators with the <em>same precedence</em>
+but <em>different fixity</em>, because Haskell won't understand how to group these expressions.
+In that case we can solve the problem by adding parenthesis explicitly.</p>
+</blockquote>
 <hr />
 <p>Exercises:</p>
 <ol>

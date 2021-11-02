@@ -314,6 +314,28 @@ to in <code>main = putStrLn myhtml</code>, we would have to wrap the expression 
 but it only takes one. This is because the above is of the form <code>&lt;name&gt; &lt;arg1&gt; &lt;arg2&gt;</code>
 in which, as we defined earlier, <code>&lt;arg1&gt;</code> and <code>&lt;arg2&gt;</code> are arguments to <code>&lt;name&gt;</code>.</p>
 <p>By using parenthesis we can group together the expressions in the right order.</p>
+<blockquote>
+<h4 id="an-aside-about-operator-precedence-and-fixity"><a class="header" href="#an-aside-about-operator-precedence-and-fixity">An aside about operator precedence and fixity</a></h4>
+<p>operators (like <code>&lt;&gt;</code>) are infix functions which take two arguments - one from each side.</p>
+<p>When there are multiple operators in the same expression without parenthesis, the operator
+<em>fixity</em> (left or right) and <em>precedence</em> (a number between 0 and 10) determines which
+operator binds more tightly.</p>
+<p>In our case <code>&lt;&gt;</code> has <em>right</em> fixity, so Haskell adds invisible parenthesis on the right side
+of <code>&lt;&gt;</code>. So for example:</p>
+<pre><code class="language-hs">&quot;&lt;html&gt;&lt;body&gt;&quot; &lt;&gt; content &lt;&gt; &quot;&lt;/body&gt;&lt;/html&gt;&quot;
+</code></pre>
+<p>is viewed by Haskell as:</p>
+<pre><code class="language-hs">&quot;&lt;html&gt;&lt;body&gt;&quot; &lt;&gt; (content &lt;&gt; &quot;&lt;/body&gt;&lt;/html&gt;&quot;)
+</code></pre>
+<p>For an example of precedence, in the expression <code>1 + 2 * 3</code>,
+the operator <code>+</code> has precedence 6, and the operator <code>*</code> has precedence 7,
+so we give precedence to <code>*</code> over <code>+</code>. Haskell will view this expression as:</p>
+<pre><code class="language-hs">1 + (2 * 3)
+</code></pre>
+<p>You might run into errors when mixing different operators with the <em>same precedence</em>
+but <em>different fixity</em>, because Haskell won't understand how to group these expressions.
+In that case we can solve the problem by adding parenthesis explicitly.</p>
+</blockquote>
 <hr />
 <p>Exercises:</p>
 <ol>
@@ -899,42 +921,107 @@ p_ = Structure . el &quot;p&quot;
 of the paragraph we wish to create, will wrap it in <code>&lt;p&gt;</code> and <code>&lt;/p&gt;</code> tags,
 and then wrap it in the <code>Structure</code> constructor to produce the
 output type <code>Structure</code> (remember: newtype constructors can be used as functions!).</p>
-<p>Let's take a deeper look and see what are the types of the two
-functions here are:</p>
+<p>Let's take a deeper look at the types:</p>
 <ul>
 <li><code>Structure :: String -&gt; Structure</code></li>
 <li><code>el &quot;p&quot; :: String -&gt; String</code></li>
-<li><code>Structure . el &quot;p&quot; :: String -&gt; Structure</code></li>
 <li><code>(.) :: (b -&gt; c) -&gt; (a -&gt; b) -&gt; (a -&gt; c)</code></li>
+<li><code>Structure . el &quot;p&quot; :: String -&gt; Structure</code></li>
 </ul>
-<p>When we try to figure out if an expression type checks, we try to match
-the types and see if they work. If they are the same type, all is
-well. If one of them is a type variable and the other isn't we write
-down that the type variable should now be the concrete type, and see
-if everything still works.</p>
-<p>So in our case we know from the type signature that the input type to
-the function <code>String</code> and the output type is <code>Structure</code>, this
-means:</p>
+<p>Let's see why the expression <code>Structure . el &quot;p&quot;</code> type checks,
+and why its type is <code>String -&gt; Structure</code>.</p>
+<h3 id="type-checking-with-pen-and-paper"><a class="header" href="#type-checking-with-pen-and-paper">Type checking with pen and paper</a></h3>
+<p>If we want to figure out if and how exactly an expression type-checks,
+we can do that rather systematically. Let's look at an example
+where we try and type-check this expression:</p>
+<pre><code class="language-hs">p_ = Structure . el &quot;p&quot;
+</code></pre>
+<p>First, we write down the type of the outer-most function. In
+our case this is the operator <code>.</code> which has the type:</p>
+<pre><code class="language-hs">(.) :: (b -&gt; c) -&gt; (a -&gt; b) -&gt; (a -&gt; c)
+</code></pre>
+<p>After that, we can try to <strong>match</strong> the type of the arguments we
+apply to this function with the type of the arguments from the type signature.</p>
+<p>In this case, we try to apply two arguments to <code>.</code>:</p>
 <ol>
-<li><code>a</code> is equivalent to <code>String</code> (we write <code>~</code> to denote equivalence), and</li>
+<li><code>Structure :: String -&gt; Structure</code></li>
+<li><code>el &quot;p&quot; :: String -&gt; String</code></li>
+</ol>
+<p>And luckily <code>.</code> expects two arguments with the types:</p>
+<ol>
+<li><code>b -&gt; c</code></li>
+<li><code>a -&gt; b</code></li>
+</ol>
+<blockquote>
+<p>Note: Applying a function with more arguments than it expects is a type error.</p>
+</blockquote>
+<p>Since the <code>.</code> operator takes at least the amount of arguments we supply, we continue
+to the next phase of type-checking: matching the types of the inputs with the types
+of the expected inputs (from the type signature of the operator).</p>
+<p>When we match two types, we are checking for <em>equivalence</em> between them. There are a few
+possible scenarios here:</p>
+<ol>
+<li>When the two types are <strong>concrete</strong> (as oppose to type variables)
+and <strong>simple</strong>, like <code>Int</code> and <code>Bool</code>,
+we check if they are the same. If they are, they type check, if they aren't they don't and we throw an error.</li>
+<li>When the two types we match are more <strong>complex</strong> (for example both are functions),
+we try to match their inputs and outputs (in case of functions). If the inputs and outputs
+match, then the two types match.</li>
+<li>There is a special case when one of the types is a <strong>type variable</strong> -
+in this case we treat the matching process like an equation and we write it down somewhere.
+The next time we see this type variable, we <em>replace it with its match in the equation</em>.
+Think about this like <em>assigning</em> a type <em>variable</em> with a <em>value</em>.</li>
+</ol>
+<p>In our case, we want to match (or check the equivalence of) these types:</p>
+<ol>
+<li><code>String -&gt; Structure</code> with <code>b -&gt; c</code></li>
+<li><code>String -&gt; String</code> with <code>a -&gt; b</code></li>
+</ol>
+<p>Let's do this one by one, starting with (1) - matching <code>String -&gt; Structure</code> and <code>b -&gt; c</code>:</p>
+<ol>
+<li>Because the two types are complex, we check that they are both functions, and match their
+inputs and outputs: <code>String</code> with <code>b</code>, and <code>Structure</code> with <code>c</code>.</li>
+<li>because <code>b</code> is a <em>type variable</em>, we mark it down somewhere that it should be equivalent to <code>String</code>.
+we write <code>b ~ String</code> (we use <code>~</code> to denote equivalence)</li>
+<li>We match <code>Structure</code> and <code>c</code>, same as before, we write down that <code>c ~ Structure</code>.</li>
+</ol>
+<p>No problem so far, lets try matching <code>String -&gt; String</code> with <code>a -&gt; b</code>:</p>
+<ol>
+<li>The two types are complex, we see that both are functions so we match their inputs and outputs.</li>
+<li>Matching <code>String</code> with <code>a</code> - we write down that <code>a ~ String</code>.</li>
+<li>Matching <code>String</code> with <code>b</code> - we remember that we have already wrote about <code>b</code> - looking back
+we see that we already noted that <code>b ~ String</code>. We need to replace <code>b</code> with the type that
+we wrote down before and check it against this type. Fortunately, the type is this equation
+is also <code>String</code>, so matching <code>String</code> with <code>String</code> works and they type-check.</li>
+</ol>
+<p>So far so good. We've type-checked the expression and discovered the following things
+about the type variables in it:</p>
+<ol>
+<li><code>a ~ String</code></li>
+<li><code>b ~ String</code></li>
 <li><code>c ~ Structure</code></li>
 </ol>
-<p>We also know that:</p>
-<ol start="3">
-<li><code>b ~ String</code> because we pass <code>Structure</code> to <code>.</code> as the first arguments, which means</li>
-<li><code>String -&gt; Structure</code> must
-match with the type of the first argument of <code>.</code> which is <code>b -&gt; c</code>, so</li>
-<li><code>b ~ String</code> which fits with our previous knowledge from (3)</li>
-<li><code>-&gt; ~ -&gt;</code></li>
-<li><code>c ~ Structure</code> which also fits with (2)</li>
-</ol>
-<p>We keep doing this process until we come to the conclusion that there
-aren't any types that don't match (we don't have two different
-concrete types that are supposed to be equivalent).</p>
+<p>Now, when asking what is the type of the expression:</p>
+<pre><code class="language-hs">p_ = Structure . el &quot;p&quot;
+</code></pre>
+<p>We say that it is the type of <code>.</code> after <em>replacing</em> the type variables using the equations we found
+and <em>removing</em> the inputs we applied to it, so we started with:</p>
+<pre><code class="language-hs">(.) :: (b -&gt; c) -&gt; (a -&gt; b) -&gt; (a -&gt; c)
+</code></pre>
+<p>Then we replaced the type variables:</p>
+<pre><code class="language-hs">(.) :: (String -&gt; Structure) -&gt; (String -&gt; String) -&gt; (String -&gt; Structure)
+</code></pre>
+<p>And removed the two arguments when we apply the function:</p>
+<pre><code class="language-hs">Structure . el &quot;p&quot; :: String -&gt; Structure
+</code></pre>
+<p>And we got the type of the expression!</p>
+<p>Fortunately, Haskell is able to do this process for us. But when Haskell complains
+that our types fail to type-check and we don't understand exactly why, going through this process
+can help us understand where the types do not match, and then we can figure out how to solve it.</p>
 <blockquote>
 <p><strong>Note</strong>: If we use a <em>parametrically polymorphic</em> function more than once,
 or use different functions that have similar type variable names,
-the type variables don't have to match in all instances simply because the share a name.
+the type variables don't have to match in all instances simply because they share a name.
 Each instance has its own unique set of type variables. For example:</p>
 <pre><code class="language-hs">id :: a -&gt; a
 ord :: Char -&gt; Int
@@ -952,7 +1039,7 @@ the types must match in all uses. So this code:</p>
 <pre><code class="language-hs">incrementChar :: (a -&gt; a) -&gt; Char -&gt; Char
 incrementChar func c = chr (ord (func c) + func 1)
 </code></pre>
-<p>Will not type check.</p>
+<p>Will not type check. Try it!</p>
 </blockquote>
 <h2 id="appending-structure"><a class="header" href="#appending-structure">Appending Structure</a></h2>
 <p>Before when we wanted to create richer HTML content and appended
