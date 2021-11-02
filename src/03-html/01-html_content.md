@@ -58,6 +58,39 @@ in which, as we defined earlier, `<arg1>` and `<arg2>` are arguments to `<name>`
 
 By using parenthesis we can group together the expressions in the right order.
 
+> #### An aside about operator precedence and fixity
+>
+> operators (like `<>`) are infix functions which take two arguments - one from each side.
+>
+> When there are multiple operators in the same expression without parenthesis, the operator
+> *fixity* (left or right) and *precedence* (a number between 0 and 10) determines which
+> operator binds more tightly.
+>
+> In our case `<>` has *right* fixity, so Haskell adds invisible parenthesis on the right side
+> of `<>`. So for example:
+>
+> ```hs
+> "<html><body>" <> content <> "</body></html>"
+> ```
+>
+> is viewed by Haskell as:
+>
+> ```hs
+> "<html><body>" <> (content <> "</body></html>")
+> ```
+>
+> For an example of precedence, in the expression `1 + 2 * 3`,
+> the operator `+` has precedence 6, and the operator `*` has precedence 7,
+> so we give precedence to `*` over `+`. Haskell will view this expression as:
+>
+> ```hs
+> 1 + (2 * 3)
+> ```
+>
+> You might run into errors when mixing different operators with the *same precedence*
+> but *different fixity*, because Haskell won't understand how to group these expressions.
+> In that case we can solve the problem by adding parenthesis explicitly.
+
 ---
 
 Exercises:
