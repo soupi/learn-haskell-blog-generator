@@ -298,7 +298,7 @@ Let's do this one by one, starting with (1) - matching `String -> Structure` and
    We write `b ~ String` (we use `~` to denote equivalence).
 3. We match `Structure` and `c`, same as before, we write down that `c ~ Structure`.
 
-No problem so far, lets try matching `String -> String` with `a -> b`:
+No problem so far, let's try matching `String -> String` with `a -> b`:
 
 1. The two types are complex, we see that both are functions so we match
    their inputs and outputs.
