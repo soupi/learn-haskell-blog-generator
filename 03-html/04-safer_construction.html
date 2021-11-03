@@ -336,15 +336,16 @@ apply to this function with the type of the arguments from the type signature.</
 <blockquote>
 <p>Note: Applying a function with more arguments than it expects is a type error.</p>
 </blockquote>
-<p>Since the <code>.</code> operator takes at least the amount of arguments we supply, we continue
+<p>Since the <code>.</code> operator takes at least the number of arguments we supply, we continue
 to the next phase of type-checking: matching the types of the inputs with the types
 of the expected inputs (from the type signature of the operator).</p>
 <p>When we match two types, we are checking for <em>equivalence</em> between them. There are a few
 possible scenarios here:</p>
 <ol>
-<li>When the two types are <strong>concrete</strong> (as oppose to type variables)
+<li>When the two types are <strong>concrete</strong> (as opposed to type variables)
 and <strong>simple</strong>, like <code>Int</code> and <code>Bool</code>,
-we check if they are the same. If they are, they type check, if they aren't they don't and we throw an error.</li>
+we check if they are the same. If they are, they type check and we continue.
+If they aren't, they don't type check and we throw an error.</li>
 <li>When the two types we match are more <strong>complex</strong> (for example both are functions),
 we try to match their inputs and outputs (in case of functions). If the inputs and outputs
 match, then the two types match.</li>
@@ -362,18 +363,21 @@ Think about this like <em>assigning</em> a type <em>variable</em> with a <em>val
 <ol>
 <li>Because the two types are complex, we check that they are both functions, and match their
 inputs and outputs: <code>String</code> with <code>b</code>, and <code>Structure</code> with <code>c</code>.</li>
-<li>because <code>b</code> is a <em>type variable</em>, we mark it down somewhere that it should be equivalent to <code>String</code>.
-we write <code>b ~ String</code> (we use <code>~</code> to denote equivalence)</li>
+<li>Because <code>b</code> is a <em>type variable</em>, we mark down somewhere that <code>b</code> should
+be equivalent to <code>String</code>.
+We write <code>b ~ String</code> (we use <code>~</code> to denote equivalence).</li>
 <li>We match <code>Structure</code> and <code>c</code>, same as before, we write down that <code>c ~ Structure</code>.</li>
 </ol>
 <p>No problem so far, lets try matching <code>String -&gt; String</code> with <code>a -&gt; b</code>:</p>
 <ol>
-<li>The two types are complex, we see that both are functions so we match their inputs and outputs.</li>
+<li>The two types are complex, we see that both are functions so we match
+their inputs and outputs.</li>
 <li>Matching <code>String</code> with <code>a</code> - we write down that <code>a ~ String</code>.</li>
-<li>Matching <code>String</code> with <code>b</code> - we remember that we have already wrote about <code>b</code> - looking back
-we see that we already noted that <code>b ~ String</code>. We need to replace <code>b</code> with the type that
-we wrote down before and check it against this type. Fortunately, the type is this equation
-is also <code>String</code>, so matching <code>String</code> with <code>String</code> works and they type-check.</li>
+<li>Matching <code>String</code> with <code>b</code> - we remember that we have already written
+about <code>b</code> - looking back we see that we already noted that <code>b ~ String</code>.
+We need to replace <code>b</code> with the type that we wrote down before and
+check it against this type, so we match <code>String</code> with <code>String</code> 
+which, fortunately, type-check because they are the same.</li>
 </ol>
 <p>So far so good. We've type-checked the expression and discovered the following things
 about the type variables in it:</p>
