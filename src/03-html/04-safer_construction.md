@@ -265,16 +265,17 @@ And luckily `.` expects two arguments with the types:
 
 > Note: Applying a function with more arguments than it expects is a type error.
 
-Since the `.` operator takes at least the amount of arguments we supply, we continue
+Since the `.` operator takes at least the number of arguments we supply, we continue
 to the next phase of type-checking: matching the types of the inputs with the types
 of the expected inputs (from the type signature of the operator).
 
 When we match two types, we are checking for *equivalence* between them. There are a few
 possible scenarios here:
 
-1. When the two types are **concrete** (as oppose to type variables)
+1. When the two types are **concrete** (as opposed to type variables)
    and **simple**, like `Int` and `Bool`,
-   we check if they are the same. If they are, they type check, if they aren't they don't and we throw an error.
+   we check if they are the same. If they are, they type check and we continue.
+   If they aren't, they don't type check and we throw an error.
 2. When the two types we match are more **complex** (for example both are functions),
    we try to match their inputs and outputs (in case of functions). If the inputs and outputs
    match, then the two types match.
@@ -292,18 +293,21 @@ Let's do this one by one, starting with (1) - matching `String -> Structure` and
 
 1. Because the two types are complex, we check that they are both functions, and match their
    inputs and outputs: `String` with `b`, and `Structure` with `c`.
-2. because `b` is a *type variable*, we mark it down somewhere that it should be equivalent to `String`.
-   we write `b ~ String` (we use `~` to denote equivalence)
+2. Because `b` is a *type variable*, we mark down somewhere that `b` should
+   be equivalent to `String`.
+   We write `b ~ String` (we use `~` to denote equivalence).
 3. We match `Structure` and `c`, same as before, we write down that `c ~ Structure`.
 
 No problem so far, lets try matching `String -> String` with `a -> b`:
 
-1. The two types are complex, we see that both are functions so we match their inputs and outputs.
+1. The two types are complex, we see that both are functions so we match
+   their inputs and outputs.
 2. Matching `String` with `a` - we write down that `a ~ String`.
-3. Matching `String` with `b` - we remember that we have already wrote about `b` - looking back
-   we see that we already noted that `b ~ String`. We need to replace `b` with the type that
-   we wrote down before and check it against this type. Fortunately, the type is this equation
-   is also `String`, so matching `String` with `String` works and they type-check.
+3. Matching `String` with `b` - we remember that we have already written
+   about `b` - looking back we see that we already noted that `b ~ String`.
+   We need to replace `b` with the type that we wrote down before and
+   check it against this type, so we match `String` with `String` 
+   which, fortunately, type-check because they are the same.
 
 So far so good. We've type-checked the expression and discovered the following things
 about the type variables in it:
