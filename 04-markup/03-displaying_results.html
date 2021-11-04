@@ -151,7 +151,7 @@ of our <code>Document</code> type. There are a few ways to do that:</p>
 <li>Write our own function of type <code>Document -&gt; String</code> which we could then print, or</li>
 <li>Have Haskell write one for us</li>
 </ol>
-<p>Haskell provides us with mechanism that can automatically generates the implementation of a
+<p>Haskell provides us with a mechanism that can automatically generate the implementation of a
 <em>type class</em> function called <code>show</code>, that will convert our type to <code>String</code>.</p>
 <p>The type of the function <code>show</code> looks like this:</p>
 <pre><code class="language-hs">show :: Show a =&gt; a -&gt; String
