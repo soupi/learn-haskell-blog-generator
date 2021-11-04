@@ -6,7 +6,7 @@ of our `Document` type. There are a few ways to do that:
 1. Write our own function of type `Document -> String` which we could then print, or
 2. Have Haskell write one for us
 
-Haskell provides us with mechanism that can automatically generates the implementation of a
+Haskell provides us with a mechanism that can automatically generate the implementation of a
 *type class* function called `show`, that will convert our type to `String`.
 
 The type of the function `show` looks like this:
