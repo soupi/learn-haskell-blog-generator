@@ -3,7 +3,7 @@
 ## Maybe
 
 Previously, when we talked about partial functions, we mentioned that one way to avoid
-writing partial functions is encode the absence of a result using `Maybe`:
+writing partial functions is to encode the absence of a result using `Maybe`:
 
 ```hs
 data Maybe a
@@ -18,7 +18,7 @@ two with the `Just` constructor to represent regular boolean values
 (`Just True` and `Just False`) and another value, `Nothing` to represent
 the absence of a boolean value.
 
-We can use this to encode the result of `head`, a function the promises to return
+We can use this to encode the result of `head`, a function that promises to return
 the first element of a list, without creating a partial function:
 
 ```hs
@@ -85,7 +85,7 @@ data EightColor
 data AnsiColor
   = AnsiColor Brightness EightColor
 
-ansiColorToVGA :: AnsiColor -> RGB
+ansiColorToVGA :: AnsiColor -> Color
 ansiColorToVGA ansicolor =
   case ansicolor of
     AnsiColor Dark Black ->
@@ -163,7 +163,7 @@ Next, instead of using a `[String]` type to denote adjacent lines, we can instea
 
 One issue we might have though with representing context with the `Structure` type,
 is that when we start parsing we don't have any context.
-But we learn of a way to represent the possibility of an absence of a value with `Maybe`! So our new context type can be `Maybe Structure` instead.
+But we learned of a way to represent the possibility of an absence of a value with `Maybe`! So our new context type can be `Maybe Structure` instead.
 
 Let's rewrite our code above to use our new context type:
 
@@ -218,7 +218,7 @@ trim = unwords . words
    Since creating new types in Haskell is cheap, this is a very viable solution.
 
    In this case I'm going with the approach of not worrying about it too much,
-   because it's a very local piece of code that can easily be fixed later if we'll see that its an issue.
+   because it's a very local piece of code that can easily be fixed later if we see that it's an issue.
 
 5. Anyway, if you've used `-Wall` like I've suggested,
    you'd get a warning from GHC saying that the *"pattern matches are non-exhaustive"*.
@@ -363,7 +363,7 @@ trim = unwords . words
 
 ### How do we know our parser works correctly?
 
-At an earlier chapter, we parsed a few example of our markup language [by hand](01-data_type.html#exercises).
+In an earlier chapter, we parsed a few examples of our markup language [by hand](01-data_type.html#exercises).
 Now, we can try to test our parser by comparing our solutions to our parser.
 By adding the `Eq` constraint to our data type (as shown in (1)), we can add these to our module and
 use the `==` (equals) operator to compare our solutions to the result our parser gives.
@@ -374,7 +374,7 @@ Try it in GHCi! You can read a text file in GHCi using the following syntax:
 ghci> txt <- readFile "/tmp/sample.txt"
 ```
 
-And then compare with a hand written example values from the solutions
+And then compare with the hand written example values from the solutions
 (after adding them to the module and loading them in GHCi):
 
 ```hs
