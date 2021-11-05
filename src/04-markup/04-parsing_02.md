@@ -365,8 +365,10 @@ trim = unwords . words
 
 In an earlier chapter, we parsed a few examples of our markup language [by hand](01-data_type.html#exercises).
 Now, we can try to test our parser by comparing our solutions to our parser.
-By adding the `Eq` constraint to our data type (as shown in (1)), we can add these to our module and
-use the `==` (equals) operator to compare our solutions to the result our parser gives.
+By adding `Eq` to the list of type class instances to derive for our `Structure` data type
+(as shown on the line marked with (1) in "final module" above),
+we can add these to our module and use the `==` (equals) operator to compare our
+solutions to the result our parser gives.
 
 Try it in GHCi! You can read a text file in GHCi using the following syntax:
 
