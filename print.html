@@ -3351,8 +3351,10 @@ trim = unwords . words
 <h3 id="how-do-we-know-our-parser-works-correctly"><a class="header" href="#how-do-we-know-our-parser-works-correctly">How do we know our parser works correctly?</a></h3>
 <p>In an earlier chapter, we parsed a few examples of our markup language <a href="04-markup/01-data_type.html#exercises">by hand</a>.
 Now, we can try to test our parser by comparing our solutions to our parser.
-By adding the <code>Eq</code> constraint to our data type (as shown in (1)), we can add these to our module and
-use the <code>==</code> (equals) operator to compare our solutions to the result our parser gives.</p>
+By adding <code>Eq</code> to the list of type class instances to derive for our <code>Structure</code> data type
+(as shown on the line marked with (1) in &quot;final module&quot; above),
+we can add these to our module and use the <code>==</code> (equals) operator to compare our
+solutions to the result our parser gives.</p>
 <p>Try it in GHCi! You can read a text file in GHCi using the following syntax:</p>
 <pre><code class="language-hs">ghci&gt; txt &lt;- readFile &quot;/tmp/sample.txt&quot;
 </code></pre>
