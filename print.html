@@ -3027,7 +3027,7 @@ as type class instances are exported automatically.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="parsing-markup-part-02-pattern-matching"><a class="header" href="#parsing-markup-part-02-pattern-matching">Parsing markup part 02 (Pattern matching)</a></h1>
 <h2 id="maybe"><a class="header" href="#maybe">Maybe</a></h2>
 <p>Previously, when we talked about partial functions, we mentioned that one way to avoid
-writing partial functions is encode the absence of a result using <code>Maybe</code>:</p>
+writing partial functions is to encode the absence of a result using <code>Maybe</code>:</p>
 <pre><code class="language-hs">data Maybe a
     = Nothing
     | Just a
@@ -3038,7 +3038,7 @@ For example, <code>Maybe Bool</code> has three values,
 two with the <code>Just</code> constructor to represent regular boolean values
 (<code>Just True</code> and <code>Just False</code>) and another value, <code>Nothing</code> to represent
 the absence of a boolean value.</p>
-<p>We can use this to encode the result of <code>head</code>, a function the promises to return
+<p>We can use this to encode the result of <code>head</code>, a function that promises to return
 the first element of a list, without creating a partial function:</p>
 <pre><code class="language-hs">head :: [a] -&gt; Maybe a
 </code></pre>
@@ -3092,7 +3092,7 @@ data EightColor
 data AnsiColor
   = AnsiColor Brightness EightColor
 
-ansiColorToVGA :: AnsiColor -&gt; RGB
+ansiColorToVGA :: AnsiColor -&gt; Color
 ansiColorToVGA ansicolor =
   case ansicolor of
     AnsiColor Dark Black -&gt;
@@ -3159,7 +3159,7 @@ trim = unwords . words
 <p>Next, instead of using a <code>[String]</code> type to denote adjacent lines, we can instead use a <code>Structure</code> to denote the context.</p>
 <p>One issue we might have though with representing context with the <code>Structure</code> type,
 is that when we start parsing we don't have any context.
-But we learn of a way to represent the possibility of an absence of a value with <code>Maybe</code>! So our new context type can be <code>Maybe Structure</code> instead.</p>
+But we learned of a way to represent the possibility of an absence of a value with <code>Maybe</code>! So our new context type can be <code>Maybe Structure</code> instead.</p>
 <p>Let's rewrite our code above to use our new context type:</p>
 <pre><code class="language-hs">parse :: String -&gt; Document
 parse = parseLines Nothing . lines -- (1)
@@ -3212,7 +3212,7 @@ There are many ways to handle that, one simple way is to create a different type
 </code></pre>
 <p>Since creating new types in Haskell is cheap, this is a very viable solution.</p>
 <p>In this case I'm going with the approach of not worrying about it too much,
-because it's a very local piece of code that can easily be fixed later if we'll see that its an issue.</p>
+because it's a very local piece of code that can easily be fixed later if we see that it's an issue.</p>
 </li>
 <li>
 <p>Anyway, if you've used <code>-Wall</code> like I've suggested,
@@ -3349,14 +3349,14 @@ trim = unwords . words
 </details>
 <hr />
 <h3 id="how-do-we-know-our-parser-works-correctly"><a class="header" href="#how-do-we-know-our-parser-works-correctly">How do we know our parser works correctly?</a></h3>
-<p>At an earlier chapter, we parsed a few example of our markup language <a href="04-markup/01-data_type.html#exercises">by hand</a>.
+<p>In an earlier chapter, we parsed a few examples of our markup language <a href="04-markup/01-data_type.html#exercises">by hand</a>.
 Now, we can try to test our parser by comparing our solutions to our parser.
 By adding the <code>Eq</code> constraint to our data type (as shown in (1)), we can add these to our module and
 use the <code>==</code> (equals) operator to compare our solutions to the result our parser gives.</p>
 <p>Try it in GHCi! You can read a text file in GHCi using the following syntax:</p>
 <pre><code class="language-hs">ghci&gt; txt &lt;- readFile &quot;/tmp/sample.txt&quot;
 </code></pre>
-<p>And then compare with a hand written example values from the solutions
+<p>And then compare with the hand written example values from the solutions
 (after adding them to the module and loading them in GHCi):</p>
 <pre><code class="language-hs">ghci&gt; parse txt == example4
 </code></pre>
