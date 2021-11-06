@@ -318,7 +318,7 @@ mconcat :: Monoid m            => [m] -> m
 ```
 
 `mconcat` is just a specialized version of `fold` for lists.
-And `fold` can be a used for any pair of data structure that implements
+And `fold` can be a used for any pair of a data structure that implements
 `Foldable` and a payload type that implements `Monoid`. This
 could be `[]` with `Structure`, or `Maybe` with `Product Int`, or
 your new shiny binary tree with `String` as the payload type. But note that
