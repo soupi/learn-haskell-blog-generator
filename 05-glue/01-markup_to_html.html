@@ -379,7 +379,7 @@ or &quot;reduced&quot;, into a summary value. This abstraction and type class is
 mconcat :: Monoid m            =&gt; [m] -&gt; m
 </code></pre>
 <p><code>mconcat</code> is just a specialized version of <code>fold</code> for lists.
-And <code>fold</code> can be a used for any pair of data structure that implements
+And <code>fold</code> can be a used for any pair of a data structure that implements
 <code>Foldable</code> and a payload type that implements <code>Monoid</code>. This
 could be <code>[]</code> with <code>Structure</code>, or <code>Maybe</code> with <code>Product Int</code>, or
 your new shiny binary tree with <code>String</code> as the payload type. But note that
