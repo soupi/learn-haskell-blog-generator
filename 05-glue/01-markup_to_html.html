@@ -343,7 +343,7 @@ mconcat list =
     x : xs -&gt; x &lt;&gt; mconcat list
 </code></pre>
 <p>(Notice that because <code>Semigroup</code> is a <em>super class</em> of <code>Monoid</code>,
-we can still use the <code>&lt;&gt;</code> (append) function from the <code>Semigroup</code> class
+we can still use the <code>&lt;&gt;</code> function from the <code>Semigroup</code> class
 without adding the <code>Semigroup a</code> constraint to the left side of <code>=&gt;</code>.
 By adding the <code>Monoid a</code> constraint we implicitly add a <code>Semigroup a</code>
 constraint as well!)</p>
@@ -386,7 +386,8 @@ your new shiny binary tree with <code>String</code> as the payload type. But not
 the <code>Foldable</code> type must be of <em>kind</em> <code>* -&gt; *</code>. So for example <code>Html</code>
 cannot be a <code>Foldable</code>.</p>
 <p><code>foldMap</code> is a function that allows us to apply a function to the
-payload type of the <code>Foldable</code> type right before appending (<code>&lt;&gt;</code>) them.</p>
+payload type of the <code>Foldable</code> type right before combining them
+with the (<code>&lt;&gt;</code>) function.</p>
 <pre><code class="language-hs">foldMap :: (Foldable t, Monoid m) -&gt; (a -&gt; m) -&gt; t a -&gt; m
 
 -- compare to a specialized version with:
