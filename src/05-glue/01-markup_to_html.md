@@ -274,7 +274,7 @@ mconcat list =
 ```
 
 (Notice that because `Semigroup` is a *super class* of `Monoid`,
-we can still use the `<>` (append) function from the `Semigroup` class
+we can still use the `<>` function from the `Semigroup` class
 without adding the `Semigroup a` constraint to the left side of `=>`.
 By adding the `Monoid a` constraint we implicitly add a `Semigroup a`
 constraint as well!)
@@ -326,7 +326,8 @@ the `Foldable` type must be of *kind* `* -> *`. So for example `Html`
 cannot be a `Foldable`.
 
 `foldMap` is a function that allows us to apply a function to the
-payload type of the `Foldable` type right before appending (`<>`) them.
+payload type of the `Foldable` type right before combining them
+with the `<>` function.
 
 ```hs
 foldMap :: (Foldable t, Monoid m) -> (a -> m) -> t a -> m
