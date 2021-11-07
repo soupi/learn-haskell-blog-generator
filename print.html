@@ -4157,7 +4157,7 @@ Note that we do not write the <code>in</code> here.</li>
 </ol>
 <p>And the last &quot;statement&quot; must be an expression of type <code>IO &lt;something&gt;</code> -
 this will be the result type of the do block.</p>
-<p>These constructs can be translated to:</p>
+<p>These constructs are desugared (translated) by the Haskell compiler to:</p>
 <ol>
 <li><code>&lt;expression&gt; *&gt;</code>,</li>
 <li><code>let ... in</code> and</li>
