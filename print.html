@@ -3698,15 +3698,15 @@ string to a Haskell representation of our markup language,
 and we built an EDSL for easy writing of HTML code.
 However, our program is still not useful to other users because
 we did not make this functionality accessible to a user via some sort of
-a user interface.</p>
+user interface.</p>
 <p>In our program, we'd like to learn from the user what they'd
 like our program to convert to HTML, and then convert that for them.
 There are many ways to design this kind of interface, for example:</p>
 <ul>
-<li>Get text as input via the <em>standard input</em>, and output HTML
+<li>Get text as input via the <em>standard input</em> and output HTML
 via the <em>standard output</em></li>
 <li>Receive two file names as <em>command-line arguments</em>, read the contents
-of the first one and write the output to the second one</li>
+of the first one, and write the output to the second one</li>
 <li>Ask for some fancier command-line arguments parsing and prefix
 the file with a flag saying what they are</li>
 <li>Some fancy GUI interface</li>
@@ -3724,7 +3724,7 @@ to override the file</li>
 <li>On any other kind of input, we'll output a generic message explaining
 the usage as we described above</li>
 </ol>
-<p>At a later chapter, we will add a little fancier command-line interface
+<p>In a later chapter, we will add a little fancier command-line interface
 using a library, and also read whole directories and not single files.</p>
 <p>But first, we need to learn a bit about I/O in Haskell, what makes
 it special, and why it's a bit different from other programming languages.</p>
@@ -3735,9 +3735,9 @@ as a unifying language for future research in functional language design.</p>
 <p>In GHC Haskell, we use a <em>lazy evaluation strategy</em> to implement non-strict
 semantics (We've talked about laziness
 <a href="05-glue/../04-markup/02-parsing_01.html#laziness">before</a>).</p>
-<p>The requirement for non-strict semantics has raise an interesting challenge,
-how do we design a language that can do more than just evaluate expressions,
-how do we model interaction with the outside world? How do we do I/O?</p>
+<p>The requirement for non-strict semantics raises an interesting challenge:
+How do we design a language that can do more than just evaluate expressions,
+how do we model interaction with the outside world, how do we do I/O?</p>
 <p>The challenge with doing I/O operations in a language with a lazy evaluation strategy
 is that as programs grow larger, the order of evaluation becomes less trivial to
 figure out. Consider this hypothetical code example
@@ -3762,11 +3762,11 @@ until we wish to print the result of subtracting one from the other,
 and then when we try to evaluate <code>-</code>, it requires to evaluate the two arguments
 in order from left to right, so we first evaluate <code>result2</code>.</p>
 <p>Evaluating <code>result2</code>, with substitution, means to replace occurrences of <code>n</code>
-with the input <code>2</code>, and then evaluate the top level function (<code>+</code>), it is a
-primitive function, we then evaluate its arguments, <code>readIntFromStdin</code>
-and then <code>n</code>, at this point <em>we are reading the first integer from the stdin</em>.</p>
+with the input <code>2</code>, and then evaluate the top level function (<code>+</code>), which is a
+primitive function. We then evaluate its arguments, <code>readIntFromStdin</code>
+and then <code>n</code>; at this point <em>we are reading the first integer from the stdin</em>.</p>
 <p>After calculating the result, we can move to evaluate <code>result1</code>, in which,
-during evaluation, <em>will read the second integer from stdin</em>, this is the
+during evaluation, <em>will read the second integer from stdin</em>. This is the
 complete opposite of what we wanted!</p>
 <p>Issues like these make lazy evaluation hard to work with in the presence of
 <strong>side effects</strong> - when the evaluation of an expression <em>can affect or be affected
@@ -3777,11 +3777,11 @@ And an unfortunate consequence of impure functions is that
 <strong>they can return different results even when they takes the same input</strong>.</p>
 <p>The presence of impure functions makes it harder for us to reason about lazy evaluation,
 and also messes up our ability to use <em>equational reasoning</em> to understand programs.</p>
-<p>Therefore, for Haskell, it was decided to only allow <strong>pure</strong> functions and expressions - ones that
-have <em>no side effects</em> - pure functions will <em>always</em> return the same output (given the same input)
+<p>Therefore, in Haskell, it was decided to only allow <strong>pure</strong> functions and expressions - ones that
+have <em>no side effects</em>. Pure functions will <em>always</em> return the same output (given the same input)
 and <strong>evaluating pure expressions is deterministic</strong>.</p>
 <p>But now, how can we do input/output operations? There are many possible solutions
-for the design space, in Haskell it was chosen to design a first class interface
+for the design space - for Haskell it was decided to design a first class interface
 with an accompanied type called <code>IO</code>. <code>IO</code>'s interface will force a distinction
 from non-I/O expressions, and will also require that in order to combine
 multiple <code>IO</code> operations, we will have to determine the order between them.</p>
@@ -3903,7 +3903,7 @@ the other that might not return anything meaningful, such as <code>putStrLn</cod
 <p>like <code>*&gt;</code> and <code>&gt;&gt;</code>, <code>pure</code> is a more general version of <code>return</code>. <code>pure</code> also has the
 advantage of not having a resemblance to an unrelated keyword in other languages.</p>
 <p>Remember that we said <code>IO a</code> is description of a program
-that when executed will produce some value of type <code>a</code>, and may do some I/O effects
+that when executed will produce some value of type <code>a</code> and may do some I/O effects
 during execution?</p>
 <p>With <code>pure</code>, we can build an <code>IO a</code> that does no I/O, and will produce a
 specific value of type <code>a</code>, the one we supply to <code>pure</code>!</p>
@@ -3925,7 +3925,7 @@ type of <code>&gt;&gt;=</code>:</p>
 <pre><code class="language-hs">(&gt;&gt;=) :: IO a -&gt; (a -&gt; IO b) -&gt; IO b
 </code></pre>
 <p>The right side of <code>&gt;&gt;=</code> in our code example (<code>\answer -&gt; case ...</code>) must
-be of type <code>String -&gt; IO Bool</code> this is because:</p>
+be of type <code>String -&gt; IO Bool</code>. This is because:</p>
 <ol>
 <li><code>getLine :: IO String</code>, so the <code>a</code> in the type signature of <code>&gt;&gt;=</code>
 should be the same as <code>String</code> in this instance, and</li>
@@ -3987,15 +3987,15 @@ main =
 right away, but only if it is what <code>whenIO</code> returns, and in turn is <em>combined</em>
 with <code>*&gt;</code> as part of the <code>main</code> expression.</p>
 <h2 id="getting-out-of-io"><a class="header" href="#getting-out-of-io">Getting out of IO?</a></h2>
-<p>What we've seen above has great consequences to the Haskell language,
-in our <code>Html</code> type, we had a function <code>render :: Html -&gt; String</code>
+<p>What we've seen above has great consequences to the Haskell language.
+In our <code>Html</code> type, we had a function <code>render :: Html -&gt; String</code>
 that could turn an <code>Html</code> to a string value.</p>
 <p>In Haskell, <strong>there is no way</strong> to implement a function such as <code>execute :: IO a -&gt; a</code>
 in a way that preserves purity and equational reasoning!</p>
 <p>Also, <code>IO</code> is <em>opaque</em>, it does not let us examine it. So we are really bound
 to what the Haskell API for <code>IO</code> allows us to do.</p>
 <p>This means that <strong>we need to think about using IO differently</strong>!</p>
-<p>In Haskell, once we got into <code>IO</code>, there is no getting out.
+<p>In Haskell, once we get into <code>IO</code>, there is no getting out.
 The only thing we can do is build bigger IO computations by <em>combining</em>
 it with more IO computations.</p>
 <p>We also can't use <code>IO a</code> in place of an <code>a</code>, so for example,
@@ -4010,13 +4010,13 @@ and then print the result to the console.</p>
 <p>In many programming languages, we might interleave reading from the file with parsing,
 and writing to the file with the HTML conversion. But we don't mix these here.
 Parsing operates on a <code>String</code> value rather than some file handle,
-and <code>Html</code> is being convert to a <code>String</code> rather than being written to the screen directly.</p>
+and <code>Html</code> is being converted to a <code>String</code> rather than being written to the screen directly.</p>
 <p>This approach of separating <code>IO</code> and pushing it to the edge of the program gives us
 a lot of flexibility. These functions without <code>IO</code> are easier to test and examine
 (because they are guaranteed to have deterministic evaluation!),
 and they are more modular and can work in many contexts (reading from stdin,
 reading from network socket, writing to an HTTP connection, and more).</p>
-<p>This pattern is often a good approach for building Haskell programs. Especially
+<p>This pattern is often a good approach for building Haskell programs, especially
 batch programs.</p>
 <h2 id="building-a-blog-generator"><a class="header" href="#building-a-blog-generator">Building a blog generator</a></h2>
 <p>We'd like to start building a blog generator, and we want to have the following
@@ -4033,7 +4033,7 @@ to override the file</li>
 the usage as we described above</li>
 </ol>
 <p>We are going to need a few functions:</p>
-<pre><code class="language-hs">getArgs :: IO [String] -- get the program arguments
+<pre><code class="language-hs">getArgs :: IO [String] -- Get the program arguments
 
 getContents :: IO String -- Read all of the content from stdin
 
@@ -4056,7 +4056,7 @@ import System.IO (getContents, readFile, writeFile)
 <ol>
 <li>
 <p>Implement a function <code>process :: Title -&gt; String -&gt; String</code> which will parse
-a document to markup, convert it to HTML and then render the HTML to a string.</p>
+a document to markup, convert it to HTML, and then render the HTML to a string.</p>
 <details><summary>Answer</summary>
 <pre><code class="language-hs">process :: Html.Title -&gt; String -&gt; String
 process title = Html.render . convert title . Markup.parse
@@ -4157,7 +4157,7 @@ Note that we do not write the <code>in</code> here.</li>
 </ol>
 <p>And the last &quot;statement&quot; must be an expression of type <code>IO &lt;something&gt;</code> -
 this will be the result type of the do block.</p>
-<p>These construct will be translated to:</p>
+<p>These constructs can be translated to:</p>
 <ol>
 <li><code>&lt;expression&gt; *&gt;</code>,</li>
 <li><code>let ... in</code> and</li>
