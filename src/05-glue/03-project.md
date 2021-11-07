@@ -19,7 +19,7 @@ A major difference between the two tools is their philosophy.
 doing package management using the whole of Hackage, and uses complicated algorithms
 to make sure packages work together.
 `stack` tries to be a more maximalistic tool that handles installing the right GHC
-for each project, provide integration with external tools like hoogle,
+for each project, provides integration with external tools like hoogle,
 and lets the user choose which 'set' of packages (including their versions) they want to use.
 
 If you've installed Haskell using GHCup, you most likely have `cabal` installed.
@@ -32,7 +32,7 @@ Using external packages can be done in multiple ways.
 For quick experimentation, we can just
 [ask stack or cabal](https://gilmi.me/blog/post/2021/08/14/hs-core-tools#using-external-packages-in-ghci)
 to build or even run our program with external packages.
-But as programs gets larger, use more dependencies, and require more functionality,
+But as programs get larger, use more dependencies, and require more functionality,
 it is better to just **create a project description** for our programs and even libraries.
 
 Describing packages is done in a **cabal file**. We can ask cabal or stack
@@ -114,7 +114,7 @@ version:             0.1.0.0
 synopsis:            A custom blog generator from markup files
 description:         This package provides a static blog generator
                      from a custom markup format to HTML.
-                     It defines a parsing for this custom markup format
+                     It defines a parser for this custom markup format
                      as well as an html pretty printer EDSL.
 
                      It is used as the example project in the online book
@@ -149,7 +149,7 @@ common common-settings
     -Wall
 ```
 
-Later, in our targets descriptions, we can add `import: common-settings` ,
+Later, in our targets' descriptions, we can add `import: common-settings` ,
 and all of these settings will be automatically added.
 
 ### Library
@@ -160,14 +160,14 @@ In a `library` target, we define:
 - The directory in which the source files can be found
 - The packages we require to build the library
 - The modules exposed from the library and can be used by others
-- The modules *not* exposed from the library and which *cannot* be used by others,
+- The modules *not* exposed from the library and which *cannot* be used by others;
   these could be any module you don't wish to export, such as an internal utility
   functions module.
   In our case we don't have anything like this, so we commented out the `other-modules`
   label.
 
 Note that it is common to specify **version bounds** for packages.
-Version bounds specify *with which packages version this library works with*.
+Version bounds specify *which package versions this library works with*.
 These can also be generated using cabal with the `cabal gen-bounds` command.
 
 ```cabal
@@ -248,9 +248,9 @@ Do this now.
 
 ### Executable
 
-We have separated our code to two sections: a library and an executable, why?
+We have separated our code into two sections: a library and an executable, why?
 
-First, libraries can be used by others. if we publish our code and someone wants to
+First, libraries can be used by others. If we publish our code and someone wants to
 use it and build upon it, they can. Executables can't be imported by other projects.
 Second, we can write unit tests for libraries. It is usually
 benefitical to write most, if not all, of our logic as a library, and provide
@@ -314,7 +314,7 @@ version:             0.1.0.0
 synopsis:            A custom blog generator from markup files
 description:         This package provides a static blog generator
                      from a custom markup format to HTML.
-                     It defines a parsing for this custom markup format
+                     It defines a parser for this custom markup format
                      as well as an html pretty printer EDSL.
 
                      It is used as the example project in the online book
@@ -420,7 +420,7 @@ The [cabal.project](https://cabal.readthedocs.io/en/3.6/cabal-project.html) and
 [stack.yaml](https://docs.haskellstack.org/en/stable/yaml_configuration/#project-specific-config)
 files are used by `cabal` and `stack` respectively to add additional information on *how
 to build the package*. While `cabal.project` isn't necessary to use `cabal`, `stack.yaml`
-is necessary in order to use `stack`. So we will cover it briefly.
+is necessary in order to use `stack`, so we will cover it briefly.
 
 There are two important fields a `stack.yaml` file must have:
 
@@ -446,7 +446,7 @@ For additional options and configurations, please consult the relevant user guid
 ## Usage
 
 Now, instead of manually running `runghc Main.hs`, we will use either `stack`
-or `cabal` to build and run our program and package (I mostly use stack, but up to you).
+or `cabal` to build and run our program and package (I mostly use stack, but it's up to you).
 
 ### For cabal:
 
@@ -522,8 +522,8 @@ uploaded to Hackage. If you'd like to learn more visit the
 ### For stack:
 
 Building the project - on the first run, stack will install the right GHC for this project
-which is specified according to the `resolver` field in the `stack.yaml` file,
-will download the package dependencies, and compile the project.
+which is specified by the `resolver` field in the `stack.yaml` file,
+download the package dependencies, and compile the project.
 
 Stack caches these installations between projects that use the same resolver,
 so future projects with the same resolver and future runs of this project won't
@@ -588,7 +588,7 @@ My suggestion is:
 
 - Search for a tutorial on something you'd like to do, and see which packages come up
 - Use the download amount on Hackage as an indication of package popularity
-- Use [Stackage](https://www.stackage.org/lts) package synopsises to locate a relevant package
+- Use [Stackage](https://www.stackage.org/lts) package synopses to locate a relevant package
 - Check social network channels for recommendations, but know that sometimes people tend
   to recommend inappropriate solutions and packages that might be too complicated or
   still experimental
