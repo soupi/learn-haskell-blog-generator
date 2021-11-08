@@ -53,7 +53,7 @@ Let's envision our command-line interface for a second, what would we like it to
 look like?
 
 We want to be able to convert a single file or input stream and produce either a file
-or an input stream, or we want to process a whole directory and create a new directory.
+or an output stream, or we want to process a whole directory and create a new directory.
 We can model it in an ADT like this:
 
 ```hs
@@ -111,7 +111,7 @@ representing the program arguments and produces an `a` if it manages
 to parse the arguments.
 
 As we've seen with previous EDSLs, this library uses the *combinator pattern*
-as well. We need consider what are the basic primitives for building
+as well. We need to consider what are the basic primitives for building
 a parser, and what are the methods of composing small parsers into bigger
 parsers.
 
@@ -158,14 +158,14 @@ As you can see, modifiers can be composed using the `<>` function,
 which means they are an instances of `Semigroup`!
 
 With such interface it means that we don't have to supply all of the modifier
-options, we can just use the one that are relevant. So if we don't want to
+options, we can just use the ones that are relevant. So if we don't want to
 have a shortened flag name, we don't have to add it.
 
 #### Functor
 
 For the data type we've defined, having `Parser FilePath` takes us
 a good step in the right direction, but it is not exactly what we need
-for a `SingleConvert`. We need a `Parser SingleInput` and a
+for a `ConvertSingle`. We need a `Parser SingleInput` and a
 `Parser SingleOutput`. If we had a `FilePath`, we could convert
 it into `SingleInput` by using the `InputFile` constructor.
 Remember, `InputFile` is also a function:
@@ -195,7 +195,7 @@ This function is called `fmap`:
 fmap :: (a -> b) -> Parser a -> Parser b
 
 -- Or with its infix version
-<$>  :: (a -> b) -> Parser a -> Parser b
+(<$>)  :: (a -> b) -> Parser a -> Parser b
 ```
 
 We've seen `fmap` before in the interface of other types:
@@ -206,7 +206,7 @@ fmap :: (a -> b) -> [a] -> [b]
 fmap :: (a -> b) -> IO a -> IO b
 ```
 
-`fmap` is a type class function like `<>` and `show`, it belongs
+`fmap` is a type class function like `<>` and `show`. It belongs
 to the type class [`Functor`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Functor.html#t:Functor):
 
 ```hs
@@ -309,7 +309,7 @@ pOutputFile = OutputFile <$> parser -- fmap and <$> are the same
 #### Applicative
 
 Now that we have two parsers,
-`ppInputFile :: Parser SingleInput`
+`pInputFile :: Parser SingleInput`
 and `pOutputFile :: Parser SingleOutput`,
 we want to *combine* them as `Options`. Again, if we only had
 `SingleInput` and `SingleOutput`, we could use the constructor `ConvertSingle`:
@@ -319,7 +319,7 @@ ConvertSingle :: SingleInput -> SingleOutput -> Options
 ```
 
 Can we do a similar trick to the one we saw before with `fmap`?
-Does a function that can lift a binary function to work
+Does a function exist that can lift a binary function to work
 on `Parser`s instead? One with this type signature:
 
 ```
@@ -397,13 +397,13 @@ pOutputFile :: Parser SingleOutput
 
 ConvertSingle :: SingleInput -> SingleOutput -> Options
 
-<$> :: (a -> b) -> Parser a -> Parser b
+(<$>) :: (a -> b) -> Parser a -> Parser b
   -- Specifically, here `a` is `SingleInput`
   -- and `b` is `SingleOutput -> Options`,
 
 ConvertSingle <$> pInputFile :: Parser (SingleOutput -> Options)
 
-<*> :: Parser (a -> b) -> Parser a -> Parser b
+(<*>) :: Parser (a -> b) -> Parser a -> Parser b
   -- Specifically, here `a -> b` is `SingleOutput -> Options`
   -- so `a` is `SingleOutput` and `b` is `Options`
 
@@ -412,7 +412,7 @@ ConvertSingle <$> pInputFile :: Parser (SingleOutput -> Options)
 ```
 
 With `<$>` and `<*>` we can chain as many parsers (or any applicative really)
-as we want. This is because two things: currying and parametric polymorphism:
+as we want. This is because of two things: currying and parametric polymorphism:
 Because functions in Haskell take exactly one argument and return exactly one,
 any multiple argument function can be represented as `a -> b`.
 
@@ -421,7 +421,7 @@ any multiple argument function can be represented as `a -> b`.
 > talks about various useful type classes and their laws.
 
 Applicative functors are a very important concept and will appear in various
-parsers interface (not just for command-line arguments, but also JSON
+parser interfaces (not just for command-line arguments, but also JSON
 parsers and general parsers), I/O, concurrency, non-determinism, and more.
 The reason this library is called optparse-applicative is because
 it uses the `Applicative` interface as the main API for
@@ -464,7 +464,7 @@ pConvertDir =
 #### Alternative
 
 One thing we forgot about is that each input and output for
-`ConvertSingle` could also potentially use the standard input instead.
+`ConvertSingle` could also potentially use the standard input and output instead.
 Up until now we only offered one option: reading from or writing to a file
 by specifying the flags `--input` and `--output`.
 However, we'd like to make these flags optional, and when they are
@@ -489,7 +489,7 @@ but it works on applicative functors. This type class isn't
 very common and is mostly used for parsing libraries as far as I know.
 It provides us with an interface to combine two `Parser`s -
 if the first one fails to parse, we try the other.
-It also provide other useful functions such as `optional`,
+It also provides other useful functions such as `optional`,
 which will help us with our case:
 
 ```hs
@@ -608,14 +608,14 @@ opts =
 
 ### Running a parser
 
-`optparse-applicative` provides non-`IO` interface to parse arguments,
+`optparse-applicative` provides a non-`IO` interface to parse arguments,
 but the most convenient way to use it is to let it take care of fetching
 program arguments, try to parse them, and throw errors and help messages in case
 it fails. This can be done with the function `execParser :: ParserInfo a -> IO a`.
 
 We can place all this options parsing stuff in a new module
-and then import it from `app/Main.hs`. Let's do that,
-here's what we have up until now:
+and then import it from `app/Main.hs`. Let's do that.
+Here's what we have up until now:
 
 <details><summary>app/OptParse.hs</summary>
 
