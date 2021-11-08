@@ -776,7 +776,7 @@ convertDirectory :: FilePath -> FilePath -> IO ()
 [`Handle`](https://hackage.haskell.org/package/base-4.15.0.0/docs/System-IO.html#t:Handle)
 is an I/O abstraction over file system objects, including `stdin` and `stdout`.
 Before, we used `writeFile` and `getContents` - these functions either
-get a `FilePath` to open and work on, or they assume the `Handle`.
+get a `FilePath` to open and work on, or they assume the `Handle` is the standard I/O.
 We can use the explicit versions that take a `Handle` from `System.IO` instead:
 
 ```hs
