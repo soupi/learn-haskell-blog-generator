@@ -5459,7 +5459,7 @@ convertDirectory :: FilePath -&gt; FilePath -&gt; IO ()
 <p><a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/System-IO.html#t:Handle"><code>Handle</code></a>
 is an I/O abstraction over file system objects, including <code>stdin</code> and <code>stdout</code>.
 Before, we used <code>writeFile</code> and <code>getContents</code> - these functions either
-get a <code>FilePath</code> to open and work on, or they assume the <code>Handle</code>.
+get a <code>FilePath</code> to open and work on, or they assume the <code>Handle</code> is the standard I/O.
 We can use the explicit versions that take a <code>Handle</code> from <code>System.IO</code> instead:</p>
 <pre><code class="language-hs">convertSingle :: Html.Title -&gt; Handle -&gt; Handle -&gt; IO ()
 convertSingle title input output = do
