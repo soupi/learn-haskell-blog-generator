@@ -194,7 +194,7 @@ and commands for our program.</p>
 <p>Let's envision our command-line interface for a second, what would we like it to
 look like?</p>
 <p>We want to be able to convert a single file or input stream and produce either a file
-or an input stream, or we want to process a whole directory and create a new directory.
+or an output stream, or we want to process a whole directory and create a new directory.
 We can model it in an ADT like this:</p>
 <pre><code class="language-hs">data Options
   = ConvertSingle SingleInput SingleOutput
@@ -244,7 +244,7 @@ we <em>can</em> convert a <code>Parser a</code> to a function that takes a list 
 representing the program arguments and produces an <code>a</code> if it manages
 to parse the arguments.</p>
 <p>As we've seen with previous EDSLs, this library uses the <em>combinator pattern</em>
-as well. We need consider what are the basic primitives for building
+as well. We need to consider what are the basic primitives for building
 a parser, and what are the methods of composing small parsers into bigger
 parsers.</p>
 <p>Let's see an example for a small parser:</p>
@@ -286,12 +286,12 @@ than <code>String</code>. But it is often the preferred type to use for text!</p
 <p>As you can see, modifiers can be composed using the <code>&lt;&gt;</code> function,
 which means they are an instances of <code>Semigroup</code>!</p>
 <p>With such interface it means that we don't have to supply all of the modifier
-options, we can just use the one that are relevant. So if we don't want to
+options, we can just use the ones that are relevant. So if we don't want to
 have a shortened flag name, we don't have to add it.</p>
 <h4 id="functor"><a class="header" href="#functor">Functor</a></h4>
 <p>For the data type we've defined, having <code>Parser FilePath</code> takes us
 a good step in the right direction, but it is not exactly what we need
-for a <code>SingleConvert</code>. We need a <code>Parser SingleInput</code> and a
+for a <code>ConvertSingle</code>. We need a <code>Parser SingleInput</code> and a
 <code>Parser SingleOutput</code>. If we had a <code>FilePath</code>, we could convert
 it into <code>SingleInput</code> by using the <code>InputFile</code> constructor.
 Remember, <code>InputFile</code> is also a function:</p>
@@ -312,14 +312,14 @@ that function and get a new function of the type <code>Parser a -&gt; Parser b</
 <pre><code class="language-hs">fmap :: (a -&gt; b) -&gt; Parser a -&gt; Parser b
 
 -- Or with its infix version
-&lt;$&gt;  :: (a -&gt; b) -&gt; Parser a -&gt; Parser b
+(&lt;$&gt;)  :: (a -&gt; b) -&gt; Parser a -&gt; Parser b
 </code></pre>
 <p>We've seen <code>fmap</code> before in the interface of other types:</p>
 <pre><code class="language-hs">fmap :: (a -&gt; b) -&gt; [a] -&gt; [b]
 
 fmap :: (a -&gt; b) -&gt; IO a -&gt; IO b
 </code></pre>
-<p><code>fmap</code> is a type class function like <code>&lt;&gt;</code> and <code>show</code>, it belongs
+<p><code>fmap</code> is a type class function like <code>&lt;&gt;</code> and <code>show</code>. It belongs
 to the type class <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Functor.html#t:Functor"><code>Functor</code></a>:</p>
 <pre><code class="language-hs">class Functor f where
   fmap :: (a -&gt; b) -&gt; f a -&gt; f b
@@ -405,14 +405,14 @@ pOutputFile = OutputFile &lt;$&gt; parser -- fmap and &lt;$&gt; are the same
 </code></pre>
 <h4 id="applicative"><a class="header" href="#applicative">Applicative</a></h4>
 <p>Now that we have two parsers,
-<code>ppInputFile :: Parser SingleInput</code>
+<code>pInputFile :: Parser SingleInput</code>
 and <code>pOutputFile :: Parser SingleOutput</code>,
 we want to <em>combine</em> them as <code>Options</code>. Again, if we only had
 <code>SingleInput</code> and <code>SingleOutput</code>, we could use the constructor <code>ConvertSingle</code>:</p>
 <pre><code class="language-hs">ConvertSingle :: SingleInput -&gt; SingleOutput -&gt; Options
 </code></pre>
 <p>Can we do a similar trick to the one we saw before with <code>fmap</code>?
-Does a function that can lift a binary function to work
+Does a function exist that can lift a binary function to work
 on <code>Parser</code>s instead? One with this type signature:</p>
 <pre><code>???
   :: (SingleInput -&gt; SingleOutput -&gt; Options)
@@ -471,13 +471,13 @@ pOutputFile :: Parser SingleOutput
 
 ConvertSingle :: SingleInput -&gt; SingleOutput -&gt; Options
 
-&lt;$&gt; :: (a -&gt; b) -&gt; Parser a -&gt; Parser b
+(&lt;$&gt;) :: (a -&gt; b) -&gt; Parser a -&gt; Parser b
   -- Specifically, here `a` is `SingleInput`
   -- and `b` is `SingleOutput -&gt; Options`,
 
 ConvertSingle &lt;$&gt; pInputFile :: Parser (SingleOutput -&gt; Options)
 
-&lt;*&gt; :: Parser (a -&gt; b) -&gt; Parser a -&gt; Parser b
+(&lt;*&gt;) :: Parser (a -&gt; b) -&gt; Parser a -&gt; Parser b
   -- Specifically, here `a -&gt; b` is `SingleOutput -&gt; Options`
   -- so `a` is `SingleOutput` and `b` is `Options`
 
@@ -485,7 +485,7 @@ ConvertSingle &lt;$&gt; pInputFile :: Parser (SingleOutput -&gt; Options)
 (ConvertSingle &lt;$&gt; pInputFile) &lt;*&gt; pOutputFile :: Parser Options
 </code></pre>
 <p>With <code>&lt;$&gt;</code> and <code>&lt;*&gt;</code> we can chain as many parsers (or any applicative really)
-as we want. This is because two things: currying and parametric polymorphism:
+as we want. This is because of two things: currying and parametric polymorphism:
 Because functions in Haskell take exactly one argument and return exactly one,
 any multiple argument function can be represented as <code>a -&gt; b</code>.</p>
 <blockquote>
@@ -494,7 +494,7 @@ any multiple argument function can be represented as <code>a -&gt; b</code>.</p>
 talks about various useful type classes and their laws.</p>
 </blockquote>
 <p>Applicative functors are a very important concept and will appear in various
-parsers interface (not just for command-line arguments, but also JSON
+parser interfaces (not just for command-line arguments, but also JSON
 parsers and general parsers), I/O, concurrency, non-determinism, and more.
 The reason this library is called optparse-applicative is because
 it uses the <code>Applicative</code> interface as the main API for
@@ -528,7 +528,7 @@ pConvertDir =
 <hr />
 <h4 id="alternative"><a class="header" href="#alternative">Alternative</a></h4>
 <p>One thing we forgot about is that each input and output for
-<code>ConvertSingle</code> could also potentially use the standard input instead.
+<code>ConvertSingle</code> could also potentially use the standard input and output instead.
 Up until now we only offered one option: reading from or writing to a file
 by specifying the flags <code>--input</code> and <code>--output</code>.
 However, we'd like to make these flags optional, and when they are
@@ -547,7 +547,7 @@ but it works on applicative functors. This type class isn't
 very common and is mostly used for parsing libraries as far as I know.
 It provides us with an interface to combine two <code>Parser</code>s -
 if the first one fails to parse, we try the other.
-It also provide other useful functions such as <code>optional</code>,
+It also provides other useful functions such as <code>optional</code>,
 which will help us with our case:</p>
 <pre><code class="language-hs">pSingleInput :: Parser SingleInput
 pSingleInput =
@@ -633,13 +633,13 @@ opts =
     )
 </code></pre>
 <h3 id="running-a-parser"><a class="header" href="#running-a-parser">Running a parser</a></h3>
-<p><code>optparse-applicative</code> provides non-<code>IO</code> interface to parse arguments,
+<p><code>optparse-applicative</code> provides a non-<code>IO</code> interface to parse arguments,
 but the most convenient way to use it is to let it take care of fetching
 program arguments, try to parse them, and throw errors and help messages in case
 it fails. This can be done with the function <code>execParser :: ParserInfo a -&gt; IO a</code>.</p>
 <p>We can place all this options parsing stuff in a new module
-and then import it from <code>app/Main.hs</code>. Let's do that,
-here's what we have up until now:</p>
+and then import it from <code>app/Main.hs</code>. Let's do that.
+Here's what we have up until now:</p>
 <details><summary>app/OptParse.hs</summary>
 <pre><code class="language-hs">-- | Command-line options parsing
 

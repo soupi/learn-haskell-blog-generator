@@ -4316,7 +4316,7 @@ managers for Haskell are <a href="https://cabal.readthedocs.io">cabal</a> and
 doing package management using the whole of Hackage, and uses complicated algorithms
 to make sure packages work together.
 <code>stack</code> tries to be a more maximalistic tool that handles installing the right GHC
-for each project, provide integration with external tools like hoogle,
+for each project, provides integration with external tools like hoogle,
 and lets the user choose which 'set' of packages (including their versions) they want to use.</p>
 <p>If you've installed Haskell using GHCup, you most likely have <code>cabal</code> installed.
 If you've installed Haskell using stack, well, you have <code>stack</code> installed.
@@ -4326,7 +4326,7 @@ Check the <a href="https://www.haskell.org/downloads/">haskell.org downloads pag
 For quick experimentation, we can just
 <a href="https://gilmi.me/blog/post/2021/08/14/hs-core-tools#using-external-packages-in-ghci">ask stack or cabal</a>
 to build or even run our program with external packages.
-But as programs gets larger, use more dependencies, and require more functionality,
+But as programs get larger, use more dependencies, and require more functionality,
 it is better to just <strong>create a project description</strong> for our programs and even libraries.</p>
 <p>Describing packages is done in a <strong>cabal file</strong>. We can ask cabal or stack
 to generate one for use using <code>cabal init --libandexe</code> or <code>stack new</code>,
@@ -4400,7 +4400,7 @@ version:             0.1.0.0
 synopsis:            A custom blog generator from markup files
 description:         This package provides a static blog generator
                      from a custom markup format to HTML.
-                     It defines a parsing for this custom markup format
+                     It defines a parser for this custom markup format
                      as well as an html pretty printer EDSL.
 
                      It is used as the example project in the online book
@@ -4429,7 +4429,7 @@ and instructed GHC to compile with <code>-Wall</code>.</p>
   ghc-options:
     -Wall
 </code></pre>
-<p>Later, in our targets descriptions, we can add <code>import: common-settings</code> ,
+<p>Later, in our targets' descriptions, we can add <code>import: common-settings</code> ,
 and all of these settings will be automatically added.</p>
 <h3 id="library"><a class="header" href="#library">Library</a></h3>
 <p>In a <code>library</code> target, we define:</p>
@@ -4438,14 +4438,14 @@ and all of these settings will be automatically added.</p>
 <li>The directory in which the source files can be found</li>
 <li>The packages we require to build the library</li>
 <li>The modules exposed from the library and can be used by others</li>
-<li>The modules <em>not</em> exposed from the library and which <em>cannot</em> be used by others,
+<li>The modules <em>not</em> exposed from the library and which <em>cannot</em> be used by others;
 these could be any module you don't wish to export, such as an internal utility
 functions module.
 In our case we don't have anything like this, so we commented out the <code>other-modules</code>
 label.</li>
 </ul>
 <p>Note that it is common to specify <strong>version bounds</strong> for packages.
-Version bounds specify <em>with which packages version this library works with</em>.
+Version bounds specify <em>which package versions this library works with</em>.
 These can also be generated using cabal with the <code>cabal gen-bounds</code> command.</p>
 <pre><code class="language-cabal">library
   import: common-settings
@@ -4512,8 +4512,8 @@ import HsBlog.Html.Internal
 </details>
 <hr />
 <h3 id="executable"><a class="header" href="#executable">Executable</a></h3>
-<p>We have separated our code to two sections: a library and an executable, why?</p>
-<p>First, libraries can be used by others. if we publish our code and someone wants to
+<p>We have separated our code into two sections: a library and an executable, why?</p>
+<p>First, libraries can be used by others. If we publish our code and someone wants to
 use it and build upon it, they can. Executables can't be imported by other projects.
 Second, we can write unit tests for libraries. It is usually
 benefitical to write most, if not all, of our logic as a library, and provide
@@ -4562,7 +4562,7 @@ version:             0.1.0.0
 synopsis:            A custom blog generator from markup files
 description:         This package provides a static blog generator
                      from a custom markup format to HTML.
-                     It defines a parsing for this custom markup format
+                     It defines a parser for this custom markup format
                      as well as an html pretty printer EDSL.
 
                      It is used as the example project in the online book
@@ -4655,7 +4655,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <a href="https://docs.haskellstack.org/en/stable/yaml_configuration/#project-specific-config">stack.yaml</a>
 files are used by <code>cabal</code> and <code>stack</code> respectively to add additional information on <em>how
 to build the package</em>. While <code>cabal.project</code> isn't necessary to use <code>cabal</code>, <code>stack.yaml</code>
-is necessary in order to use <code>stack</code>. So we will cover it briefly.</p>
+is necessary in order to use <code>stack</code>, so we will cover it briefly.</p>
 <p>There are two important fields a <code>stack.yaml</code> file must have:</p>
 <ul>
 <li><code>resolver</code>: Describes which snapshot to use for packages and ghc version.
@@ -4675,7 +4675,7 @@ packages:
 <p>For additional options and configurations, please consult the relevant user guides.</p>
 <h2 id="usage"><a class="header" href="#usage">Usage</a></h2>
 <p>Now, instead of manually running <code>runghc Main.hs</code>, we will use either <code>stack</code>
-or <code>cabal</code> to build and run our program and package (I mostly use stack, but up to you).</p>
+or <code>cabal</code> to build and run our program and package (I mostly use stack, but it's up to you).</p>
 <h3 id="for-cabal"><a class="header" href="#for-cabal">For cabal:</a></h3>
 <p>Building the project - on the first run, cabal will download the package dependencies
 and use the GHC on PATH to build the project.</p>
@@ -4728,8 +4728,8 @@ uploaded to Hackage. If you'd like to learn more visit the
 <a href="https://cabal.readthedocs.io/en/3.6/cabal-commands.html">Cabal user guide</a>.</p>
 <h3 id="for-stack"><a class="header" href="#for-stack">For stack:</a></h3>
 <p>Building the project - on the first run, stack will install the right GHC for this project
-which is specified according to the <code>resolver</code> field in the <code>stack.yaml</code> file,
-will download the package dependencies, and compile the project.</p>
+which is specified by the <code>resolver</code> field in the <code>stack.yaml</code> file,
+download the package dependencies, and compile the project.</p>
 <p>Stack caches these installations between projects that use the same resolver,
 so future projects with the same resolver and future runs of this project won't
 require reinstallation. This approach is kind of a middle ground between full packages
@@ -4773,7 +4773,7 @@ People have written on
 <ul>
 <li>Search for a tutorial on something you'd like to do, and see which packages come up</li>
 <li>Use the download amount on Hackage as an indication of package popularity</li>
-<li>Use <a href="https://www.stackage.org/lts">Stackage</a> package synopsises to locate a relevant package</li>
+<li>Use <a href="https://www.stackage.org/lts">Stackage</a> package synopses to locate a relevant package</li>
 <li>Check social network channels for recommendations, but know that sometimes people tend
 to recommend inappropriate solutions and packages that might be too complicated or
 still experimental</li>
@@ -4862,7 +4862,7 @@ and commands for our program.</p>
 <p>Let's envision our command-line interface for a second, what would we like it to
 look like?</p>
 <p>We want to be able to convert a single file or input stream and produce either a file
-or an input stream, or we want to process a whole directory and create a new directory.
+or an output stream, or we want to process a whole directory and create a new directory.
 We can model it in an ADT like this:</p>
 <pre><code class="language-hs">data Options
   = ConvertSingle SingleInput SingleOutput
@@ -4912,7 +4912,7 @@ we <em>can</em> convert a <code>Parser a</code> to a function that takes a list 
 representing the program arguments and produces an <code>a</code> if it manages
 to parse the arguments.</p>
 <p>As we've seen with previous EDSLs, this library uses the <em>combinator pattern</em>
-as well. We need consider what are the basic primitives for building
+as well. We need to consider what are the basic primitives for building
 a parser, and what are the methods of composing small parsers into bigger
 parsers.</p>
 <p>Let's see an example for a small parser:</p>
@@ -4954,12 +4954,12 @@ than <code>String</code>. But it is often the preferred type to use for text!</p
 <p>As you can see, modifiers can be composed using the <code>&lt;&gt;</code> function,
 which means they are an instances of <code>Semigroup</code>!</p>
 <p>With such interface it means that we don't have to supply all of the modifier
-options, we can just use the one that are relevant. So if we don't want to
+options, we can just use the ones that are relevant. So if we don't want to
 have a shortened flag name, we don't have to add it.</p>
 <h4 id="functor"><a class="header" href="#functor">Functor</a></h4>
 <p>For the data type we've defined, having <code>Parser FilePath</code> takes us
 a good step in the right direction, but it is not exactly what we need
-for a <code>SingleConvert</code>. We need a <code>Parser SingleInput</code> and a
+for a <code>ConvertSingle</code>. We need a <code>Parser SingleInput</code> and a
 <code>Parser SingleOutput</code>. If we had a <code>FilePath</code>, we could convert
 it into <code>SingleInput</code> by using the <code>InputFile</code> constructor.
 Remember, <code>InputFile</code> is also a function:</p>
@@ -4980,14 +4980,14 @@ that function and get a new function of the type <code>Parser a -&gt; Parser b</
 <pre><code class="language-hs">fmap :: (a -&gt; b) -&gt; Parser a -&gt; Parser b
 
 -- Or with its infix version
-&lt;$&gt;  :: (a -&gt; b) -&gt; Parser a -&gt; Parser b
+(&lt;$&gt;)  :: (a -&gt; b) -&gt; Parser a -&gt; Parser b
 </code></pre>
 <p>We've seen <code>fmap</code> before in the interface of other types:</p>
 <pre><code class="language-hs">fmap :: (a -&gt; b) -&gt; [a] -&gt; [b]
 
 fmap :: (a -&gt; b) -&gt; IO a -&gt; IO b
 </code></pre>
-<p><code>fmap</code> is a type class function like <code>&lt;&gt;</code> and <code>show</code>, it belongs
+<p><code>fmap</code> is a type class function like <code>&lt;&gt;</code> and <code>show</code>. It belongs
 to the type class <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Functor.html#t:Functor"><code>Functor</code></a>:</p>
 <pre><code class="language-hs">class Functor f where
   fmap :: (a -&gt; b) -&gt; f a -&gt; f b
@@ -5073,14 +5073,14 @@ pOutputFile = OutputFile &lt;$&gt; parser -- fmap and &lt;$&gt; are the same
 </code></pre>
 <h4 id="applicative"><a class="header" href="#applicative">Applicative</a></h4>
 <p>Now that we have two parsers,
-<code>ppInputFile :: Parser SingleInput</code>
+<code>pInputFile :: Parser SingleInput</code>
 and <code>pOutputFile :: Parser SingleOutput</code>,
 we want to <em>combine</em> them as <code>Options</code>. Again, if we only had
 <code>SingleInput</code> and <code>SingleOutput</code>, we could use the constructor <code>ConvertSingle</code>:</p>
 <pre><code class="language-hs">ConvertSingle :: SingleInput -&gt; SingleOutput -&gt; Options
 </code></pre>
 <p>Can we do a similar trick to the one we saw before with <code>fmap</code>?
-Does a function that can lift a binary function to work
+Does a function exist that can lift a binary function to work
 on <code>Parser</code>s instead? One with this type signature:</p>
 <pre><code>???
   :: (SingleInput -&gt; SingleOutput -&gt; Options)
@@ -5139,13 +5139,13 @@ pOutputFile :: Parser SingleOutput
 
 ConvertSingle :: SingleInput -&gt; SingleOutput -&gt; Options
 
-&lt;$&gt; :: (a -&gt; b) -&gt; Parser a -&gt; Parser b
+(&lt;$&gt;) :: (a -&gt; b) -&gt; Parser a -&gt; Parser b
   -- Specifically, here `a` is `SingleInput`
   -- and `b` is `SingleOutput -&gt; Options`,
 
 ConvertSingle &lt;$&gt; pInputFile :: Parser (SingleOutput -&gt; Options)
 
-&lt;*&gt; :: Parser (a -&gt; b) -&gt; Parser a -&gt; Parser b
+(&lt;*&gt;) :: Parser (a -&gt; b) -&gt; Parser a -&gt; Parser b
   -- Specifically, here `a -&gt; b` is `SingleOutput -&gt; Options`
   -- so `a` is `SingleOutput` and `b` is `Options`
 
@@ -5153,7 +5153,7 @@ ConvertSingle &lt;$&gt; pInputFile :: Parser (SingleOutput -&gt; Options)
 (ConvertSingle &lt;$&gt; pInputFile) &lt;*&gt; pOutputFile :: Parser Options
 </code></pre>
 <p>With <code>&lt;$&gt;</code> and <code>&lt;*&gt;</code> we can chain as many parsers (or any applicative really)
-as we want. This is because two things: currying and parametric polymorphism:
+as we want. This is because of two things: currying and parametric polymorphism:
 Because functions in Haskell take exactly one argument and return exactly one,
 any multiple argument function can be represented as <code>a -&gt; b</code>.</p>
 <blockquote>
@@ -5162,7 +5162,7 @@ any multiple argument function can be represented as <code>a -&gt; b</code>.</p>
 talks about various useful type classes and their laws.</p>
 </blockquote>
 <p>Applicative functors are a very important concept and will appear in various
-parsers interface (not just for command-line arguments, but also JSON
+parser interfaces (not just for command-line arguments, but also JSON
 parsers and general parsers), I/O, concurrency, non-determinism, and more.
 The reason this library is called optparse-applicative is because
 it uses the <code>Applicative</code> interface as the main API for
@@ -5196,7 +5196,7 @@ pConvertDir =
 <hr />
 <h4 id="alternative"><a class="header" href="#alternative">Alternative</a></h4>
 <p>One thing we forgot about is that each input and output for
-<code>ConvertSingle</code> could also potentially use the standard input instead.
+<code>ConvertSingle</code> could also potentially use the standard input and output instead.
 Up until now we only offered one option: reading from or writing to a file
 by specifying the flags <code>--input</code> and <code>--output</code>.
 However, we'd like to make these flags optional, and when they are
@@ -5215,7 +5215,7 @@ but it works on applicative functors. This type class isn't
 very common and is mostly used for parsing libraries as far as I know.
 It provides us with an interface to combine two <code>Parser</code>s -
 if the first one fails to parse, we try the other.
-It also provide other useful functions such as <code>optional</code>,
+It also provides other useful functions such as <code>optional</code>,
 which will help us with our case:</p>
 <pre><code class="language-hs">pSingleInput :: Parser SingleInput
 pSingleInput =
@@ -5301,13 +5301,13 @@ opts =
     )
 </code></pre>
 <h3 id="running-a-parser"><a class="header" href="#running-a-parser">Running a parser</a></h3>
-<p><code>optparse-applicative</code> provides non-<code>IO</code> interface to parse arguments,
+<p><code>optparse-applicative</code> provides a non-<code>IO</code> interface to parse arguments,
 but the most convenient way to use it is to let it take care of fetching
 program arguments, try to parse them, and throw errors and help messages in case
 it fails. This can be done with the function <code>execParser :: ParserInfo a -&gt; IO a</code>.</p>
 <p>We can place all this options parsing stuff in a new module
-and then import it from <code>app/Main.hs</code>. Let's do that,
-here's what we have up until now:</p>
+and then import it from <code>app/Main.hs</code>. Let's do that.
+Here's what we have up until now:</p>
 <details><summary>app/OptParse.hs</summary>
 <pre><code class="language-hs">-- | Command-line options parsing
 

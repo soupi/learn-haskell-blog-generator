@@ -162,7 +162,7 @@ managers for Haskell are <a href="https://cabal.readthedocs.io">cabal</a> and
 doing package management using the whole of Hackage, and uses complicated algorithms
 to make sure packages work together.
 <code>stack</code> tries to be a more maximalistic tool that handles installing the right GHC
-for each project, provide integration with external tools like hoogle,
+for each project, provides integration with external tools like hoogle,
 and lets the user choose which 'set' of packages (including their versions) they want to use.</p>
 <p>If you've installed Haskell using GHCup, you most likely have <code>cabal</code> installed.
 If you've installed Haskell using stack, well, you have <code>stack</code> installed.
@@ -172,7 +172,7 @@ Check the <a href="https://www.haskell.org/downloads/">haskell.org downloads pag
 For quick experimentation, we can just
 <a href="https://gilmi.me/blog/post/2021/08/14/hs-core-tools#using-external-packages-in-ghci">ask stack or cabal</a>
 to build or even run our program with external packages.
-But as programs gets larger, use more dependencies, and require more functionality,
+But as programs get larger, use more dependencies, and require more functionality,
 it is better to just <strong>create a project description</strong> for our programs and even libraries.</p>
 <p>Describing packages is done in a <strong>cabal file</strong>. We can ask cabal or stack
 to generate one for use using <code>cabal init --libandexe</code> or <code>stack new</code>,
@@ -246,7 +246,7 @@ version:             0.1.0.0
 synopsis:            A custom blog generator from markup files
 description:         This package provides a static blog generator
                      from a custom markup format to HTML.
-                     It defines a parsing for this custom markup format
+                     It defines a parser for this custom markup format
                      as well as an html pretty printer EDSL.
 
                      It is used as the example project in the online book
@@ -275,7 +275,7 @@ and instructed GHC to compile with <code>-Wall</code>.</p>
   ghc-options:
     -Wall
 </code></pre>
-<p>Later, in our targets descriptions, we can add <code>import: common-settings</code> ,
+<p>Later, in our targets' descriptions, we can add <code>import: common-settings</code> ,
 and all of these settings will be automatically added.</p>
 <h3 id="library"><a class="header" href="#library">Library</a></h3>
 <p>In a <code>library</code> target, we define:</p>
@@ -284,14 +284,14 @@ and all of these settings will be automatically added.</p>
 <li>The directory in which the source files can be found</li>
 <li>The packages we require to build the library</li>
 <li>The modules exposed from the library and can be used by others</li>
-<li>The modules <em>not</em> exposed from the library and which <em>cannot</em> be used by others,
+<li>The modules <em>not</em> exposed from the library and which <em>cannot</em> be used by others;
 these could be any module you don't wish to export, such as an internal utility
 functions module.
 In our case we don't have anything like this, so we commented out the <code>other-modules</code>
 label.</li>
 </ul>
 <p>Note that it is common to specify <strong>version bounds</strong> for packages.
-Version bounds specify <em>with which packages version this library works with</em>.
+Version bounds specify <em>which package versions this library works with</em>.
 These can also be generated using cabal with the <code>cabal gen-bounds</code> command.</p>
 <pre><code class="language-cabal">library
   import: common-settings
@@ -358,8 +358,8 @@ import HsBlog.Html.Internal
 </details>
 <hr />
 <h3 id="executable"><a class="header" href="#executable">Executable</a></h3>
-<p>We have separated our code to two sections: a library and an executable, why?</p>
-<p>First, libraries can be used by others. if we publish our code and someone wants to
+<p>We have separated our code into two sections: a library and an executable, why?</p>
+<p>First, libraries can be used by others. If we publish our code and someone wants to
 use it and build upon it, they can. Executables can't be imported by other projects.
 Second, we can write unit tests for libraries. It is usually
 benefitical to write most, if not all, of our logic as a library, and provide
@@ -408,7 +408,7 @@ version:             0.1.0.0
 synopsis:            A custom blog generator from markup files
 description:         This package provides a static blog generator
                      from a custom markup format to HTML.
-                     It defines a parsing for this custom markup format
+                     It defines a parser for this custom markup format
                      as well as an html pretty printer EDSL.
 
                      It is used as the example project in the online book
@@ -501,7 +501,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 <a href="https://docs.haskellstack.org/en/stable/yaml_configuration/#project-specific-config">stack.yaml</a>
 files are used by <code>cabal</code> and <code>stack</code> respectively to add additional information on <em>how
 to build the package</em>. While <code>cabal.project</code> isn't necessary to use <code>cabal</code>, <code>stack.yaml</code>
-is necessary in order to use <code>stack</code>. So we will cover it briefly.</p>
+is necessary in order to use <code>stack</code>, so we will cover it briefly.</p>
 <p>There are two important fields a <code>stack.yaml</code> file must have:</p>
 <ul>
 <li><code>resolver</code>: Describes which snapshot to use for packages and ghc version.
@@ -521,7 +521,7 @@ packages:
 <p>For additional options and configurations, please consult the relevant user guides.</p>
 <h2 id="usage"><a class="header" href="#usage">Usage</a></h2>
 <p>Now, instead of manually running <code>runghc Main.hs</code>, we will use either <code>stack</code>
-or <code>cabal</code> to build and run our program and package (I mostly use stack, but up to you).</p>
+or <code>cabal</code> to build and run our program and package (I mostly use stack, but it's up to you).</p>
 <h3 id="for-cabal"><a class="header" href="#for-cabal">For cabal:</a></h3>
 <p>Building the project - on the first run, cabal will download the package dependencies
 and use the GHC on PATH to build the project.</p>
@@ -574,8 +574,8 @@ uploaded to Hackage. If you'd like to learn more visit the
 <a href="https://cabal.readthedocs.io/en/3.6/cabal-commands.html">Cabal user guide</a>.</p>
 <h3 id="for-stack"><a class="header" href="#for-stack">For stack:</a></h3>
 <p>Building the project - on the first run, stack will install the right GHC for this project
-which is specified according to the <code>resolver</code> field in the <code>stack.yaml</code> file,
-will download the package dependencies, and compile the project.</p>
+which is specified by the <code>resolver</code> field in the <code>stack.yaml</code> file,
+download the package dependencies, and compile the project.</p>
 <p>Stack caches these installations between projects that use the same resolver,
 so future projects with the same resolver and future runs of this project won't
 require reinstallation. This approach is kind of a middle ground between full packages
@@ -619,7 +619,7 @@ People have written on
 <ul>
 <li>Search for a tutorial on something you'd like to do, and see which packages come up</li>
 <li>Use the download amount on Hackage as an indication of package popularity</li>
-<li>Use <a href="https://www.stackage.org/lts">Stackage</a> package synopsises to locate a relevant package</li>
+<li>Use <a href="https://www.stackage.org/lts">Stackage</a> package synopses to locate a relevant package</li>
 <li>Check social network channels for recommendations, but know that sometimes people tend
 to recommend inappropriate solutions and packages that might be too complicated or
 still experimental</li>
