@@ -4,7 +4,9 @@ This was a long info dump. Let's practice what we've learned. We want to:
 
 - Create the output directory
 - Grab all file names in a directory
-- Filter them according to their extension, we want to process `txt` files and copy other files without modification
+- Filter them according to their extension
+- Process .txt files
+- Copy other files without modification
 - Parse each text file, build an index of the result,
   convert the files to HTML, and write everything to the target directory
 
