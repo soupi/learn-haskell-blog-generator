@@ -153,7 +153,8 @@ Left (NotADigit 'a')
 
 We can use `traverse` on any two types where one implements the `Applicative`
 interface, like `Either a` or `IO`, and the other implements the `Traversable` interface,
-like `[]` (linked lists) and [`Map k`](https://hackage.haskell.org/package/containers-0.6.5.1/docs/Data-Map-Strict.html#t:Map)
+like `[]` (linked lists) and
+[`Map k`](https://hackage.haskell.org/package/containers-0.6.5.1/docs/Data-Map-Strict.html#t:Map)
 (also known as a dictionary in other languages - a mapping from keys to values).
 For example using `IO` and `Map`. Note that we can construct a `Map` data structure
 from a list of tuples using the
@@ -238,7 +239,9 @@ There are a few approaches, the most prominent ones are:
    handle a possible case that the input might be an empty string.
 2. Use a specialized error type for each type, and when they are composed together,
    map the error type of each function to a more general error type. This can
-   be done with the function [`first`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Bifunctor.html#v:first) from the `Bifunctor` type class.
+   be done with the function
+   [`first`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Bifunctor.html#v:first)
+   from the `Bifunctor` type class.
 
 ## Monadic interface
 
@@ -362,8 +365,10 @@ And now we can write the code this way:
 
 
 This function, `flatten` (and `flatMap` as well), have different names in Haskell.
-They are called [`join`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Monad.html#v:join)
-and [`=<<`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Monad.html#v:-61--60--60-) (pronounced "reverse bind"),
+They are called
+[`join`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Monad.html#v:join)
+and [`=<<`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Monad.html#v:-61--60--60-)
+(pronounced "reverse bind"),
 and they are the essence of another incredibly useful abstraction in Haskell.
 
 If we have a type that can implement:
@@ -419,7 +424,8 @@ The monadic interface can mean very different things for different types. For `I
 is ordering of effects, for `Either` it is early cutoff,
 for [`Logic`](https://hackage.haskell.org/package/logict-0.7.1.0) this means backtracking computation, etc.
 
-Again, don't worry about analogies and metaphors, focus on the API and the [laws](https://wiki.haskell.org/Monad_laws).
+Again, don't worry about analogies and metaphors, focus on the API and the
+[laws](https://wiki.haskell.org/Monad_laws).
 
 > Hey, did you check the monad laws? left identity, right identity and associativity? We've already
 > discussed a type class with exactly these laws - the `Monoid` type class. Maybe this is related

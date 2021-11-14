@@ -78,7 +78,8 @@ main =
 >    Features such as syntactic extensions (like LambdaCase above), extensions to the type checker,
 >    and more.
 >
->    These extensions can be added by adding `{-# language <extension-name> #-}` (the `language` part is case insensitive)
+>    These extensions can be added by adding `{-# language <extension-name> #-}`
+>    (the `language` part is case insensitive)
 >    to the top of a Haskell source file, or they can be set globally for an entire project by
 >    specifying them in the
 >    [default-extensions](https://cabal.readthedocs.io/en/3.6/cabal-package.html#pkg-field-default-extensions)
