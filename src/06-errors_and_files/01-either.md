@@ -85,8 +85,7 @@ max3chars x y z =
 
 
 The `Functor` and `Applicative` interfaces of `Either a` allow us to
-apply functions to the payload values of `Either a` types (where the `a` is the
-same type for all of the payload values) and **delay** the error handling to a
+apply functions to the payload values and **delay** the error handling to a
 later phase. Semantically, the first Either in order that returns a `Left`
 will be the return value. We can see how this works in the implementation
 of the applicative instance:
