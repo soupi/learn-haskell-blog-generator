@@ -26,7 +26,7 @@ type class. By making a type an instance of the `Exception` type class, we can t
 and catch it in `IO` code:
 
 ```hs
-{-# LANGUAGE LambdaCase #-}
+{-# language LambdaCase #-}
 
 import Control.Exception
 import System.IO
@@ -78,7 +78,7 @@ main =
 >    Features such as syntactic extensions (like LambdaCase above), extensions to the type checker,
 >    and more.
 >
->    These extensions can be added by adding `{-# LANGUAGE <extension-name> #-}`
+>    These extensions can be added by adding `{-# language <extension-name> #-}` (the `language` part is case insensitive)
 >    to the top of a Haskell source file, or they can be set globally for an entire project by
 >    specifying them in the
 >    [default-extensions](https://cabal.readthedocs.io/en/3.6/cabal-package.html#pkg-field-default-extensions)
@@ -128,7 +128,7 @@ the `Exception` type class has; I think
 ```hs
 -- need to add these at the top
 
-{-# LANGUAGE ScopedTypeVariables #-}
+{-# language ScopedTypeVariables #-}
 
 import GHC.IO.Exception (IOException(..))
 
