@@ -263,7 +263,8 @@ Left (NotADigit 'a')
 </code></pre>
 <p>We can use <code>traverse</code> on any two types where one implements the <code>Applicative</code>
 interface, like <code>Either a</code> or <code>IO</code>, and the other implements the <code>Traversable</code> interface,
-like <code>[]</code> (linked lists) and <a href="https://hackage.haskell.org/package/containers-0.6.5.1/docs/Data-Map-Strict.html#t:Map"><code>Map k</code></a>
+like <code>[]</code> (linked lists) and
+<a href="https://hackage.haskell.org/package/containers-0.6.5.1/docs/Data-Map-Strict.html#t:Map"><code>Map k</code></a>
 (also known as a dictionary in other languages - a mapping from keys to values).
 For example using <code>IO</code> and <code>Map</code>. Note that we can construct a <code>Map</code> data structure
 from a list of tuples using the
@@ -326,7 +327,9 @@ because for example a user calling <code>parseDigit</code> shouldn't be forced t
 handle a possible case that the input might be an empty string.</li>
 <li>Use a specialized error type for each type, and when they are composed together,
 map the error type of each function to a more general error type. This can
-be done with the function <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Bifunctor.html#v:first"><code>first</code></a> from the <code>Bifunctor</code> type class.</li>
+be done with the function
+<a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Bifunctor.html#v:first"><code>first</code></a>
+from the <code>Bifunctor</code> type class.</li>
 </ol>
 <h2 id="monadic-interface"><a class="header" href="#monadic-interface">Monadic interface</a></h2>
 <p>The applicative interface allows us to lift a function on to work on multiple
@@ -416,8 +419,10 @@ flatMap func val = flatten (fmap func val)
 &gt; typeCheck =&lt;&lt; parse =&lt;&lt; tokenize string
 </code></pre>
 <p>This function, <code>flatten</code> (and <code>flatMap</code> as well), have different names in Haskell.
-They are called <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Monad.html#v:join"><code>join</code></a>
-and <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Monad.html#v:-61--60--60-"><code>=&lt;&lt;</code></a> (pronounced &quot;reverse bind&quot;),
+They are called
+<a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Monad.html#v:join"><code>join</code></a>
+and <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Monad.html#v:-61--60--60-"><code>=&lt;&lt;</code></a>
+(pronounced &quot;reverse bind&quot;),
 and they are the essence of another incredibly useful abstraction in Haskell.</p>
 <p>If we have a type that can implement:</p>
 <ol>
@@ -456,7 +461,8 @@ of <code>&gt;&gt;=</code> (try it!).</p>
 <p>The monadic interface can mean very different things for different types. For <code>IO</code> this
 is ordering of effects, for <code>Either</code> it is early cutoff,
 for <a href="https://hackage.haskell.org/package/logict-0.7.1.0"><code>Logic</code></a> this means backtracking computation, etc.</p>
-<p>Again, don't worry about analogies and metaphors, focus on the API and the <a href="https://wiki.haskell.org/Monad_laws">laws</a>.</p>
+<p>Again, don't worry about analogies and metaphors, focus on the API and the
+<a href="https://wiki.haskell.org/Monad_laws">laws</a>.</p>
 <blockquote>
 <p>Hey, did you check the monad laws? left identity, right identity and associativity? We've already
 discussed a type class with exactly these laws - the <code>Monoid</code> type class. Maybe this is related
