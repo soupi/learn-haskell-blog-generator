@@ -274,7 +274,7 @@ fmap :: (a -> b) -> Either Error a -> Either Error b
 
 -- here, `a` is [Token] and `b` is `Either Error AST`:
 
-fmap parse (tokenize string) :: Either Error (Either Error AST)
+> fmap parse (tokenize string) :: Either Error (Either Error AST)
 ```
 
 While this code compiles, it isn't great, because we are building
@@ -332,13 +332,13 @@ Because we have this function, we can now use it on the output of
 from before:
 
 ```
-flatten (fmap parse (tokenize string)) :: Either Error AST
+> flatten (fmap parse (tokenize string)) :: Either Error AST
 ```
 
 And now we can use this function again to compose with `typecheck`:
 
-```
-flatten (fmap typecheck (flatten (fmap parse (tokenize string)))) :: Either Error TypedAST
+```hs
+> flatten (fmap typecheck (flatten (fmap parse (tokenize string)))) :: Either Error TypedAST
 ```
 
 This `flatten` + `fmap` combination looks like a recurring pattern which
@@ -352,13 +352,13 @@ flatMap func val = flatten (fmap func val)
 And now we can write the code this way:
 
 ```hs
-flatMap typecheck (flatMap parse (tokenize string)) :: Either Error TypedAST
+> flatMap typecheck (flatMap parse (tokenize string)) :: Either Error TypedAST
 
 -- Or using backticks syntax to convert the function to infix form:
-typecheck `flatMap` parse `flatMap` tokenize string
+> typecheck `flatMap` parse `flatMap` tokenize string
 
 -- Or create a custom infix operator: (=<<) = flatMap
-typeCheck =<< parse =<< tokenize string
+> typeCheck =<< parse =<< tokenize string
 ```
 
 
@@ -405,7 +405,7 @@ With `>>=` we can write our compilation pipeline from before in a left-to-right
 manner, which seems to be more popular for monads:
 
 ```hs
-tokenize string >>= parse >>= typecheck
+> tokenize string >>= parse >>= typecheck
 ```
 
 We have already met this function before when we talked about `IO`. Yes,
