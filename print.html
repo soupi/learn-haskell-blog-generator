@@ -5604,7 +5604,7 @@ We still need to process multiple files in a directory and create an index landi
 <p>Our HTML EDSL currently does not support links or other content modifiers such as bold and italics.
 We should add these so we can use them when creating an index.</p>
 <p>Up until now we've passed <code>String</code> to <code>Structure</code> creating functions such as <code>p_</code>
-and <code>h_</code>. Instead, we could create and pass them a new type, <code>Content</code>, we
+and <code>h_</code>. Instead, we could create and pass them a new type, <code>Content</code>, which
 can be regular text, links, images, and so on.</p>
 <hr />
 <p><strong>Exercise</strong>: implement what we've just discussed. Follow the compiler errors and refactor what needs refactoring.</p>
@@ -5879,7 +5879,7 @@ failure and success. It is often useful to describe the failure modes
 using an ADT.</p>
 <p>For example, let's say that we want to parse a <code>Char</code> as a decimal digit
 to an <code>Int</code>. This operation could fail if the Character is not a digit.
-We can represent this error a data type:</p>
+We can represent this error as a data type:</p>
 <pre><code class="language-hs">data ParseDigitError
   = NotADigit Char
   deriving Show
@@ -5918,8 +5918,7 @@ max3chars x y z =
     &lt;*&gt; parseDigit z
 </code></pre>
 <p>The <code>Functor</code> and <code>Applicative</code> interfaces of <code>Either a</code> allow us to
-apply functions on the payload values of <code>Either a</code> types (where the <code>a</code> is the
-same between all of applied values them) and <strong>delay</strong> the error handling to a
+apply functions to the payload values and <strong>delay</strong> the error handling to a
 later phase. Semantically, the first Either in order that returns a <code>Left</code>
 will be the return value. We can see how this works in the implementation
 of the applicative instance:</p>
@@ -5928,16 +5927,16 @@ of the applicative instance:</p>
     Left  e &lt;*&gt; _ = Left e
     Right f &lt;*&gt; r = fmap f r
 </code></pre>
-<p>At some point, someone who will actually want to <strong>inspect</strong> the result
+<p>At some point, someone will actually want to <strong>inspect</strong> the result
 and see if we got an error (with the <code>Left</code> constructor) or the expected value
-(with the <code>Right</code> constructor) by pattern matching on the result.</p>
+(with the <code>Right</code> constructor) and they can do that by pattern matching on the result.</p>
 <h2 id="applicative--traversable"><a class="header" href="#applicative--traversable">Applicative + Traversable</a></h2>
-<p>The <code>Applicative</code> interface of <code>Either</code> is very powerful, and can be combine
+<p>The <code>Applicative</code> interface of <code>Either</code> is very powerful, and can be combined
 with another abstraction called
 <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Traversable.html#g:1"><code>Traversable</code></a> -
 for data structures that can be traversed from left to right, like a linked list or a binary tree.
-With these, we can combine an unspecified amount of values such as <code>Either ParseDigitError Int</code>
-As long as they are all in a data structure that implements <code>Traversable</code>.</p>
+With these, we can combine an unspecified amount of values such as <code>Either ParseDigitError Int</code>,
+as long as they are all in a data structure that implements <code>Traversable</code>.</p>
 <p>Let's see an example:</p>
 <pre><code class="language-hs">ghci&gt; :t &quot;1234567&quot;
 &quot;1234567&quot; :: String
@@ -6034,7 +6033,7 @@ There are a few approaches, the most prominent ones are:</p>
 <ol>
 <li>Make them return the same error type. Write an ADT that holds all possible
 error descriptions. This can work in some cases but isn't always ideal
-because for example a user calling <code>parseDigit</code> shouldn't be force to
+because for example a user calling <code>parseDigit</code> shouldn't be forced to
 handle a possible case that the input might be an empty string.</li>
 <li>Use a specialized error type for each type, and when they are composed together,
 map the error type of each function to a more general error type. This can
@@ -6424,7 +6423,7 @@ instead of writing <code>\e -&gt; case e of</code>, we can write <code>\case</co
 additional features that aren't covered in the 98 or 2010 standards of Haskell.
 Features such as syntactic extensions (like LambdaCase above), extensions to the type checker,
 and more.</p>
-<p>These extensions can be added by adding <code>{-# language &lt;extension-name&gt; #-}</code>
+<p>These extensions can be added by adding <code>{-# language &lt;extension-name&gt; #-}</code> (the <code>language</code> part is case insensitive)
 to the top of a Haskell source file, or they can be set globally for an entire project by
 specifying them in the
 <a href="https://cabal.readthedocs.io/en/3.6/cabal-package.html#pkg-field-default-extensions">default-extensions</a>
@@ -6459,10 +6458,10 @@ main = do
 <p>Our program will crash with an error:</p>
 <pre><code>ghc: &lt;stdout&gt;: hFlush: illegal operation (handle is closed)
 </code></pre>
-<p>First, how do we know which exception we should handle? Some functions documentation
+<p>First, how do we know which exception we should handle? Some functions' documentation
 will include this, but unfortunately <code>putStrLn</code> does not. We could guess from the
 <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html#i:Exception">list of instances</a>
-the <code>Exception</code> type class has, I think
+the <code>Exception</code> type class has; I think
 <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/GHC-IO-Exception.html#t:IOException"><code>IOException</code></a> fits. Now, how can we handle this case as well? We can chain catches:</p>
 <pre><code class="language-hs">-- need to add these at the top
 
@@ -6569,9 +6568,10 @@ catch exceptions in <code>IO</code> code.</p>
 <ul>
 <li>Create the output directory</li>
 <li>Grab all file names in a directory</li>
-<li>Filter them according to their extension, we want to process <code>txt</code> file and</li>
-<li>copy other files without modification</li>
-<li>We want to parse each text file, build an index of the result,
+<li>Filter them according to their extension</li>
+<li>Process .txt files</li>
+<li>Copy other files without modification</li>
+<li>Parse each text file, build an index of the result,
 convert the files to HTML, and write everything to the target directory</li>
 </ul>
 <blockquote>
@@ -6666,8 +6666,8 @@ data DirContents
 getDirFilesAndContent :: FilePath -&gt; IO DirContents
 
 </code></pre>
-<p><code>getDirFilesAndContent</code> is responsible for providing the relevant files for processing.
-Both the ones we need to convert to markup (and their textual content) and other files we
+<p><code>getDirFilesAndContent</code> is responsible for providing the relevant files for processing --
+both the ones we need to convert to markup (and their textual content) and other files we
 might want to copy as-is (such as images and style-sheets).</p>
 <pre><code class="language-hs">-- | Returns the directory content
 getDirFilesAndContent :: FilePath -&gt; IO DirContents
@@ -6683,12 +6683,12 @@ getDirFilesAndContent inputDir = do
     , dcFilesToCopy = otherFiles
     }
 </code></pre>
-<p>This functions does 4 important things:</p>
+<p>This function does 4 important things:</p>
 <ol>
-<li>List all the files in the directory</li>
-<li>Split the files to 2 groups according to their file extension</li>
-<li>Read the contents of the .txt files and report when files failed to read</li>
-<li>Return the results. We've defined a data type to make what each result more obvious</li>
+<li>Lists all the files in the directory</li>
+<li>Splits the files into 2 groups according to their file extension</li>
+<li>Reads the contents of the .txt files and report when files failed to be read</li>
+<li>Returns the results. We've defined a data type to make what each result is more obvious</li>
 </ol>
 <p>Part (3) is a little bit more involved than the rest, lets explore it.</p>
 <h4 id="applyioonlist"><a class="header" href="#applyioonlist"><code>applyIoOnList</code></a></h4>
@@ -6705,7 +6705,7 @@ applyIoOnList action files = do
     pure (file, maybeContent)
 </code></pre>
 <p><code>applyIoOnList</code> is a higher order function that applies a particular <code>IO</code> function
-(in our case <code>readFile</code>) on a list of things (In our case <code>FilePath</code>s),
+(in our case <code>readFile</code>) on a list of things (in our case <code>FilePath</code>s),
 and for each thing, it returns the thing itself along with the result of
 applying the <code>IO</code> function as an <code>Either</code>, where the <code>Left</code> side is a <code>String</code>
 representation of an error if one occurred.</p>
@@ -6777,19 +6777,19 @@ createOutputDirectory dir = do
   pure create
 </code></pre>
 <p><code>createOutputDirectoryOrExit</code> itself is not terribly exciting, it does
-what it is named after, it tries to create the output directory, and exits the
+what it is named -- it tries to create the output directory, and exits the
 program in case it didn't succeed.</p>
 <p><code>createOutputDirectory</code> is the function that actually does the heavy lifting.
 It checks if the directory already exists, and checks if the user would like to
-override it. If they do, we remove it and create the new directory, if they don't,
+override it. If they do, we remove it and create the new directory; if they don't,
 we do nothing and report their decision.</p>
 <h3 id="txtstorenderedhtml"><a class="header" href="#txtstorenderedhtml"><code>txtsToRenderedHtml</code></a></h3>
 <pre><code class="language-hs">let
   outputHtmls = txtsToRenderedHtml filesToProcess
 </code></pre>
 <p>In this part of the code we convert files to markup and change the
-input file paths into their respective output file paths (<code>.txt</code> -&gt; <code>.html</code>),
-we then build the index page, and convert everything to HTML.</p>
+input file paths to their respective output file paths (<code>.txt</code> -&gt; <code>.html</code>).
+We then build the index page, and convert everything to HTML.</p>
 <pre><code class="language-hs">-- | Convert text files to Markup, build an index, and render as html.
 txtsToRenderedHtml :: [(FilePath, String)] -&gt; [(FilePath, String)]
 txtsToRenderedHtml txtFiles =
@@ -6810,8 +6810,8 @@ convertFile (file, doc) = (file, convert file doc)
 part. We can use <code>fmap</code> on the tuple because it is a <code>Functor</code> on the second
 argument, just like <code>Either</code>!</p>
 <h3 id="copyfiles-and-writefiles"><a class="header" href="#copyfiles-and-writefiles"><code>copyFiles</code> and <code>writeFiles</code></a></h3>
-<p>The only thing left to do after the processing is completed is to write the directory
-content after processing to the newly created directory:</p>
+<p>The only thing left to do is to write the directory
+content, after the processing is completed, to the newly created directory:</p>
 <pre><code class="language-hs">-- | Copy files to a directory, recording errors to stderr.
 copyFiles :: FilePath -&gt; [FilePath] -&gt; IO ()
 copyFiles outputDir files = do
@@ -6844,10 +6844,10 @@ understand? Is it more modular or less? What are the pros and cons?</p>
 <hr />
 <h2 id="summary-9"><a class="header" href="#summary-9">Summary</a></h2>
 <p>With that, we have completed our <code>HsBlog.Directory</code> module that handles converting
-a directory safely. Note that code could probably be simplified quite a bit if we
+a directory safely. Note that the code could probably be simplified quite a bit if we
 were fine with errors crashing the entire program altogether, but sometimes this is
 the price we pay for robustness. It is up to you to choose what you can live with
-and what not, but I hope this saga have taught you how to approach handling errors
+and what not, but I hope this saga has taught you how to approach handling errors
 in Haskell in case you need to.</p>
 <hr />
 <p>View the full module:</p>

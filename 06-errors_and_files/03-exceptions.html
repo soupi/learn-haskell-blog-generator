@@ -217,7 +217,7 @@ instead of writing <code>\e -&gt; case e of</code>, we can write <code>\case</co
 additional features that aren't covered in the 98 or 2010 standards of Haskell.
 Features such as syntactic extensions (like LambdaCase above), extensions to the type checker,
 and more.</p>
-<p>These extensions can be added by adding <code>{-# language &lt;extension-name&gt; #-}</code>
+<p>These extensions can be added by adding <code>{-# language &lt;extension-name&gt; #-}</code> (the <code>language</code> part is case insensitive)
 to the top of a Haskell source file, or they can be set globally for an entire project by
 specifying them in the
 <a href="https://cabal.readthedocs.io/en/3.6/cabal-package.html#pkg-field-default-extensions">default-extensions</a>
@@ -252,10 +252,10 @@ main = do
 <p>Our program will crash with an error:</p>
 <pre><code>ghc: &lt;stdout&gt;: hFlush: illegal operation (handle is closed)
 </code></pre>
-<p>First, how do we know which exception we should handle? Some functions documentation
+<p>First, how do we know which exception we should handle? Some functions' documentation
 will include this, but unfortunately <code>putStrLn</code> does not. We could guess from the
 <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html#i:Exception">list of instances</a>
-the <code>Exception</code> type class has, I think
+the <code>Exception</code> type class has; I think
 <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/GHC-IO-Exception.html#t:IOException"><code>IOException</code></a> fits. Now, how can we handle this case as well? We can chain catches:</p>
 <pre><code class="language-hs">-- need to add these at the top
 

@@ -168,7 +168,7 @@ failure and success. It is often useful to describe the failure modes
 using an ADT.</p>
 <p>For example, let's say that we want to parse a <code>Char</code> as a decimal digit
 to an <code>Int</code>. This operation could fail if the Character is not a digit.
-We can represent this error a data type:</p>
+We can represent this error as a data type:</p>
 <pre><code class="language-hs">data ParseDigitError
   = NotADigit Char
   deriving Show
@@ -207,8 +207,7 @@ max3chars x y z =
     &lt;*&gt; parseDigit z
 </code></pre>
 <p>The <code>Functor</code> and <code>Applicative</code> interfaces of <code>Either a</code> allow us to
-apply functions on the payload values of <code>Either a</code> types (where the <code>a</code> is the
-same between all of applied values them) and <strong>delay</strong> the error handling to a
+apply functions to the payload values and <strong>delay</strong> the error handling to a
 later phase. Semantically, the first Either in order that returns a <code>Left</code>
 will be the return value. We can see how this works in the implementation
 of the applicative instance:</p>
@@ -217,16 +216,16 @@ of the applicative instance:</p>
     Left  e &lt;*&gt; _ = Left e
     Right f &lt;*&gt; r = fmap f r
 </code></pre>
-<p>At some point, someone who will actually want to <strong>inspect</strong> the result
+<p>At some point, someone will actually want to <strong>inspect</strong> the result
 and see if we got an error (with the <code>Left</code> constructor) or the expected value
-(with the <code>Right</code> constructor) by pattern matching on the result.</p>
+(with the <code>Right</code> constructor) and they can do that by pattern matching on the result.</p>
 <h2 id="applicative--traversable"><a class="header" href="#applicative--traversable">Applicative + Traversable</a></h2>
-<p>The <code>Applicative</code> interface of <code>Either</code> is very powerful, and can be combine
+<p>The <code>Applicative</code> interface of <code>Either</code> is very powerful, and can be combined
 with another abstraction called
 <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Traversable.html#g:1"><code>Traversable</code></a> -
 for data structures that can be traversed from left to right, like a linked list or a binary tree.
-With these, we can combine an unspecified amount of values such as <code>Either ParseDigitError Int</code>
-As long as they are all in a data structure that implements <code>Traversable</code>.</p>
+With these, we can combine an unspecified amount of values such as <code>Either ParseDigitError Int</code>,
+as long as they are all in a data structure that implements <code>Traversable</code>.</p>
 <p>Let's see an example:</p>
 <pre><code class="language-hs">ghci&gt; :t &quot;1234567&quot;
 &quot;1234567&quot; :: String
@@ -323,7 +322,7 @@ There are a few approaches, the most prominent ones are:</p>
 <ol>
 <li>Make them return the same error type. Write an ADT that holds all possible
 error descriptions. This can work in some cases but isn't always ideal
-because for example a user calling <code>parseDigit</code> shouldn't be force to
+because for example a user calling <code>parseDigit</code> shouldn't be forced to
 handle a possible case that the input might be an empty string.</li>
 <li>Use a specialized error type for each type, and when they are composed together,
 map the error type of each function to a more general error type. This can
