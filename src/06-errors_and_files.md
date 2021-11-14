@@ -10,7 +10,7 @@ Our HTML EDSL currently does not support links or other content modifiers such a
 We should add these so we can use them when creating an index.
 
 Up until now we've passed `String` to `Structure` creating functions such as `p_`
-and `h_`. Instead, we could create and pass them a new type, `Content`, we
+and `h_`. Instead, we could create and pass them a new type, `Content`, which
 can be regular text, links, images, and so on.
 
 ---

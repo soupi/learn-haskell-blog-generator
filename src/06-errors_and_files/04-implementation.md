@@ -4,9 +4,8 @@ This was a long info dump. Let's practice what we've learned. We want to:
 
 - Create the output directory
 - Grab all file names in a directory
-- Filter them according to their extension, we want to process `txt` file and
-- copy other files without modification
-- We want to parse each text file, build an index of the result,
+- Filter them according to their extension, we want to process `txt` files and copy other files without modification
+- Parse each text file, build an index of the result,
   convert the files to HTML, and write everything to the target directory
 
 
@@ -119,8 +118,7 @@ getDirFilesAndContent :: FilePath -> IO DirContents
 
 ```
 
-`getDirFilesAndContent` is responsible for providing the relevant files for processing.
-Both the ones we need to convert to markup (and their textual content) and other files we
+`getDirFilesAndContent` is responsible for providing the relevant files for processing -- both the ones we need to convert to markup (and their textual content) and other files we
 might want to copy as-is (such as images and style-sheets).
 
 ```hs
@@ -139,12 +137,12 @@ getDirFilesAndContent inputDir = do
     }
 ```
 
-This functions does 4 important things:
+This function does 4 important things:
 
-1. List all the files in the directory
-2. Split the files to 2 groups according to their file extension
-3. Read the contents of the .txt files and report when files failed to read
-4. Return the results. We've defined a data type to make what each result more obvious
+1. Lists all the files in the directory
+2. Splits the files into 2 groups according to their file extension
+3. Reads the contents of the .txt files and report when files failed to be read
+4. Returns the results. We've defined a data type to make what each result is more obvious
 
 Part (3) is a little bit more involved than the rest, lets explore it.
 
@@ -165,7 +163,7 @@ applyIoOnList action files = do
 ```
 
 `applyIoOnList` is a higher order function that applies a particular `IO` function
-(in our case `readFile`) on a list of things (In our case `FilePath`s),
+(in our case `readFile`) on a list of things (in our case `FilePath`s),
 and for each thing, it returns the thing itself along with the result of
 applying the `IO` function as an `Either`, where the `Left` side is a `String`
 representation of an error if one occurred.
@@ -252,12 +250,12 @@ createOutputDirectory dir = do
 ```
 
 `createOutputDirectoryOrExit` itself is not terribly exciting, it does
-what it is named after, it tries to create the output directory, and exits the
+what it is named -- it tries to create the output directory, and exits the
 program in case it didn't succeed.
 
 `createOutputDirectory` is the function that actually does the heavy lifting.
 It checks if the directory already exists, and checks if the user would like to
-override it. If they do, we remove it and create the new directory, if they don't,
+override it. If they do, we remove it and create the new directory; if they don't,
 we do nothing and report their decision.
 
 ### `txtsToRenderedHtml`
@@ -268,8 +266,8 @@ let
 ```
 
 In this part of the code we convert files to markup and change the
-input file paths into their respective output file paths (`.txt` -> `.html`),
-we then build the index page, and convert everything to HTML.
+input file paths to their respective output file paths (`.txt` -> `.html`).
+We then build the index page, and convert everything to HTML.
 
 ```hs
 -- | Convert text files to Markup, build an index, and render as html.
@@ -295,8 +293,8 @@ argument, just like `Either`!
 
 ### `copyFiles` and `writeFiles`
 
-The only thing left to do after the processing is completed is to write the directory
-content after processing to the newly created directory:
+The only thing left to do is to write the directory
+content, after the processing is completed, to the newly created directory:
 
 ```hs
 -- | Copy files to a directory, recording errors to stderr.
@@ -340,10 +338,10 @@ understand? Is it more modular or less? What are the pros and cons?
 ## Summary
 
 With that, we have completed our `HsBlog.Directory` module that handles converting
-a directory safely. Note that code could probably be simplified quite a bit if we
+a directory safely. Note that the code could probably be simplified quite a bit if we
 were fine with errors crashing the entire program altogether, but sometimes this is
 the price we pay for robustness. It is up to you to choose what you can live with
-and what not, but I hope this saga have taught you how to approach handling errors
+and what not, but I hope this saga has taught you how to approach handling errors
 in Haskell in case you need to.
 
 ---
