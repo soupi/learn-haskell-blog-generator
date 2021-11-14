@@ -120,7 +120,8 @@ getDirFilesAndContent :: FilePath -> IO DirContents
 
 ```
 
-`getDirFilesAndContent` is responsible for providing the relevant files for processing -- both the ones we need to convert to markup (and their textual content) and other files we
+`getDirFilesAndContent` is responsible for providing the relevant files for processing --
+both the ones we need to convert to markup (and their textual content) and other files we
 might want to copy as-is (such as images and style-sheets).
 
 ```hs
