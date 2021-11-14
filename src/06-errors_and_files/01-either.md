@@ -100,7 +100,7 @@ instance Applicative (Either e) where
 
 At some point, someone will actually want to **inspect** the result
 and see if we got an error (with the `Left` constructor) or the expected value
-(with the `Right` constructor) by pattern matching on the result.
+(with the `Right` constructor) and they can do that by pattern matching on the result.
 
 ## Applicative + Traversable
 
