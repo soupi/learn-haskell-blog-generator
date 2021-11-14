@@ -354,7 +354,7 @@ fmap :: (a -&gt; b) -&gt; Either Error a -&gt; Either Error b
 
 -- here, `a` is [Token] and `b` is `Either Error AST`:
 
-fmap parse (tokenize string) :: Either Error (Either Error AST)
+&gt; fmap parse (tokenize string) :: Either Error (Either Error AST)
 </code></pre>
 <p>While this code compiles, it isn't great, because we are building
 layers of <code>Either Error</code> and we can't use this trick again with
@@ -397,10 +397,10 @@ flatten e =
 <p>Because we have this function, we can now use it on the output of
 <code>fmap parse (tokenize string) :: Either Error (Either Error AST)</code>
 from before:</p>
-<pre><code>flatten (fmap parse (tokenize string)) :: Either Error AST
+<pre><code>&gt; flatten (fmap parse (tokenize string)) :: Either Error AST
 </code></pre>
 <p>And now we can use this function again to compose with <code>typecheck</code>:</p>
-<pre><code>flatten (fmap typecheck (flatten (fmap parse (tokenize string)))) :: Either Error TypedAST
+<pre><code class="language-hs">&gt; flatten (fmap typecheck (flatten (fmap parse (tokenize string)))) :: Either Error TypedAST
 </code></pre>
 <p>This <code>flatten</code> + <code>fmap</code> combination looks like a recurring pattern which
 we can combine into a function:</p>
@@ -408,13 +408,13 @@ we can combine into a function:</p>
 flatMap func val = flatten (fmap func val)
 </code></pre>
 <p>And now we can write the code this way:</p>
-<pre><code class="language-hs">flatMap typecheck (flatMap parse (tokenize string)) :: Either Error TypedAST
+<pre><code class="language-hs">&gt; flatMap typecheck (flatMap parse (tokenize string)) :: Either Error TypedAST
 
 -- Or using backticks syntax to convert the function to infix form:
-typecheck `flatMap` parse `flatMap` tokenize string
+&gt; typecheck `flatMap` parse `flatMap` tokenize string
 
 -- Or create a custom infix operator: (=&lt;&lt;) = flatMap
-typeCheck =&lt;&lt; parse =&lt;&lt; tokenize string
+&gt; typeCheck =&lt;&lt; parse =&lt;&lt; tokenize string
 </code></pre>
 <p>This function, <code>flatten</code> (and <code>flatMap</code> as well), have different names in Haskell.
 They are called <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Monad.html#v:join"><code>join</code></a>
@@ -446,7 +446,7 @@ the <code>Monad</code> interface:</p>
 </code></pre>
 <p>With <code>&gt;&gt;=</code> we can write our compilation pipeline from before in a left-to-right
 manner, which seems to be more popular for monads:</p>
-<pre><code class="language-hs">tokenize string &gt;&gt;= parse &gt;&gt;= typecheck
+<pre><code class="language-hs">&gt; tokenize string &gt;&gt;= parse &gt;&gt;= typecheck
 </code></pre>
 <p>We have already met this function before when we talked about <code>IO</code>. Yes,
 <code>IO</code> also implements the <code>Monad</code> interface. The monadic interface for <code>IO</code>

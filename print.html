@@ -6065,7 +6065,7 @@ fmap :: (a -&gt; b) -&gt; Either Error a -&gt; Either Error b
 
 -- here, `a` is [Token] and `b` is `Either Error AST`:
 
-fmap parse (tokenize string) :: Either Error (Either Error AST)
+&gt; fmap parse (tokenize string) :: Either Error (Either Error AST)
 </code></pre>
 <p>While this code compiles, it isn't great, because we are building
 layers of <code>Either Error</code> and we can't use this trick again with
@@ -6108,10 +6108,10 @@ flatten e =
 <p>Because we have this function, we can now use it on the output of
 <code>fmap parse (tokenize string) :: Either Error (Either Error AST)</code>
 from before:</p>
-<pre><code>flatten (fmap parse (tokenize string)) :: Either Error AST
+<pre><code>&gt; flatten (fmap parse (tokenize string)) :: Either Error AST
 </code></pre>
 <p>And now we can use this function again to compose with <code>typecheck</code>:</p>
-<pre><code>flatten (fmap typecheck (flatten (fmap parse (tokenize string)))) :: Either Error TypedAST
+<pre><code class="language-hs">&gt; flatten (fmap typecheck (flatten (fmap parse (tokenize string)))) :: Either Error TypedAST
 </code></pre>
 <p>This <code>flatten</code> + <code>fmap</code> combination looks like a recurring pattern which
 we can combine into a function:</p>
@@ -6119,13 +6119,13 @@ we can combine into a function:</p>
 flatMap func val = flatten (fmap func val)
 </code></pre>
 <p>And now we can write the code this way:</p>
-<pre><code class="language-hs">flatMap typecheck (flatMap parse (tokenize string)) :: Either Error TypedAST
+<pre><code class="language-hs">&gt; flatMap typecheck (flatMap parse (tokenize string)) :: Either Error TypedAST
 
 -- Or using backticks syntax to convert the function to infix form:
-typecheck `flatMap` parse `flatMap` tokenize string
+&gt; typecheck `flatMap` parse `flatMap` tokenize string
 
 -- Or create a custom infix operator: (=&lt;&lt;) = flatMap
-typeCheck =&lt;&lt; parse =&lt;&lt; tokenize string
+&gt; typeCheck =&lt;&lt; parse =&lt;&lt; tokenize string
 </code></pre>
 <p>This function, <code>flatten</code> (and <code>flatMap</code> as well), have different names in Haskell.
 They are called <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Monad.html#v:join"><code>join</code></a>
@@ -6157,7 +6157,7 @@ the <code>Monad</code> interface:</p>
 </code></pre>
 <p>With <code>&gt;&gt;=</code> we can write our compilation pipeline from before in a left-to-right
 manner, which seems to be more popular for monads:</p>
-<pre><code class="language-hs">tokenize string &gt;&gt;= parse &gt;&gt;= typecheck
+<pre><code class="language-hs">&gt; tokenize string &gt;&gt;= parse &gt;&gt;= typecheck
 </code></pre>
 <p>We have already met this function before when we talked about <code>IO</code>. Yes,
 <code>IO</code> also implements the <code>Monad</code> interface. The monadic interface for <code>IO</code>
@@ -7238,9 +7238,9 @@ convertFile (file, doc) = do
 </code></pre>
 <blockquote>
 <p>Note: we didn't change <code>convert</code> to use <code>Reader</code> because it is a user facing API for our
-library. By providing simpler interface we give our users more flexibility - what if
-they already use <code>ReaderT</code> with a different environment, or a different underlying
-<code>m</code>? Providing a simple function argument passing interface is preferred in this case.</p>
+library. By providing a simpler interface we allow more users to use our library -
+even those that aren't yet familiar with monad transformers.</p>
+<p>Providing a simple function argument passing interface is preferred in this case.</p>
 </blockquote>
 <h3 id="run-a-reader"><a class="header" href="#run-a-reader">Run a <code>Reader</code></a></h3>
 <p>Similar to handling the errors with <code>Either</code>, At some point we need to supply the environment to
@@ -7263,8 +7263,69 @@ convertDirectory env inputDir outputDir = do
   putStrLn &quot;Done.&quot;
 </code></pre>
 <p>See the <code>let outputHtmls</code>part.</p>
+<h3 id="extra-transforming-env-for-a-particular-call"><a class="header" href="#extra-transforming-env-for-a-particular-call">Extra: Transforming <code>Env</code> for a particular call</a></h3>
+<p>Sometimes we may want to modify the <code>Env</code> we pass to a particular function call.
+For example, we may have a general <code>Env</code> type that contains a lot of information, and
+functions that only need a part of that information.</p>
+<p>If the functions we are calling are like <code>convert</code> and take the environment as an
+argument instead of using a <code>Reader</code>, we can just extract the environment
+with <code>ask</code>, apply a function to the extracted environment,
+and pass the result to the function, like this:</p>
+<pre><code class="language-hs">outer :: Reader BigEnv MyResult
+outer = do
+  env &lt;- ask
+  pure (inner (extractSmallEnv env))
+
+inner :: SmallEnv -&gt; MyResult
+inner = ...
+
+extractSmallEnv :: BigEnv -&gt; SmallEnv
+extractSmallEnv = ...
+</code></pre>
+<p>But if <code>inner</code> uses a <code>Reader SamllEnv</code> instead of argument passing,
+we can use <code>runReader</code> to <em>convert <code>inner</code> to a normal function</em>,
+and use the same idea as above!</p>
+<pre><code class="language-hs">outer :: Reader BigEnv MyResult
+outer = do
+  env &lt;- ask
+  -- Here the type of `runReader inner` is `SmallEnv -&gt; MyResult`
+  pure (runReader inner (extractSmallEnv env))
+
+inner :: Reader SmallEnv MyResult
+inner = ...
+
+extractSmallEnv :: BigEnv -&gt; SmallEnv
+extractSmallEnv = ...
+</code></pre>
+<p>This pattern is generalized and captured by a function called
+<a href="https://hackage.haskell.org/package/transformers-0.6.0.2/docs/Control-Monad-Trans-Reader.html#v:withReaderT">withReaderT</a>,
+and works even for <code>ReaderT</code>:</p>
+<pre><code class="language-hs">withReaderT :: (env2 -&gt; env1) -&gt; ReaderT env1 m a -&gt; ReaderT env2 m a
+</code></pre>
+<p><code>withReaderT</code> takes a function that modifies the environment,
+and converts a <code>ReaderT env1 m a</code> computation to a <code>ReaderT env2 m a</code> computation
+using this function.</p>
+<p>Let's see it concretely with our example:</p>
+<pre><code class="language-hs">outer :: Reader BigEnv MyResult
+outer = withReaderT extractSmallEnv inner
+</code></pre>
+<hr />
+<p>Question: what is the type of <code>withReaderT</code> when specialized in our case?</p>
+<details><summary>Answer</summary>
+<pre><code class="language-hs">withReaderT
+  :: (BigEnv -&gt; SmallEnv)     -- This is the type of `extractSmallEnv`
+  -&gt; Reader SmallEnv MyResult -- This is the type of `inner`
+  -&gt; Reader BigEnv   MyResult -- This is the type of `outer`
+</code></pre>
+</details>
+<hr />
+<p>Note the order of the environments! We use a function from a <code>BigEnv</code> to a <code>SmallEnv</code>,
+to convert a <code>Reader</code> of <code>SmallEnv</code> to a <code>Reader</code> of <code>BigEnv</code>!</p>
+<p>This is because we are mapping over the <em>input</em> of a function rather than the <em>output</em>,
+and is related to topics like variance and covariance, but isn't terribly important
+for us at the moment.</p>
 <h3 id="using-env-in-our-logic-code"><a class="header" href="#using-env-in-our-logic-code">Using <code>Env</code> in our logic code</a></h3>
-<p>One thing we haven't talked about yet is actually using the environment in the <code>convert</code>
+<p>One thing we haven't talked about yet is actually using our environment in the <code>convert</code>
 function to generate the pages we want. And actually, we don't even have the ability to add
 stylesheets to our HTML EDSL at the moment! We need to go back and extend it. Let's do all
 that now:</p>
@@ -7480,7 +7541,7 @@ main = do
 <h3 id="summary-11"><a class="header" href="#summary-11">Summary</a></h3>
 <p>Which version do you like better? Manually passing arguments, or using <code>Reader</code>?</p>
 <p>To me, it is not clear that the second version with <code>Reader</code> is better than the first
-with explicit argument passing.</p>
+with explicit argument passing in our particular case.</p>
 <p>Using <code>Reader</code> and <code>ReaderT</code> makes our code a little less friendly toward beginners
 that are not yet familiar with these concepts and techniques, and we don't see
 (in this case) much benefit.</p>
