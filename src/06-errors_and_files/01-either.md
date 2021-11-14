@@ -31,7 +31,7 @@ using an ADT.
 
 For example, let's say that we want to parse a `Char` as a decimal digit
 to an `Int`. This operation could fail if the Character is not a digit.
-We can represent this error a data type:
+We can represent this error as a data type:
 
 ```hs
 data ParseDigitError
@@ -85,8 +85,7 @@ max3chars x y z =
 
 
 The `Functor` and `Applicative` interfaces of `Either a` allow us to
-apply functions on the payload values of `Either a` types (where the `a` is the
-same between all of applied values them) and **delay** the error handling to a
+apply functions to the payload values and **delay** the error handling to a
 later phase. Semantically, the first Either in order that returns a `Left`
 will be the return value. We can see how this works in the implementation
 of the applicative instance:
@@ -98,18 +97,18 @@ instance Applicative (Either e) where
     Right f <*> r = fmap f r
 ```
 
-At some point, someone who will actually want to **inspect** the result
+At some point, someone will actually want to **inspect** the result
 and see if we got an error (with the `Left` constructor) or the expected value
-(with the `Right` constructor) by pattern matching on the result.
+(with the `Right` constructor) and they can do that by pattern matching on the result.
 
 ## Applicative + Traversable
 
-The `Applicative` interface of `Either` is very powerful, and can be combine
+The `Applicative` interface of `Either` is very powerful, and can be combined
 with another abstraction called
 [`Traversable`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Traversable.html#g:1) -
 for data structures that can be traversed from left to right, like a linked list or a binary tree.
-With these, we can combine an unspecified amount of values such as `Either ParseDigitError Int`
-As long as they are all in a data structure that implements `Traversable`.
+With these, we can combine an unspecified amount of values such as `Either ParseDigitError Int`,
+as long as they are all in a data structure that implements `Traversable`.
 
 Let's see an example:
 
@@ -235,7 +234,7 @@ There are a few approaches, the most prominent ones are:
 
 1. Make them return the same error type. Write an ADT that holds all possible
    error descriptions. This can work in some cases but isn't always ideal
-   because for example a user calling `parseDigit` shouldn't be force to
+   because for example a user calling `parseDigit` shouldn't be forced to
    handle a possible case that the input might be an empty string.
 2. Use a specialized error type for each type, and when they are composed together,
    map the error type of each function to a more general error type. This can

@@ -78,7 +78,7 @@ main =
 >    Features such as syntactic extensions (like LambdaCase above), extensions to the type checker,
 >    and more.
 >
->    These extensions can be added by adding `{-# language <extension-name> #-}`
+>    These extensions can be added by adding `{-# language <extension-name> #-}` (the `language` part is case insensitive)
 >    to the top of a Haskell source file, or they can be set globally for an entire project by
 >    specifying them in the
 >    [default-extensions](https://cabal.readthedocs.io/en/3.6/cabal-package.html#pkg-field-default-extensions)
@@ -119,10 +119,10 @@ Our program will crash with an error:
 ghc: <stdout>: hFlush: illegal operation (handle is closed)
 ```
 
-First, how do we know which exception we should handle? Some functions documentation
+First, how do we know which exception we should handle? Some functions' documentation
 will include this, but unfortunately `putStrLn` does not. We could guess from the
 [list of instances](https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html#i:Exception)
-the `Exception` type class has, I think
+the `Exception` type class has; I think
 [`IOException`](https://hackage.haskell.org/package/base-4.15.0.0/docs/GHC-IO-Exception.html#t:IOException) fits. Now, how can we handle this case as well? We can chain catches:
 
 ```hs
