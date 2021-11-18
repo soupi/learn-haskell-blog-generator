@@ -150,7 +150,7 @@ the blog for various processing. Things like the blog name, stylesheet
 location, and so on.</p>
 <h2 id="environment"><a class="header" href="#environment">Environment</a></h2>
 <p>We can represent our environment as a record data type and build it from user input.
-The user input can be a from command-line arguments, a configuration file,
+The user input can be from command-line arguments, a configuration file,
 or something else.</p>
 <pre><code class="language-hs">module HsBlog.Env where
 
@@ -185,7 +185,7 @@ compose together, and the <code>m a</code> represents the underlying result that
 The <code>m</code> could be any type that implements <code>Monad</code> that we are familiar with.
 Usually goes well with <code>IO</code> or <code>Identity</code>, depending if we want to share
 an environment between effectful or uneffectful computations.</p>
-<p>What <code>ReaderT</code> does is <em>carry</em> a value of type <code>r</code> and pass it around to
+<p>What <code>ReaderT</code> does is <em>carry</em> a value of type <code>r</code> and passes it around to
 other functions when we use the <code>Applicative</code> and <code>Monad</code> interfaces so that
 we don't have to pass the value around manually. And when we want to grab
 the <code>r</code> and use it, all we have to do is <code>ask</code>.</p>
@@ -195,10 +195,10 @@ convert our functions to use <code>ReaderT</code> - those that are uneffectful a
 and those that are effectful can return <code>ReaderT Env IO a</code> instead of <code>IO a</code>.</p>
 <p>Note, as we've said before, <code>Functor</code>, <code>Applicative</code> and <code>Monad</code> all expect the type
 that implements their interface to have the kind <code>* -&gt; *</code>.
-This means that it is <code>ReaderT r m</code> implements this interfaces, and when we compose functions with
+This means that it is <code>ReaderT r m</code> implements these interfaces, and when we compose functions with
 <code>&lt;*&gt;</code> or <code>&gt;&gt;=</code> we replace the <code>f</code> or <code>m</code> in their type signature with <code>ReaderT r m</code>.</p>
-<p>This means that, like with <code>Either e</code> when we had compose functions with the same error type,
-so is with <code>ReaderT r m</code> - we have to compose functions with the same <code>r</code> type and same
+<p>This means that, as with <code>Either e</code> when we had composed functions with the same error type,
+so it is with <code>ReaderT r m</code> - we have to compose functions with the same <code>r</code> type and same
 <code>m</code> type, so we can't mix different environment types or different underlying <code>m</code> types.</p>
 <p>We're going to use a specialized version of <code>ReaderT</code> that uses a specific <code>m</code> = <code>Identity</code>
 called <a href="https://hackage.haskell.org/package/mtl-2.2.2/docs/Control-Monad-Reader.html#g:2"><code>Reader</code></a>.
@@ -209,7 +209,7 @@ to get a better understanding of how <code>ReaderT</code> works,
 try doing the following exercise:</p>
 <ol>
 <li>Choose an <code>Applicative</code> or <code>Monad</code> interface function, I recommend <code>liftA2</code>,
-and specialize it's type signature by replacing <code>f</code> (or <code>m</code>) with a concrete <code>ReaderT</code> type such as
+and specialize its type signature by replacing <code>f</code> (or <code>m</code>) with a concrete <code>ReaderT</code> type such as
 <code>ReaderT Int IO</code>.</li>
 <li>Unpack the <code>ReaderT</code> newtype, replacing <code>ReaderT Int IO t</code> with <code>Int -&gt; IO t</code>.</li>
 <li>Implement this specialized version of the function you've chosen</li>
@@ -299,14 +299,14 @@ even those that aren't yet familiar with monad transformers.</p>
 <p>Providing a simple function argument passing interface is preferred in this case.</p>
 </blockquote>
 <h3 id="run-a-reader"><a class="header" href="#run-a-reader">Run a <code>Reader</code></a></h3>
-<p>Similar to handling the errors with <code>Either</code>, At some point we need to supply the environment to
+<p>Similar to handling the errors with <code>Either</code>, at some point we need to supply the environment to
 a computation that uses <code>Reader</code>, and extract the result from the computation.
 We can do that with the functions <code>runReader</code> and <code>runReaderT</code>:</p>
 <pre><code class="language-hs">runReader :: Reader r a -&gt; (r -&gt; a)
 
 runReaderT :: ReaderT r m a -&gt; (r -&gt; m a)
 </code></pre>
-<p>These function converts a <code>Reader</code> or <code>ReaderT</code> to a function that takes and <code>r</code>.
+<p>These functions convert a <code>Reader</code> or <code>ReaderT</code> to a function that takes and <code>r</code>.
 Then we can pass the initial environment to that function:</p>
 <pre><code class="language-hs">convertDirectory :: Env -&gt; FilePath -&gt; FilePath -&gt; IO ()
 convertDirectory env inputDir outputDir = do
