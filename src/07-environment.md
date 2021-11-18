@@ -64,8 +64,9 @@ and those that are effectful can return `ReaderT Env IO a` instead of `IO a`.
 
 Note, as we've said before, `Functor`, `Applicative` and `Monad` all expect the type
 that implements their interface to have the kind `* -> *`.
-This means that it is `ReaderT r m` implements these interfaces, and when we compose functions with
-`<*>` or `>>=` we replace the `f` or `m` in their type signature with `ReaderT r m`.
+This means that it is `ReaderT r m` which implements these interfaces,
+and when we compose functions with `<*>` or `>>=` we replace the `f` or `m`
+in their type signature with `ReaderT r m`.
 
 This means that, as with `Either e` when we had composed functions with the same error type,
 so it is with `ReaderT r m` - we have to compose functions with the same `r` type and same
