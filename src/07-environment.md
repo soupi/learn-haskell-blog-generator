@@ -7,7 +7,7 @@ location, and so on.
 ## Environment
 
 We can represent our environment as a record data type and build it from user input.
-The user input can be a from command-line arguments, a configuration file,
+The user input can be from command-line arguments, a configuration file,
 or something else.
 
 ```hs
@@ -52,7 +52,7 @@ The `m` could be any type that implements `Monad` that we are familiar with.
 Usually goes well with `IO` or `Identity`, depending if we want to share
 an environment between effectful or uneffectful computations.
 
-What `ReaderT` does is *carry* a value of type `r` and pass it around to
+What `ReaderT` does is *carry* a value of type `r` and passes it around to
 other functions when we use the `Applicative` and `Monad` interfaces so that
 we don't have to pass the value around manually. And when we want to grab
 the `r` and use it, all we have to do is `ask`.
@@ -64,11 +64,11 @@ and those that are effectful can return `ReaderT Env IO a` instead of `IO a`.
 
 Note, as we've said before, `Functor`, `Applicative` and `Monad` all expect the type
 that implements their interface to have the kind `* -> *`.
-This means that it is `ReaderT r m` implements this interfaces, and when we compose functions with
+This means that it is `ReaderT r m` implements these interfaces, and when we compose functions with
 `<*>` or `>>=` we replace the `f` or `m` in their type signature with `ReaderT r m`.
 
-This means that, like with `Either e` when we had compose functions with the same error type,
-so is with `ReaderT r m` - we have to compose functions with the same `r` type and same
+This means that, as with `Either e` when we had composed functions with the same error type,
+so it is with `ReaderT r m` - we have to compose functions with the same `r` type and same
 `m` type, so we can't mix different environment types or different underlying `m` types.
 
 We're going to use a specialized version of `ReaderT` that uses a specific `m` = `Identity`
@@ -79,7 +79,7 @@ The `Control.Monad.Reader` provides an alias: `Reader r a = ReaderT r Identity a
 > to get a better understanding of how `ReaderT` works,
 > try doing the following exercise:
 > 1. Choose an `Applicative` or `Monad` interface function, I recommend `liftA2`,
->    and specialize it's type signature by replacing `f` (or `m`) with a concrete `ReaderT` type such as
+>    and specialize its type signature by replacing `f` (or `m`) with a concrete `ReaderT` type such as
 >    `ReaderT Int IO`.
 > 2. Unpack the `ReaderT` newtype, replacing `ReaderT Int IO t` with `Int -> IO t`.
 > 3. Implement this specialized version of the function you've chosen
@@ -213,7 +213,7 @@ convertFile (file, doc) = do
 
 ### Run a `Reader`
 
-Similar to handling the errors with `Either`, At some point we need to supply the environment to
+Similar to handling the errors with `Either`, at some point we need to supply the environment to
 a computation that uses `Reader`, and extract the result from the computation.
 We can do that with the functions `runReader` and `runReaderT`:
 
@@ -223,7 +223,7 @@ runReader :: Reader r a -> (r -> a)
 runReaderT :: ReaderT r m a -> (r -> m a)
 ```
 
-These function converts a `Reader` or `ReaderT` to a function that takes and `r`.
+These functions convert a `Reader` or `ReaderT` to a function that takes and `r`.
 Then we can pass the initial environment to that function:
 
 ```hs
