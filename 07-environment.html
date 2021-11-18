@@ -195,8 +195,9 @@ convert our functions to use <code>ReaderT</code> - those that are uneffectful a
 and those that are effectful can return <code>ReaderT Env IO a</code> instead of <code>IO a</code>.</p>
 <p>Note, as we've said before, <code>Functor</code>, <code>Applicative</code> and <code>Monad</code> all expect the type
 that implements their interface to have the kind <code>* -&gt; *</code>.
-This means that it is <code>ReaderT r m</code> implements these interfaces, and when we compose functions with
-<code>&lt;*&gt;</code> or <code>&gt;&gt;=</code> we replace the <code>f</code> or <code>m</code> in their type signature with <code>ReaderT r m</code>.</p>
+This means that it is <code>ReaderT r m</code> which implements these interfaces,
+and when we compose functions with <code>&lt;*&gt;</code> or <code>&gt;&gt;=</code> we replace the <code>f</code> or <code>m</code>
+in their type signature with <code>ReaderT r m</code>.</p>
 <p>This means that, as with <code>Either e</code> when we had composed functions with the same error type,
 so it is with <code>ReaderT r m</code> - we have to compose functions with the same <code>r</code> type and same
 <code>m</code> type, so we can't mix different environment types or different underlying <code>m</code> types.</p>
