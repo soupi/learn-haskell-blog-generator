@@ -102,7 +102,7 @@ to the `other-modules` section in the cabal file).
 
 ## Writing tests
 
-Lets write our first test. We'll create a new module to test
+Let's write our first test. We'll create a new module to test
 markup parsing. We'll call it `MarkupParsingSpec.hs`. We'll need
 the following imports as well:
 
@@ -122,7 +122,7 @@ and using a function like `shouldBe` we can compare two values and make
 sure they are equal. If they are, the test will pass, and if not, it will fail
 with a descriptive error.
 
-Lets try it and write a test that obviously fails!
+Let's try it and write a test that obviously fails!
 
 ```hs
 spec :: Spec

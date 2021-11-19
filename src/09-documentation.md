@@ -123,7 +123,7 @@ and let's see how we can improve it.
 ## Haddock markup
 
 Haddock builds the API reference pages by building our project, examining the exported modules
-and their exported definitions, and by grabbing source code comments written in special markup format.
+and their exported definitions, and grabbing source code comments written in special markup format.
 
 Let's take a quick look at this markup format. We will go over a few important bits,
 but if you'd like to learn more, a complete guide for Haddock markup can be found in the
@@ -135,7 +135,7 @@ but if you'd like to learn more, a complete guide for Haddock markup can be foun
 All haddock annotations appear as part of regular Haskell comments.
 They can be used with both single line form (`--`) and multi-line form (`{-` and `-}`).
 The placement of a comment block and the haddock marker determine to which Haskell
-definition the haddocks is attached.
+definition the haddock string is attached.
 
 We can annotate a Haskell definition by writing a comment block prefixed with `|` *before*
 the definition, or by writing a comment block prefixed with `^` *after* the definition.
