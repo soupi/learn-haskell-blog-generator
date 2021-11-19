@@ -7656,7 +7656,7 @@ Because we haven't defined any tests, our output is:</p>
 <code>hspec-discover</code> will find and run them automatically (though we will still need add them
 to the <code>other-modules</code> section in the cabal file).</p>
 <h2 id="writing-tests"><a class="header" href="#writing-tests">Writing tests</a></h2>
-<p>Lets write our first test. We'll create a new module to test
+<p>Let's write our first test. We'll create a new module to test
 markup parsing. We'll call it <code>MarkupParsingSpec.hs</code>. We'll need
 the following imports as well:</p>
 <pre><code class="language-hs">module MarkupParsingSpec where
@@ -7671,7 +7671,7 @@ describe a group of tests, using the <code>it</code> function we can add a new t
 and using a function like <code>shouldBe</code> we can compare two values and make
 sure they are equal. If they are, the test will pass, and if not, it will fail
 with a descriptive error.</p>
-<p>Lets try it and write a test that obviously fails!</p>
+<p>Let's try it and write a test that obviously fails!</p>
 <pre><code class="language-hs">spec :: Spec
 spec = do
   describe &quot;Markup parsing tests&quot; $ do
@@ -8058,7 +8058,7 @@ the different modules, follow the links of the types, imagine what this API refe
 and let's see how we can improve it.</p>
 <h2 id="haddock-markup"><a class="header" href="#haddock-markup">Haddock markup</a></h2>
 <p>Haddock builds the API reference pages by building our project, examining the exported modules
-and their exported definitions, and by grabbing source code comments written in special markup format.</p>
+and their exported definitions, and grabbing source code comments written in special markup format.</p>
 <p>Let's take a quick look at this markup format. We will go over a few important bits,
 but if you'd like to learn more, a complete guide for Haddock markup can be found in the
 <a href="https://haskell-haddock.readthedocs.io/en/latest/markup.html">Haddock documentation</a>.</p>
@@ -8066,7 +8066,7 @@ but if you'd like to learn more, a complete guide for Haddock markup can be foun
 <p>All haddock annotations appear as part of regular Haskell comments.
 They can be used with both single line form (<code>--</code>) and multi-line form (<code>{-</code> and <code>-}</code>).
 The placement of a comment block and the haddock marker determine to which Haskell
-definition the haddocks is attached.</p>
+definition the haddock string is attached.</p>
 <p>We can annotate a Haskell definition by writing a comment block prefixed with <code>|</code> <em>before</em>
 the definition, or by writing a comment block prefixed with <code>^</code> <em>after</em> the definition.</p>
 <p>For example:</p>

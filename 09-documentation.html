@@ -240,7 +240,7 @@ the different modules, follow the links of the types, imagine what this API refe
 and let's see how we can improve it.</p>
 <h2 id="haddock-markup"><a class="header" href="#haddock-markup">Haddock markup</a></h2>
 <p>Haddock builds the API reference pages by building our project, examining the exported modules
-and their exported definitions, and by grabbing source code comments written in special markup format.</p>
+and their exported definitions, and grabbing source code comments written in special markup format.</p>
 <p>Let's take a quick look at this markup format. We will go over a few important bits,
 but if you'd like to learn more, a complete guide for Haddock markup can be found in the
 <a href="https://haskell-haddock.readthedocs.io/en/latest/markup.html">Haddock documentation</a>.</p>
@@ -248,7 +248,7 @@ but if you'd like to learn more, a complete guide for Haddock markup can be foun
 <p>All haddock annotations appear as part of regular Haskell comments.
 They can be used with both single line form (<code>--</code>) and multi-line form (<code>{-</code> and <code>-}</code>).
 The placement of a comment block and the haddock marker determine to which Haskell
-definition the haddocks is attached.</p>
+definition the haddock string is attached.</p>
 <p>We can annotate a Haskell definition by writing a comment block prefixed with <code>|</code> <em>before</em>
 the definition, or by writing a comment block prefixed with <code>^</code> <em>after</em> the definition.</p>
 <p>For example:</p>
