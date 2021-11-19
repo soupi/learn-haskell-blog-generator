@@ -3,10 +3,10 @@
 We want to add some tests to our blog generator. At the very least
 a few regression tests to make sure that if we extend or change our markup parsing code,
 HTML generation code, or translation from markup to HTML code, and make a mistake, we'll
-have a safety web alerting us of issues.
+have a safety net alerting us of issues.
 
 We will use the [hspec](https://hspec.github.io/) testing framework to write our tests.
-There are other very common testing frameworks in Haskell, for example
+There are other testing frameworks in Haskell, for example
 [tasty](https://hackage.haskell.org/package/tasty), but I like `hspec`'s documentation,
 so we'll use that.
 
@@ -15,11 +15,13 @@ so we'll use that.
 ### Cabal file additions
 
 We're going to define a new section in our `hs-blog-gen.cabal` file for our new test suite.
-Like `library` and `executable`, this section is called `test-suite`.
+This section is called `test-suite` and it is fairly similar to the `library` and
+`executable` sections.
 
-The interfaces for how to define a test suite is describe in the
+The interfaces for how to define a test suite are described in the
 [Cabal documentation](https://cabal.readthedocs.io/en/3.6/cabal-package.html#test-suites).
-We are going to use the `exitcode-stdio-1.0` interface. Let's go over the different settings.
+We are going to use the `exitcode-stdio-1.0` interface. Let's go over the different settings
+and options:
 
 ```cabal
 test-suite hs-blog-gen-test
@@ -42,7 +44,7 @@ test-suite hs-blog-gen-test
 ```
 
 - `hs-source-dirs: test` - The directory of the source file for the test suite
-- `main-is: Spec.hs` - The entry point source file to the test suite
+- `main-is: Spec.hs` - The entry point to the test suite source file
 - `build-depends` - The packages we are going to use:
   - [`base`](https://hackage.haskell.org/package/base) -
     The standard library for Haskell, as we've used before
@@ -51,7 +53,7 @@ test-suite hs-blog-gen-test
   - [`hspec-discover`](https://hackage.haskell.org/package/hspec-discover) -
     Automatic discovery of hspec tests
   - [`raw-strings-qq`](https://hackage.haskell.org/package/raw-strings-qq) -
-    Syntax for writing raw string literals
+    Additional syntax for writing raw string literals
   - `hs-blog` - Our library
 - [`ghc-options`](https://cabal.readthedocs.io/en/3.6/cabal-package.html#pkg-field-ghc-options) -
     Extra options and flags for GHC
@@ -69,10 +71,10 @@ test-suite hs-blog-gen-test
     Specifically, [`-N`](https://downloads.haskell.org/ghc/latest/docs/html/users_guide/using-concurrent.html#rts-flag--N%20%E2%9F%A8x%E2%9F%A9)
     Sets the number of cores to use in our program.
 - [`build-tool-depends`](https://cabal.readthedocs.io/en/3.6/cabal-package.html#pkg-field-build-tool-depends) -
-  Uses a specific executable from a package dependency in aids of building the package.
+  Uses a specific executable from a package dependency in aid of building the package.
   In this case, we are using the `hspec-discover` executable from the
   [`hspec-discover`](https://hackage.haskell.org/package/hspec-discover) package, which
-  goes over the source directory for the tests, finds all of the spec files,
+  goes over the source directory for the tests, finds all of the `Spec` files,
   and creates an entry point for the program that will run all the tests it discovered.
 
 
@@ -85,6 +87,7 @@ to the "main" file of the test suite, for us this is `test/Spec.hs`:
 {-# OPTIONS_GHC -F -pgmF hspec-discover #-}
 ```
 
+That's it! `hspec-discover` will automatically define a `main` for us.
 Now we can run the tests using `stack test` or `cabal v2-test` (your choice).
 Because we haven't defined any tests, our output is:
 
@@ -93,13 +96,13 @@ Finished in 0.0000 seconds
 0 examples, 0 failures
 ```
 
-When we add new hspec tests (Which their filename much end with `Spec` and must expose the test `spec`),
-`hspec-discover` will run them automatically (though we will still need add them
+When we add new hspec tests (Which their filename must end with `Spec` and must expose the test `spec`),
+`hspec-discover` will find and run them automatically (though we will still need add them
 to the `other-modules` section in the cabal file).
 
 ## Writing tests
 
-Let's start writing our first test. We'll create a new module to test
+Lets write our first test. We'll create a new module to test
 markup parsing. We'll call it `MarkupParsingSpec.hs`. We'll need
 the following imports as well:
 
@@ -111,11 +114,15 @@ import HsBlog.Markup
 ```
 
 `hspec` provides us with a monadic interface for describing, composing and
-nesting test specifications (typed `Spec`). Using the `describe` function we can
+nesting test specifications (`Spec`s).
+
+Using the `describe` function we can
 describe a group of tests, using the `it` function we can add a new test,
 and using a function like `shouldBe` we can compare two values and make
 sure they are equal. If they are, the test will pass, and if not, it will fail
-with a descriptive error. Let's try it and write a test that obviously fails!
+with a descriptive error.
+
+Lets try it and write a test that obviously fails!
 
 ```hs
 spec :: Spec
@@ -197,7 +204,7 @@ We can add a few more tests:
         [CodeBlock ["main = putStrLn \"hello world!\""]]
 ```
 
-Running the tests:
+And run the tests again:
 
 ```sh
 MarkupParsing
@@ -214,7 +221,7 @@ Finished in 0.0003 seconds
 This is the gist of writing unit tests with `hspec`. It's important to note
 that we can nest `Spec`s that are declared with `describe` to create trees,
 and of course refactor and move things to different functions and modules
-to make are test suite better organized.
+to make our test suite better organized.
 
 For example, we can write our tests like this:
 
@@ -248,7 +255,7 @@ simple = do
         [CodeBlock ["main = putStrLn \"hello world!\""]]
 ```
 
-Also, there are other "expectations" like `shouldBe` we can use when writing tests.
+Also, there are other "expectations" like `shouldBe` that we can use when writing tests.
 They are described in the [hspec tutorial](https://hspec.github.io/expectations.html)
 and can be found in the
 [haddock documentation](https://hackage.haskell.org/package/hspec-expectations-0.8.2/docs/Test-Hspec-Expectations.html) as well.
@@ -260,13 +267,16 @@ test, we can use a library called
 [raw-strings-qq](https://hackage.haskell.org/package/raw-strings-qq)
 which uses a language extension called
 [`QuasiQuotes`](https://downloads.haskell.org/ghc/latest/docs/html/users_guide/exts/template_haskell.html#extension-QuasiQuotes).
-`QuasiQuotes` is a meta-programming extension that provides a mechanism to extend the syntax for Haskell.
+`QuasiQuotes` is a meta-programming extension that provides a mechanism for extending the
+syntax of Haskell.
 
 A quasi-quote has the form `[quoter| string |]`, where the quoter is the name
 of the function providing the syntax we wish to use, and the string is our input.
 
-In our case, we use the quoter `r`, and write any string we want, with multi-lines
-and unescaped strings! We could use this to write the tests
+In our case, we use the quoter `r`, which is defined in
+[raw-strings-qq](https://hackage.haskell.org/package/raw-strings-qq-1.1/docs/Text-RawString-QQ.html),
+and write any string we want, with multi-lines and unescaped strings!
+We could use this to write the tests
 [we previously wrote](04-markup/01-data_type.html#exercises):
 
 ```hs
