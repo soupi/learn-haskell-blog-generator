@@ -1,6 +1,6 @@
 # About this book
 
-> Note: This is still in alpha stage. If you find errors, [please let me know](https://github.com/soupi/learn-haskell-blog-generator/issues).
+> Note: This book is still fairly new. If you find errors, [please let me know](https://github.com/soupi/learn-haskell-blog-generator/issues).
 
 <!--
 <div style="text-align: center">
@@ -17,7 +17,6 @@ We will:
 2. Define and parse our custom markup language
 3. Read files and glue things together
 4. Add command line arguments parsing
-<!-- 5. Alternatively serve the blog over HTTP -->
 
 In each chapter of the book we will focus on a particular task we wish to achieve,
 and through the chapter we'll learn just enough Haskell to complete the task.
