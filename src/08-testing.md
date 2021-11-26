@@ -45,6 +45,8 @@ test-suite hs-blog-gen-test
 
 - `hs-source-dirs: test` - The directory of the source file for the test suite
 - `main-is: Spec.hs` - The entry point to the test suite source file
+- `other-modules` - The modules in our test suite.
+  Currently commented out because we haven't added any yet.
 - `build-depends` - The packages we are going to use:
   - [`base`](https://hackage.haskell.org/package/base) -
     The standard library for Haskell, as we've used before
@@ -96,9 +98,15 @@ Finished in 0.0000 seconds
 0 examples, 0 failures
 ```
 
-When we add new hspec tests (in files whose names must end with `Spec` and must expose the test `spec`),
-`hspec-discover` will find and run them automatically (though we will still need add them
-to the `other-modules` section in the cabal file).
+When we add new hspec tests, `hspec-discover` will find and run them automatically
+(though we will still need add them to the `other-modules` section in the cabal file).
+
+For `hspec-discover` to identify modules as test modules, the modules must follow
+a convention:
+
+1. Their module names must end with `Spec`
+2. They must define a value `spec :: Spec` (which describes the test) and export it
+   outside of the module (by adding it to the export list of the module, for example).
 
 ## Writing tests
 
@@ -119,8 +127,8 @@ nesting test specifications (`Spec`s).
 Using the `describe` function we can
 describe a group of tests, using the `it` function we can add a new test,
 and using a function like `shouldBe` we can compare two values and make
-sure they are equal. If they are, the test will pass, and if not, it will fail
-with a descriptive error.
+sure they are equal by using their `Eq` instance.
+If they are, the test will pass, and if not, it will fail with a descriptive error.
 
 Let's try it and write a test that obviously fails!
 
