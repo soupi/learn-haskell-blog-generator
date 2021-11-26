@@ -232,7 +232,7 @@ Because we haven't defined any tests, our output is:</p>
 <pre><code class="language-sh">Finished in 0.0000 seconds
 0 examples, 0 failures
 </code></pre>
-<p>When we add new hspec tests (Which their filename must end with <code>Spec</code> and must expose the test <code>spec</code>),
+<p>When we add new hspec tests (in files whose names must end with <code>Spec</code> and must expose the test <code>spec</code>),
 <code>hspec-discover</code> will find and run them automatically (though we will still need add them
 to the <code>other-modules</code> section in the cabal file).</p>
 <h2 id="writing-tests"><a class="header" href="#writing-tests">Writing tests</a></h2>
@@ -363,7 +363,7 @@ They are described in the <a href="https://hspec.github.io/expectations.html">hs
 and can be found in the
 <a href="https://hackage.haskell.org/package/hspec-expectations-0.8.2/docs/Test-Hspec-Expectations.html">haddock documentation</a> as well.</p>
 <h3 id="raw-strings"><a class="header" href="#raw-strings">Raw strings</a></h3>
-<p>If we want to write multi-line strings, or avoid escaping string like we did in the &quot;code&quot;
+<p>If we want to write multi-line strings, or avoid escaping strings like we did in the &quot;code&quot;
 test, we can use a library called
 <a href="https://hackage.haskell.org/package/raw-strings-qq">raw-strings-qq</a>
 which uses a language extension called
