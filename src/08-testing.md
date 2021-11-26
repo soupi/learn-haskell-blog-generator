@@ -96,7 +96,7 @@ Finished in 0.0000 seconds
 0 examples, 0 failures
 ```
 
-When we add new hspec tests (Which their filename must end with `Spec` and must expose the test `spec`),
+When we add new hspec tests (in files whose names must end with `Spec` and must expose the test `spec`),
 `hspec-discover` will find and run them automatically (though we will still need add them
 to the `other-modules` section in the cabal file).
 
@@ -262,7 +262,7 @@ and can be found in the
 
 ### Raw strings
 
-If we want to write multi-line strings, or avoid escaping string like we did in the "code"
+If we want to write multi-line strings, or avoid escaping strings like we did in the "code"
 test, we can use a library called
 [raw-strings-qq](https://hackage.haskell.org/package/raw-strings-qq)
 which uses a language extension called
