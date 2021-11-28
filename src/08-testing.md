@@ -283,7 +283,7 @@ of the function providing the syntax we wish to use, and the string is our input
 
 In our case, we use the quoter `r`, which is defined in
 [raw-strings-qq](https://hackage.haskell.org/package/raw-strings-qq-1.1/docs/Text-RawString-QQ.html),
-and write any string we want, with multi-lines and unescaped strings!
+and write any string we want, with multi-lines and unescaped characters!
 We could use this to write the tests
 [we previously wrote](04-markup/01-data_type.html#exercises):
 
