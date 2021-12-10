@@ -14,9 +14,10 @@ converting documents written in our own custom markup language to HTML.
 We will:
 
 1. Implement a tiny HTML printer library
-2. Define and parse our custom markup language
+2. Define and parse our own custom markup language
 3. Read files and glue things together
 4. Add command line arguments parsing
+5. Write tests and documentation
 
 In each chapter of the book we will focus on a particular task we wish to achieve,
 and through the chapter we'll learn just enough Haskell to complete the task.
