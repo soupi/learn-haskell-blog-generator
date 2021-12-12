@@ -4825,18 +4825,18 @@ provide other benefits such as automatic generation of usage lines, help screens
 error reporting, and more.</p>
 <p>While <code>optparse-applicative</code>'s dependency footprint isn't very large,
 it is likely that a user of our library wouldn't need command-line parsing
-in this particular case, so it makes sense to add this dependency on the <code>executable</code>
-rather than the <code>library</code> in the cabal file:</p>
-<pre><code class="language-cabal">executable hs-blog-gen
-  import: common-settings
-  hs-source-dirs: app
-  main-is: Main.hs
-  build-depends:
-      base
-    , optparse-applicative
-    , hs-blog
-  ghc-options:
-    -O
+in this particular case, so it makes sense to add this dependency to the <code>executable</code> section
+(rather than the <code>library</code> section) in the <code>.cabal</code> file:</p>
+<pre><code class="language-diff"> executable hs-blog-gen
+   import: common-settings
+   hs-source-dirs: app
+   main-is: Main.hs
+   build-depends:
+       base
++    , optparse-applicative
+     , hs-blog
+   ghc-options:
+     -O
 </code></pre>
 <h2 id="building-a-command-line-parser"><a class="header" href="#building-a-command-line-parser">Building a command-line parser</a></h2>
 <p>The optparse-applicative package has pretty decent
@@ -5091,7 +5091,7 @@ type class. <code>Applicative</code> (also known as applicative functor) has thr
 primary functions:</p>
 <pre><code class="language-hs">class Functor f =&gt; Applicative f where
   pure :: a -&gt; f a
-  liftA2 :: (a -&gt; b -&gt; c) -&gt; f a -&gt; f b -&gt; f c 
+  liftA2 :: (a -&gt; b -&gt; c) -&gt; f a -&gt; f b -&gt; f c
   (&lt;*&gt;) :: f (a -&gt; b) -&gt; f a -&gt; f b
 </code></pre>
 <p><a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Applicative.html#t:Applicative"><code>Applicative</code></a>
@@ -5106,7 +5106,7 @@ a certain <code>f</code>, applicative functors allow us to apply a function to
 talked about <code>IO</code>. For <code>IO</code>, <code>pure</code> lets us create an <code>IO</code> action
 that would return a specific value without doing IO.
 With <code>pure</code> for <code>Parser</code>, we can create a <code>Parser</code> that when run
-will return a specific value as output. </p>
+will return a specific value as output.</p>
 <p><code>liftA2</code> and <code>&lt;*&gt;</code> are two functions that can be implemented in
 terms of one another. <code>&lt;*&gt;</code> is actually the more useful one between
 the two. Because when combined with <code>fmap</code> (or rather the infix version <code>&lt;$&gt;</code>),
@@ -5206,9 +5206,9 @@ the function <code>optional</code> from <code>Control.Applicative</code>:</p>
 </code></pre>
 <p><code>optional</code> works on types which implement instances of the
 <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Applicative.html#t:Alternative"><code>Alternative</code></a> type class:</p>
-<pre><code class="language-hs">class Applicative f =&gt; Alternative f where 
+<pre><code class="language-hs">class Applicative f =&gt; Alternative f where
   (&lt;|&gt;) :: f a -&gt; f a -&gt; f a
-  empty :: f a 
+  empty :: f a
 </code></pre>
 <p><code>Alternative</code> looks very similar to the <code>Monoid</code> type class,
 but it works on applicative functors. This type class isn't
@@ -5558,13 +5558,24 @@ process :: Html.Title -&gt; String -&gt; String
 process title = Html.render . convert title . Markup.parse
 </code></pre>
 </details>
-<p>We need to make a few small changes to the cabal file.</p>
+<p>We need to make a few small changes to the <code>.cabal</code> file.</p>
 <p>First, we need to add the dependency <code>directory</code> to the <code>executable</code>,
 because we use the library <code>System.Directory</code> in <code>Main</code>.</p>
 <p>Second, we need to list <code>OptParse</code> in the list of modules in
-the <code>executable</code>. Below <code>main-is: Main.hs</code>, add:</p>
-<pre><code class="language-cabal">  other-modules:
-    OptParse
+the <code>executable</code>.</p>
+<pre><code class="language-diff"> executable hs-blog-gen
+   import: common-settings
+   hs-source-dirs: app
+   main-is: Main.hs
++  other-modules:
++    OptParse
+   build-depends:
+       base
++    , directory
+     , optparse-applicative
+     , hs-blog
+   ghc-options:
+     -O
 </code></pre>
 <h2 id="summary-6"><a class="header" href="#summary-6">Summary</a></h2>
 <p>We've learned about a new fancy library called <code>optparse-applicative</code>
