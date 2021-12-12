@@ -155,7 +155,7 @@ and help messages.
 > than `String`. But it is often the preferred type to use for text!
 
 As you can see, modifiers can be composed using the `<>` function,
-which means they are an instances of `Semigroup`!
+which means they are instances of `Semigroup`!
 
 With such interface it means that we don't have to supply all of the modifier
 options, we can just use the ones that are relevant. So if we don't want to
