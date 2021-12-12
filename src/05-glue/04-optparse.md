@@ -14,20 +14,20 @@ error reporting, and more.
 
 While `optparse-applicative`'s dependency footprint isn't very large,
 it is likely that a user of our library wouldn't need command-line parsing
-in this particular case, so it makes sense to add this dependency on the `executable`
-rather than the `library` in the cabal file:
+in this particular case, so it makes sense to add this dependency to the `executable` section
+(rather than the `library` section) in the `.cabal` file:
 
-```cabal
-executable hs-blog-gen
-  import: common-settings
-  hs-source-dirs: app
-  main-is: Main.hs
-  build-depends:
-      base
-    , optparse-applicative
-    , hs-blog
-  ghc-options:
-    -O
+```diff
+ executable hs-blog-gen
+   import: common-settings
+   hs-source-dirs: app
+   main-is: Main.hs
+   build-depends:
+       base
++    , optparse-applicative
+     , hs-blog
+   ghc-options:
+     -O
 ```
 
 ## Building a command-line parser
@@ -232,7 +232,7 @@ instance of functor.
 
 > Notice how `f` has a kind `* -> *`, we can infer the kind of `f`
 > by looking at the other types in the type signature of `fmap`:
-> 
+>
 > 1. `a` and `b` have the kind `*` because they are used as arguments/return
 > types of functions
 > 2. `f a` has the kind `*` because it is used as an argument to a function, therefore
@@ -335,7 +335,7 @@ primary functions:
 ```hs
 class Functor f => Applicative f where
   pure :: a -> f a
-  liftA2 :: (a -> b -> c) -> f a -> f b -> f c 
+  liftA2 :: (a -> b -> c) -> f a -> f b -> f c
   (<*>) :: f (a -> b) -> f a -> f b
 ```
 
@@ -354,7 +354,7 @@ You should already be familiar with `pure`, we've seen it when we
 talked about `IO`. For `IO`, `pure` lets us create an `IO` action
 that would return a specific value without doing IO.
 With `pure` for `Parser`, we can create a `Parser` that when run
-will return a specific value as output. 
+will return a specific value as output.
 
 `liftA2` and `<*>` are two functions that can be implemented in
 terms of one another. `<*>` is actually the more useful one between
@@ -479,9 +479,9 @@ optional :: Alternative f => f a -> f (Maybe a)
 [`Alternative`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Applicative.html#t:Alternative) type class:
 
 ```hs
-class Applicative f => Alternative f where 
+class Applicative f => Alternative f where
   (<|>) :: f a -> f a -> f a
-  empty :: f a 
+  empty :: f a
 ```
 
 `Alternative` looks very similar to the `Monoid` type class,
@@ -889,17 +889,28 @@ process title = Html.render . convert title . Markup.parse
 
 </details>
 
-We need to make a few small changes to the cabal file.
+We need to make a few small changes to the `.cabal` file.
 
 First, we need to add the dependency `directory` to the `executable`,
 because we use the library `System.Directory` in `Main`.
 
 Second, we need to list `OptParse` in the list of modules in
-the `executable`. Below `main-is: Main.hs`, add:
+the `executable`.
 
-```cabal
-  other-modules:
-    OptParse
+```diff
+ executable hs-blog-gen
+   import: common-settings
+   hs-source-dirs: app
+   main-is: Main.hs
++  other-modules:
++    OptParse
+   build-depends:
+       base
++    , directory
+     , optparse-applicative
+     , hs-blog
+   ghc-options:
+     -O
 ```
 
 ## Summary
