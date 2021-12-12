@@ -4952,7 +4952,7 @@ been using it up until now because it is slightly less ergonomic to use
 than <code>String</code>. But it is often the preferred type to use for text!</p>
 </blockquote>
 <p>As you can see, modifiers can be composed using the <code>&lt;&gt;</code> function,
-which means they are an instances of <code>Semigroup</code>!</p>
+which means modifiers implement an instance of the <code>Semigroup</code> type class!</p>
 <p>With such an interface it means that we don't have to supply all of the modifier
 options, we can just use the ones that are relevant. So if we don't want to
 have a shortened flag name, we don't have to add it.</p>
