@@ -157,7 +157,7 @@ and help messages.
 As you can see, modifiers can be composed using the `<>` function,
 which means they are an instances of `Semigroup`!
 
-With such interface it means that we don't have to supply all of the modifier
+With such an interface it means that we don't have to supply all of the modifier
 options, we can just use the ones that are relevant. So if we don't want to
 have a shortened flag name, we don't have to add it.
 
