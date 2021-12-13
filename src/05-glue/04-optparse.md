@@ -137,8 +137,8 @@ out =
     )
 ```
 
-`strOption` is a parser builder. It is a function that takes *option
-modifiers* as an argument, and returns a parser that will parse a string.
+`strOption` is a parser builder. It is a function that takes a combined
+*option modifiers* as an argument, and returns a parser that will parse a string.
 We can specify the type to be `FilePath` because `FilePath` is an
 alias to `String`. The parser builder describes how to parse the value,
 and the modifiers describe its properties, such as the flag name,
@@ -157,8 +157,8 @@ and help messages.
 As you can see, modifiers can be composed using the `<>` function,
 which means modifiers implement an instance of the `Semigroup` type class!
 
-With such an interface it means that we don't have to supply all of the modifier
-options, we can just use the ones that are relevant. So if we don't want to
+With such an interface we don't have to supply all the modifier
+options, but only the relevant ones. So if we don't want to
 have a shortened flag name, we don't have to add it.
 
 #### Functor
@@ -227,7 +227,7 @@ fmap id = id
 fmap (f . g) == fmap f . fmap g
 ```
 
-Any type `f` that can implement `fmap` and follow these laws can be an
+Any type `f` that can implement `fmap` and follow these laws can be a valid
 instance of functor.
 
 > Notice how `f` has a kind `* -> *`, we can infer the kind of `f`

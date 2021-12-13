@@ -36,7 +36,7 @@ differences:
 2. We can have alternative structures using `|`, `newtype`s have no
    alternatives.
 
-This is because `newtype`s is used to provide a type safe __alias__,  and `data`
+This is because `newtype` is used to provide a type safe __alias__, and `data`
 is used to build a new **composite** type that can potentially have *alternatives*.
 
 Let's see a few of examples of data types:
@@ -48,10 +48,10 @@ Let's see a few of examples of data types:
      = True
      | False
    ```
-   
+
    We created a new data type named `Bool` with the possible values `True` or `False`.
    In this case we only have *constructor* alternatives and none of the constructors
-   carry additional values, this is similar to enums in other languages.
+   carry additional values. This is similar to enums in other languages.
 
 2. Person
 
@@ -60,28 +60,28 @@ Let's see a few of examples of data types:
      = Person String Int -- where the first is the name and the second is
                          -- the age
    ```
-   
+
    We created a new data type named `Person`. Values of the type `Person`
    look like this:
-   
+
    ```
    Person <some-string> <some-int>
    ```
-   
+
    For example:
-   
+
    ```hs
    Person "Gil" 32
    ```
-   
+
    In this case we create a *composite* of multiple types, without alternatives.
    This is similar to structs in other language, but structs give each field
    a name, and here we distinguish them by position.
-   
+
    Alternatively, Haskell has *syntactic sugar* for naming fields called **records**.
    The above definition can also be written like this:
-   
-   
+
+
    ```hs
    data Person
      = Person
@@ -89,36 +89,36 @@ Let's see a few of examples of data types:
        , age :: Int
        }
    ```
-   
+
    Values of this type can be written exactly as before,
-   
+
    ```hs
    Person "Gil" 32
    ```
-   
+
    Or with this syntax:
-   
+
    ```hs
    Person { name = "Gil", age = 32 }
    ```
-   
+
    Haskell will also generate functions that can be used to extract the fields from the composite type:
-   
+
    ```hs
    name :: Person -> String
    age :: Person -> Int
    ```
-   
+
    Which can be used like this:
-   
+
    ```hs
    ghci> age (Person { name = "Gil", age = 32 })
    32
    ```
-   
+
    We even have special syntax for updating specific fields in a record. Of course,
    we do not update records in place - we generate a new value instead.
-   
+
    ```hs
    ghci> gil = Person { name = "Gil", age = 32 }
    ghci> age (gil { age = 33 })
@@ -126,14 +126,14 @@ Let's see a few of examples of data types:
    ghci> age gil
    32
    ```
-   
+
    Unfortunately, having specialized functions for each field also means that if we
    defined a different data type with the field `age`, the functions which GHC needs
    to generate will clash.
-   
+
    The easiest way to solve this is to give fields unique names, for example
    by adding a prefix:
-   
+
    ```hs
    data Person
      = Person
@@ -141,7 +141,7 @@ Let's see a few of examples of data types:
        , pAge :: Int
        }
    ```
-   
+
    Another way is by using extensions to the Haskell language, which we will cover
    in later chapters.
 
@@ -151,21 +151,21 @@ Let's see a few of examples of data types:
    data Tuple a b
      = Tuple a b
    ```
-   
+
    This is pretty similar to `Person`, but we can plug any type we want
    for this definition. For example:
-   
+
    ```hs
    Tuple "Clicked" True :: Tuple String Bool
-   
+
    Tuple 'a' 'z' :: Tuple Char Char
    ```
-   
+
    This type has special syntax in Haskell:
-   
+
    ```hs
    ("Clicked", True) :: (String, Bool)
-   
+
    ('a', 'z') :: (Char, Char)
    ```
 
@@ -203,23 +203,23 @@ Let's see a few of examples of data types:
      = Left a
      | Right b
    ```
-   
+
    Similar to Tuple but instead of having only one constructor, we have
    two. This means that we can choose which side we want. Here are a
    couple of values of type `Either String Int`:
-   
+
    ```hs
    Left "Hello"
-   
+
    Right 17
    ```
-   
+
    This type is useful for modeling errors. Either we succeeded and got
    what we wanted (The `Right` constructor with the value), or we didn't
    and got an error instead (The `Left` constructor with a string or a
    custom error type).
-   
-In our program we use `data` types to model the different kinds of content types we have
+
+In our program we use `data` types to model the different kinds of content types
 in our markup language. We tag each structure using the data constructor
 and provide the rest of the information (the paragraph text, the list items, etc)
 in the `<types>` section of the data declaration for each constructor:
@@ -251,7 +251,7 @@ Represent the following markup documents as values of `Document`:
 
 2. ```org
    * Welcome
-   
+
    To this tutorial about Haskell.
    ```
 
@@ -259,40 +259,40 @@ Represent the following markup documents as values of `Document`:
    Remember that multiple lines with no separation
    are grouped together to a single paragraph
    but list items remain separate.
-   
+
    # Item 1 of a list
    # Item 2 of the same list
    ```
 
 4. ```org
    * Compiling programs with ghc
-   
+
    Running ghc invokes the Glasgow Haskell Compiler (GHC),
    and can be used to compile Haskell modules and programs into native
    executables and libraries.
-   
+
    Create a new Haskell source file named hello.hs, and write
    the following code in it:
-   
+
    > main = putStrLn "Hello, Haskell!"
-   
+
    Now, we can compile the program by invoking ghc with the file name:
-   
+
    > ➜ ghc hello.hs
    > [1 of 1] Compiling Main             ( hello.hs, hello.o )
    > Linking hello ...
-   
+
    GHC created the following files:
-   
+
    - hello.hi - Haskell interface file
    - hello.o - Object file, the output of the compiler before linking
    - hello (or hello.exe on Microsoft Windows) - A native runnable executable.
-   
+
    GHC will produce an executable when the source file satisfies both conditions:
-   
+
    # Defines the main function in the source file
    # Defines the module name to be Main, or does not have a module declaration
-   
+
    Otherwise, it will only produce the .o and .hi files.
    ```
 
