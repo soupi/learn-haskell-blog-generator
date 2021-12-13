@@ -138,7 +138,7 @@ out =
 ```
 
 `strOption` is a parser builder. It is a function that takes a combined
-*option modifiers* as argument, and returns a parser that will parse a string.
+*option modifiers* as an argument, and returns a parser that will parse a string.
 We can specify the type to be `FilePath` because `FilePath` is an
 alias to `String`. The parser builder describes how to parse the value,
 and the modifiers describe its properties, such as the flag name,
@@ -227,7 +227,7 @@ fmap id = id
 fmap (f . g) == fmap f . fmap g
 ```
 
-Any type `f` that implements `fmap` and follows these laws is an
+Any type `f` that can implement `fmap` and follow these laws can be a valid
 instance of functor.
 
 > Notice how `f` has a kind `* -> *`, we can infer the kind of `f`
@@ -254,7 +254,7 @@ satisfy the first law. `fmap id = id` means that
 clearly see that `mapMaybe id (Just x) == Nothing`.
 
 This is a good example of how Haskell doesn't help us make sure the laws
-are satisfied, and why they are important? Unlawful `Functor` instances
+are satisfied, and why they are important. Unlawful `Functor` instances
 will behave differently than we'd expect a `Functor` to behave.
 Let's try again!
 
