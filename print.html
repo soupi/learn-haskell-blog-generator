@@ -2119,7 +2119,7 @@ For <code>newtype</code>s we can only write one.</li>
 <li>We can have alternative structures using <code>|</code>, <code>newtype</code>s have no
 alternatives.</li>
 </ol>
-<p>This is because <code>newtype</code>s is used to provide a type safe <strong>alias</strong>,  and <code>data</code>
+<p>This is because <code>newtype</code> is used to provide a type safe <strong>alias</strong>, and <code>data</code>
 is used to build a new <strong>composite</strong> type that can potentially have <em>alternatives</em>.</p>
 <p>Let's see a few of examples of data types:</p>
 <ol>
@@ -2131,7 +2131,7 @@ is used to build a new <strong>composite</strong> type that can potentially have
 </code></pre>
 <p>We created a new data type named <code>Bool</code> with the possible values <code>True</code> or <code>False</code>.
 In this case we only have <em>constructor</em> alternatives and none of the constructors
-carry additional values, this is similar to enums in other languages.</p>
+carry additional values. This is similar to enums in other languages.</p>
 </li>
 <li>
 <p>Person</p>
@@ -2251,7 +2251,7 @@ and got an error instead (The <code>Left</code> constructor with a string or a
 custom error type).</p>
 </li>
 </ol>
-<p>In our program we use <code>data</code> types to model the different kinds of content types we have
+<p>In our program we use <code>data</code> types to model the different kinds of content types
 in our markup language. We tag each structure using the data constructor
 and provide the rest of the information (the paragraph text, the list items, etc)
 in the <code>&lt;types&gt;</code> section of the data declaration for each constructor:</p>
@@ -4934,8 +4934,8 @@ out =
       &lt;&gt; help &quot;Output file&quot;
     )
 </code></pre>
-<p><code>strOption</code> is a parser builder. It is a function that takes <em>option
-modifiers</em> as an argument, and returns a parser that will parse a string.
+<p><code>strOption</code> is a parser builder. It is a function that takes a combined
+<em>option modifiers</em> as an argument, and returns a parser that will parse a string.
 We can specify the type to be <code>FilePath</code> because <code>FilePath</code> is an
 alias to <code>String</code>. The parser builder describes how to parse the value,
 and the modifiers describe its properties, such as the flag name,
@@ -4953,8 +4953,8 @@ than <code>String</code>. But it is often the preferred type to use for text!</p
 </blockquote>
 <p>As you can see, modifiers can be composed using the <code>&lt;&gt;</code> function,
 which means modifiers implement an instance of the <code>Semigroup</code> type class!</p>
-<p>With such an interface it means that we don't have to supply all of the modifier
-options, we can just use the ones that are relevant. So if we don't want to
+<p>With such an interface we don't have to supply all the modifier
+options, but only the relevant ones. So if we don't want to
 have a shortened flag name, we don't have to add it.</p>
 <h4 id="functor"><a class="header" href="#functor">Functor</a></h4>
 <p>For the data type we've defined, having <code>Parser FilePath</code> takes us
@@ -5002,7 +5002,7 @@ fmap id = id
 --    them after fmap
 fmap (f . g) == fmap f . fmap g
 </code></pre>
-<p>Any type <code>f</code> that can implement <code>fmap</code> and follow these laws can be an
+<p>Any type <code>f</code> that can implement <code>fmap</code> and follow these laws can be a valid
 instance of functor.</p>
 <blockquote>
 <p>Notice how <code>f</code> has a kind <code>* -&gt; *</code>, we can infer the kind of <code>f</code>

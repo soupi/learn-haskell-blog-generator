@@ -173,7 +173,7 @@ For <code>newtype</code>s we can only write one.</li>
 <li>We can have alternative structures using <code>|</code>, <code>newtype</code>s have no
 alternatives.</li>
 </ol>
-<p>This is because <code>newtype</code>s is used to provide a type safe <strong>alias</strong>,  and <code>data</code>
+<p>This is because <code>newtype</code> is used to provide a type safe <strong>alias</strong>, and <code>data</code>
 is used to build a new <strong>composite</strong> type that can potentially have <em>alternatives</em>.</p>
 <p>Let's see a few of examples of data types:</p>
 <ol>
@@ -185,7 +185,7 @@ is used to build a new <strong>composite</strong> type that can potentially have
 </code></pre>
 <p>We created a new data type named <code>Bool</code> with the possible values <code>True</code> or <code>False</code>.
 In this case we only have <em>constructor</em> alternatives and none of the constructors
-carry additional values, this is similar to enums in other languages.</p>
+carry additional values. This is similar to enums in other languages.</p>
 </li>
 <li>
 <p>Person</p>
@@ -305,7 +305,7 @@ and got an error instead (The <code>Left</code> constructor with a string or a
 custom error type).</p>
 </li>
 </ol>
-<p>In our program we use <code>data</code> types to model the different kinds of content types we have
+<p>In our program we use <code>data</code> types to model the different kinds of content types
 in our markup language. We tag each structure using the data constructor
 and provide the rest of the information (the paragraph text, the list items, etc)
 in the <code>&lt;types&gt;</code> section of the data declaration for each constructor:</p>
