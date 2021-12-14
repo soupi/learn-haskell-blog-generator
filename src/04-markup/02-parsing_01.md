@@ -74,8 +74,8 @@ sum n m =
     else n
 ```
 
-__In Haskell, in order to emulate iteration with mutable state, we call the function again
-with the values we want the variables to have in the next iteration.__
+In Haskell, in order to _emulate iteration with mutable state_, we call the function again
+with the values we want the variables to have in the next iteration.
 
 ### Evaluation of recursion
 
