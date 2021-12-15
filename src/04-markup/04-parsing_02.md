@@ -7,8 +7,8 @@ writing partial functions is to encode the absence of a result using `Maybe`:
 
 ```hs
 data Maybe a
-    = Nothing
-    | Just a
+  = Nothing
+  | Just a
 ```
 
 `Maybe` is a data type from the standard library (named [base](https://hackage.haskell.org/package/base))
@@ -22,7 +22,7 @@ We can use this to encode the result of `head`, a function that promises to retu
 the first element of a list, without creating a partial function:
 
 ```hs
-head :: [a] -> Maybe a
+safeHead :: [a] -> Maybe a
 ```
 
 This way, when the list is empty, we can return `Nothing`, and when it has at least
@@ -31,7 +31,7 @@ the [Data.Maybe](https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-May
 module under the name
 [listToMaybe](https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Maybe.html#v:listToMaybe).
 
-In order to consume values of type `Maybe <something>`, and other types created with
+In order to *consume* values of type `Maybe <something>`, and other types created with
 `data`, we can use pattern matching.
 
 ## Pattern Matching
@@ -116,6 +116,48 @@ by passing the flag `-Wall` to `ghc` or `runghc`.
 > and I would encourage you to avoid it,
 > but if you want to use it instead of case expressions, it is possible.
 
+### Pattern matching on linked lists
+
+Because linked lists have their own [special syntax](/03-html/06-escaping_characters.html#linked-lists-briefly),
+we also have slightly special syntax when we pattern match on them.
+We can use the same special syntax for creating lists when we pattern match on lists,
+replacing the *elements* of the list with patterns. For example:
+
+```hs
+safeHead :: [a] -> Maybe a
+safeHead list =
+  case list of
+    -- Empty list
+    [] -> Nothing
+
+    -- Cons cell pattern, will match any list with at least one element
+	x : _ -> Just x
+```
+
+```hs
+exactlyTwo :: [a] -> Maybe (a, a)
+exactlyTwo list =
+  case list of
+    -- Will match a list with exactly two elements
+	[x, y] -> Just (x, y)
+
+    -- Will match any other pattern
+	_ -> Nothing
+```
+
+```hs
+-- This will also work
+exactlyTwoVersion2 :: [a] -> Maybe (a, a)
+exactlyTwoVersion2 list =
+  case list of
+    -- Will match a list with exactly two elements
+	x : y : [] -> Just (x, y)
+
+    -- Will match any other pattern
+	_ -> Nothing
+```
+
+
 ---
 
 Exercises:
@@ -123,7 +165,106 @@ Exercises:
 1. Create a function `isBright :: AnsiColor -> Bool` that checks whether a color is bright or not
 2. Use [this table](https://en.wikipedia.org/wiki/ANSI_escape_code#3-bit_and_4-bit) to write `ansiToUbuntu`.
 3. Create a function `isEmpty :: [a] -> Bool` that uses `listToMaybe` to check whether a list is empty or not
-3. Create a function `isEmpty :: [a] -> Bool` that *doesn't* use `listToMaybe` to check whether a list is empty or not
+4. Create a function `isEmpty :: [a] -> Bool` that *doesn't* use `listToMaybe` to check whether a list is empty or not
+
+Solutions:
+
+<details><summary>Solution for (1)</summary>
+
+```hs
+isBright :: AnsiColor -> Bool
+isBright ansiColor =
+  case ansiColor of
+    AnsiColor Bright _ -> True
+    AnsiColor Dark _ -> False
+```
+
+</details>
+<details><summary>Solution for (2)</summary>
+
+```hs
+ansiToUbuntu :: AnsiColor -> Color
+ansiToUbuntu ansiColor =
+  case ansiColor of
+    AnsiColor brightness color ->
+      case brightness of
+        Dark ->
+          case color of
+            Black -> RGB 0 0 0
+            Red -> RGB 194 54 33
+            Green -> RGB 37 188 36
+            Yellow -> RGB 173 173 39
+            Blue -> RGB 73 46 225
+            Magenta -> RGB 211 56 211
+            Cyan -> RGB 51 187 200
+            White -> RGB 203 204 205
+
+        Bright ->
+          case color of
+            Black -> RGB 129 131 131
+            Red -> RGB 252 57 31
+            Green -> RGB 49 231 34
+            Yellow -> RGB 234 236 35
+            Blue -> RGB 88 51 255
+            Magenta -> RGB 249 53 248
+            Cyan -> RGB 20 240 240
+            White -> RGB 233 235 235
+```
+
+Since pattern matching goes arbitrarily deep as we saw before, we could instead
+pattern match all the way through in one case expression:
+
+```hs
+ansiToUbuntu :: AnsiColor -> Color
+ansiToUbuntu ansiColor =
+  case ansiColor of
+    AnsiColor Dark Black -> RGB 0 0 0
+    AnsiColor Dark Red -> RGB 194 54 33
+    AnsiColor Dark Green -> RGB 37 188 36
+    AnsiColor Dark Yellow -> RGB 173 173 39
+    AnsiColor Dark Blue -> RGB 73 46 225
+    AnsiColor Dark Magenta -> RGB 211 56 211
+    AnsiColor Dark Cyan -> RGB 51 187 200
+    AnsiColor Dark White -> RGB 203 204 205
+    AnsiColor Bright Black -> RGB 129 131 131
+    AnsiColor Bright Red -> RGB 252 57 31
+    AnsiColor Bright Green -> RGB 49 231 34
+    AnsiColor Bright Yellow -> RGB 234 236 35
+    AnsiColor Bright Blue -> RGB 88 51 255
+    AnsiColor Bright Magenta -> RGB 249 53 248
+    AnsiColor Bright Cyan -> RGB 20 240 240
+    AnsiColor Bright White -> RGB 233 235 235
+```
+
+But this is a bit too much repetition of `AnsiColor`, `Dark` and `Bright`
+to my taste in this case.
+
+</details>
+<details><summary>Solution for (3)</summary>
+
+```hs
+isEmpty :: [a] -> Bool
+isEmpty list =
+  case listToMaybe list of
+    Nothing -> True
+    Just _ -> False
+```
+
+</details>
+<details><summary>Solution for (4)</summary>
+
+```hs
+isEmpty :: [a] -> Bool
+isEmpty list =
+  case list of
+    [] -> True
+    _ : _ -> False
+```
+
+</details>
+
+
+
 
 ---
 
@@ -234,11 +375,11 @@ parseLines context txts =
   case txts of
     -- done case
     [] -> maybeToList context
-   
+
     -- Header 1 case
     ('*' : ' ' : line) : rest ->
       maybe id (:) context (Header 1 (trim line) : parseLines Nothing rest)
-   
+
     -- Unordered list case
     ('-' : ' ' : line) : rest ->
       case context of
@@ -247,7 +388,7 @@ parseLines context txts =
 
         _ ->
           maybe id (:) context (parseLines (Just (UnorderedList [trim line])) rest)
-   
+
     -- Paragraph case
     currentLine : rest ->
       let
@@ -307,11 +448,11 @@ parseLines context txts =
   case txts of
     -- done case
     [] -> maybeToList context
-   
+
     -- Header 1 case
     ('*' : ' ' : line) : rest ->
       maybe id (:) context (Header 1 (trim line) : parseLines Nothing rest)
-   
+
     -- Unordered list case
     ('-' : ' ' : line) : rest ->
       case context of

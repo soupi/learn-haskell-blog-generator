@@ -583,14 +583,14 @@ parseLines currentParagraph txts =
   let
     paragraph = Paragraph (unlines (reverse currentParagraph)) -- (2), (3)
   in
-    case txts of
+    case txts of -- (4)
       [] -> [paragraph]
       currentLine : rest ->
         if trim currentLine == ""
           then
-            paragraph : parseLines [] rest -- (4)
+            paragraph : parseLines [] rest -- (5)
           else
-            parseLines (currentLine : currentParagraph) rest -- (5)
+            parseLines (currentLine : currentParagraph) rest -- (6)
 
 trim :: String -> String
 trim = unwords . words
@@ -601,9 +601,17 @@ Things to note:
 1. We pass a list that contains the currently grouped paragraph (paragraphs are separated by an empty line)
 2. Because of laziness, `paragraph` is not computed until it's needed, so we don't have to worry about
   the performance implications in the case the we are still grouping lines
-3. Why do we reverse `currentParagraph`? (See point (5))
-4. When we run into an empty line we add the accumulated paragraph to the resulting list (A `Document` is a list of structures) and start the function again with the rest of the input.
-5. We pass the new lines to be grouped in a paragraph **in reverse order** because of
+3. Why do we reverse `currentParagraph`? (See point (6))
+4. We saw case expressions used to deconstruct `newtype`s and `Char`s,
+   but we can also pattern match on lists and other ADTs as well!
+   In this case we match against two patterns, an empty list (`[]`),
+   and a "cons cell" - a list with at least one element (`currentLine : rest`).
+   In the body of the "cons" pattern, we bind the first element to the name `currentLine`,
+   and the rest of the elements to the name `rest`.
+
+   We will talk about how all of this works really soon!
+5. When we run into an empty line we add the accumulated paragraph to the resulting list (A `Document` is a list of structures) and start the function again with the rest of the input.
+6. We pass the new lines to be grouped in a paragraph **in reverse order** because of
    performance characteristics - because of the nature of singly-linked lists,
    prepending an element is fast, and appending is slow. Prepending only requires
    us to create a new cons (`:`) cell to hold a pointer to the value and a pointer to the list,
