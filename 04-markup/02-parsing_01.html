@@ -583,33 +583,52 @@ parseLines currentParagraph txts =
   let
     paragraph = Paragraph (unlines (reverse currentParagraph)) -- (2), (3)
   in
-    case txts of
+    case txts of -- (4)
       [] -&gt; [paragraph]
       currentLine : rest -&gt;
         if trim currentLine == &quot;&quot;
           then
-            paragraph : parseLines [] rest -- (4)
+            paragraph : parseLines [] rest -- (5)
           else
-            parseLines (currentLine : currentParagraph) rest -- (5)
+            parseLines (currentLine : currentParagraph) rest -- (6)
 
 trim :: String -&gt; String
 trim = unwords . words
 </code></pre>
 <p>Things to note:</p>
 <ol>
-<li>We pass a list that contains the currently grouped paragraph (paragraphs are separated by an empty line)</li>
-<li>Because of laziness, <code>paragraph</code> is not computed until it's needed, so we don't have to worry about
-the performance implications in the case the we are still grouping lines</li>
-<li>Why do we reverse <code>currentParagraph</code>? (See point (5))</li>
-<li>When we run into an empty line we add the accumulated paragraph to the resulting list (A <code>Document</code> is a list of structures) and start the function again with the rest of the input.</li>
-<li>We pass the new lines to be grouped in a paragraph <strong>in reverse order</strong> because of
+<li>
+<p>We pass a list that contains the currently grouped paragraph (paragraphs are separated by an empty line)</p>
+</li>
+<li>
+<p>Because of laziness, <code>paragraph</code> is not computed until it's needed, so we don't have to worry about
+the performance implications in the case the we are still grouping lines</p>
+</li>
+<li>
+<p>Why do we reverse <code>currentParagraph</code>? (See point (6))</p>
+</li>
+<li>
+<p>We saw case expressions used to deconstruct <code>newtype</code>s and <code>Char</code>s,
+but we can also pattern match on lists and other ADTs as well!
+In this case we match against two patterns, an empty list (<code>[]</code>),
+and a &quot;cons cell&quot; - a list with at least one element (<code>currentLine : rest</code>).
+In the body of the &quot;cons&quot; pattern, we bind the first element to the name <code>currentLine</code>,
+and the rest of the elements to the name <code>rest</code>.</p>
+<p>We will talk about how all of this works really soon!</p>
+</li>
+<li>
+<p>When we run into an empty line we add the accumulated paragraph to the resulting list (A <code>Document</code> is a list of structures) and start the function again with the rest of the input.</p>
+</li>
+<li>
+<p>We pass the new lines to be grouped in a paragraph <strong>in reverse order</strong> because of
 performance characteristics - because of the nature of singly-linked lists,
 prepending an element is fast, and appending is slow. Prepending only requires
 us to create a new cons (<code>:</code>) cell to hold a pointer to the value and a pointer to the list,
 but appending requires us to traverse the list to its end and rebuild the cons cells -
 the last one will contain the last value of the list and a pointer to the list to append,
 the next will contain the value before the last value of the list and a pointer to the
-list which contains the last element and the appended list, and so on.</li>
+list which contains the last element and the appended list, and so on.</p>
+</li>
 </ol>
 <p>This code above will group together paragraphs in a structure, but how do we view our result?
 In the next chapter will take a short detour and talk a bit about type classes, and how

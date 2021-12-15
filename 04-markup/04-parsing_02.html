@@ -149,8 +149,8 @@
 <p>Previously, when we talked about partial functions, we mentioned that one way to avoid
 writing partial functions is to encode the absence of a result using <code>Maybe</code>:</p>
 <pre><code class="language-hs">data Maybe a
-    = Nothing
-    | Just a
+  = Nothing
+  | Just a
 </code></pre>
 <p><code>Maybe</code> is a data type from the standard library (named <a href="https://hackage.haskell.org/package/base">base</a>)
 that is used to add an additional value to a type: the absence of a value.
@@ -160,14 +160,14 @@ two with the <code>Just</code> constructor to represent regular boolean values
 the absence of a boolean value.</p>
 <p>We can use this to encode the result of <code>head</code>, a function that promises to return
 the first element of a list, without creating a partial function:</p>
-<pre><code class="language-hs">head :: [a] -&gt; Maybe a
+<pre><code class="language-hs">safeHead :: [a] -&gt; Maybe a
 </code></pre>
 <p>This way, when the list is empty, we can return <code>Nothing</code>, and when it has at least
 one element, we can return <code>Just &lt;first element&gt;</code>. This function can be found in
 the <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Maybe.html">Data.Maybe</a>
 module under the name
 <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Maybe.html#v:listToMaybe">listToMaybe</a>.</p>
-<p>In order to consume values of type <code>Maybe &lt;something&gt;</code>, and other types created with
+<p>In order to <em>consume</em> values of type <code>Maybe &lt;something&gt;</code>, and other types created with
 <code>data</code>, we can use pattern matching.</p>
 <h2 id="pattern-matching"><a class="header" href="#pattern-matching">Pattern Matching</a></h2>
 <p>We've already seen pattern matching a few times.
@@ -241,6 +241,39 @@ multiple times, <a href="https://twitter.com/_gilmi/status/1257225601079029760">
 and I would encourage you to avoid it,
 but if you want to use it instead of case expressions, it is possible.</p>
 </blockquote>
+<h3 id="pattern-matching-on-linked-lists"><a class="header" href="#pattern-matching-on-linked-lists">Pattern matching on linked lists</a></h3>
+<p>Because linked lists have their own <a href="/03-html/06-escaping_characters.html#linked-lists-briefly">special syntax</a>,
+we also have slightly special syntax when we pattern match on them.
+We can use the same special syntax for creating lists when we pattern match on lists,
+replacing the <em>elements</em> of the list with patterns. For example:</p>
+<pre><code class="language-hs">safeHead :: [a] -&gt; Maybe a
+safeHead list =
+  case list of
+    -- Empty list
+    [] -&gt; Nothing
+
+    -- Cons cell pattern, will match any list with at least one element
+	x : _ -&gt; Just x
+</code></pre>
+<pre><code class="language-hs">exactlyTwo :: [a] -&gt; Maybe (a, a)
+exactlyTwo list =
+  case list of
+    -- Will match a list with exactly two elements
+	[x, y] -&gt; Just (x, y)
+
+    -- Will match any other pattern
+	_ -&gt; Nothing
+</code></pre>
+<pre><code class="language-hs">-- This will also work
+exactlyTwoVersion2 :: [a] -&gt; Maybe (a, a)
+exactlyTwoVersion2 list =
+  case list of
+    -- Will match a list with exactly two elements
+	x : y : [] -&gt; Just (x, y)
+
+    -- Will match any other pattern
+	_ -&gt; Nothing
+</code></pre>
 <hr />
 <p>Exercises:</p>
 <ol>
@@ -249,6 +282,84 @@ but if you want to use it instead of case expressions, it is possible.</p>
 <li>Create a function <code>isEmpty :: [a] -&gt; Bool</code> that uses <code>listToMaybe</code> to check whether a list is empty or not</li>
 <li>Create a function <code>isEmpty :: [a] -&gt; Bool</code> that <em>doesn't</em> use <code>listToMaybe</code> to check whether a list is empty or not</li>
 </ol>
+<p>Solutions:</p>
+<details><summary>Solution for (1)</summary>
+<pre><code class="language-hs">isBright :: AnsiColor -&gt; Bool
+isBright ansiColor =
+  case ansiColor of
+    AnsiColor Bright _ -&gt; True
+    AnsiColor Dark _ -&gt; False
+</code></pre>
+</details>
+<details><summary>Solution for (2)</summary>
+<pre><code class="language-hs">ansiToUbuntu :: AnsiColor -&gt; Color
+ansiToUbuntu ansiColor =
+  case ansiColor of
+    AnsiColor brightness color -&gt;
+      case brightness of
+        Dark -&gt;
+          case color of
+            Black -&gt; RGB 0 0 0
+            Red -&gt; RGB 194 54 33
+            Green -&gt; RGB 37 188 36
+            Yellow -&gt; RGB 173 173 39
+            Blue -&gt; RGB 73 46 225
+            Magenta -&gt; RGB 211 56 211
+            Cyan -&gt; RGB 51 187 200
+            White -&gt; RGB 203 204 205
+
+        Bright -&gt;
+          case color of
+            Black -&gt; RGB 129 131 131
+            Red -&gt; RGB 252 57 31
+            Green -&gt; RGB 49 231 34
+            Yellow -&gt; RGB 234 236 35
+            Blue -&gt; RGB 88 51 255
+            Magenta -&gt; RGB 249 53 248
+            Cyan -&gt; RGB 20 240 240
+            White -&gt; RGB 233 235 235
+</code></pre>
+<p>Since pattern matching goes arbitrarily deep as we saw before, we could instead
+pattern match all the way through in one case expression:</p>
+<pre><code class="language-hs">ansiToUbuntu :: AnsiColor -&gt; Color
+ansiToUbuntu ansiColor =
+  case ansiColor of
+    AnsiColor Dark Black -&gt; RGB 0 0 0
+    AnsiColor Dark Red -&gt; RGB 194 54 33
+    AnsiColor Dark Green -&gt; RGB 37 188 36
+    AnsiColor Dark Yellow -&gt; RGB 173 173 39
+    AnsiColor Dark Blue -&gt; RGB 73 46 225
+    AnsiColor Dark Magenta -&gt; RGB 211 56 211
+    AnsiColor Dark Cyan -&gt; RGB 51 187 200
+    AnsiColor Dark White -&gt; RGB 203 204 205
+    AnsiColor Bright Black -&gt; RGB 129 131 131
+    AnsiColor Bright Red -&gt; RGB 252 57 31
+    AnsiColor Bright Green -&gt; RGB 49 231 34
+    AnsiColor Bright Yellow -&gt; RGB 234 236 35
+    AnsiColor Bright Blue -&gt; RGB 88 51 255
+    AnsiColor Bright Magenta -&gt; RGB 249 53 248
+    AnsiColor Bright Cyan -&gt; RGB 20 240 240
+    AnsiColor Bright White -&gt; RGB 233 235 235
+</code></pre>
+<p>But this is a bit too much repetition of <code>AnsiColor</code>, <code>Dark</code> and <code>Bright</code>
+to my taste in this case.</p>
+</details>
+<details><summary>Solution for (3)</summary>
+<pre><code class="language-hs">isEmpty :: [a] -&gt; Bool
+isEmpty list =
+  case listToMaybe list of
+    Nothing -&gt; True
+    Just _ -&gt; False
+</code></pre>
+</details>
+<details><summary>Solution for (4)</summary>
+<pre><code class="language-hs">isEmpty :: [a] -&gt; Bool
+isEmpty list =
+  case list of
+    [] -&gt; True
+    _ : _ -&gt; False
+</code></pre>
+</details>
 <hr />
 <h2 id="parsing-with-rich-context"><a class="header" href="#parsing-with-rich-context">Parsing with rich context</a></h2>
 <p>Previously we wrote a parser that separates documents into different paragraphs.
@@ -256,21 +367,21 @@ With new features under our belt we can now remember the exact context we are in
 (whether it is a text paragraph, a list, or a code block) and act accordingly!</p>
 <p>Let's look again at the parsing code we wrote previously:</p>
 <pre><code class="language-hs">parse :: String -&gt; Document
-parse = parseLines [] . lines -- (1)
+parse = parseLines [] . lines
 
 parseLines :: [String] -&gt; [String] -&gt; Document
 parseLines currentParagraph txts =
   let
-    paragraph = Paragraph (unlines (reverse currentParagraph)) -- (2), (3)
+    paragraph = Paragraph (unlines (reverse currentParagraph))
   in
     case txts of
       [] -&gt; [paragraph]
       currentLine : rest -&gt;
         if trim currentLine == &quot;&quot;
           then
-            paragraph : parseLines [] rest -- (4)
+            paragraph : parseLines [] rest
           else
-            parseLines (currentLine : currentParagraph) rest -- (5)
+            parseLines (currentLine : currentParagraph) rest
 
 trim :: String -&gt; String
 trim = unwords . words
@@ -314,8 +425,13 @@ trim = unwords . words
 <p>Unsure what <code>maybeToList</code> does? <a href="https://hoogle.haskell.org">Hoogle</a> it!</p>
 </li>
 <li>
-<p><a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Prelude.html#v:maybe">maybe</a> is a function that works similarly to pattern matching on a <code>Maybe</code>.
-Check out the types of <code>id</code>, <code>(:)</code> and <code>maybe id (:)</code> in GHCi!</p>
+<p><a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Prelude.html#v:maybe">maybe</a> is a function
+that works similarly to pattern matching on a <code>Maybe</code>:
+the third argument to <code>maybe</code> is the value we pattern match on, the second argument is a function to apply
+to the value found in a <code>Just</code> case, and the first argument is the value to return in case the value
+we pattern match on is <code>Nothing</code>. This way to encode pattern matching using functions is actually
+fairly common.</p>
+<p>Check out the types of <code>id</code>, <code>(:)</code> and <code>maybe id (:)</code> in GHCi!</p>
 </li>
 <li>
 <p>Hey! Didn't we say that appending <code>String</code>s/lists is slow (which is what <code>unwords</code> does)? Yes, it is.
@@ -348,11 +464,11 @@ parseLines context txts =
   case txts of
     -- done case
     [] -&gt; maybeToList context
-   
+
     -- Header 1 case
     ('*' : ' ' : line) : rest -&gt;
       maybe id (:) context (Header 1 (trim line) : parseLines Nothing rest)
-   
+
     -- Unordered list case
     ('-' : ' ' : line) : rest -&gt;
       case context of
@@ -361,7 +477,7 @@ parseLines context txts =
 
         _ -&gt;
           maybe id (:) context (parseLines (Just (UnorderedList [trim line])) rest)
-   
+
     -- Paragraph case
     currentLine : rest -&gt;
       let
@@ -416,11 +532,11 @@ parseLines context txts =
   case txts of
     -- done case
     [] -&gt; maybeToList context
-   
+
     -- Header 1 case
     ('*' : ' ' : line) : rest -&gt;
       maybe id (:) context (Header 1 (trim line) : parseLines Nothing rest)
-   
+
     -- Unordered list case
     ('-' : ' ' : line) : rest -&gt;
       case context of
