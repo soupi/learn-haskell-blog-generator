@@ -278,21 +278,21 @@ Let's look again at the parsing code we wrote previously:
 
 ```hs
 parse :: String -> Document
-parse = parseLines [] . lines -- (1)
+parse = parseLines [] . lines
 
 parseLines :: [String] -> [String] -> Document
 parseLines currentParagraph txts =
   let
-    paragraph = Paragraph (unlines (reverse currentParagraph)) -- (2), (3)
+    paragraph = Paragraph (unlines (reverse currentParagraph))
   in
     case txts of
       [] -> [paragraph]
       currentLine : rest ->
         if trim currentLine == ""
           then
-            paragraph : parseLines [] rest -- (4)
+            paragraph : parseLines [] rest
           else
-            parseLines (currentLine : currentParagraph) rest -- (5)
+            parseLines (currentLine : currentParagraph) rest
 
 trim :: String -> String
 trim = unwords . words
@@ -338,7 +338,13 @@ trim = unwords . words
 
 1. We can now pass `Nothing` when we don't have a context
 2. Unsure what `maybeToList` does? [Hoogle](https://hoogle.haskell.org) it!
-3. [maybe](https://hackage.haskell.org/package/base-4.15.0.0/docs/Prelude.html#v:maybe) is a function that works similarly to pattern matching on a `Maybe`.
+3. [maybe](https://hackage.haskell.org/package/base-4.15.0.0/docs/Prelude.html#v:maybe) is a function
+   that works similarly to pattern matching on a `Maybe`:
+   the third argument to `maybe` is the value we pattern match on, the second argument is a function to apply
+   to the value found in a `Just` case, and the first argument is the value to return in case the value
+   we pattern match on is `Nothing`. This way to encode pattern matching using functions is actually
+   fairly common.
+
    Check out the types of `id`, `(:)` and `maybe id (:)` in GHCi!
 4. Hey! Didn't we say that appending `String`s/lists is slow (which is what `unwords` does)? Yes, it is.
    Because in our `Structure` data type, a paragraph is defined as `Paragraph String` and not `Paragraph [String]`,
