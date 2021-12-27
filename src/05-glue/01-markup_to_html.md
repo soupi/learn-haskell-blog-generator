@@ -338,7 +338,7 @@ foldMap :: (Foldable t, Monoid m) -> (a -> m) -> t a -> m
 -- - a ~ Markup.Structure
 foldMap
   :: (Markup.Structure -> Html.Structure)
-  -> [Html.Structure]
+  -> [Markup.Structure]
   -> Html.Structure
 ```
 
