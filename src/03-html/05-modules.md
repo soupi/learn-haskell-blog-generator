@@ -7,7 +7,7 @@ In this section we will move the HTML generation library to its own module.
 Each Haskell source file is a module. The module name should have the
 same name as the source file and should start with a capital
 letter. Sub-directories should also be part of the name and we use `.`
-do denote a sub-directory. We'll see that in the next section.
+to denote a sub-directory. We'll see that in the next section.
 
 The only exception to the rule are entry points to the program -
 modules with the name 'Main' that define `main` in them. Their source
