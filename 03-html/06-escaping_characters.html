@@ -244,7 +244,7 @@ and what we really want is a <code>String</code> and not <code>[String]</code>.<
 <pre><code class="language-hs">concat :: [[a]] -&gt; [a]
 </code></pre>
 <p>It flattens a list of list of something into a list of something.
-In our case in will flatten <code>[String]</code> into <code>String</code>, remember that this works
+In our case it will flatten <code>[String]</code> into <code>String</code>, remember that this works
 because <code>String</code> is a <strong>type alias</strong> for <code>[Char]</code>, so we actually have
 <code>[[Char]] -&gt; [Char]</code>.</p>
 <h2 id="ghci"><a class="header" href="#ghci">GHCi</a></h2>
