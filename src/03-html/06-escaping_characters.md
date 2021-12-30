@@ -119,7 +119,7 @@ concat :: [[a]] -> [a]
 ```
 
 It flattens a list of list of something into a list of something.
-In our case in will flatten `[String]` into `String`, remember that this works
+In our case it will flatten `[String]` into `String`, remember that this works
 because `String` is a **type alias** for `[Char]`, so we actually have
 `[[Char]] -> [Char]`.
 
