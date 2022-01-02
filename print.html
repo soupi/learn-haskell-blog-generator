@@ -3652,7 +3652,7 @@ empty_ = Structure &quot;&quot;
 concatStructure list =
   case list of
     [] -&gt; empty_
-    x : xs -&gt; x &lt;&gt; concatStructure list
+    x : xs -&gt; x &lt;&gt; concatStructure xs
 </code></pre>
 </details>
 <hr />
@@ -3718,7 +3718,7 @@ is a bit more complicated because of backwards compatibility and performance rea
 mconcat list =
   case list of
     [] -&gt; mempty
-    x : xs -&gt; x &lt;&gt; mconcat list
+    x : xs -&gt; x &lt;&gt; mconcat xs
 </code></pre>
 <p>(Notice that because <code>Semigroup</code> is a <em>super class</em> of <code>Monoid</code>,
 we can still use the <code>&lt;&gt;</code> function from the <code>Semigroup</code> class
