@@ -178,7 +178,7 @@ concatStructure :: [Structure] -> Structure
 concatStructure list =
   case list of
     [] -> empty_
-    x : xs -> x <> concatStructure list
+    x : xs -> x <> concatStructure xs
 ```
 
 </details>
@@ -270,7 +270,7 @@ mconcat :: Monoid a => [a] -> a
 mconcat list =
   case list of
     [] -> mempty
-    x : xs -> x <> mconcat list
+    x : xs -> x <> mconcat xs
 ```
 
 (Notice that because `Semigroup` is a *super class* of `Monoid`,
@@ -289,7 +289,7 @@ Abstractions are useful and help us **reuse** code!
 > functionality, [Sum](https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Monoid.html#t:Sum)
 > and [Product](https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Monoid.html#t:Product).
 > See how they can be used in `ghci`:
-> 
+>
 > ```hs
 > ghci> import Data.Monoid
 > ghci> Product 2 <> Product 3 -- note, Product is a data constructor
