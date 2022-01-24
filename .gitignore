@@ -1,7 +1,12 @@
+*.hi
+*.o
+hello
+
+
 dist/
 dist-newstyle/
 .stack-work/
 *~
-output/
-*.o
-*.hi
+*.swp
+book/
+mdbook
