@@ -517,8 +517,8 @@ buildIndex files =
       map
         ( \(file, doc) -&gt;
           case doc of
-            Markup.Header 1 header : article -&gt;
-              Html.h_ 3 (Html.link_ file (Html.txt_ header))
+            Markup.Heading 1 heading : article -&gt;
+              Html.h_ 3 (Html.link_ file (Html.txt_ heading))
                 &lt;&gt; foldMap convertStructure (take 2 article)
                 &lt;&gt; Html.p_ (Html.link_ file (Html.txt_ &quot;...&quot;))
             _ -&gt;

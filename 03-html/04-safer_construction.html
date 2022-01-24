@@ -188,7 +188,7 @@ add feet to meters without any conversion.</p>
 We want two separate types to represent:</p>
 <ol>
 <li>A complete Html document</li>
-<li>A type for html structures such as headers and paragraphs that can go inside the <body> tag</li>
+<li>A type for html structures such as headings and paragraphs that can go inside the <body> tag</li>
 </ol>
 <p>We want them to be distinct because we don't want to mix them together.</p>
 <details>
@@ -507,7 +507,7 @@ myhtml =
   html_
     &quot;My title&quot;
     ( append_
-      (h1_ &quot;Header&quot;)
+      (h1_ &quot;Heading&quot;)
       ( append_
         (p_ &quot;Paragraph #1&quot;)
         (p_ &quot;Paragraph #2&quot;)
@@ -560,9 +560,9 @@ render html =
 <hr />
 <h2 id="are-we-safe-yet"><a class="header" href="#are-we-safe-yet">Are we safe yet?</a></h2>
 <p>We have made some progress - now we can't write <code>&quot;Hello&quot;</code>
-where we'd expect either a paragraph or a header, but we can still
+where we'd expect either a paragraph or a heading, but we can still
 write <code>Structure &quot;hello&quot;</code> and get something that isn't a
-paragraph or a header. So while we made it harder for the user
+paragraph or a heading. So while we made it harder for the user
 to make mistakes by accident, we haven't really been able to <strong>enforce
 the invariants</strong> we wanted to enforce in our library.</p>
 <p>Next we'll see how we can make expressions such as <code>Structure &quot;hello&quot;</code> illegal

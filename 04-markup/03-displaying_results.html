@@ -197,7 +197,7 @@ type classes. Fortunately, <code>Show</code> is one of them.</p>
 an instance of <code>Show</code>, we can <em>automatically derive</em> it by adding <code>deriving Show</code> at the
 end of the data definition.</p>
 <pre><code class="language-hs">data Structure
-  = Header Natural String
+  = Heading Natural String
   | Paragraph String
   | UnorderedList [String]
   | OrderedList [String]

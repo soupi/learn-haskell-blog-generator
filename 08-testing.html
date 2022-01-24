@@ -266,7 +266,7 @@ spec = do
     it &quot;empty&quot; $
       shouldBe
         (parse &quot;&quot;)
-        [Header 1 &quot;bug&quot;]
+        [Heading 1 &quot;bug&quot;]
 </code></pre>
 <p>After adding the module to the <code>other-modules</code> list in the cabal file:</p>
 <pre><code class="language-hs">  other-modules:
@@ -279,9 +279,9 @@ spec = do
 
 Failures:
 
-  test/MarkupParsingSpec.hs:10:7: 
+  test/MarkupParsingSpec.hs:10:7:
   1) MarkupParsing, Markup parsing tests, empty
-       expected: [Header 1 &quot;bug&quot;]
+       expected: [Heading 1 &quot;bug&quot;]
         but got: []
 
   To rerun use: --match &quot;/MarkupParsing/Markup parsing tests/empty/&quot;
@@ -312,10 +312,10 @@ Finished in 0.0001 seconds
         (parse &quot;hello world&quot;)
         [Paragraph &quot;hello world&quot;]
 
-    it &quot;header 1&quot; $
+    it &quot;heading 1&quot; $
       shouldBe
-        (parse &quot;* Header 1&quot;)
-        [Header 1 &quot;Header 1&quot;]
+        (parse &quot;* Heading 1&quot;)
+        [Heading 1 &quot;Heading 1&quot;]
 
     it &quot;code&quot; $
       shouldBe
@@ -327,7 +327,7 @@ Finished in 0.0001 seconds
   Markup parsing tests
     Test empty
     paragraph
-    header 1
+    heading 1
     code
 
 Finished in 0.0003 seconds
@@ -356,10 +356,10 @@ simple = do
         (parse &quot;hello world&quot;)
         [Paragraph &quot;hello world&quot;]
 
-    it &quot;header 1&quot; $
+    it &quot;heading 1&quot; $
       shouldBe
-        (parse &quot;* Header 1&quot;)
-        [Header 1 &quot;Header 1&quot;]
+        (parse &quot;* Heading 1&quot;)
+        [Heading 1 &quot;Heading 1&quot;]
 
     it &quot;code&quot; $
       shouldBe
@@ -418,7 +418,7 @@ multiline = do
       shouldBe
         (parse example3)
         example3Result
-        
+
 
 example3 :: String
 example3 = [r|
@@ -445,7 +445,7 @@ example3Result =
     simple
       Test empty
       paragraph
-      header 1
+      heading 1
       code
     Multi-line tests
       example3
@@ -469,7 +469,7 @@ multiline = do
       shouldBe
         (parse example4)
         example4Result
-        
+
 
 example4 :: String
 example4 = [r|
@@ -506,7 +506,7 @@ Otherwise, it will only produce the .o and .hi files.
 
 example4Result :: Document
 example4Result =
-  [ Header 1 &quot;Compiling programs with ghc&quot;
+  [ Heading 1 &quot;Compiling programs with ghc&quot;
   , Paragraph &quot;Running ghc invokes the Glasgow Haskell Compiler (GHC), and can be used to compile Haskell modules and programs into native executables and libraries.&quot;
   , Paragraph &quot;Create a new Haskell source file named hello.hs, and write the following code in it:&quot;
   , CodeBlock
@@ -547,8 +547,8 @@ Please consult the tutorial for your chosen testing framework, and read more abo
 this very important subject on your own.</p>
 <blockquote>
 <p>You can view the git commit of
-<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/dad1168229fbea91986fde6d88e4c008cd3f3a28">the changes we've made</a>
-and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/code-after-testing">final version of the code</a>.</p>
+<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/7c1f70a15b99b37d794615aa1852ffe335023af9">the changes we've made</a>
+and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/7c1f70a15b99b37d794615aa1852ffe335023af9">code up until now</a>.</p>
 </blockquote>
 
                     </main>

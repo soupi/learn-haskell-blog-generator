@@ -150,10 +150,10 @@ from most mainstream languages is the ability to represent data precisely and su
 <p>So how do we represent our markup language using Haskell?</p>
 <p>Previously, in our HTML builder library, we used <code>newtype</code>s to differentiate
 between HTML documents, structures and titles, but we didn't really need to
-differentiate between different kinds of structures such as paragraphs and headers,
+differentiate between different kinds of structures such as paragraphs and headings,
 not without parsing the data at least.</p>
 <p>In this case, we have a list of structures, and each structure could be
-one of a few specific options (a paragraph, a header, a list, etc),
+one of a few specific options (a paragraph, a heading, a list, etc),
 and we want to be able to know which structure is which so we can easily
 convert it into the equivalent HTML representation.</p>
 <p>For that, we have <code>data</code> definitions. <code>data</code> gives us the ability to
@@ -313,7 +313,7 @@ in the <code>&lt;types&gt;</code> section of the data declaration for each const
   = [Structure]
 
 data Structure
-  = Header Natural String
+  = Heading Natural String
   | Paragraph String
   | UnorderedList [String]
   | OrderedList [String]
@@ -390,7 +390,7 @@ example1 =
   <summary>Solution 2</summary>
 <pre><code class="language-hs">example2 :: Document
 example2 =
-  [ Header 1 &quot;Welcome&quot;
+  [ Heading 1 &quot;Welcome&quot;
   , Paragraph &quot;To this tutorial about Haskell.&quot;
   ]
 </code></pre>
@@ -411,7 +411,7 @@ example3 =
   <summary>Solution 4</summary>
 <pre><code class="language-hs">example4 :: Document
 example4 =
-  [ Header 1 &quot;Compiling programs with ghc&quot;
+  [ Heading 1 &quot;Compiling programs with ghc&quot;
   , Paragraph &quot;Running ghc invokes the Glasgow Haskell Compiler (GHC), and can be used to compile Haskell modules and programs into native executables and libraries.&quot;
   , Paragraph &quot;Create a new Haskell source file named hello.hs, and write the following code in it:&quot;
   , CodeBlock
@@ -456,7 +456,7 @@ type Document
   = [Structure]
 
 data Structure
-  = Header Natural String
+  = Heading Natural String
   | Paragraph String
   | UnorderedList [String]
   | OrderedList [String]
@@ -472,7 +472,7 @@ first represent it as a Haskell type is for flexibility and modularity.</p>
 <p>If the parsing code is coupled with HTML generation, we lose the
 ability to pre-process the markup document. For example we might want
 to take only a small part of the document (for summary) and present
-it, or create a table of content from headers. Or maybe we'd like to
+it, or create a table of content from headings. Or maybe we'd like to
 add other targets and not just HTML - maybe markdown format or a GUI reader?</p>
 <p>Parsing to an &quot;abstract data type&quot; (ADT) representation (one that does
 not contain the details of the language, that for example that we use '#' for

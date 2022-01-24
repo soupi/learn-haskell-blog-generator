@@ -252,10 +252,10 @@ definition the haddock string is attached.</p>
 <p>We can annotate a Haskell definition by writing a comment block prefixed with <code>|</code> <em>before</em>
 the definition, or by writing a comment block prefixed with <code>^</code> <em>after</em> the definition.</p>
 <p>For example:</p>
-<pre><code class="language-hs">-- | Construct an HTML page from a `Header`
+<pre><code class="language-hs">-- | Construct an HTML page from a `Head`
 --   and a `Structure`.
 html_
-  :: Header -- ^ Represents the @\&lt;head\&gt;@ section in an HTML file
+  :: Head -- ^ Represents the @\&lt;head\&gt;@ section in an HTML file
   -&gt; Structure -- ^ Represents the @\&lt;body\&gt;@ section in an HTML file
   -&gt; Html
 html_ = ...
@@ -269,7 +269,7 @@ html_ = ...
 - A code block
 -}
 data Structure
-  = Header Natural String
+  = Heading Natural String
   -- ^ A section heading with a level
   | Paragraph String
   -- ^ A paragraph
@@ -303,7 +303,7 @@ Headings are comments which are prefixed with a number of <code>*</code> (just l
 <p>For example:</p>
 <pre><code class="language-hs">-- * HTML EDSL
 
-html_ :: Header -&gt; Structure -&gt; Html
+html_ :: Head -&gt; Structure -&gt; Html
 html_ = ...
 
 -- ** Structure
@@ -311,8 +311,8 @@ html_ = ...
 p_ :: Content -&gt; Structure
 p_ = ..
 
-h1_ :: Content -&gt; Structure
-h1_ = ..
+h_ :: Content -&gt; Structure
+h_ = ..
 
 ...
 
@@ -331,7 +331,7 @@ link_ = ...
   , html_
 
     -- ** Combinators used to construct the @\&lt;head\&gt;@ section
-  , Header
+  , Head
   , title_
   , stylesheet_
   , meta_
@@ -340,7 +340,6 @@ link_ = ...
   , Structure
   , p_
   , h_
-  , h1_
   , ul_
   , ol_
   , code_
@@ -371,7 +370,7 @@ For example, we can:</p>
 <ul>
 <li>
 <p>Hyperlink identifiers by surrounding them with <code>`</code>.</p>
-<p>For example: <code>`Header`</code></p>
+<p>For example: <code>`Heading`</code></p>
 </li>
 <li>
 <p>Write <code>monospaced text</code> by surrounding it with <code>@</code>.</p>

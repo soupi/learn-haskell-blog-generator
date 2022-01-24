@@ -388,12 +388,12 @@ stylesheets to our HTML EDSL at the moment! We need to go back and extend it. Le
 that now:</p>
 <hr />
 <p>Since stylesheets go in the <code>head</code> element, perhaps it's a good idea to create an additional
-<code>newtype</code> like <code>Structure</code> for <code>Header</code> information? Things like title, stylesheet,
+<code>newtype</code> like <code>Structure</code> for <code>head</code> information? Things like title, stylesheet,
 and even meta elements can be composed together just like we did for <code>Structure</code>
-to build the <code>Header</code>!</p>
+to build the <code>head</code>!</p>
 <ol>
 <li>
-<p>Do it now: extend our HTML library to include headers and add 3 functions:
+<p>Do it now: extend our HTML library to include headings and add 3 functions:
 <code>title_</code> for titles, <code>stylesheet_</code> for stylesheets, and <code>meta_</code> for meta elements
 like <a href="https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/abouts-cards">twitter cards</a>.</p>
 <details><summary>Solution</summary>
@@ -402,7 +402,7 @@ like <a href="https://developer.twitter.com/en/docs/twitter-for-websites/cards/o
 
 module HsBlog.Html
   ( Html
-  , Header
+  , Head
   , title_
   , stylesheet_
   , meta_
@@ -410,7 +410,6 @@ module HsBlog.Html
   , html_
   , p_
   , h_
-  , h1_
   , ul_
   , ol_
   , code_
@@ -424,43 +423,44 @@ module HsBlog.Html
   )
   where
 
+import Prelude hiding (head)
 import HsBlog.Html.Internal
 </code></pre>
 </details>
 <details><summary>src/HsBlog/Html/Internal.hs</summary>
-<pre><code class="language-hs">newtype Header
-  = Header String
+<pre><code class="language-hs">newtype Head
+  = Head String
 
 -- * EDSL
 
-html_ :: Header -&gt; Structure -&gt; Html
-html_ (Header header) content =
+html_ :: Head -&gt; Structure -&gt; Html
+html_ (Head head) content =
   Html
     ( el &quot;html&quot;
-      ( el &quot;head&quot; header
+      ( el &quot;head&quot; head
         &lt;&gt; el &quot;body&quot; (getStructureString content)
       )
     )
 
--- * Header
+-- * Head
 
-title_ :: String -&gt; Header
-title_ = Header . el &quot;title&quot; . escape
+title_ :: String -&gt; Head
+title_ = Head . el &quot;title&quot; . escape
 
-stylesheet_ :: FilePath -&gt; Header
+stylesheet_ :: FilePath -&gt; Head
 stylesheet_ path =
-  Header $ &quot;&lt;link rel=\&quot;stylesheet\&quot; type=\&quot;text/css\&quot; href=\&quot;&quot; &lt;&gt; escape path &lt;&gt; &quot;\&quot;&gt;&quot;
+  Head $ &quot;&lt;link rel=\&quot;stylesheet\&quot; type=\&quot;text/css\&quot; href=\&quot;&quot; &lt;&gt; escape path &lt;&gt; &quot;\&quot;&gt;&quot;
 
-meta_ :: String -&gt; String -&gt; Header
+meta_ :: String -&gt; String -&gt; Head
 meta_ name content =
-  Header $ &quot;&lt;meta name=\&quot;&quot; &lt;&gt; escape name &lt;&gt; &quot;\&quot; content=\&quot;&quot; &lt;&gt; escape content &lt;&gt; &quot;\&quot;&gt;&quot;
+  Head $ &quot;&lt;meta name=\&quot;&quot; &lt;&gt; escape name &lt;&gt; &quot;\&quot; content=\&quot;&quot; &lt;&gt; escape content &lt;&gt; &quot;\&quot;&gt;&quot;
 
-instance Semigroup Header where
-  (&lt;&gt;) (Header h1) (Header h2) =
-    Header (h1 &lt;&gt; h2)
+instance Semigroup Head where
+  (&lt;&gt;) (Head h1) (Head h2) =
+    Head (h1 &lt;&gt; h2)
 
-instance Monoid Header where
-  mempty = Header &quot;&quot;
+instance Monoid Head where
+  mempty = Head &quot;&quot;
 </code></pre>
 </details>
 </details>
@@ -470,22 +470,23 @@ instance Monoid Header where
 <code>Reader</code>!</p>
 <details><summary>Solution</summary>
 <details><summary>src/HsBlog/Convert.hs</summary>
-<pre><code class="language-hs">import HsBlog.Env (Env(..))
+<pre><code class="language-hs">import Prelude hiding (head)
+import HsBlog.Env (Env(..))
 
 convert :: Env -&gt; String -&gt; Markup.Document -&gt; Html.Html
 convert env title doc =
   let
-    header =
+    head =
       Html.title_ (eBlogName env &lt;&gt; &quot; - &quot; &lt;&gt; title)
         &lt;&gt; Html.stylesheet_ (eStylesheetPath env)
     article =
       foldMap convertStructure doc
     websiteTitle =
-      Html.h1_ (Html.link_ &quot;index.html&quot; $ Html.txt_ $ eBlogName env)
+      Html.h_ 1 (Html.link_ &quot;index.html&quot; $ Html.txt_ $ eBlogName env)
     body =
       websiteTitle &lt;&gt; article
   in
-    Html.html_ header body
+    Html.html_ head body
 </code></pre>
 </details>
 <details><summary>src/HsBlog/Directory.hs</summary>
@@ -497,8 +498,8 @@ buildIndex files = do
       map
         ( \(file, doc) -&gt;
           case doc of
-            Markup.Header 1 header : article -&gt;
-              Html.h_ 3 (Html.link_ file (Html.txt_ header))
+            Markup.Head 1 head : article -&gt;
+              Html.h_ 3 (Html.link_ file (Html.txt_ head))
                 &lt;&gt; foldMap convertStructure (take 2 article)
                 &lt;&gt; Html.p_ (Html.link_ file (Html.txt_ &quot;...&quot;))
             _ -&gt;
@@ -509,7 +510,7 @@ buildIndex files = do
       ( Html.title_ (eBlogName env)
         &lt;&gt; Html.stylesheet_ (eStylesheetPath env)
       )
-      ( Html.h1_ (Html.link_ &quot;index.html&quot; (Html.txt_ &quot;Blog&quot;))
+      ( Html.h_ 1 (Html.link_ &quot;index.html&quot; (Html.txt_ &quot;Blog&quot;))
         &lt;&gt; Html.h_ 2 (Html.txt_ &quot;Posts&quot;)
         &lt;&gt; mconcat previews
       )
@@ -610,8 +611,8 @@ arsenal and I wanted to demonstrate it.</p>
 and it's often better to try and get away with simpler techniques if we can.</p>
 <blockquote>
 <p>You can view the git commit of
-<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/fe72df16c1af822484cec546b892526f96bf9d59">the changes we've made</a>
-and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/code-after-reader">code up until now</a>.</p>
+<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/b4c986fb52cd6d78a1acecad189490a8d13f8909">the changes we've made</a>
+and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/b4c986fb52cd6d78a1acecad189490a8d13f8909">code up until now</a>.</p>
 </blockquote>
 
                     </main>

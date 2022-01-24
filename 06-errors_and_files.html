@@ -158,8 +158,7 @@ can be regular text, links, images, and so on.</p>
 <p><strong>Exercise</strong>: implement what we've just discussed. Follow the compiler errors and refactor what needs refactoring.</p>
 <details><summary>Solution</summary>
 <details><summary>src/Html/Internal.hs</summary>
-<pre><code class="language-hs">-- Html/Internal.hs
-module HsBlog.Html.Internal where
+<pre><code class="language-hs">module HsBlog.Html.Internal where
 
 import Numeric.Natural
 
@@ -192,9 +191,6 @@ html_ title content =
 
 p_ :: Content -&gt; Structure
 p_ = Structure . el &quot;p&quot; . getContentString
-
-h1_ :: Content -&gt; Structure
-h1_ = Structure . el &quot;h1&quot; . getContentString
 
 h_ :: Natural -&gt; Content -&gt; Structure
 h_ n = Structure . el (&quot;h&quot; &lt;&gt; show n) . getContentString
@@ -294,16 +290,13 @@ escape =
 </code></pre>
 </details>
 <details><summary>src/Html.hs</summary>
-<pre><code class="language-hs">-- Html.hs
-
-module HsBlog.Html
+<pre><code class="language-hs">module HsBlog.Html
   ( Html
   , Title
   , Structure
   , html_
   , p_
   , h_
-  , h1_
   , ul_
   , ol_
   , code_
@@ -321,8 +314,7 @@ import HsBlog.Html.Internal
 </code></pre>
 </details>
 <details><summary>src/Convert.hs</summary>
-<pre><code class="language-hs">-- Convert.hs
-module HsBlog.Convert where
+<pre><code class="language-hs">module HsBlog.Convert where
 
 import qualified HsBlog.Markup as Markup
 import qualified HsBlog.Html as Html
@@ -333,7 +325,7 @@ convert title = Html.html_ title . foldMap convertStructure
 convertStructure :: Markup.Structure -&gt; Html.Structure
 convertStructure structure =
   case structure of
-    Markup.Header n txt -&gt;
+    Markup.Heading n txt -&gt;
       Html.h_ n $ Html.txt_ txt
 
     Markup.Paragraph p -&gt;
@@ -351,11 +343,16 @@ convertStructure structure =
 </details>
 </details>
 <hr />
+<blockquote>
+<p>You can view the git commit of
+<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/2f867fe7ad89b962a37f9c56da4f44fa4f4b3a1c">the changes we've made</a>
+and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/2f867fe7ad89b962a37f9c56da4f44fa4f4b3a1c">code up until now</a>.</p>
+</blockquote>
 <h2 id="creating-an-index-page"><a class="header" href="#creating-an-index-page">Creating an index page</a></h2>
 <p>With our extended HTML EDSL, we can now create an index page with links to the other pages.</p>
 <p>To create an index page, we need a list of files with their <em>target destination</em>,
 as well as their <code>Markup</code> (so we can extract information to include in our index page,
-such as the first header and paragraph). Our output should be an <code>Html</code> page.</p>
+such as the first heading and paragraph). Our output should be an <code>Html</code> page.</p>
 <hr />
 <p>We need to implement the following function:</p>
 <pre><code class="language-hs">buildIndex :: [(FilePath, Markup)] -&gt; Html
@@ -368,8 +365,8 @@ buildIndex files =
       map
         ( \(file, doc) -&gt;
           case doc of
-            Markup.Header 1 header : article -&gt;
-              Html.h_ 3 (Html.link_ file (Html.txt_ header))
+            Markup.Heading 1 heading : article -&gt;
+              Html.h_ 3 (Html.link_ file (Html.txt_ heading))
                 &lt;&gt; foldMap convertStructure (take 3 article)
                 &lt;&gt; Html.p_ (Html.link_ file (Html.txt_ &quot;...&quot;))
             _ -&gt;
@@ -379,7 +376,7 @@ buildIndex files =
   in
     Html.html_
       &quot;Blog&quot;
-      ( Html.h1_ (Html.link_ &quot;index.html&quot; (Html.txt_ &quot;Blog&quot;))
+      ( Html.h_ 1 (Html.link_ &quot;index.html&quot; (Html.txt_ &quot;Blog&quot;))
         &lt;&gt; Html.h_ 2 (Html.txt_ &quot;Posts&quot;)
         &lt;&gt; mconcat previews
       )

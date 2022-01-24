@@ -598,10 +598,10 @@ but we'll talk more about them later and see where they can be useful.</p>
 <p>Change the implementation of the HTML functions we built to use <code>el</code> instead</p>
 </li>
 <li>
-<p>Add a couple more functions for defining paragraphs and headers:</p>
+<p>Add a couple more functions for defining paragraphs and headings:</p>
 <ol>
 <li><code>p_</code> which uses the tag <code>&lt;p&gt;</code> for paragraphs</li>
-<li><code>h1_</code> which uses the tag <code>&lt;h1&gt;</code> for headers</li>
+<li><code>h1_</code> which uses the tag <code>&lt;h1&gt;</code> for headings</li>
 </ol>
 </li>
 <li>
@@ -807,7 +807,7 @@ add feet to meters without any conversion.</p>
 We want two separate types to represent:</p>
 <ol>
 <li>A complete Html document</li>
-<li>A type for html structures such as headers and paragraphs that can go inside the <body> tag</li>
+<li>A type for html structures such as headings and paragraphs that can go inside the <body> tag</li>
 </ol>
 <p>We want them to be distinct because we don't want to mix them together.</p>
 <details>
@@ -1126,7 +1126,7 @@ myhtml =
   html_
     &quot;My title&quot;
     ( append_
-      (h1_ &quot;Header&quot;)
+      (h1_ &quot;Heading&quot;)
       ( append_
         (p_ &quot;Paragraph #1&quot;)
         (p_ &quot;Paragraph #2&quot;)
@@ -1179,9 +1179,9 @@ render html =
 <hr />
 <h2 id="are-we-safe-yet"><a class="header" href="#are-we-safe-yet">Are we safe yet?</a></h2>
 <p>We have made some progress - now we can't write <code>&quot;Hello&quot;</code>
-where we'd expect either a paragraph or a header, but we can still
+where we'd expect either a paragraph or a heading, but we can still
 write <code>Structure &quot;hello&quot;</code> and get something that isn't a
-paragraph or a header. So while we made it harder for the user
+paragraph or a heading. So while we made it harder for the user
 to make mistakes by accident, we haven't really been able to <strong>enforce
 the invariants</strong> we wanted to enforce in our library.</p>
 <p>Next we'll see how we can make expressions such as <code>Structure &quot;hello&quot;</code> illegal
@@ -1295,7 +1295,7 @@ myhtml =
   html_
     &quot;My title&quot;
     ( append_
-      (h1_ &quot;Header&quot;)
+      (h1_ &quot;Heading&quot;)
       ( append_
         (p_ &quot;Paragraph #1&quot;)
         (p_ &quot;Paragraph #2&quot;)
@@ -1539,7 +1539,7 @@ Concrete examples of running code can aid a lot in understanding it!</p>
 <ol>
 <li>Page title</li>
 <li>Paragraphs</li>
-<li>Headers</li>
+<li>Headings</li>
 </ol>
 <p>We can apply our escape function at these places before doing anything else with it.
 That way all HTML constructions are safe.</p>
@@ -1900,7 +1900,7 @@ myhtml =
   html_
     &quot;My title&quot;
     ( append_
-      (h1_ &quot;Header&quot;)
+      (h1_ &quot;Heading&quot;)
       ( append_
         (p_ &quot;Paragraph #1&quot;)
         (p_ &quot;Paragraph #2&quot;)
@@ -2005,12 +2005,15 @@ escape =
   in
     concat . map escapeChar
 </code></pre>
+<blockquote>
+<p>You can also <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/76c4f4b31c7883c5c0b9f09c7b1a391640a31538">browse the code as a tree</a>.</p>
+</blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="custom-markup-language"><a class="header" href="#custom-markup-language">Custom markup language</a></h1>
 <p>In this chapter we will define our own simple markup language
 and parse documents written in this language into Haskell data structures.</p>
 <p>Our markup language will contain the following features:</p>
 <ul>
-<li>Headers: prefix by a number of <code>*</code> characters</li>
+<li>Headings: prefix by a number of <code>*</code> characters</li>
 <li>Paragraphs: a group of lines without empty lines in between</li>
 <li>Unordered lists: a group of lines each prefixed with <code>- </code></li>
 <li>Ordered lists: a group of lines each prefixed with <code># </code></li>
@@ -2096,10 +2099,10 @@ from most mainstream languages is the ability to represent data precisely and su
 <p>So how do we represent our markup language using Haskell?</p>
 <p>Previously, in our HTML builder library, we used <code>newtype</code>s to differentiate
 between HTML documents, structures and titles, but we didn't really need to
-differentiate between different kinds of structures such as paragraphs and headers,
+differentiate between different kinds of structures such as paragraphs and headings,
 not without parsing the data at least.</p>
 <p>In this case, we have a list of structures, and each structure could be
-one of a few specific options (a paragraph, a header, a list, etc),
+one of a few specific options (a paragraph, a heading, a list, etc),
 and we want to be able to know which structure is which so we can easily
 convert it into the equivalent HTML representation.</p>
 <p>For that, we have <code>data</code> definitions. <code>data</code> gives us the ability to
@@ -2259,7 +2262,7 @@ in the <code>&lt;types&gt;</code> section of the data declaration for each const
   = [Structure]
 
 data Structure
-  = Header Natural String
+  = Heading Natural String
   | Paragraph String
   | UnorderedList [String]
   | OrderedList [String]
@@ -2336,7 +2339,7 @@ example1 =
   <summary>Solution 2</summary>
 <pre><code class="language-hs">example2 :: Document
 example2 =
-  [ Header 1 &quot;Welcome&quot;
+  [ Heading 1 &quot;Welcome&quot;
   , Paragraph &quot;To this tutorial about Haskell.&quot;
   ]
 </code></pre>
@@ -2357,7 +2360,7 @@ example3 =
   <summary>Solution 4</summary>
 <pre><code class="language-hs">example4 :: Document
 example4 =
-  [ Header 1 &quot;Compiling programs with ghc&quot;
+  [ Heading 1 &quot;Compiling programs with ghc&quot;
   , Paragraph &quot;Running ghc invokes the Glasgow Haskell Compiler (GHC), and can be used to compile Haskell modules and programs into native executables and libraries.&quot;
   , Paragraph &quot;Create a new Haskell source file named hello.hs, and write the following code in it:&quot;
   , CodeBlock
@@ -2402,7 +2405,7 @@ type Document
   = [Structure]
 
 data Structure
-  = Header Natural String
+  = Heading Natural String
   | Paragraph String
   | UnorderedList [String]
   | OrderedList [String]
@@ -2418,7 +2421,7 @@ first represent it as a Haskell type is for flexibility and modularity.</p>
 <p>If the parsing code is coupled with HTML generation, we lose the
 ability to pre-process the markup document. For example we might want
 to take only a small part of the document (for summary) and present
-it, or create a table of content from headers. Or maybe we'd like to
+it, or create a table of content from headings. Or maybe we'd like to
 add other targets and not just HTML - maybe markdown format or a GUI reader?</p>
 <p>Parsing to an &quot;abstract data type&quot; (ADT) representation (one that does
 not contain the details of the language, that for example that we use '#' for
@@ -2967,7 +2970,7 @@ type classes. Fortunately, <code>Show</code> is one of them.</p>
 an instance of <code>Show</code>, we can <em>automatically derive</em> it by adding <code>deriving Show</code> at the
 end of the data definition.</p>
 <pre><code class="language-hs">data Structure
-  = Header Natural String
+  = Heading Natural String
   | Paragraph String
   | UnorderedList [String]
   | OrderedList [String]
@@ -3339,7 +3342,7 @@ we can't use our trick of building a list of lines and the reverse it at the end
 <p>So what do we do?
 There are many ways to handle that, one simple way is to create a different type with the right shape:</p>
 <pre><code class="language-hs">data Context
-  = CtxHeader Natural String
+  = CtxHeading Natural String
   | CtxParagraph [String]
   | CtxUnorderedList [String]
   | CtxOrderedList [String]
@@ -3364,9 +3367,9 @@ parseLines context txts =
     -- done case
     [] -&gt; maybeToList context
 
-    -- Header 1 case
+    -- Heading 1 case
     ('*' : ' ' : line) : rest -&gt;
-      maybe id (:) context (Header 1 (trim line) : parseLines Nothing rest)
+      maybe id (:) context (Heading 1 (trim line) : parseLines Nothing rest)
 
     -- Unordered list case
     ('-' : ' ' : line) : rest -&gt;
@@ -3415,7 +3418,7 @@ type Document
   = [Structure]
 
 data Structure
-  = Header Natural String
+  = Heading Natural String
   | Paragraph String
   | UnorderedList [String]
   | OrderedList [String]
@@ -3432,9 +3435,9 @@ parseLines context txts =
     -- done case
     [] -&gt; maybeToList context
 
-    -- Header 1 case
+    -- Heading 1 case
     ('*' : ' ' : line) : rest -&gt;
-      maybe id (:) context (Header 1 (trim line) : parseLines Nothing rest)
+      maybe id (:) context (Heading 1 (trim line) : parseLines Nothing rest)
 
     -- Unordered list case
     ('-' : ' ' : line) : rest -&gt;
@@ -3507,6 +3510,11 @@ so we'll be able to:</p>
 <li>Generate HTML code</li>
 </ol>
 <p>And also discuss how to work with IO in Haskell while we're at it.</p>
+<blockquote>
+<p>You can view the git commit of
+<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/4ee2adbdf9b2657f547bcc4b268be6f6798981a6">the changes we've made</a>
+and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/76c4f4b31c7883c5c0b9f09c7b1a391640a31538">code up until now</a>.</p>
+</blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="gluing-things-together"><a class="header" href="#gluing-things-together">Gluing things together</a></h1>
 <p>In this chapter we are going to glue the pieces that we built together
 and build an actual blog generator. We will:</p>
@@ -3561,7 +3569,7 @@ the relevant HTML API.</p>
 <pre><code class="language-hs">convertStructure :: Markup.Structure -&gt; Html.Structure
 convertStructure structure =
   case structure of
-    Markup.Header 1 txt -&gt;
+    Markup.Heading 1 txt -&gt;
       Html.h1_ txt
 
     Markup.Paragraph p -&gt;
@@ -3578,18 +3586,18 @@ convertStructure structure =
 </code></pre>
 <p>Notice that running this code with <code>-Wall</code> will reveal that the pattern matching
 is <em>non-exhaustive</em>. This is because we don't currently have a way to build
-headers that are not <code>h1</code>. There are a few ways to handle this:</p>
+headings that are not <code>h1</code>. There are a few ways to handle this:</p>
 <ul>
-<li>Ignore the warning - this will like fail at runtime one day and the user will be sad</li>
+<li>Ignore the warning - this will likely fail at runtime one day and the user will be sad</li>
 <li>Pattern match other cases and add a nice error with the <code>error</code> function, has
 the same disadvantage above, but will also not notify that there's a possible issue
 here at compile time.</li>
 <li>Pattern match and do the wrong thing - user is still sad</li>
 <li>Encode errors in the type system using <code>Either</code>, we'll see how to do this in later
 chapters</li>
-<li>Restrict the input - change <code>Markup.Header</code> to not include a number but rather
-specific supported headers. This is a reasonable approach.</li>
-<li>Implement an HTML function supporting arbitrary headers. Should be straightforward
+<li>Restrict the input - change <code>Markup.Heading</code> to not include a number but rather
+specific supported headings. This is a reasonable approach.</li>
+<li>Implement an HTML function supporting arbitrary headings. Should be straightforward
 to do.</li>
 </ul>
 <hr />
@@ -3607,7 +3615,7 @@ h_ n = Structure . el (&quot;h&quot; &lt;&gt; show n) . escape
 <pre><code class="language-hs">convertStructure :: Markup.Structure -&gt; Html.Structure
 convertStructure structure =
   case structure of
-    Markup.Header n txt -&gt;
+    Markup.Heading n txt -&gt;
       Html.h_ n txt
 
     Markup.Paragraph p -&gt;
@@ -3802,7 +3810,7 @@ convert title = Html.html_ title . foldMap convertStructure
 convertStructure :: Markup.Structure -&gt; Html.Structure
 convertStructure structure =
   case structure of
-    Markup.Header n txt -&gt;
+    Markup.Heading n txt -&gt;
       Html.h_ n txt
 
     Markup.Paragraph p -&gt;
@@ -3827,6 +3835,11 @@ convertStructure structure =
 </ul>
 <p>Next, we are going to glue our functionality together and learn about
 I/O in Haskell!</p>
+<blockquote>
+<p>You can view the git commit of
+<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/84c92cbe8679e66b191ca4d4692241b4e5c13a57">the changes we've made</a>
+and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/4ee2adbdf9b2657f547bcc4b268be6f6798981a6">code up until now</a>.</p>
+</blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="working-with-io"><a class="header" href="#working-with-io">Working with IO</a></h1>
 <p>In previous chapters we were able to build a parser from a text
 string to a Haskell representation of our markup language,
@@ -4426,13 +4439,15 @@ without breaking purity.</p>
 <p>We have also achieved a major milestone. With this chapter, we implemented
 enough pieces that we can finally run our program on a single document
 and get an HTML rendered result!</p>
-<blockquote>
-<p>You can view the code we have until now <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/code-after-io">here</a>.</p>
-</blockquote>
 <p>However, our command-line interface is still sub-par. We want to render a blog
 with multiple articles, create an index page, and more. We still have more to do
 to be able to call our program a blog generator.</p>
 <p>Let's keep going!</p>
+<blockquote>
+<p>You can view the git commit of
+<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/e5c2f0ea5792892207421dbdbf41d921b0c0a84b">the changes we've made</a>
+and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/e5c2f0ea5792892207421dbdbf41d921b0c0a84b">code up until now</a>.</p>
+</blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="defining-a-project-description"><a class="header" href="#defining-a-project-description">Defining a project description</a></h1>
 <p>Up until now we've only used <code>base</code> and the libraries
 <a href="https://downloads.haskell.org/ghc/latest/docs/html/users_guide/9.0.1-notes.html#included-libraries">included</a>
@@ -4944,8 +4959,8 @@ our package manager will download and install the required package for us!</p>
 for other Haskell developers to use!</p>
 <blockquote>
 <p>You can view the git commit of
-<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/9c12ee9b36ae63f9d5dfe09799c217521900a2e5">the changes we've made</a>
-and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/code-after-optparse">code up until now</a>.</p>
+<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/826948302d08bfa4e889cf7013b911705c965445">the changes we've made</a>
+and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/826948302d08bfa4e889cf7013b911705c965445">code up until now</a>.</p>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="fancy-options-parsing"><a class="header" href="#fancy-options-parsing">Fancy options parsing</a></h1>
 <p>We'd like to define a nicer interface for our program. And while we could manage something
@@ -5739,8 +5754,8 @@ if the output file or directory already exists, it's okay to replace them.</p>
 <hr />
 <blockquote>
 <p>You can view the git commit of
-<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/44fd95e8a6376df015f4198668b27b3a707b8961">the changes we've made</a>
-and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/code-after-optparse">code up until now</a>.</p>
+<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/6efea76deb62332b23e90fc74b6b74b404fd8c3d">the changes we've made</a>
+and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/6efea76deb62332b23e90fc74b6b74b404fd8c3d">code up until now</a>.</p>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="handling-errors-and-multiple-files"><a class="header" href="#handling-errors-and-multiple-files">Handling errors and multiple files</a></h1>
 <p>We have left an unimplemented function last chapter,
@@ -5756,8 +5771,7 @@ can be regular text, links, images, and so on.</p>
 <p><strong>Exercise</strong>: implement what we've just discussed. Follow the compiler errors and refactor what needs refactoring.</p>
 <details><summary>Solution</summary>
 <details><summary>src/Html/Internal.hs</summary>
-<pre><code class="language-hs">-- Html/Internal.hs
-module HsBlog.Html.Internal where
+<pre><code class="language-hs">module HsBlog.Html.Internal where
 
 import Numeric.Natural
 
@@ -5790,9 +5804,6 @@ html_ title content =
 
 p_ :: Content -&gt; Structure
 p_ = Structure . el &quot;p&quot; . getContentString
-
-h1_ :: Content -&gt; Structure
-h1_ = Structure . el &quot;h1&quot; . getContentString
 
 h_ :: Natural -&gt; Content -&gt; Structure
 h_ n = Structure . el (&quot;h&quot; &lt;&gt; show n) . getContentString
@@ -5892,16 +5903,13 @@ escape =
 </code></pre>
 </details>
 <details><summary>src/Html.hs</summary>
-<pre><code class="language-hs">-- Html.hs
-
-module HsBlog.Html
+<pre><code class="language-hs">module HsBlog.Html
   ( Html
   , Title
   , Structure
   , html_
   , p_
   , h_
-  , h1_
   , ul_
   , ol_
   , code_
@@ -5919,8 +5927,7 @@ import HsBlog.Html.Internal
 </code></pre>
 </details>
 <details><summary>src/Convert.hs</summary>
-<pre><code class="language-hs">-- Convert.hs
-module HsBlog.Convert where
+<pre><code class="language-hs">module HsBlog.Convert where
 
 import qualified HsBlog.Markup as Markup
 import qualified HsBlog.Html as Html
@@ -5931,7 +5938,7 @@ convert title = Html.html_ title . foldMap convertStructure
 convertStructure :: Markup.Structure -&gt; Html.Structure
 convertStructure structure =
   case structure of
-    Markup.Header n txt -&gt;
+    Markup.Heading n txt -&gt;
       Html.h_ n $ Html.txt_ txt
 
     Markup.Paragraph p -&gt;
@@ -5949,11 +5956,16 @@ convertStructure structure =
 </details>
 </details>
 <hr />
+<blockquote>
+<p>You can view the git commit of
+<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/2f867fe7ad89b962a37f9c56da4f44fa4f4b3a1c">the changes we've made</a>
+and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/2f867fe7ad89b962a37f9c56da4f44fa4f4b3a1c">code up until now</a>.</p>
+</blockquote>
 <h2 id="creating-an-index-page"><a class="header" href="#creating-an-index-page">Creating an index page</a></h2>
 <p>With our extended HTML EDSL, we can now create an index page with links to the other pages.</p>
 <p>To create an index page, we need a list of files with their <em>target destination</em>,
 as well as their <code>Markup</code> (so we can extract information to include in our index page,
-such as the first header and paragraph). Our output should be an <code>Html</code> page.</p>
+such as the first heading and paragraph). Our output should be an <code>Html</code> page.</p>
 <hr />
 <p>We need to implement the following function:</p>
 <pre><code class="language-hs">buildIndex :: [(FilePath, Markup)] -&gt; Html
@@ -5966,8 +5978,8 @@ buildIndex files =
       map
         ( \(file, doc) -&gt;
           case doc of
-            Markup.Header 1 header : article -&gt;
-              Html.h_ 3 (Html.link_ file (Html.txt_ header))
+            Markup.Heading 1 heading : article -&gt;
+              Html.h_ 3 (Html.link_ file (Html.txt_ heading))
                 &lt;&gt; foldMap convertStructure (take 3 article)
                 &lt;&gt; Html.p_ (Html.link_ file (Html.txt_ &quot;...&quot;))
             _ -&gt;
@@ -5977,7 +5989,7 @@ buildIndex files =
   in
     Html.html_
       &quot;Blog&quot;
-      ( Html.h1_ (Html.link_ &quot;index.html&quot; (Html.txt_ &quot;Blog&quot;))
+      ( Html.h_ 1 (Html.link_ &quot;index.html&quot; (Html.txt_ &quot;Blog&quot;))
         &lt;&gt; Html.h_ 2 (Html.txt_ &quot;Posts&quot;)
         &lt;&gt; mconcat previews
       )
@@ -7089,8 +7101,8 @@ buildIndex files =
       map
         ( \(file, doc) -&gt;
           case doc of
-            Markup.Header 1 header : article -&gt;
-              Html.h_ 3 (Html.link_ file (Html.txt_ header))
+            Markup.Heading 1 heading : article -&gt;
+              Html.h_ 3 (Html.link_ file (Html.txt_ heading))
                 &lt;&gt; foldMap convertStructure (take 2 article)
                 &lt;&gt; Html.p_ (Html.link_ file (Html.txt_ &quot;...&quot;))
             _ -&gt;
@@ -7238,8 +7250,8 @@ We saw how to stack an <code>Either</code>-like monad transformer, <code>ExceptT
 <p>We are almost done. Only a couple more things left to do with this project. Let's go!</p>
 <blockquote>
 <p>You can view the git commit of
-<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/72d99dbbad05c8a4fbce152315f45bbaabba177e">the changes we've made</a>
-and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/code-after-multiple-files">code up until now</a>.</p>
+<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/0025762fbe91e159f82b8fc5d39d86cac39c4f7d">the changes we've made</a>
+and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/0025762fbe91e159f82b8fc5d39d86cac39c4f7d">code up until now</a>.</p>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="passing-environment-variables"><a class="header" href="#passing-environment-variables">Passing environment variables</a></h1>
 <p>We'd like to add some sort of an environment to keep general information on
@@ -7485,12 +7497,12 @@ stylesheets to our HTML EDSL at the moment! We need to go back and extend it. Le
 that now:</p>
 <hr />
 <p>Since stylesheets go in the <code>head</code> element, perhaps it's a good idea to create an additional
-<code>newtype</code> like <code>Structure</code> for <code>Header</code> information? Things like title, stylesheet,
+<code>newtype</code> like <code>Structure</code> for <code>head</code> information? Things like title, stylesheet,
 and even meta elements can be composed together just like we did for <code>Structure</code>
-to build the <code>Header</code>!</p>
+to build the <code>head</code>!</p>
 <ol>
 <li>
-<p>Do it now: extend our HTML library to include headers and add 3 functions:
+<p>Do it now: extend our HTML library to include headings and add 3 functions:
 <code>title_</code> for titles, <code>stylesheet_</code> for stylesheets, and <code>meta_</code> for meta elements
 like <a href="https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/abouts-cards">twitter cards</a>.</p>
 <details><summary>Solution</summary>
@@ -7499,7 +7511,7 @@ like <a href="https://developer.twitter.com/en/docs/twitter-for-websites/cards/o
 
 module HsBlog.Html
   ( Html
-  , Header
+  , Head
   , title_
   , stylesheet_
   , meta_
@@ -7507,7 +7519,6 @@ module HsBlog.Html
   , html_
   , p_
   , h_
-  , h1_
   , ul_
   , ol_
   , code_
@@ -7521,43 +7532,44 @@ module HsBlog.Html
   )
   where
 
+import Prelude hiding (head)
 import HsBlog.Html.Internal
 </code></pre>
 </details>
 <details><summary>src/HsBlog/Html/Internal.hs</summary>
-<pre><code class="language-hs">newtype Header
-  = Header String
+<pre><code class="language-hs">newtype Head
+  = Head String
 
 -- * EDSL
 
-html_ :: Header -&gt; Structure -&gt; Html
-html_ (Header header) content =
+html_ :: Head -&gt; Structure -&gt; Html
+html_ (Head head) content =
   Html
     ( el &quot;html&quot;
-      ( el &quot;head&quot; header
+      ( el &quot;head&quot; head
         &lt;&gt; el &quot;body&quot; (getStructureString content)
       )
     )
 
--- * Header
+-- * Head
 
-title_ :: String -&gt; Header
-title_ = Header . el &quot;title&quot; . escape
+title_ :: String -&gt; Head
+title_ = Head . el &quot;title&quot; . escape
 
-stylesheet_ :: FilePath -&gt; Header
+stylesheet_ :: FilePath -&gt; Head
 stylesheet_ path =
-  Header $ &quot;&lt;link rel=\&quot;stylesheet\&quot; type=\&quot;text/css\&quot; href=\&quot;&quot; &lt;&gt; escape path &lt;&gt; &quot;\&quot;&gt;&quot;
+  Head $ &quot;&lt;link rel=\&quot;stylesheet\&quot; type=\&quot;text/css\&quot; href=\&quot;&quot; &lt;&gt; escape path &lt;&gt; &quot;\&quot;&gt;&quot;
 
-meta_ :: String -&gt; String -&gt; Header
+meta_ :: String -&gt; String -&gt; Head
 meta_ name content =
-  Header $ &quot;&lt;meta name=\&quot;&quot; &lt;&gt; escape name &lt;&gt; &quot;\&quot; content=\&quot;&quot; &lt;&gt; escape content &lt;&gt; &quot;\&quot;&gt;&quot;
+  Head $ &quot;&lt;meta name=\&quot;&quot; &lt;&gt; escape name &lt;&gt; &quot;\&quot; content=\&quot;&quot; &lt;&gt; escape content &lt;&gt; &quot;\&quot;&gt;&quot;
 
-instance Semigroup Header where
-  (&lt;&gt;) (Header h1) (Header h2) =
-    Header (h1 &lt;&gt; h2)
+instance Semigroup Head where
+  (&lt;&gt;) (Head h1) (Head h2) =
+    Head (h1 &lt;&gt; h2)
 
-instance Monoid Header where
-  mempty = Header &quot;&quot;
+instance Monoid Head where
+  mempty = Head &quot;&quot;
 </code></pre>
 </details>
 </details>
@@ -7567,22 +7579,23 @@ instance Monoid Header where
 <code>Reader</code>!</p>
 <details><summary>Solution</summary>
 <details><summary>src/HsBlog/Convert.hs</summary>
-<pre><code class="language-hs">import HsBlog.Env (Env(..))
+<pre><code class="language-hs">import Prelude hiding (head)
+import HsBlog.Env (Env(..))
 
 convert :: Env -&gt; String -&gt; Markup.Document -&gt; Html.Html
 convert env title doc =
   let
-    header =
+    head =
       Html.title_ (eBlogName env &lt;&gt; &quot; - &quot; &lt;&gt; title)
         &lt;&gt; Html.stylesheet_ (eStylesheetPath env)
     article =
       foldMap convertStructure doc
     websiteTitle =
-      Html.h1_ (Html.link_ &quot;index.html&quot; $ Html.txt_ $ eBlogName env)
+      Html.h_ 1 (Html.link_ &quot;index.html&quot; $ Html.txt_ $ eBlogName env)
     body =
       websiteTitle &lt;&gt; article
   in
-    Html.html_ header body
+    Html.html_ head body
 </code></pre>
 </details>
 <details><summary>src/HsBlog/Directory.hs</summary>
@@ -7594,8 +7607,8 @@ buildIndex files = do
       map
         ( \(file, doc) -&gt;
           case doc of
-            Markup.Header 1 header : article -&gt;
-              Html.h_ 3 (Html.link_ file (Html.txt_ header))
+            Markup.Head 1 head : article -&gt;
+              Html.h_ 3 (Html.link_ file (Html.txt_ head))
                 &lt;&gt; foldMap convertStructure (take 2 article)
                 &lt;&gt; Html.p_ (Html.link_ file (Html.txt_ &quot;...&quot;))
             _ -&gt;
@@ -7606,7 +7619,7 @@ buildIndex files = do
       ( Html.title_ (eBlogName env)
         &lt;&gt; Html.stylesheet_ (eStylesheetPath env)
       )
-      ( Html.h1_ (Html.link_ &quot;index.html&quot; (Html.txt_ &quot;Blog&quot;))
+      ( Html.h_ 1 (Html.link_ &quot;index.html&quot; (Html.txt_ &quot;Blog&quot;))
         &lt;&gt; Html.h_ 2 (Html.txt_ &quot;Posts&quot;)
         &lt;&gt; mconcat previews
       )
@@ -7707,8 +7720,8 @@ arsenal and I wanted to demonstrate it.</p>
 and it's often better to try and get away with simpler techniques if we can.</p>
 <blockquote>
 <p>You can view the git commit of
-<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/fe72df16c1af822484cec546b892526f96bf9d59">the changes we've made</a>
-and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/code-after-reader">code up until now</a>.</p>
+<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/b4c986fb52cd6d78a1acecad189490a8d13f8909">the changes we've made</a>
+and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/b4c986fb52cd6d78a1acecad189490a8d13f8909">code up until now</a>.</p>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="testing"><a class="header" href="#testing">Testing</a></h1>
 <p>We want to add some tests to our blog generator. At the very least
@@ -7832,7 +7845,7 @@ spec = do
     it &quot;empty&quot; $
       shouldBe
         (parse &quot;&quot;)
-        [Header 1 &quot;bug&quot;]
+        [Heading 1 &quot;bug&quot;]
 </code></pre>
 <p>After adding the module to the <code>other-modules</code> list in the cabal file:</p>
 <pre><code class="language-hs">  other-modules:
@@ -7845,9 +7858,9 @@ spec = do
 
 Failures:
 
-  test/MarkupParsingSpec.hs:10:7: 
+  test/MarkupParsingSpec.hs:10:7:
   1) MarkupParsing, Markup parsing tests, empty
-       expected: [Header 1 &quot;bug&quot;]
+       expected: [Heading 1 &quot;bug&quot;]
         but got: []
 
   To rerun use: --match &quot;/MarkupParsing/Markup parsing tests/empty/&quot;
@@ -7878,10 +7891,10 @@ Finished in 0.0001 seconds
         (parse &quot;hello world&quot;)
         [Paragraph &quot;hello world&quot;]
 
-    it &quot;header 1&quot; $
+    it &quot;heading 1&quot; $
       shouldBe
-        (parse &quot;* Header 1&quot;)
-        [Header 1 &quot;Header 1&quot;]
+        (parse &quot;* Heading 1&quot;)
+        [Heading 1 &quot;Heading 1&quot;]
 
     it &quot;code&quot; $
       shouldBe
@@ -7893,7 +7906,7 @@ Finished in 0.0001 seconds
   Markup parsing tests
     Test empty
     paragraph
-    header 1
+    heading 1
     code
 
 Finished in 0.0003 seconds
@@ -7922,10 +7935,10 @@ simple = do
         (parse &quot;hello world&quot;)
         [Paragraph &quot;hello world&quot;]
 
-    it &quot;header 1&quot; $
+    it &quot;heading 1&quot; $
       shouldBe
-        (parse &quot;* Header 1&quot;)
-        [Header 1 &quot;Header 1&quot;]
+        (parse &quot;* Heading 1&quot;)
+        [Heading 1 &quot;Heading 1&quot;]
 
     it &quot;code&quot; $
       shouldBe
@@ -7984,7 +7997,7 @@ multiline = do
       shouldBe
         (parse example3)
         example3Result
-        
+
 
 example3 :: String
 example3 = [r|
@@ -8011,7 +8024,7 @@ example3Result =
     simple
       Test empty
       paragraph
-      header 1
+      heading 1
       code
     Multi-line tests
       example3
@@ -8035,7 +8048,7 @@ multiline = do
       shouldBe
         (parse example4)
         example4Result
-        
+
 
 example4 :: String
 example4 = [r|
@@ -8072,7 +8085,7 @@ Otherwise, it will only produce the .o and .hi files.
 
 example4Result :: Document
 example4Result =
-  [ Header 1 &quot;Compiling programs with ghc&quot;
+  [ Heading 1 &quot;Compiling programs with ghc&quot;
   , Paragraph &quot;Running ghc invokes the Glasgow Haskell Compiler (GHC), and can be used to compile Haskell modules and programs into native executables and libraries.&quot;
   , Paragraph &quot;Create a new Haskell source file named hello.hs, and write the following code in it:&quot;
   , CodeBlock
@@ -8113,8 +8126,8 @@ Please consult the tutorial for your chosen testing framework, and read more abo
 this very important subject on your own.</p>
 <blockquote>
 <p>You can view the git commit of
-<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/dad1168229fbea91986fde6d88e4c008cd3f3a28">the changes we've made</a>
-and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/code-after-testing">final version of the code</a>.</p>
+<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/7c1f70a15b99b37d794615aa1852ffe335023af9">the changes we've made</a>
+and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/7c1f70a15b99b37d794615aa1852ffe335023af9">code up until now</a>.</p>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="generating-documentation"><a class="header" href="#generating-documentation">Generating documentation</a></h1>
 <p>There are <a href="https://documentation.divio.com/">many ways</a>
@@ -8224,10 +8237,10 @@ definition the haddock string is attached.</p>
 <p>We can annotate a Haskell definition by writing a comment block prefixed with <code>|</code> <em>before</em>
 the definition, or by writing a comment block prefixed with <code>^</code> <em>after</em> the definition.</p>
 <p>For example:</p>
-<pre><code class="language-hs">-- | Construct an HTML page from a `Header`
+<pre><code class="language-hs">-- | Construct an HTML page from a `Head`
 --   and a `Structure`.
 html_
-  :: Header -- ^ Represents the @\&lt;head\&gt;@ section in an HTML file
+  :: Head -- ^ Represents the @\&lt;head\&gt;@ section in an HTML file
   -&gt; Structure -- ^ Represents the @\&lt;body\&gt;@ section in an HTML file
   -&gt; Html
 html_ = ...
@@ -8241,7 +8254,7 @@ html_ = ...
 - A code block
 -}
 data Structure
-  = Header Natural String
+  = Heading Natural String
   -- ^ A section heading with a level
   | Paragraph String
   -- ^ A paragraph
@@ -8275,7 +8288,7 @@ Headings are comments which are prefixed with a number of <code>*</code> (just l
 <p>For example:</p>
 <pre><code class="language-hs">-- * HTML EDSL
 
-html_ :: Header -&gt; Structure -&gt; Html
+html_ :: Head -&gt; Structure -&gt; Html
 html_ = ...
 
 -- ** Structure
@@ -8283,8 +8296,8 @@ html_ = ...
 p_ :: Content -&gt; Structure
 p_ = ..
 
-h1_ :: Content -&gt; Structure
-h1_ = ..
+h_ :: Content -&gt; Structure
+h_ = ..
 
 ...
 
@@ -8303,7 +8316,7 @@ link_ = ...
   , html_
 
     -- ** Combinators used to construct the @\&lt;head\&gt;@ section
-  , Header
+  , Head
   , title_
   , stylesheet_
   , meta_
@@ -8312,7 +8325,6 @@ link_ = ...
   , Structure
   , p_
   , h_
-  , h1_
   , ul_
   , ol_
   , code_
@@ -8343,7 +8355,7 @@ For example, we can:</p>
 <ul>
 <li>
 <p>Hyperlink identifiers by surrounding them with <code>`</code>.</p>
-<p>For example: <code>`Header`</code></p>
+<p>For example: <code>`Heading`</code></p>
 </li>
 <li>
 <p>Write <code>monospaced text</code> by surrounding it with <code>@</code>.</p>

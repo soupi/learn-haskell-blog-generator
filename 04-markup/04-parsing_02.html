@@ -440,7 +440,7 @@ we can't use our trick of building a list of lines and the reverse it at the end
 <p>So what do we do?
 There are many ways to handle that, one simple way is to create a different type with the right shape:</p>
 <pre><code class="language-hs">data Context
-  = CtxHeader Natural String
+  = CtxHeading Natural String
   | CtxParagraph [String]
   | CtxUnorderedList [String]
   | CtxOrderedList [String]
@@ -465,9 +465,9 @@ parseLines context txts =
     -- done case
     [] -&gt; maybeToList context
 
-    -- Header 1 case
+    -- Heading 1 case
     ('*' : ' ' : line) : rest -&gt;
-      maybe id (:) context (Header 1 (trim line) : parseLines Nothing rest)
+      maybe id (:) context (Heading 1 (trim line) : parseLines Nothing rest)
 
     -- Unordered list case
     ('-' : ' ' : line) : rest -&gt;
@@ -516,7 +516,7 @@ type Document
   = [Structure]
 
 data Structure
-  = Header Natural String
+  = Heading Natural String
   | Paragraph String
   | UnorderedList [String]
   | OrderedList [String]
@@ -533,9 +533,9 @@ parseLines context txts =
     -- done case
     [] -&gt; maybeToList context
 
-    -- Header 1 case
+    -- Heading 1 case
     ('*' : ' ' : line) : rest -&gt;
-      maybe id (:) context (Header 1 (trim line) : parseLines Nothing rest)
+      maybe id (:) context (Heading 1 (trim line) : parseLines Nothing rest)
 
     -- Unordered list case
     ('-' : ' ' : line) : rest -&gt;
@@ -608,6 +608,11 @@ so we'll be able to:</p>
 <li>Generate HTML code</li>
 </ol>
 <p>And also discuss how to work with IO in Haskell while we're at it.</p>
+<blockquote>
+<p>You can view the git commit of
+<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/4ee2adbdf9b2657f547bcc4b268be6f6798981a6">the changes we've made</a>
+and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/76c4f4b31c7883c5c0b9f09c7b1a391640a31538">code up until now</a>.</p>
+</blockquote>
 
                     </main>
 

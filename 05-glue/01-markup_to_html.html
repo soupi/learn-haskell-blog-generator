@@ -183,7 +183,7 @@ the relevant HTML API.</p>
 <pre><code class="language-hs">convertStructure :: Markup.Structure -&gt; Html.Structure
 convertStructure structure =
   case structure of
-    Markup.Header 1 txt -&gt;
+    Markup.Heading 1 txt -&gt;
       Html.h1_ txt
 
     Markup.Paragraph p -&gt;
@@ -200,18 +200,18 @@ convertStructure structure =
 </code></pre>
 <p>Notice that running this code with <code>-Wall</code> will reveal that the pattern matching
 is <em>non-exhaustive</em>. This is because we don't currently have a way to build
-headers that are not <code>h1</code>. There are a few ways to handle this:</p>
+headings that are not <code>h1</code>. There are a few ways to handle this:</p>
 <ul>
-<li>Ignore the warning - this will like fail at runtime one day and the user will be sad</li>
+<li>Ignore the warning - this will likely fail at runtime one day and the user will be sad</li>
 <li>Pattern match other cases and add a nice error with the <code>error</code> function, has
 the same disadvantage above, but will also not notify that there's a possible issue
 here at compile time.</li>
 <li>Pattern match and do the wrong thing - user is still sad</li>
 <li>Encode errors in the type system using <code>Either</code>, we'll see how to do this in later
 chapters</li>
-<li>Restrict the input - change <code>Markup.Header</code> to not include a number but rather
-specific supported headers. This is a reasonable approach.</li>
-<li>Implement an HTML function supporting arbitrary headers. Should be straightforward
+<li>Restrict the input - change <code>Markup.Heading</code> to not include a number but rather
+specific supported headings. This is a reasonable approach.</li>
+<li>Implement an HTML function supporting arbitrary headings. Should be straightforward
 to do.</li>
 </ul>
 <hr />
@@ -229,7 +229,7 @@ h_ n = Structure . el (&quot;h&quot; &lt;&gt; show n) . escape
 <pre><code class="language-hs">convertStructure :: Markup.Structure -&gt; Html.Structure
 convertStructure structure =
   case structure of
-    Markup.Header n txt -&gt;
+    Markup.Heading n txt -&gt;
       Html.h_ n txt
 
     Markup.Paragraph p -&gt;
@@ -424,7 +424,7 @@ convert title = Html.html_ title . foldMap convertStructure
 convertStructure :: Markup.Structure -&gt; Html.Structure
 convertStructure structure =
   case structure of
-    Markup.Header n txt -&gt;
+    Markup.Heading n txt -&gt;
       Html.h_ n txt
 
     Markup.Paragraph p -&gt;
@@ -449,6 +449,11 @@ convertStructure structure =
 </ul>
 <p>Next, we are going to glue our functionality together and learn about
 I/O in Haskell!</p>
+<blockquote>
+<p>You can view the git commit of
+<a href="https://github.com/soupi/learn-haskell-blog-generator/commit/84c92cbe8679e66b191ca4d4692241b4e5c13a57">the changes we've made</a>
+and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/4ee2adbdf9b2657f547bcc4b268be6f6798981a6">code up until now</a>.</p>
+</blockquote>
 
                     </main>
 
