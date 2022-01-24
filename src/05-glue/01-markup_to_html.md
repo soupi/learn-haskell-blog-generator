@@ -74,7 +74,7 @@ Notice that running this code with `-Wall` will reveal that the pattern matching
 is *non-exhaustive*. This is because we don't currently have a way to build
 headings that are not `h1`. There are a few ways to handle this:
 
-- Ignore the warning - this will like fail at runtime one day and the user will be sad
+- Ignore the warning - this will likely fail at runtime one day and the user will be sad
 - Pattern match other cases and add a nice error with the `error` function, has
   the same disadvantage above, but will also not notify that there's a possible issue
   here at compile time.
