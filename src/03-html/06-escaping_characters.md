@@ -227,7 +227,7 @@ The user of our library can currently only supply strings in a few places:
 
 1. Page title
 2. Paragraphs
-3. Headers
+3. Headings
 
 We can apply our escape function at these places before doing anything else with it.
 That way all HTML constructions are safe.

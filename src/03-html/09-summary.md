@@ -28,7 +28,7 @@ myhtml =
   html_
     "My title"
     ( append_
-      (h1_ "Header")
+      (h1_ "Heading")
       ( append_
         (p_ "Paragraph #1")
         (p_ "Paragraph #2")
@@ -138,4 +138,4 @@ escape =
     concat . map escapeChar
 ```
 
-> [View the code up until now](https://github.com/soupi/learn-haskell-blog-generator/tree/76c4f4b31c7883c5c0b9f09c7b1a391640a31538).
+> You can also [browse the code as a tree](https://github.com/soupi/learn-haskell-blog-generator/tree/76c4f4b31c7883c5c0b9f09c7b1a391640a31538).

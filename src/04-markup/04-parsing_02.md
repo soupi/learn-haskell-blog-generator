@@ -355,7 +355,7 @@ trim = unwords . words
 
    ```hs
    data Context
-     = CtxHeader Natural String
+     = CtxHeading Natural String
      | CtxParagraph [String]
      | CtxUnorderedList [String]
      | CtxOrderedList [String]
@@ -382,9 +382,9 @@ parseLines context txts =
     -- done case
     [] -> maybeToList context
 
-    -- Header 1 case
+    -- Heading 1 case
     ('*' : ' ' : line) : rest ->
-      maybe id (:) context (Header 1 (trim line) : parseLines Nothing rest)
+      maybe id (:) context (Heading 1 (trim line) : parseLines Nothing rest)
 
     -- Unordered list case
     ('-' : ' ' : line) : rest ->
@@ -438,7 +438,7 @@ type Document
   = [Structure]
 
 data Structure
-  = Header Natural String
+  = Heading Natural String
   | Paragraph String
   | UnorderedList [String]
   | OrderedList [String]
@@ -455,9 +455,9 @@ parseLines context txts =
     -- done case
     [] -> maybeToList context
 
-    -- Header 1 case
+    -- Heading 1 case
     ('*' : ' ' : line) : rest ->
-      maybe id (:) context (Header 1 (trim line) : parseLines Nothing rest)
+      maybe id (:) context (Heading 1 (trim line) : parseLines Nothing rest)
 
     -- Unordered list case
     ('-' : ' ' : line) : rest ->

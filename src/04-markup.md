@@ -5,7 +5,7 @@ and parse documents written in this language into Haskell data structures.
 
 Our markup language will contain the following features:
 
-- Headers: prefix by a number of `*` characters
+- Headings: prefix by a number of `*` characters
 - Paragraphs: a group of lines without empty lines in between
 - Unordered lists: a group of lines each prefixed with `- `
 - Ordered lists: a group of lines each prefixed with `# `

@@ -71,7 +71,7 @@ end of the data definition.
 
 ```hs
 data Structure
-  = Header Natural String
+  = Heading Natural String
   | Paragraph String
   | UnorderedList [String]
   | OrderedList [String]
