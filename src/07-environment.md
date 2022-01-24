@@ -345,12 +345,12 @@ to build the `head`!
    like [twitter cards](https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/abouts-cards).
 
    <details><summary>Solution</summary>
-   
+
      <details><summary>src/HsBlog/Html.hs</summary>
-     
+
      ```hs
      -- Html.hs
-     
+
      module HsBlog.Html
        ( Html
        , Head
@@ -373,21 +373,21 @@ to build the `head`!
        , render
        )
        where
-     
+
      import Prelude hiding (head)
      import HsBlog.Html.Internal
      ```
-     
+
      </details>
-     
+
      <details><summary>src/HsBlog/Html/Internal.hs</summary>
-     
+
      ```hs
      newtype Head
        = Head String
-     
+
      -- * EDSL
-     
+
      html_ :: Head -> Structure -> Html
      html_ (Head head) content =
        Html
@@ -396,30 +396,30 @@ to build the `head`!
              <> el "body" (getStructureString content)
            )
          )
-     
+
      -- * Head
-     
+
      title_ :: String -> Head
      title_ = Head . el "title" . escape
-     
+
      stylesheet_ :: FilePath -> Head
      stylesheet_ path =
        Head $ "<link rel=\"stylesheet\" type=\"text/css\" href=\"" <> escape path <> "\">"
-     
+
      meta_ :: String -> String -> Head
      meta_ name content =
        Head $ "<meta name=\"" <> escape name <> "\" content=\"" <> escape content <> "\">"
-     
+
      instance Semigroup Head where
        (<>) (Head h1) (Head h2) =
          Head (h1 <> h2)
-     
+
      instance Monoid Head where
        mempty = Head ""
      ```
-     
+
      </details>
-   
+
    </details>
 
 2. Fix `convert` and `buildIndex` to use the new API. Note: `buildIndex` should return
@@ -427,13 +427,13 @@ to build the `head`!
 
 
    <details><summary>Solution</summary>
-   
+
      <details><summary>src/HsBlog/Convert.hs</summary>
-     
+
      ```hs
      import Prelude hiding (head)
      import HsBlog.Env (Env(..))
-     
+
      convert :: Env -> String -> Markup.Document -> Html.Html
      convert env title doc =
        let
@@ -449,11 +449,11 @@ to build the `head`!
        in
          Html.html_ head body
      ```
-     
+
      </details>
-     
+
      <details><summary>src/HsBlog/Directory.hs</summary>
-     
+
      ```hs
      buildIndex :: [(FilePath, Markup.Document)] -> Reader Env Html.Html
      buildIndex files = do
@@ -480,35 +480,35 @@ to build the `head`!
              <> mconcat previews
            )
      ```
-     
+
      </details>
-   
+
    </details>
 
 3. Create a command-line parser for `Env`, attach it to the `convert-dir` command,
    and pass the result it to the `convertDirectory` function.
 
    <details><summary>Solution</summary>
-   
+
      <details><summary>src/HsBlog.hs</summary>
-     
+
      ```hs
      import HsBlog.Env (defaultEnv)
-     
+
      convertSingle :: String -> Handle -> Handle -> IO ()
 
      process :: String -> String -> String
      process title = Html.render . convert defaultEnv title . Markup.parse
      ```
-     
+
      </details>
-     
-     
+
+
      <details><summary>app/OptParse.hs</summary>
-     
+
      ```hs
      import HsBlog.Env
-     
+
      ------------------------------------------------
      -- * Our command-line options model
 
@@ -517,19 +517,19 @@ to build the `head`!
        = ConvertSingle SingleInput SingleOutput
        | ConvertDir FilePath FilePath Env
        deriving Show
-     
+
      ------------------------------------------------
      -- * Directory conversion parser
 
      pConvertDir :: Parser Options
      pConvertDir =
        ConvertDir <$> pInputDir <*> pOutputDir <*> pEnv
-     
+
      -- | Parser for blog environment
      pEnv :: Parser Env
      pEnv =
        Env <$> pBlogName <*> pStylesheet
-     
+
      -- | Blog name parser
      pBlogName :: Parser String
      pBlogName =
@@ -541,7 +541,7 @@ to build the `head`!
            <> value (eBlogName defaultEnv)
            <> showDefault
          )
-     
+
      -- | Stylesheet parser
      pStylesheet :: Parser String
      pStylesheet =
@@ -553,13 +553,13 @@ to build the `head`!
            <> value (eStylesheetPath defaultEnv)
            <> showDefault
          )
-     
+
      ```
 
      </details>
-     
+
      <details><summary>app/Main.hs</summary>
-     
+
      ```hs
      main :: IO ()
      main = do
@@ -567,12 +567,12 @@ to build the `head`!
        case options of
          ConvertDir input output env ->
            HsBlog.convertDirectory env input output
-     
+
          ...
      ```
-     
+
      </details>
-   
+
    </details>
 
 
@@ -599,5 +599,5 @@ It is important to weigh the benefits and costs of using advanced techniques,
 and it's often better to try and get away with simpler techniques if we can.
 
 > You can view the git commit of
-> [the changes we've made](https://github.com/soupi/learn-haskell-blog-generator/commit/fe72df16c1af822484cec546b892526f96bf9d59)
-> and the [code up until now](https://github.com/soupi/learn-haskell-blog-generator/tree/code-after-reader).
+> [the changes we've made](https://github.com/soupi/learn-haskell-blog-generator/commit/b4c986fb52cd6d78a1acecad189490a8d13f8909)
+> and the [code up until now](https://github.com/soupi/learn-haskell-blog-generator/tree/b4c986fb52cd6d78a1acecad189490a8d13f8909).

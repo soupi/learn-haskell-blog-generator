@@ -137,3 +137,5 @@ escape =
   in
     concat . map escapeChar
 ```
+
+> [View the code up until now](https://github.com/soupi/learn-haskell-blog-generator/tree/76c4f4b31c7883c5c0b9f09c7b1a391640a31538).

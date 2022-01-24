@@ -24,5 +24,5 @@ We've also learned a few new abstractions and techniques:
 We are almost done. Only a couple more things left to do with this project. Let's go!
 
 > You can view the git commit of
-> [the changes we've made](https://github.com/soupi/learn-haskell-blog-generator/commit/72d99dbbad05c8a4fbce152315f45bbaabba177e)
-> and the [code up until now](https://github.com/soupi/learn-haskell-blog-generator/tree/code-after-multiple-files).
+> [the changes we've made](https://github.com/soupi/learn-haskell-blog-generator/commit/0025762fbe91e159f82b8fc5d39d86cac39c4f7d)
+> and the [code up until now](https://github.com/soupi/learn-haskell-blog-generator/tree/0025762fbe91e159f82b8fc5d39d86cac39c4f7d).

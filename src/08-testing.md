@@ -158,7 +158,7 @@ MarkupParsing
 
 Failures:
 
-  test/MarkupParsingSpec.hs:10:7: 
+  test/MarkupParsingSpec.hs:10:7:
   1) MarkupParsing, Markup parsing tests, empty
        expected: [Heading 1 "bug"]
         but got: []
@@ -324,7 +324,7 @@ multiline = do
       shouldBe
         (parse example3)
         example3Result
-        
+
 
 example3 :: String
 example3 = [r|
@@ -384,7 +384,7 @@ multiline = do
       shouldBe
         (parse example4)
         example4Result
-        
+
 
 example4 :: String
 example4 = [r|
@@ -468,5 +468,5 @@ Please consult the tutorial for your chosen testing framework, and read more abo
 this very important subject on your own.
 
 > You can view the git commit of
-> [the changes we've made](https://github.com/soupi/learn-haskell-blog-generator/commit/dad1168229fbea91986fde6d88e4c008cd3f3a28)
-> and the [final version of the code](https://github.com/soupi/learn-haskell-blog-generator/tree/code-after-testing).
+> [the changes we've made](https://github.com/soupi/learn-haskell-blog-generator/commit/7c1f70a15b99b37d794615aa1852ffe335023af9)
+> and the [code up until now](https://github.com/soupi/learn-haskell-blog-generator/tree/7c1f70a15b99b37d794615aa1852ffe335023af9).
