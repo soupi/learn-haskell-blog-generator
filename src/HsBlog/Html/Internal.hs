@@ -2,6 +2,7 @@
 
 module HsBlog.Html.Internal where
 
+import Prelude hiding (head)
 import Numeric.Natural
 
 -- * Types
@@ -15,19 +16,39 @@ newtype Structure
 newtype Content
   = Content String
 
-type Title
-  = String
+newtype Head
+  = Head String
 
 -- * EDSL
 
-html_ :: Title -> Structure -> Html
-html_ title content =
+html_ :: Head -> Structure -> Html
+html_ (Head head) content =
   Html
     ( el "html"
-      ( el "head" (el "title" (escape title))
+      ( el "head" head
         <> el "body" (getStructureString content)
       )
     )
+
+-- * Head
+
+title_ :: String -> Head
+title_ = Head . el "title" . escape
+
+stylesheet_ :: FilePath -> Head
+stylesheet_ path =
+  Head $ "<link rel=\"stylesheet\" type=\"text/css\" href=\"" <> escape path <> "\">"
+
+meta_ :: String -> String -> Head
+meta_ name content =
+  Head $ "<meta name=\"" <> escape name <> "\" content=\"" <> escape content <> "\">"
+
+instance Semigroup Head where
+  (<>) (Head h1) (Head h2) =
+    Head (h1 <> h2)
+
+instance Monoid Head where
+  mempty = Head ""
 
 -- * Structure
 
