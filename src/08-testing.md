@@ -139,7 +139,7 @@ spec = do
     it "empty" $
       shouldBe
         (parse "")
-        [Header 1 "bug"]
+        [Heading 1 "bug"]
 ```
 
 After adding the module to the `other-modules` list in the cabal file:
@@ -160,7 +160,7 @@ Failures:
 
   test/MarkupParsingSpec.hs:10:7: 
   1) MarkupParsing, Markup parsing tests, empty
-       expected: [Header 1 "bug"]
+       expected: [Heading 1 "bug"]
         but got: []
 
   To rerun use: --match "/MarkupParsing/Markup parsing tests/empty/"
@@ -201,10 +201,10 @@ We can add a few more tests:
         (parse "hello world")
         [Paragraph "hello world"]
 
-    it "header 1" $
+    it "heading 1" $
       shouldBe
-        (parse "* Header 1")
-        [Header 1 "Header 1"]
+        (parse "* Heading 1")
+        [Heading 1 "Heading 1"]
 
     it "code" $
       shouldBe
@@ -219,7 +219,7 @@ MarkupParsing
   Markup parsing tests
     Test empty
     paragraph
-    header 1
+    heading 1
     code
 
 Finished in 0.0003 seconds
@@ -252,10 +252,10 @@ simple = do
         (parse "hello world")
         [Paragraph "hello world"]
 
-    it "header 1" $
+    it "heading 1" $
       shouldBe
-        (parse "* Header 1")
-        [Header 1 "Header 1"]
+        (parse "* Heading 1")
+        [Heading 1 "Heading 1"]
 
     it "code" $
       shouldBe
@@ -354,7 +354,7 @@ MarkupParsing
     simple
       Test empty
       paragraph
-      header 1
+      heading 1
       code
     Multi-line tests
       example3
@@ -421,7 +421,7 @@ Otherwise, it will only produce the .o and .hi files.
 
 example4Result :: Document
 example4Result =
-  [ Header 1 "Compiling programs with ghc"
+  [ Heading 1 "Compiling programs with ghc"
   , Paragraph "Running ghc invokes the Glasgow Haskell Compiler (GHC), and can be used to compile Haskell modules and programs into native executables and libraries."
   , Paragraph "Create a new Haskell source file named hello.hs, and write the following code in it:"
   , CodeBlock

@@ -143,10 +143,10 @@ the definition, or by writing a comment block prefixed with `^` *after* the defi
 For example:
 
 ```hs
--- | Construct an HTML page from a `Header`
+-- | Construct an HTML page from a `Head`
 --   and a `Structure`.
 html_
-  :: Header -- ^ Represents the @\<head\>@ section in an HTML file
+  :: Head -- ^ Represents the @\<head\>@ section in an HTML file
   -> Structure -- ^ Represents the @\<body\>@ section in an HTML file
   -> Html
 html_ = ...
@@ -163,7 +163,7 @@ Here's another example:
 - A code block
 -}
 data Structure
-  = Header Natural String
+  = Heading Natural String
   -- ^ A section heading with a level
   | Paragraph String
   -- ^ A paragraph
@@ -206,7 +206,7 @@ For example:
 ```hs
 -- * HTML EDSL
 
-html_ :: Header -> Structure -> Html
+html_ :: Head -> Structure -> Html
 html_ = ...
 
 -- ** Structure
@@ -214,8 +214,8 @@ html_ = ...
 p_ :: Content -> Structure
 p_ = ..
 
-h1_ :: Content -> Structure
-h1_ = ..
+h_ :: Content -> Structure
+h_ = ..
 
 ...
 
@@ -237,7 +237,7 @@ module HsBlog.Html
   , html_
 
     -- ** Combinators used to construct the @\<head\>@ section
-  , Header
+  , Head
   , title_
   , stylesheet_
   , meta_
@@ -246,7 +246,6 @@ module HsBlog.Html
   , Structure
   , p_
   , h_
-  , h1_
   , ul_
   , ol_
   , code_
@@ -284,7 +283,7 @@ For example, we can:
 
 - Hyperlink identifiers by surrounding them with `` ` ``.
 
-  For example: `` `Header` ``
+  For example: `` `Heading` ``
 - Write `monospaced text` by surrounding it with `@`.
 
   For example: `@Paragraph "Hello"@`

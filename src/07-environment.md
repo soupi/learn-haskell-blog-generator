@@ -336,11 +336,11 @@ that now:
 ---
 
 Since stylesheets go in the `head` element, perhaps it's a good idea to create an additional
-`newtype` like `Structure` for `Header` information? Things like title, stylesheet,
+`newtype` like `Structure` for `head` information? Things like title, stylesheet,
 and even meta elements can be composed together just like we did for `Structure`
-to build the `Header`!
+to build the `head`!
 
-1. Do it now: extend our HTML library to include headers and add 3 functions:
+1. Do it now: extend our HTML library to include headings and add 3 functions:
    `title_` for titles, `stylesheet_` for stylesheets, and `meta_` for meta elements
    like [twitter cards](https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/abouts-cards).
 
@@ -353,7 +353,7 @@ to build the `Header`!
      
      module HsBlog.Html
        ( Html
-       , Header
+       , Head
        , title_
        , stylesheet_
        , meta_
@@ -361,7 +361,6 @@ to build the `Header`!
        , html_
        , p_
        , h_
-       , h1_
        , ul_
        , ol_
        , code_
@@ -375,6 +374,7 @@ to build the `Header`!
        )
        where
      
+     import Prelude hiding (head)
      import HsBlog.Html.Internal
      ```
      
@@ -383,39 +383,39 @@ to build the `Header`!
      <details><summary>src/HsBlog/Html/Internal.hs</summary>
      
      ```hs
-     newtype Header
-       = Header String
+     newtype Head
+       = Head String
      
      -- * EDSL
      
-     html_ :: Header -> Structure -> Html
-     html_ (Header header) content =
+     html_ :: Head -> Structure -> Html
+     html_ (Head head) content =
        Html
          ( el "html"
-           ( el "head" header
+           ( el "head" head
              <> el "body" (getStructureString content)
            )
          )
      
-     -- * Header
+     -- * Head
      
-     title_ :: String -> Header
-     title_ = Header . el "title" . escape
+     title_ :: String -> Head
+     title_ = Head . el "title" . escape
      
-     stylesheet_ :: FilePath -> Header
+     stylesheet_ :: FilePath -> Head
      stylesheet_ path =
-       Header $ "<link rel=\"stylesheet\" type=\"text/css\" href=\"" <> escape path <> "\">"
+       Head $ "<link rel=\"stylesheet\" type=\"text/css\" href=\"" <> escape path <> "\">"
      
-     meta_ :: String -> String -> Header
+     meta_ :: String -> String -> Head
      meta_ name content =
-       Header $ "<meta name=\"" <> escape name <> "\" content=\"" <> escape content <> "\">"
+       Head $ "<meta name=\"" <> escape name <> "\" content=\"" <> escape content <> "\">"
      
-     instance Semigroup Header where
-       (<>) (Header h1) (Header h2) =
-         Header (h1 <> h2)
+     instance Semigroup Head where
+       (<>) (Head h1) (Head h2) =
+         Head (h1 <> h2)
      
-     instance Monoid Header where
-       mempty = Header ""
+     instance Monoid Head where
+       mempty = Head ""
      ```
      
      </details>
@@ -431,22 +431,23 @@ to build the `Header`!
      <details><summary>src/HsBlog/Convert.hs</summary>
      
      ```hs
+     import Prelude hiding (head)
      import HsBlog.Env (Env(..))
      
      convert :: Env -> String -> Markup.Document -> Html.Html
      convert env title doc =
        let
-         header =
+         head =
            Html.title_ (eBlogName env <> " - " <> title)
              <> Html.stylesheet_ (eStylesheetPath env)
          article =
            foldMap convertStructure doc
          websiteTitle =
-           Html.h1_ (Html.link_ "index.html" $ Html.txt_ $ eBlogName env)
+           Html.h_ 1 (Html.link_ "index.html" $ Html.txt_ $ eBlogName env)
          body =
            websiteTitle <> article
        in
-         Html.html_ header body
+         Html.html_ head body
      ```
      
      </details>
@@ -462,8 +463,8 @@ to build the `Header`!
            map
              ( \(file, doc) ->
                case doc of
-                 Markup.Header 1 header : article ->
-                   Html.h_ 3 (Html.link_ file (Html.txt_ header))
+                 Markup.Head 1 head : article ->
+                   Html.h_ 3 (Html.link_ file (Html.txt_ head))
                      <> foldMap convertStructure (take 2 article)
                      <> Html.p_ (Html.link_ file (Html.txt_ "..."))
                  _ ->
@@ -474,7 +475,7 @@ to build the `Header`!
            ( Html.title_ (eBlogName env)
              <> Html.stylesheet_ (eStylesheetPath env)
            )
-           ( Html.h1_ (Html.link_ "index.html" (Html.txt_ "Blog"))
+           ( Html.h_ 1 (Html.link_ "index.html" (Html.txt_ "Blog"))
              <> Html.h_ 2 (Html.txt_ "Posts")
              <> mconcat previews
            )

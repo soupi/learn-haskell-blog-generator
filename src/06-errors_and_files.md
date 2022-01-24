@@ -22,7 +22,6 @@ can be regular text, links, images, and so on.
 <details><summary>src/Html/Internal.hs</summary>
 
 ```hs
--- Html/Internal.hs
 module HsBlog.Html.Internal where
 
 import Numeric.Natural
@@ -56,9 +55,6 @@ html_ title content =
 
 p_ :: Content -> Structure
 p_ = Structure . el "p" . getContentString
-
-h1_ :: Content -> Structure
-h1_ = Structure . el "h1" . getContentString
 
 h_ :: Natural -> Content -> Structure
 h_ n = Structure . el ("h" <> show n) . getContentString
@@ -162,8 +158,6 @@ escape =
 <details><summary>src/Html.hs</summary>
 
 ```hs
--- Html.hs
-
 module HsBlog.Html
   ( Html
   , Title
@@ -171,7 +165,6 @@ module HsBlog.Html
   , html_
   , p_
   , h_
-  , h1_
   , ul_
   , ol_
   , code_
@@ -193,7 +186,6 @@ import HsBlog.Html.Internal
 <details><summary>src/Convert.hs</summary>
 
 ```hs
--- Convert.hs
 module HsBlog.Convert where
 
 import qualified HsBlog.Markup as Markup
@@ -205,7 +197,7 @@ convert title = Html.html_ title . foldMap convertStructure
 convertStructure :: Markup.Structure -> Html.Structure
 convertStructure structure =
   case structure of
-    Markup.Header n txt ->
+    Markup.Heading n txt ->
       Html.h_ n $ Html.txt_ txt
 
     Markup.Paragraph p ->
@@ -233,7 +225,7 @@ With our extended HTML EDSL, we can now create an index page with links to the o
 
 To create an index page, we need a list of files with their *target destination*,
 as well as their `Markup` (so we can extract information to include in our index page,
-such as the first header and paragraph). Our output should be an `Html` page.
+such as the first heading and paragraph). Our output should be an `Html` page.
 
 ---
 
@@ -253,8 +245,8 @@ buildIndex files =
       map
         ( \(file, doc) ->
           case doc of
-            Markup.Header 1 header : article ->
-              Html.h_ 3 (Html.link_ file (Html.txt_ header))
+            Markup.Heading 1 heading : article ->
+              Html.h_ 3 (Html.link_ file (Html.txt_ heading))
                 <> foldMap convertStructure (take 3 article)
                 <> Html.p_ (Html.link_ file (Html.txt_ "..."))
             _ ->
@@ -264,7 +256,7 @@ buildIndex files =
   in
     Html.html_
       "Blog"
-      ( Html.h1_ (Html.link_ "index.html" (Html.txt_ "Blog"))
+      ( Html.h_ 1 (Html.link_ "index.html" (Html.txt_ "Blog"))
         <> Html.h_ 2 (Html.txt_ "Posts")
         <> mconcat previews
       )

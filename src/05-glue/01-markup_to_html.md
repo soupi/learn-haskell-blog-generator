@@ -54,7 +54,7 @@ the relevant HTML API.
 convertStructure :: Markup.Structure -> Html.Structure
 convertStructure structure =
   case structure of
-    Markup.Header 1 txt ->
+    Markup.Heading 1 txt ->
       Html.h1_ txt
 
     Markup.Paragraph p ->
@@ -72,7 +72,7 @@ convertStructure structure =
 
 Notice that running this code with `-Wall` will reveal that the pattern matching
 is *non-exhaustive*. This is because we don't currently have a way to build
-headers that are not `h1`. There are a few ways to handle this:
+headings that are not `h1`. There are a few ways to handle this:
 
 - Ignore the warning - this will like fail at runtime one day and the user will be sad
 - Pattern match other cases and add a nice error with the `error` function, has
@@ -81,9 +81,9 @@ headers that are not `h1`. There are a few ways to handle this:
 - Pattern match and do the wrong thing - user is still sad
 - Encode errors in the type system using `Either`, we'll see how to do this in later
   chapters
-- Restrict the input - change `Markup.Header` to not include a number but rather
-  specific supported headers. This is a reasonable approach.
-- Implement an HTML function supporting arbitrary headers. Should be straightforward
+- Restrict the input - change `Markup.Heading` to not include a number but rather
+  specific supported headings. This is a reasonable approach.
+- Implement an HTML function supporting arbitrary headings. Should be straightforward
   to do.
 
 ---
@@ -114,7 +114,7 @@ Exercise: Fix `convertStructure` using `h_`.
 convertStructure :: Markup.Structure -> Html.Structure
 convertStructure structure =
   case structure of
-    Markup.Header n txt ->
+    Markup.Heading n txt ->
       Html.h_ n txt
 
     Markup.Paragraph p ->
@@ -374,7 +374,7 @@ convert title = Html.html_ title . foldMap convertStructure
 convertStructure :: Markup.Structure -> Html.Structure
 convertStructure structure =
   case structure of
-    Markup.Header n txt ->
+    Markup.Heading n txt ->
       Html.h_ n txt
 
     Markup.Paragraph p ->

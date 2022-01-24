@@ -65,7 +65,7 @@ For now, let's create a couple of types for our use case.
 We want two separate types to represent:
 
 1. A complete Html document
-2. A type for html structures such as headers and paragraphs that can go inside the <body> tag
+2. A type for html structures such as headings and paragraphs that can go inside the <body> tag
 
 We want them to be distinct because we don't want to mix them together.
 
@@ -497,7 +497,7 @@ myhtml =
   html_
     "My title"
     ( append_
-      (h1_ "Header")
+      (h1_ "Heading")
       ( append_
         (p_ "Paragraph #1")
         (p_ "Paragraph #2")
@@ -554,9 +554,9 @@ render html =
 ## Are we safe yet?
 
 We have made some progress - now we can't write `"Hello"`
-where we'd expect either a paragraph or a header, but we can still
+where we'd expect either a paragraph or a heading, but we can still
 write `Structure "hello"` and get something that isn't a
-paragraph or a header. So while we made it harder for the user
+paragraph or a heading. So while we made it harder for the user
 to make mistakes by accident, we haven't really been able to **enforce
 the invariants** we wanted to enforce in our library.
 

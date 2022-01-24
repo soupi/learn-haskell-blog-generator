@@ -7,11 +7,11 @@ So how do we represent our markup language using Haskell?
 
 Previously, in our HTML builder library, we used `newtype`s to differentiate
 between HTML documents, structures and titles, but we didn't really need to
-differentiate between different kinds of structures such as paragraphs and headers,
+differentiate between different kinds of structures such as paragraphs and headings,
 not without parsing the data at least.
 
 In this case, we have a list of structures, and each structure could be
-one of a few specific options (a paragraph, a header, a list, etc),
+one of a few specific options (a paragraph, a heading, a list, etc),
 and we want to be able to know which structure is which so we can easily
 convert it into the equivalent HTML representation.
 
@@ -229,7 +229,7 @@ type Document
   = [Structure]
 
 data Structure
-  = Header Natural String
+  = Heading Natural String
   | Paragraph String
   | UnorderedList [String]
   | OrderedList [String]
@@ -316,7 +316,7 @@ example1 =
 ```hs
 example2 :: Document
 example2 =
-  [ Header 1 "Welcome"
+  [ Heading 1 "Welcome"
   , Paragraph "To this tutorial about Haskell."
   ]
 ```
@@ -345,7 +345,7 @@ example3 =
 ```hs
 example4 :: Document
 example4 =
-  [ Header 1 "Compiling programs with ghc"
+  [ Heading 1 "Compiling programs with ghc"
   , Paragraph "Running ghc invokes the Glasgow Haskell Compiler (GHC), and can be used to compile Haskell modules and programs into native executables and libraries."
   , Paragraph "Create a new Haskell source file named hello.hs, and write the following code in it:"
   , CodeBlock
@@ -395,7 +395,7 @@ type Document
   = [Structure]
 
 data Structure
-  = Header Natural String
+  = Heading Natural String
   | Paragraph String
   | UnorderedList [String]
   | OrderedList [String]
@@ -416,7 +416,7 @@ first represent it as a Haskell type is for flexibility and modularity.
 If the parsing code is coupled with HTML generation, we lose the
 ability to pre-process the markup document. For example we might want
 to take only a small part of the document (for summary) and present
-it, or create a table of content from headers. Or maybe we'd like to
+it, or create a table of content from headings. Or maybe we'd like to
 add other targets and not just HTML - maybe markdown format or a GUI reader?
 
 Parsing to an "abstract data type" (ADT) representation (one that does
