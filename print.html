@@ -2474,7 +2474,7 @@ And we do that until the number we decrement reaches 0.</p>
 <li>On the next step we now have <code>5</code> and <code>0</code>, since the second number is <code>0</code> we declare <code>5</code> as the result.</li>
 </ul>
 <p>This can be written imperatively using a loop:</p>
-<pre><code class="language-js">function sum(n, m) {
+<pre><code class="language-js">function add(n, m) {
   while (m /= 0) {
     n = increment(n);
     m = decrement(m);
@@ -2483,9 +2483,9 @@ And we do that until the number we decrement reaches 0.</p>
 }
 </code></pre>
 <p>We can write the same algorithm in Haskell without mutation using recursion:</p>
-<pre><code class="language-hs">sum n m =
+<pre><code class="language-hs">add n m =
   if m /= 0
-    then sum (increment n) (decrement m)
+    then add (increment n) (decrement m)
     else n
 </code></pre>
 <p>In Haskell, in order to <em>emulate iteration with mutable state</em>, we call the function again
@@ -2500,18 +2500,18 @@ is the result of the function (this is called tail position), we can just drop t
 stack frame and then allocate one for the function we call, so we don't require <code>N</code> stack frames
 for <code>N</code> iterations.</p>
 <p>This is of course only one way to do tail call elimination and other
-strategies exists, such as translating code like our recursive <code>sum</code> above to the iteration version.</p>
+strategies exists, such as translating code like our recursive <code>add</code> above to the iteration version.</p>
 <h4 id="laziness"><a class="header" href="#laziness">Laziness</a></h4>
 <p>Haskell plays by slightly different rules because it uses a <em>lazy evaluation strategy</em>
 instead of the much more common strict evaluation strategy. An <em>evaluation strategy</em>
 refers to &quot;when do we evaluate a computation&quot;. In a strict language the answer is simple:
 <em>we evaluate the arguments of a function before entering a function</em>.</p>
-<p>So for example the evaluation of <code>sum (increment 3) (decrement 2)</code> using strict evaluation
+<p>So for example the evaluation of <code>add (increment 3) (decrement 2)</code> using strict evaluation
 will look like this:</p>
 <ol>
 <li>Evaluate <code>increment 3</code> to <code>4</code></li>
 <li>Evaluate <code>decrement 2</code> to <code>1</code></li>
-<li>Evaluate <code>sum 4 1</code></li>
+<li>Evaluate <code>add 4 1</code></li>
 </ol>
 <p>Or, alternatively (depending on the language) we reverse (1) and (2) and evaluate the arguments
 from right-to-left instead of left-to-right.</p>
@@ -2520,21 +2520,21 @@ from right-to-left instead of left-to-right.</p>
 outside world, for example when writing a computation to standard output or sending it over the network.</p>
 <p>So unless this computation is required, it won't be evaluated. For example:</p>
 <pre><code class="language-hs">main =
-  if sum (increment 2) (decrement 3) == 5
+  if add (increment 2) (decrement 3) == 5
     then putStrLn &quot;Yes.&quot;
     else putStrLn &quot;No.&quot;
 </code></pre>
-<p>In the case above, we need the result of <code>sum (increment 2) (decrement 3)</code>
+<p>In the case above, we need the result of <code>add (increment 2) (decrement 3)</code>
 in order to know which message to write,
 so it will be evaluated. But:</p>
 <pre><code class="language-hs">main =
   let
-    five = sum (increment 2) (decrement 3)
+    five = add (increment 2) (decrement 3)
   in
     putStrLn &quot;Not required&quot;
 </code></pre>
 <p>In the case above we don't actually need <code>five</code>, so we don't evaluate it!</p>
-<p>But then if we know we need <code>sum (increment 2) (decrement 3)</code>,
+<p>But then if we know we need <code>add (increment 2) (decrement 3)</code>,
 do we use strict evaluation now? The answer is no - because we might not need
 to evaluate the arguments to complete the computation. For example in this case:</p>
 <pre><code class="language-hs">const a b = a
@@ -2556,7 +2556,7 @@ or a pattern in pattern matching).</p>
 <p>I've written a more in-depth blog post about how this works in Haskell:
 <a href="https://gilmi.me/blog/post/2020/10/01/substitution-and-equational-reasoning">Substitution and Equational Reasoning</a>.</p>
 <p>Please read it and try to evaluate the following program by hand:</p>
-<pre><code class="language-hs">import Prelude hiding (const, sum) -- feel free to ignore this line
+<pre><code class="language-hs">import Prelude hiding (const) -- feel free to ignore this line
 
 increment n = n + 1
 
@@ -2564,13 +2564,13 @@ decrement n = n - 1
 
 const a b = a
 
-sum n m =
+add n m =
   if m /= 0
-    then sum (increment n) (decrement m)
+    then add (increment n) (decrement m)
     else n
 
 main =
-  if const (sum 3 2) (decrement 3) == 5
+  if const (add 3 2) (decrement 3) == 5
     then putStrLn &quot;Yes.&quot;
     else putStrLn &quot;No.&quot;
 </code></pre>
@@ -2578,34 +2578,34 @@ main =
 <details>
   <summary>Solution</summary>
 <p>evaluating <code>main</code></p>
-<pre><code class="language-hs">if const (sum 3 2) (decrement 3) == 5
+<pre><code class="language-hs">if const (add 3 2) (decrement 3) == 5
   then putStrLn &quot;Yes.&quot;
   else putStrLn &quot;No.&quot;
 </code></pre>
 <p>expanding <code>const</code></p>
-<pre><code class="language-hs">if sum 3 2 == 5
+<pre><code class="language-hs">if add 3 2 == 5
   then putStrLn &quot;Yes.&quot;
   else putStrLn &quot;No.&quot;
 </code></pre>
-<p>expanding <code>sum</code></p>
-<pre><code class="language-hs">if (if 2 /= 0 then sum (increment 3) (decrement 2) else 3) == 5
+<p>expanding <code>add</code></p>
+<pre><code class="language-hs">if (if 2 /= 0 then add (increment 3) (decrement 2) else 3) == 5
   then putStrLn &quot;Yes.&quot;
   else putStrLn &quot;No.&quot;
 </code></pre>
 <p>evaluating the control flow <code>2 /= 0</code></p>
-<pre><code class="language-hs">if (if True then sum (increment 3) (decrement 2) else 3) == 5
+<pre><code class="language-hs">if (if True then add (increment 3) (decrement 2) else 3) == 5
   then putStrLn &quot;Yes.&quot;
   else putStrLn &quot;No.&quot;
 </code></pre>
 <p>Choosing the <code>then</code> branch</p>
-<pre><code class="language-hs">if (sum (increment 3) (decrement 2)) == 5
+<pre><code class="language-hs">if (add (increment 3) (decrement 2)) == 5
   then putStrLn &quot;Yes.&quot;
   else putStrLn &quot;No.&quot;
 </code></pre>
-<p>expanding <code>sum</code></p>
+<p>expanding <code>add</code></p>
 <pre><code class="language-hs">if
   ( if decrement 2 /= 0
-    then sum
+    then add
       (increment (increment 3))
       (decrement (decrement 2))
     else (increment 3)
@@ -2616,7 +2616,7 @@ main =
 <p>Evaluating <code>decrement 2</code> in the control flow (notice how both places change!)</p>
 <pre><code class="language-hs">if
   ( if 1 /= 0
-    then sum
+    then add
       (increment (increment 3))
       (decrement 1)
     else (increment 3)
@@ -2627,7 +2627,7 @@ main =
 <p>Evaluating the control flow <code>1 /= 0</code></p>
 <pre><code class="language-hs">if
   ( if True
-    then sum
+    then add
       (increment (increment 3))
       (decrement 1)
     else (increment 3)
@@ -2637,17 +2637,17 @@ main =
 </code></pre>
 <p>Choosing the <code>then</code> branch</p>
 <pre><code class="language-hs">if
-  ( sum
+  ( add
     (increment (increment 3))
     (decrement 1)
   ) == 5
   then putStrLn &quot;Yes.&quot;
   else putStrLn &quot;No.&quot;
 </code></pre>
-<p>Expanding <code>sum</code></p>
+<p>Expanding <code>add</code></p>
 <pre><code class="language-hs">if
   ( if decrement 1 /= 0
-    then sum
+    then add
       (increment (increment (increment 3)))
       (decrement (decrement 1))
     else increment (increment 3)
@@ -2658,7 +2658,7 @@ main =
 <p>Evaluating control flow <code>decrement 1</code></p>
 <pre><code class="language-hs">if
   ( if 0 /= 0
-    then sum
+    then add
       (increment (increment (increment 3)))
       (decrement 0)
     else increment (increment 3)
@@ -2669,7 +2669,7 @@ main =
 <p>Evaluating control flow <code>0 /= 0</code></p>
 <pre><code class="language-hs">if
   ( if False
-    then sum
+    then add
       (increment (increment (increment 3)))
       (decrement 0)
     else increment (increment 3)
