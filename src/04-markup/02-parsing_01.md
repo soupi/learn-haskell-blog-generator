@@ -56,7 +56,7 @@ For example for `3` and `2`:
 This can be written imperatively using a loop:
 
 ```js
-function sum(n, m) {
+function add(n, m) {
   while (m /= 0) {
     n = increment(n);
     m = decrement(m);
@@ -68,9 +68,9 @@ function sum(n, m) {
 We can write the same algorithm in Haskell without mutation using recursion:
 
 ```hs
-sum n m =
+add n m =
   if m /= 0
-    then sum (increment n) (decrement m)
+    then add (increment n) (decrement m)
     else n
 ```
 
@@ -90,7 +90,7 @@ stack frame and then allocate one for the function we call, so we don't require 
 for `N` iterations.
 
 This is of course only one way to do tail call elimination and other
-strategies exists, such as translating code like our recursive `sum` above to the iteration version.
+strategies exists, such as translating code like our recursive `add` above to the iteration version.
 
 #### Laziness
 
@@ -99,12 +99,12 @@ instead of the much more common strict evaluation strategy. An *evaluation strat
 refers to "when do we evaluate a computation". In a strict language the answer is simple:
 _we evaluate the arguments of a function before entering a function_.
 
-So for example the evaluation of `sum (increment 3) (decrement 2)` using strict evaluation
+So for example the evaluation of `add (increment 3) (decrement 2)` using strict evaluation
 will look like this:
 
 1. Evaluate `increment 3` to `4`
 2. Evaluate `decrement 2` to `1`
-3. Evaluate `sum 4 1`
+3. Evaluate `add 4 1`
 
 Or, alternatively (depending on the language) we reverse (1) and (2) and evaluate the arguments
 from right-to-left instead of left-to-right.
@@ -117,26 +117,26 @@ So unless this computation is required, it won't be evaluated. For example:
 
 ```hs
 main =
-  if sum (increment 2) (decrement 3) == 5
+  if add (increment 2) (decrement 3) == 5
     then putStrLn "Yes."
     else putStrLn "No."
 ```
 
-In the case above, we need the result of `sum (increment 2) (decrement 3)`
+In the case above, we need the result of `add (increment 2) (decrement 3)`
 in order to know which message to write,
 so it will be evaluated. But:
 
 ```hs
 main =
   let
-    five = sum (increment 2) (decrement 3)
+    five = add (increment 2) (decrement 3)
   in
     putStrLn "Not required"
 ```
 
 In the case above we don't actually need `five`, so we don't evaluate it!
 
-But then if we know we need `sum (increment 2) (decrement 3)`,
+But then if we know we need `add (increment 2) (decrement 3)`,
 do we use strict evaluation now? The answer is no - because we might not need
 to evaluate the arguments to complete the computation. For example in this case:
 
@@ -167,7 +167,7 @@ I've written a more in-depth blog post about how this works in Haskell:
 Please read it and try to evaluate the following program by hand:
 
 ```hs
-import Prelude hiding (const, sum) -- feel free to ignore this line
+import Prelude hiding (const) -- feel free to ignore this line
 
 increment n = n + 1
 
@@ -175,13 +175,13 @@ decrement n = n - 1
 
 const a b = a
 
-sum n m =
+add n m =
   if m /= 0
-    then sum (increment n) (decrement m)
+    then add (increment n) (decrement m)
     else n
 
 main =
-  if const (sum 3 2) (decrement 3) == 5
+  if const (add 3 2) (decrement 3) == 5
     then putStrLn "Yes."
     else putStrLn "No."
 ```
@@ -194,7 +194,7 @@ Remember that evaluation always begins from `main`.
 evaluating `main`
 
 ```hs
-if const (sum 3 2) (decrement 3) == 5
+if const (add 3 2) (decrement 3) == 5
   then putStrLn "Yes."
   else putStrLn "No."
 ```
@@ -202,15 +202,15 @@ if const (sum 3 2) (decrement 3) == 5
 expanding `const`
 
 ```hs
-if sum 3 2 == 5
+if add 3 2 == 5
   then putStrLn "Yes."
   else putStrLn "No."
 ```
 
-expanding `sum`
+expanding `add`
 
 ```hs
-if (if 2 /= 0 then sum (increment 3) (decrement 2) else 3) == 5
+if (if 2 /= 0 then add (increment 3) (decrement 2) else 3) == 5
   then putStrLn "Yes."
   else putStrLn "No."
 ```
@@ -219,7 +219,7 @@ evaluating the control flow `2 /= 0`
 
 
 ```hs
-if (if True then sum (increment 3) (decrement 2) else 3) == 5
+if (if True then add (increment 3) (decrement 2) else 3) == 5
   then putStrLn "Yes."
   else putStrLn "No."
 ```
@@ -227,17 +227,17 @@ if (if True then sum (increment 3) (decrement 2) else 3) == 5
 Choosing the `then` branch
 
 ```hs
-if (sum (increment 3) (decrement 2)) == 5
+if (add (increment 3) (decrement 2)) == 5
   then putStrLn "Yes."
   else putStrLn "No."
 ```
 
-expanding `sum`
+expanding `add`
 
 ```hs
 if
   ( if decrement 2 /= 0
-    then sum
+    then add
       (increment (increment 3))
       (decrement (decrement 2))
     else (increment 3)
@@ -251,7 +251,7 @@ Evaluating `decrement 2` in the control flow (notice how both places change!)
 ```hs
 if
   ( if 1 /= 0
-    then sum
+    then add
       (increment (increment 3))
       (decrement 1)
     else (increment 3)
@@ -265,7 +265,7 @@ Evaluating the control flow `1 /= 0`
 ```hs
 if
   ( if True
-    then sum
+    then add
       (increment (increment 3))
       (decrement 1)
     else (increment 3)
@@ -278,7 +278,7 @@ Choosing the `then` branch
 
 ```hs
 if
-  ( sum
+  ( add
     (increment (increment 3))
     (decrement 1)
   ) == 5
@@ -286,12 +286,12 @@ if
   else putStrLn "No."
 ```
 
-Expanding `sum`
+Expanding `add`
 
 ```hs
 if
   ( if decrement 1 /= 0
-    then sum
+    then add
       (increment (increment (increment 3)))
       (decrement (decrement 1))
     else increment (increment 3)
@@ -305,7 +305,7 @@ Evaluating control flow `decrement 1`
 ```hs
 if
   ( if 0 /= 0
-    then sum
+    then add
       (increment (increment (increment 3)))
       (decrement 0)
     else increment (increment 3)
@@ -319,7 +319,7 @@ Evaluating control flow `0 /= 0`
 ```hs
 if
   ( if False
-    then sum
+    then add
       (increment (increment (increment 3)))
       (decrement 0)
     else increment (increment 3)
