@@ -339,7 +339,7 @@ inner = ...
 extractSmallEnv :: BigEnv -&gt; SmallEnv
 extractSmallEnv = ...
 </code></pre>
-<p>But if <code>inner</code> uses a <code>Reader SamllEnv</code> instead of argument passing,
+<p>But if <code>inner</code> uses a <code>Reader SmallEnv</code> instead of argument passing,
 we can use <code>runReader</code> to <em>convert <code>inner</code> to a normal function</em>,
 and use the same idea as above!</p>
 <pre><code class="language-hs">outer :: Reader BigEnv MyResult
