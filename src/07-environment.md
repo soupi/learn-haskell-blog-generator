@@ -265,7 +265,7 @@ extractSmallEnv :: BigEnv -> SmallEnv
 extractSmallEnv = ...
 ```
 
-But if `inner` uses a `Reader SamllEnv` instead of argument passing,
+But if `inner` uses a `Reader SmallEnv` instead of argument passing,
 we can use `runReader` to *convert `inner` to a normal function*,
 and use the same idea as above!
 
