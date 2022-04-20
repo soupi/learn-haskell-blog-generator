@@ -25,7 +25,7 @@ and is valid Haskell code!
 
 In Haskell we frequently create and use EDSLs to express domain specific
 logic. We have EDSLs for concurrency, command-line options parsing, JSON and HTML,
-Creating build systems, writing tests, and many more.
+creating build systems, writing tests, and many more.
 
 Specialized languages are useful because they can solve specific problems in
 a concise (and often safe) way, and embedding them in general purpose programming
