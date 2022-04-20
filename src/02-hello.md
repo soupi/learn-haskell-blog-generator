@@ -55,7 +55,7 @@ To run this little program, we can compile it using the command line program `gh
 Linking hello ...
 ```
 
-Invoking `ghc` with will create the following artifact files:
+Invoking `ghc` with `hello.hs` will create the following artifact files:
 
 1. `hello.o` - Object file
 2. `hello.hi` - Haskell interface file
