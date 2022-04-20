@@ -752,9 +752,9 @@ structure with the append function <code>&lt;&gt;</code>.</p>
 <ol>
 <li>
 <p>We can use Haskell's type system to make sure we only construct <em>valid</em>
-HTML (so for example we don't create a <code>&lt;title&gt;</code> node
-without a <code>&lt;head&gt;</code> node, or have user content that 
-can include unescaped special characters),
+HTML, so for example we don't create a <code>&lt;title&gt;</code> node
+without a <code>&lt;head&gt;</code> node or have user content that 
+can include unescaped special characters,
 and throw a type error when the user tries to do something invalid.</p>
 </li>
 <li>
@@ -773,7 +773,7 @@ we are going to meet two ways: <code>newtype</code> and <code>type</code>.</p>
 <p><code>newtype</code> lets us give a new name to an already existing type in a
 way that the two cannot mix together.</p>
 <p>A <code>newtype</code> declaration looks like this:</p>
-<pre><code class="language-hs">newtype &lt;type-name&gt; = &lt;constructor&gt; &lt;existing-type&gt;
+<pre><code>newtype &lt;type-name&gt; = &lt;constructor&gt; &lt;existing-type&gt;
 </code></pre>
 <p>For example in our case we can define a distinct type for <code>Html</code> like this:</p>
 <pre><code class="language-hs">newtype Html = Html String
@@ -827,7 +827,7 @@ function definitions.</p>
 <ol>
 <li>
 <p>case expressions are kind of beefed up switch expressions and look like this:</p>
-<pre><code class="language-hs">case &lt;expression&gt; of
+<pre><code>case &lt;expression&gt; of
   &lt;pattern&gt; -&gt; &lt;expression&gt;
   ...
   &lt;pattern&gt; -&gt; &lt;expression&gt;
@@ -852,7 +852,7 @@ sense.</p>
 <li>
 <p>Alternatively, when declaring a function, we can also use pattern matching on the
 arguments:</p>
-<pre><code class="language-hs">func &lt;pattern&gt; = &lt;expression&gt;
+<pre><code>func &lt;pattern&gt; = &lt;expression&gt;
 </code></pre>
 <p>For example:</p>
 <pre><code class="language-hs">getStructureString :: Structure -&gt; String

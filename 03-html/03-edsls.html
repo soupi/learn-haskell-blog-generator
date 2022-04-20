@@ -189,9 +189,9 @@ structure with the append function <code>&lt;&gt;</code>.</p>
 <ol>
 <li>
 <p>We can use Haskell's type system to make sure we only construct <em>valid</em>
-HTML (so for example we don't create a <code>&lt;title&gt;</code> node
-without a <code>&lt;head&gt;</code> node, or have user content that 
-can include unescaped special characters),
+HTML, so for example we don't create a <code>&lt;title&gt;</code> node
+without a <code>&lt;head&gt;</code> node or have user content that 
+can include unescaped special characters,
 and throw a type error when the user tries to do something invalid.</p>
 </li>
 <li>
