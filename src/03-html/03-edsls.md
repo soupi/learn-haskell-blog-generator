@@ -53,9 +53,9 @@ structure with the append function `<>`.
 There are still a few tricks we can use to make our HTML EDSL better:
 
 1. We can use Haskell's type system to make sure we only construct *valid*
-   HTML (so for example we don't create a `<title>` node
-   without a `<head>` node, or have user content that 
-   can include unescaped special characters),
+   HTML, so for example we don't create a `<title>` node
+   without a `<head>` node or have user content that 
+   can include unescaped special characters,
    and throw a type error when the user tries to do something invalid.
 
 2. Our HTML EDSL can move to its own module so it can be reused in multiple modules

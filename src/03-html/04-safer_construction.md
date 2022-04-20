@@ -14,7 +14,7 @@ way that the two cannot mix together.
 
 A `newtype` declaration looks like this:
 
-```hs
+```
 newtype <type-name> = <constructor> <existing-type>
 ```
 
@@ -92,7 +92,7 @@ function definitions.
 
 1. case expressions are kind of beefed up switch expressions and look like this:
 
-   ```hs
+   ```
    case <expression> of
      <pattern> -> <expression>
      ...
@@ -121,7 +121,7 @@ function definitions.
 2. Alternatively, when declaring a function, we can also use pattern matching on the
 arguments:
 
-   ```hs
+   ```
    func <pattern> = <expression>
    ```
 
