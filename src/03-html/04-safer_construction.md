@@ -439,7 +439,7 @@ Let's look at one more way to give new names to types.
 A `type` definition looks really similar to a `newtype` definition - the only
 difference is that we reference the type name directly without a constructor:
 
-```hs
+```
 type <type-name> = <existing-type>
 ```
 
