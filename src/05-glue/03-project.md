@@ -371,7 +371,7 @@ Just write whatever you want here:
 
 One day it will be a static blog generator.
 
-[Read the book](https://soupi.github.io/learn-haskell-blog-generator).
+[Read the book](https://lhbg-book.link).
 ```
 
 </details>
@@ -425,8 +425,8 @@ is necessary in order to use `stack`, so we will cover it briefly.
 There are two important fields a `stack.yaml` file must have:
 
 - `resolver`: Describes which snapshot to use for packages and ghc version.
-  We will choose the latest (at time of writing) on the `lts` branch: `lts-18.9`.
-  Visit [this link](https://www.stackage.org/lts-18.9) to find out which packages this
+  We will choose the latest (at time of writing) on the `lts` branch: `lts-18.22`.
+  Visit [this link](https://www.stackage.org/lts-18.22) to find out which packages this
   snapshot includes, what their versions are, and which GHC version is used
   with this snapshot.
 - `packages`: Describes the location of packages we plan to build. In our case
@@ -435,7 +435,7 @@ There are two important fields a `stack.yaml` file must have:
 We'll add `stack.yaml` to our project directory:
 
 ```yaml
-resolver: lts-18.9
+resolver: lts-18.22
 
 packages:
 - .
