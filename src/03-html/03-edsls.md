@@ -28,9 +28,9 @@ logic. We have EDSLs for concurrency, command-line options parsing, JSON and HTM
 creating build systems, writing tests, and many more.
 
 Specialized languages are useful because they can solve specific problems in
-a concise (and often safe) way, and embedding them in general purpose programming
-languages provides us to use the full power of the language for our domain logic,
-including syntax highlighting and various tools available for the language.
+a concise (and often safe) way, and by embedding we get to use the full power of
+the host language for our domain logic, including syntax highlighting and
+various tools available for the language.
 
 The drawback of embedding domain specific languages is that we have to adhere
 the rules of the programming language we embed in, such as syntactic and semantic rules.
