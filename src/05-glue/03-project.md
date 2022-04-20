@@ -383,7 +383,7 @@ This is BSD-3-Clause with me as the author. Please write your own name for your 
 ```
 BSD 3-Clause License
 
-Copyright (c) 2021, Gil Mizrahi
+Copyright (c) 2021-2022, Gil Mizrahi
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
