@@ -542,5 +542,5 @@ so we'll be able to:
 And also discuss how to work with IO in Haskell while we're at it.
 
 > You can view the git commit of
-> [the changes we've made](https://github.com/soupi/learn-haskell-blog-generator/commit/4ee2adbdf9b2657f547bcc4b268be6f6798981a6)
-> and the [code up until now](https://github.com/soupi/learn-haskell-blog-generator/tree/76c4f4b31c7883c5c0b9f09c7b1a391640a31538).
+> [the changes we've made](https://github.com/soupi/learn-haskell-blog-generator/commit/9f951a05d4f78cf59190ee4f3cd8de85e1c33bd1)
+> and the [code up until now](https://github.com/soupi/learn-haskell-blog-generator/tree/9f951a05d4f78cf59190ee4f3cd8de85e1c33bd1).

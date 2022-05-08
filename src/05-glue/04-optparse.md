@@ -948,5 +948,5 @@ if the output file or directory already exists, it's okay to replace them.
 ---
 
 > You can view the git commit of
-> [the changes we've made](https://github.com/soupi/learn-haskell-blog-generator/commit/6efea76deb62332b23e90fc74b6b74b404fd8c3d)
-> and the [code up until now](https://github.com/soupi/learn-haskell-blog-generator/tree/6efea76deb62332b23e90fc74b6b74b404fd8c3d).
+> [the changes we've made](https://github.com/soupi/learn-haskell-blog-generator/commit/d0d76aad632fe3abd8701e44db5ba687e0c7ac96)
+> and the [code up until now](https://github.com/soupi/learn-haskell-blog-generator/tree/d0d76aad632fe3abd8701e44db5ba687e0c7ac96).

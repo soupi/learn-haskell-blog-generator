@@ -468,5 +468,5 @@ Please consult the tutorial for your chosen testing framework, and read more abo
 this very important subject on your own.
 
 > You can view the git commit of
-> [the changes we've made](https://github.com/soupi/learn-haskell-blog-generator/commit/7c1f70a15b99b37d794615aa1852ffe335023af9)
-> and the [code up until now](https://github.com/soupi/learn-haskell-blog-generator/tree/7c1f70a15b99b37d794615aa1852ffe335023af9).
+> [the changes we've made](https://github.com/soupi/learn-haskell-blog-generator/commit/da1615b6e0a2a4ff2728528240d790754853bf02)
+> and the [code up until now](https://github.com/soupi/learn-haskell-blog-generator/tree/da1615b6e0a2a4ff2728528240d790754853bf02).

@@ -220,8 +220,8 @@ convertStructure structure =
 ---
 
 > You can view the git commit of
-> [the changes we've made](https://github.com/soupi/learn-haskell-blog-generator/commit/2f867fe7ad89b962a37f9c56da4f44fa4f4b3a1c)
-> and the [code up until now](https://github.com/soupi/learn-haskell-blog-generator/tree/2f867fe7ad89b962a37f9c56da4f44fa4f4b3a1c).
+> [the changes we've made](https://github.com/soupi/learn-haskell-blog-generator/commit/110a19029f0be42eb2ac656f5d38356dbf9c5746)
+> and the [code up until now](https://github.com/soupi/learn-haskell-blog-generator/tree/110a19029f0be42eb2ac656f5d38356dbf9c5746).
 
 ## Creating an index page
 

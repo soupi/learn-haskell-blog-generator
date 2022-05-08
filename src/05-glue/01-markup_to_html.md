@@ -403,5 +403,5 @@ Next, we are going to glue our functionality together and learn about
 I/O in Haskell!
 
 > You can view the git commit of
-> [the changes we've made](https://github.com/soupi/learn-haskell-blog-generator/commit/84c92cbe8679e66b191ca4d4692241b4e5c13a57)
-> and the [code up until now](https://github.com/soupi/learn-haskell-blog-generator/tree/4ee2adbdf9b2657f547bcc4b268be6f6798981a6).
+> [the changes we've made](https://github.com/soupi/learn-haskell-blog-generator/commit/ad34f2264e9114f2d7436ff472c78da47055fcfe)
+> and the [code up until now](https://github.com/soupi/learn-haskell-blog-generator/tree/ad34f2264e9114f2d7436ff472c78da47055fcfe).

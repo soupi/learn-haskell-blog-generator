@@ -138,4 +138,4 @@ escape =
     concat . map escapeChar
 ```
 
-> You can also [browse the code as a tree](https://github.com/soupi/learn-haskell-blog-generator/tree/76c4f4b31c7883c5c0b9f09c7b1a391640a31538).
+> You can also [browse the code as a tree](https://github.com/soupi/learn-haskell-blog-generator/tree/2a4691de627bcb280e92f3d02a88d5404179dc86).

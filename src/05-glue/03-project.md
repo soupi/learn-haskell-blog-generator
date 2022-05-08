@@ -630,5 +630,5 @@ Note that this package format is something we could release on [Hackage](https:/
 for other Haskell developers to use!
 
 > You can view the git commit of
-> [the changes we've made](https://github.com/soupi/learn-haskell-blog-generator/commit/826948302d08bfa4e889cf7013b911705c965445)
-> and the [code up until now](https://github.com/soupi/learn-haskell-blog-generator/tree/826948302d08bfa4e889cf7013b911705c965445).
+> [the changes we've made](https://github.com/soupi/learn-haskell-blog-generator/commit/8ca58aef80930db82cd20e85f44f5e34e1d74214)
+> and the [code up until now](https://github.com/soupi/learn-haskell-blog-generator/tree/8ca58aef80930db82cd20e85f44f5e34e1d74214).
