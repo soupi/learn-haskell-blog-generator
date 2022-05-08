@@ -83,7 +83,7 @@ Note: the two functions above could be unified.
 
 ```hs
 code_ :: String -> Structure
-code_ = Structure . el "pre"
+code_ = Structure . el "pre" . escape
 ```
 
 </details>
