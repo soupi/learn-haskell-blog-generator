@@ -1872,7 +1872,7 @@ ol_ =
 <details>
   <summary>Code blocks</summary>
 <pre><code class="language-hs">code_ :: String -&gt; Structure
-code_ = Structure . el &quot;pre&quot;
+code_ = Structure . el &quot;pre&quot; . escape
 </code></pre>
 </details>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="summary-1"><a class="header" href="#summary-1">Summary</a></h1>
@@ -1968,7 +1968,7 @@ ol_ =
   Structure . el &quot;ol&quot; . concat . map (el &quot;li&quot; . getStructureString)
 
 code_ :: String -&gt; Structure
-code_ = Structure . el &quot;pre&quot;
+code_ = Structure . el &quot;pre&quot; . escape
 
 append_ :: Structure -&gt; Structure -&gt; Structure
 append_ c1 c2 =

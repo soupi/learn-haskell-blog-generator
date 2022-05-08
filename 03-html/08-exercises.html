@@ -196,7 +196,7 @@ ol_ =
 <details>
   <summary>Code blocks</summary>
 <pre><code class="language-hs">code_ :: String -&gt; Structure
-code_ = Structure . el &quot;pre&quot;
+code_ = Structure . el &quot;pre&quot; . escape
 </code></pre>
 </details>
 

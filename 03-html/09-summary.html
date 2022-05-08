@@ -237,7 +237,7 @@ ol_ =
   Structure . el &quot;ol&quot; . concat . map (el &quot;li&quot; . getStructureString)
 
 code_ :: String -&gt; Structure
-code_ = Structure . el &quot;pre&quot;
+code_ = Structure . el &quot;pre&quot; . escape
 
 append_ :: Structure -&gt; Structure -&gt; Structure
 append_ c1 c2 =
