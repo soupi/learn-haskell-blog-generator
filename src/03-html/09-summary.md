@@ -99,7 +99,7 @@ ol_ =
   Structure . el "ol" . concat . map (el "li" . getStructureString)
 
 code_ :: String -> Structure
-code_ = Structure . el "pre"
+code_ = Structure . el "pre" . escape
 
 append_ :: Structure -> Structure -> Structure
 append_ c1 c2 =
