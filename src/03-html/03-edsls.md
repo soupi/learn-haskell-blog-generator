@@ -4,7 +4,7 @@ Right off the bat we run into a common pattern in Haskell: creating
 Embedded Domain Specific Languages (EDSLs for short).
 
 Domain specific languages (DSLs) are specialized programming languages that are
-tailored to specific domains. In contrast of general purpose languages,
+tailored to specific domains, in contrast to general purpose languages,
 which try to work well in many domains.
 
 A few examples of DSLs are:

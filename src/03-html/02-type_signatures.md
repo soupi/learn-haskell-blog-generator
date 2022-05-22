@@ -69,8 +69,8 @@ makeHtml :: String -> (String -> String)
 ```
 
 Consequently, the expression `makeHtml "My title"` is also a function!
-One that will take a string (the content, the second argument of `makeHtml`)
-and will return the expected HTML string with "My title" in the title.
+One that takes a string (the content, the second argument of `makeHtml`)
+and returns the expected HTML string with "My title" in the title.
 
 This is called **partial application**.
 
@@ -83,7 +83,7 @@ el tag content =
   "<" <> tag <> ">" <> content <> "</" <> tag <> ">"
 ```
 
-el is a function that takes a tag and content, and wraps the content
+el is a function that takes a tag and a content, and wraps the content
 with the tag.
 
 We can now implement `html_` and `body_` by partially applying `el` and
@@ -103,7 +103,7 @@ exactly like normal expressions. You can define names to them like
 regular values, put them in data structures, pass them to functions,
 everything you can do with regular values like `Int` or `String`.
 
-The way Haskell treats names is very similar to copy paste. anywhere
+The way Haskell treats names is very similar to copy paste. Anywhere
 you see `html_` in the code, you can replace it with `el "html"`. They are
 the same (this is what the equals signs say, right? That the two sides
 are the same). This property, of being able to *substitute* the two sides of the

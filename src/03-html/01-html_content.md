@@ -63,7 +63,7 @@ By using parenthesis we can group together the expressions in the right order.
 > operators (like `<>`) are infix functions which take two arguments - one from each side.
 >
 > When there are multiple operators in the same expression without parenthesis, the operator
-> *fixity* (left or right) and *precedence* (a number between 0 and 10) determines which
+> *fixity* (left or right) and *precedence* (a number between 0 and 10) determine which
 > operator binds more tightly.
 >
 > In our case `<>` has *right* fixity, so Haskell adds invisible parenthesis on the right side
@@ -115,7 +115,7 @@ Exercises:
    makeHtml "My page title" "My page content"
    ```
    
-   Should be:
+   should be:
    
    ```html
    <html><head><title>My page title</title></head><body>My page content</body></html>

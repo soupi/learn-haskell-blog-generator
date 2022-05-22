@@ -52,16 +52,16 @@ In `escape` we see a few new things:
 
 ## Linked lists briefly
 
-Linked lists are a very common data structure in Haskell, so common that
+Linked lists are very common data structures in Haskell, so common that
 they have their own special syntax:
 
-1. The type for lists are denoted with brackets and inside them is the type of the element. For example:
+1. The list types are denoted with brackets and inside them is the type of the element. For example:
    - `[Int]` - a list of integers
    - `[Char]` - a list of characters
    - `[String]` - a list of strings
    - `[[String]]` - a list of a list of strings
    - `[a]` - a list of any single type (all elements must be of the same type)
-2. A value representing a empty list is written like this: `[]`
+2. An empty list is written like this: `[]`
 3. Prepending an element to a list is done with the operator `:` (pronounced cons) which is right-associative (like `->`).
    For example: `1 : []`, or `1 : 2 : 3 : []`.
 4. The above lists can also be written like this: `[1]` and `[1, 2, 3]`.
@@ -70,9 +70,9 @@ Also, Strings are linked lists of characters - String is defined as:
 `type String = [Char]`, so we can use them the same way we use lists.
 
 > Do note, however, that linked lists, despite their convenience, are often
-> not the right tool for the job. They are not particularity space efficient
+> not the right tool for the job. They are not particularly space efficient
 > and are slow for appending, random access and more. That also makes `String`
-> a lot less efficient than it could be. And I generally recommend using a
+> a lot less efficient than what it could be. And I generally recommend using a
 > different string type, `Text`, instead, which is available in an external package.
 > We will talk about lists, `Text`, and other data structures in the future!
 
@@ -119,8 +119,8 @@ concat :: [[a]] -> [a]
 ```
 
 It flattens a list of list of something into a list of something.
-In our case it will flatten `[String]` into `String`, remember that this works
-because `String` is a **type alias** for `[Char]`, so we actually have
+In our case it will flatten `[String]` into `String`, remember that
+`String` is a **type alias** for `[Char]`, so we actually have
 `[[Char]] -> [Char]`.
 
 ## GHCi
@@ -190,7 +190,7 @@ ghci> clearBit 33 0
 32
 ```
 
-We can even ask what the type of an expression is using the `:type` command
+We can even ask the type of an expression using the `:type` command
 (`:t` for short):
 
 ```
@@ -206,11 +206,9 @@ Leaving GHCi.
 ```
 
 GHCi is a very useful tool for quick experiments and exploration.
-And it can be used to quickly test what our code does.
-
 We've seen a couple of examples of that above - passing the string `"<html>"` to our
 `escape` function returns the string `"&lt;html&gt;"`, which can be rendered by
-a browser as `<html>` instead of the browser considering it as an HTML tag.
+a browser as `<html>` instead of an HTML tag.
 
 If you are having a hard time figuring out what a particular function does, consider
 testing it in GHCi - pass it different inputs, and see if it matches your expectations.
