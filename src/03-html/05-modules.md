@@ -49,7 +49,7 @@ Note that we do not export:
 1. The constructors for our new types, only the types themselves.
    If we wanted to export the constructors as well we would've written
    `Html(Html)` or `Html(..)`. This way the user cannot create their own
-   `Structure` simply by writing `Structure "Hello"`.
+   `Structure` by writing `Structure "Hello"`.
 
 2. Internal functions used by the library, such as `el` and `getStructureString`.
 
@@ -100,8 +100,8 @@ render html =
     Html str -> str
 ```
 
-Now, anyone importing our module (using the `import` statement which
-can be used below module declarations but above any other
+Now, anyone importing our module (using the `import` statement
+below module declarations but above any other
 declaration), will only be able to import what we export.
 
 Add the following code at the top of the `hello.hs` file:

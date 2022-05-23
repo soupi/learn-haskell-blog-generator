@@ -219,7 +219,7 @@ p_ = Structure . el "p"
 ```
 
 The function `p_` will take an arbitrary `String` which is the content
-of the paragraph we wish to create, will wrap it in `<p>` and `</p>` tags,
+of the paragraph we wish to create, wrap it in `<p>` and `</p>` tags,
 and then wrap it in the `Structure` constructor to produce the
 output type `Structure` (remember: newtype constructors can be used as functions!).
 
@@ -309,7 +309,7 @@ No problem so far, let's try matching `String -> String` with `a -> b`:
    check it against this type, so we match `String` with `String` 
    which, fortunately, type-check because they are the same.
 
-So far so good. We've type-checked the expression and discovered the following things
+So far so good. We've type-checked the expression and discovered the following equivalences 
 about the type variables in it:
 
 1. `a ~ String`
@@ -335,7 +335,7 @@ Then we replaced the type variables:
 (.) :: (String -> Structure) -> (String -> String) -> (String -> Structure)
 ```
 
-And removed the two arguments when we apply the function:
+And removed the two arguments when we applied the function:
 
 ```hs
 Structure . el "p" :: String -> Structure
@@ -363,8 +363,8 @@ can help us understand where the types do not match, and then we can figure out 
 > ```
 > 
 > In the snippet above, we use `id` twice (for no good reason other than for demonstration purposes).
-> The first `id` takes a `Char` as an argument, and its `a` is equivalent to `Char`.
-> The second `id` takes an `Int` as an argument, and its *distinct* `a` is equivalent to `Int`.
+> The first `id` takes a `Char` as argument, and its `a` is equivalent to `Char`.
+> The second `id` takes an `Int` as argument, and its *distinct* `a` is equivalent to `Int`.
 > 
 > This unfortunately only applies to functions defined at the top-level. If we'd define a local function
 > to be passed as an argument to `incrementChar` with the same type signature as `id`,
@@ -408,11 +408,11 @@ append_ (Structure a) (Structure b) =
 
 ---
 
-## Converting back an `Html` to `String`
+## Converting back `Html` to `String`
 
 After constructing a valid `Html` value, we want to be able to
 print it to the output so we can display it in our browser.
-For that, we need to write a function that takes an `Html` and converts it to a `String`, which we can then pass to `putStrLn`.
+For that, we need a function that takes an `Html` and converts it to a `String`, which we can then pass to `putStrLn`.
 
 ---
 
@@ -450,8 +450,8 @@ type Title = String
 ```
 
 `type`, in contrast with `newtype`, is just a type name alias.
-When we declare that `Title` is a *type alias* of `String`
-We mean that `Title` and `String` are interchangeable,
+When we declare `Title` as a *type alias* of `String`,
+we mean that `Title` and `String` are interchangeable,
 and we can use one or the other whenever we want:
 
 ```hs
@@ -464,7 +464,7 @@ Both are valid in this case.
 
 We can sometimes use `type`s to give a bit more clarity to our code,
 but they are much less useful than `newtype`s which allow us to
-*distinguish* between two types that have the same type representation.
+*distinguish* two types with the same type representation.
 
 ## The rest of the owl
 
@@ -480,7 +480,7 @@ Try changing the code we wrote in previous chapters to use the new types we crea
 > This will make our HTML EDSL less flexible but more compact.
 >
 > Alternatively, we could create `newtype`s for `HtmlHead` and `HtmlBody` and
-> pass those to `html_`, and we might do that at later chapters, but I've chose
+> pass those to `html_`, and we might do that at later chapters, but I've chosen
 > to keep the API a bit simple for now, we can always refactor later!
 
 <details>

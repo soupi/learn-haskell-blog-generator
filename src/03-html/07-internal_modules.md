@@ -9,7 +9,7 @@ to include our library in their project and build their own HTML pages
 with it.
 
 It is important to note that users are building their project against
-the API that we expose to them, and the package manager don't generally
+the API that we expose to them, and the package manager doesn't generally
 provide access to the source code, so they can't, for example,
 modify the `Html` module (that we expose) in their project directly
 without jumping through some hoops.
@@ -22,7 +22,7 @@ This provides the safety we wanted to provide, but in this case it also
 *blocks* the user from extending our library *in their own project* with
 things we haven't implemented yet, such as lists or code blocks.
 
-When a user runs into trouble with using a library (such as missing features)
+When a user runs into trouble with a library (such as missing features)
 the best course of action usually is to open an issue in the repository or
 submit a pull request, but sometimes the user needs things to work *now*.
 
@@ -49,7 +49,7 @@ to only export the API we'd like to export (as before).
 If you end up using one yourself when using an external Haskell library,
 make sure to open a ticket in the library's repository after the storm has passed!
 
-### Lets make the changes
+### Let's make the changes
 
 We will create a new directory named `Html` and inside it a new file
 named `Internal.hs`. The name of this module should be `Html.Internal`.
@@ -189,12 +189,12 @@ escape =
 
 For our particular project, `Internal` modules aren't necessary.
 Because our project and the source code for the HTML EDSL are
-part of the same project, and we have access the the `Html`
+part of the same project, and we have access to the `Html`
 module directly, we can always go and edit it if we want
 (and we are going to do that throughout the book).
 
 However, if we were planning to release our HTML EDSL as a *library*
-for other developers to use, it would be very nice of us
+for other developers to use, it would be nice
 to also expose the internal implementation as an `Internal`
 module. Just so we can save some trouble for potential users!
 
