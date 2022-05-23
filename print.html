@@ -319,7 +319,7 @@ in which, as we defined earlier, <code>&lt;arg1&gt;</code> and <code>&lt;arg2&gt
 <h4 id="an-aside-about-operator-precedence-and-fixity"><a class="header" href="#an-aside-about-operator-precedence-and-fixity">An aside about operator precedence and fixity</a></h4>
 <p>operators (like <code>&lt;&gt;</code>) are infix functions which take two arguments - one from each side.</p>
 <p>When there are multiple operators in the same expression without parenthesis, the operator
-<em>fixity</em> (left or right) and <em>precedence</em> (a number between 0 and 10) determines which
+<em>fixity</em> (left or right) and <em>precedence</em> (a number between 0 and 10) determine which
 operator binds more tightly.</p>
 <p>In our case <code>&lt;&gt;</code> has <em>right</em> fixity, so Haskell adds invisible parenthesis on the right side
 of <code>&lt;&gt;</code>. So for example:</p>
@@ -365,7 +365,7 @@ and name them <code>head_</code> and <code>title_</code>.</p>
 <p>The output for:</p>
 <pre><code class="language-hs">makeHtml &quot;My page title&quot; &quot;My page content&quot;
 </code></pre>
-<p>Should be:</p>
+<p>should be:</p>
 <pre><code class="language-html">&lt;html&gt;&lt;head&gt;&lt;title&gt;My page title&lt;/title&gt;&lt;/head&gt;&lt;body&gt;My page content&lt;/body&gt;&lt;/html&gt;
 </code></pre>
 </li>
@@ -510,8 +510,8 @@ as well and finally returns a string.</p>
 <pre><code class="language-hs">makeHtml :: String -&gt; (String -&gt; String)
 </code></pre>
 <p>Consequently, the expression <code>makeHtml &quot;My title&quot;</code> is also a function!
-One that will take a string (the content, the second argument of <code>makeHtml</code>)
-and will return the expected HTML string with &quot;My title&quot; in the title.</p>
+One that takes a string (the content, the second argument of <code>makeHtml</code>)
+and returns the expected HTML string with &quot;My title&quot; in the title.</p>
 <p>This is called <strong>partial application</strong>.</p>
 <p>To illustrate, let's define <code>html_</code> and <code>body_</code> in a different way by
 defining a new function, <code>el</code>.</p>
@@ -519,7 +519,7 @@ defining a new function, <code>el</code>.</p>
 el tag content =
   &quot;&lt;&quot; &lt;&gt; tag &lt;&gt; &quot;&gt;&quot; &lt;&gt; content &lt;&gt; &quot;&lt;/&quot; &lt;&gt; tag &lt;&gt; &quot;&gt;&quot;
 </code></pre>
-<p>el is a function that takes a tag and content, and wraps the content
+<p>el is a function that takes a tag and a content, and wraps the content
 with the tag.</p>
 <p>We can now implement <code>html_</code> and <code>body_</code> by partially applying <code>el</code> and
 only provide the tag.</p>
@@ -534,7 +534,7 @@ equals sign because Haskell functions are &quot;<strong>first class</strong>&quo
 exactly like normal expressions. You can define names to them like
 regular values, put them in data structures, pass them to functions,
 everything you can do with regular values like <code>Int</code> or <code>String</code>.</p>
-<p>The way Haskell treats names is very similar to copy paste. anywhere
+<p>The way Haskell treats names is very similar to copy paste. Anywhere
 you see <code>html_</code> in the code, you can replace it with <code>el &quot;html&quot;</code>. They are
 the same (this is what the equals signs say, right? That the two sides
 are the same). This property, of being able to <em>substitute</em> the two sides of the
@@ -711,7 +711,7 @@ el tag content =
 <p>Right off the bat we run into a common pattern in Haskell: creating
 Embedded Domain Specific Languages (EDSLs for short).</p>
 <p>Domain specific languages (DSLs) are specialized programming languages that are
-tailored to specific domains. In contrast of general purpose languages,
+tailored to specific domains, in contrast to general purpose languages,
 which try to work well in many domains.</p>
 <p>A few examples of DSLs are:</p>
 <ul>
@@ -919,7 +919,7 @@ p_ = el &quot;p&quot;
 p_ = Structure . el &quot;p&quot;
 </code></pre>
 <p>The function <code>p_</code> will take an arbitrary <code>String</code> which is the content
-of the paragraph we wish to create, will wrap it in <code>&lt;p&gt;</code> and <code>&lt;/p&gt;</code> tags,
+of the paragraph we wish to create, wrap it in <code>&lt;p&gt;</code> and <code>&lt;/p&gt;</code> tags,
 and then wrap it in the <code>Structure</code> constructor to produce the
 output type <code>Structure</code> (remember: newtype constructors can be used as functions!).</p>
 <p>Let's take a deeper look at the types:</p>
@@ -999,7 +999,7 @@ We need to replace <code>b</code> with the type that we wrote down before and
 check it against this type, so we match <code>String</code> with <code>String</code> 
 which, fortunately, type-check because they are the same.</li>
 </ol>
-<p>So far so good. We've type-checked the expression and discovered the following things
+<p>So far so good. We've type-checked the expression and discovered the following equivalences 
 about the type variables in it:</p>
 <ol>
 <li><code>a ~ String</code></li>
@@ -1016,7 +1016,7 @@ and <em>removing</em> the inputs we applied to it, so we started with:</p>
 <p>Then we replaced the type variables:</p>
 <pre><code class="language-hs">(.) :: (String -&gt; Structure) -&gt; (String -&gt; String) -&gt; (String -&gt; Structure)
 </code></pre>
-<p>And removed the two arguments when we apply the function:</p>
+<p>And removed the two arguments when we applied the function:</p>
 <pre><code class="language-hs">Structure . el &quot;p&quot; :: String -&gt; Structure
 </code></pre>
 <p>And we got the type of the expression!</p>
@@ -1036,8 +1036,8 @@ incrementChar :: Char -&gt; Char
 incrementChar c = chr (ord (id c) + id 1)
 </code></pre>
 <p>In the snippet above, we use <code>id</code> twice (for no good reason other than for demonstration purposes).
-The first <code>id</code> takes a <code>Char</code> as an argument, and its <code>a</code> is equivalent to <code>Char</code>.
-The second <code>id</code> takes an <code>Int</code> as an argument, and its <em>distinct</em> <code>a</code> is equivalent to <code>Int</code>.</p>
+The first <code>id</code> takes a <code>Char</code> as argument, and its <code>a</code> is equivalent to <code>Char</code>.
+The second <code>id</code> takes an <code>Int</code> as argument, and its <em>distinct</em> <code>a</code> is equivalent to <code>Int</code>.</p>
 <p>This unfortunately only applies to functions defined at the top-level. If we'd define a local function
 to be passed as an argument to <code>incrementChar</code> with the same type signature as <code>id</code>,
 the types must match in all uses. So this code:</p>
@@ -1066,10 +1066,10 @@ append_ (Structure a) (Structure b) =
 </code></pre>
 </details>
 <hr />
-<h2 id="converting-back-an-html-to-string"><a class="header" href="#converting-back-an-html-to-string">Converting back an <code>Html</code> to <code>String</code></a></h2>
+<h2 id="converting-back-html-to-string"><a class="header" href="#converting-back-html-to-string">Converting back <code>Html</code> to <code>String</code></a></h2>
 <p>After constructing a valid <code>Html</code> value, we want to be able to
 print it to the output so we can display it in our browser.
-For that, we need to write a function that takes an <code>Html</code> and converts it to a <code>String</code>, which we can then pass to <code>putStrLn</code>.</p>
+For that, we need a function that takes an <code>Html</code> and converts it to a <code>String</code>, which we can then pass to <code>putStrLn</code>.</p>
 <hr />
 <p>Implement the <code>render</code> function.</p>
 <details>
@@ -1091,8 +1091,8 @@ difference is that we reference the type name directly without a constructor:</p
 <pre><code class="language-hs">type Title = String
 </code></pre>
 <p><code>type</code>, in contrast with <code>newtype</code>, is just a type name alias.
-When we declare that <code>Title</code> is a <em>type alias</em> of <code>String</code>
-We mean that <code>Title</code> and <code>String</code> are interchangeable,
+When we declare <code>Title</code> as a <em>type alias</em> of <code>String</code>,
+we mean that <code>Title</code> and <code>String</code> are interchangeable,
 and we can use one or the other whenever we want:</p>
 <pre><code class="language-hs">&quot;hello&quot; :: Title
 
@@ -1101,7 +1101,7 @@ and we can use one or the other whenever we want:</p>
 <p>Both are valid in this case.</p>
 <p>We can sometimes use <code>type</code>s to give a bit more clarity to our code,
 but they are much less useful than <code>newtype</code>s which allow us to
-<em>distinguish</em> between two types that have the same type representation.</p>
+<em>distinguish</em> two types with the same type representation.</p>
 <h2 id="the-rest-of-the-owl"><a class="header" href="#the-rest-of-the-owl">The rest of the owl</a></h2>
 <hr />
 <p>Try changing the code we wrote in previous chapters to use the new types we created.</p>
@@ -1112,7 +1112,7 @@ by calling <code>el</code> directly in <code>html_</code>, which can now have th
 <code>Title -&gt; Structure -&gt; Html</code>.
 This will make our HTML EDSL less flexible but more compact.</p>
 <p>Alternatively, we could create <code>newtype</code>s for <code>HtmlHead</code> and <code>HtmlBody</code> and
-pass those to <code>html_</code>, and we might do that at later chapters, but I've chose
+pass those to <code>html_</code>, and we might do that at later chapters, but I've chosen
 to keep the API a bit simple for now, we can always refactor later!</p>
 </blockquote>
 <details>
@@ -1227,7 +1227,7 @@ module declaration code at the top of the file:</p>
 <p>The constructors for our new types, only the types themselves.
 If we wanted to export the constructors as well we would've written
 <code>Html(Html)</code> or <code>Html(..)</code>. This way the user cannot create their own
-<code>Structure</code> simply by writing <code>Structure &quot;Hello&quot;</code>.</p>
+<code>Structure</code> by writing <code>Structure &quot;Hello&quot;</code>.</p>
 </li>
 <li>
 <p>Internal functions used by the library, such as <code>el</code> and <code>getStructureString</code>.</p>
@@ -1277,8 +1277,8 @@ render html =
   case html of
     Html str -&gt; str
 </code></pre>
-<p>Now, anyone importing our module (using the <code>import</code> statement which
-can be used below module declarations but above any other
+<p>Now, anyone importing our module (using the <code>import</code> statement
+below module declarations but above any other
 declaration), will only be able to import what we export.</p>
 <p>Add the following code at the top of the <code>hello.hs</code> file:</p>
 <pre><code class="language-hs">import Html
@@ -1408,10 +1408,10 @@ all&quot; pattern that will always succeed.</p>
 </li>
 </ol>
 <h2 id="linked-lists-briefly"><a class="header" href="#linked-lists-briefly">Linked lists briefly</a></h2>
-<p>Linked lists are a very common data structure in Haskell, so common that
+<p>Linked lists are very common data structures in Haskell, so common that
 they have their own special syntax:</p>
 <ol>
-<li>The type for lists are denoted with brackets and inside them is the type of the element. For example:
+<li>The list types are denoted with brackets and inside them is the type of the element. For example:
 <ul>
 <li><code>[Int]</code> - a list of integers</li>
 <li><code>[Char]</code> - a list of characters</li>
@@ -1420,7 +1420,7 @@ they have their own special syntax:</p>
 <li><code>[a]</code> - a list of any single type (all elements must be of the same type)</li>
 </ul>
 </li>
-<li>A value representing a empty list is written like this: <code>[]</code></li>
+<li>An empty list is written like this: <code>[]</code></li>
 <li>Prepending an element to a list is done with the operator <code>:</code> (pronounced cons) which is right-associative (like <code>-&gt;</code>).
 For example: <code>1 : []</code>, or <code>1 : 2 : 3 : []</code>.</li>
 <li>The above lists can also be written like this: <code>[1]</code> and <code>[1, 2, 3]</code>.</li>
@@ -1429,9 +1429,9 @@ For example: <code>1 : []</code>, or <code>1 : 2 : 3 : []</code>.</li>
 <code>type String = [Char]</code>, so we can use them the same way we use lists.</p>
 <blockquote>
 <p>Do note, however, that linked lists, despite their convenience, are often
-not the right tool for the job. They are not particularity space efficient
+not the right tool for the job. They are not particularly space efficient
 and are slow for appending, random access and more. That also makes <code>String</code>
-a lot less efficient than it could be. And I generally recommend using a
+a lot less efficient than what it could be. And I generally recommend using a
 different string type, <code>Text</code>, instead, which is available in an external package.
 We will talk about lists, <code>Text</code>, and other data structures in the future!</p>
 </blockquote>
@@ -1460,8 +1460,8 @@ and what we really want is a <code>String</code> and not <code>[String]</code>.<
 <pre><code class="language-hs">concat :: [[a]] -&gt; [a]
 </code></pre>
 <p>It flattens a list of list of something into a list of something.
-In our case it will flatten <code>[String]</code> into <code>String</code>, remember that this works
-because <code>String</code> is a <strong>type alias</strong> for <code>[Char]</code>, so we actually have
+In our case it will flatten <code>[String]</code> into <code>String</code>, remember that
+<code>String</code> is a <strong>type alias</strong> for <code>[Char]</code>, so we actually have
 <code>[[Char]] -&gt; [Char]</code>.</p>
 <h2 id="ghci"><a class="header" href="#ghci">GHCi</a></h2>
 <p>One way we can quickly see our code in action is using the interactive development environment <strong>GHCi</strong>.
@@ -1513,7 +1513,7 @@ ghci&gt; shiftL 32 1
 ghci&gt; clearBit 33 0
 32
 </code></pre>
-<p>We can even ask what the type of an expression is using the <code>:type</code> command
+<p>We can even ask the type of an expression using the <code>:type</code> command
 (<code>:t</code> for short):</p>
 <pre><code>λ&gt; :type escape
 escape :: String -&gt; String
@@ -1523,10 +1523,9 @@ escape :: String -&gt; String
 Leaving GHCi.
 </code></pre>
 <p>GHCi is a very useful tool for quick experiments and exploration.
-And it can be used to quickly test what our code does.</p>
-<p>We've seen a couple of examples of that above - passing the string <code>&quot;&lt;html&gt;&quot;</code> to our
+We've seen a couple of examples of that above - passing the string <code>&quot;&lt;html&gt;&quot;</code> to our
 <code>escape</code> function returns the string <code>&quot;&amp;lt;html&amp;gt;&quot;</code>, which can be rendered by
-a browser as <code>&lt;html&gt;</code> instead of the browser considering it as an HTML tag.</p>
+a browser as <code>&lt;html&gt;</code> instead of an HTML tag.</p>
 <p>If you are having a hard time figuring out what a particular function does, consider
 testing it in GHCi - pass it different inputs, and see if it matches your expectations.
 Concrete examples of running code can aid a lot in understanding it!</p>
@@ -1659,7 +1658,7 @@ Users who are interested in our library could use a package manager
 to include our library in their project and build their own HTML pages
 with it.</p>
 <p>It is important to note that users are building their project against
-the API that we expose to them, and the package manager don't generally
+the API that we expose to them, and the package manager doesn't generally
 provide access to the source code, so they can't, for example,
 modify the <code>Html</code> module (that we expose) in their project directly
 without jumping through some hoops.</p>
@@ -1669,7 +1668,7 @@ library is via the API we provide.</p>
 <p>This provides the safety we wanted to provide, but in this case it also
 <em>blocks</em> the user from extending our library <em>in their own project</em> with
 things we haven't implemented yet, such as lists or code blocks.</p>
-<p>When a user runs into trouble with using a library (such as missing features)
+<p>When a user runs into trouble with a library (such as missing features)
 the best course of action usually is to open an issue in the repository or
 submit a pull request, but sometimes the user needs things to work <em>now</em>.</p>
 <p>We admit that we are not perfect and can't think of all use cases for our
@@ -1689,7 +1688,7 @@ to only export the API we'd like to export (as before).</p>
 <p><code>Internal</code> modules are considered unstable and risky to use by convention.
 If you end up using one yourself when using an external Haskell library,
 make sure to open a ticket in the library's repository after the storm has passed!</p>
-<h3 id="lets-make-the-changes"><a class="header" href="#lets-make-the-changes">Lets make the changes</a></h3>
+<h3 id="lets-make-the-changes"><a class="header" href="#lets-make-the-changes">Let's make the changes</a></h3>
 <p>We will create a new directory named <code>Html</code> and inside it a new file
 named <code>Internal.hs</code>. The name of this module should be <code>Html.Internal</code>.</p>
 <p>This module will contain all of the code we previously had in the <code>Html</code>
@@ -1812,11 +1811,11 @@ escape =
 <h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
 <p>For our particular project, <code>Internal</code> modules aren't necessary.
 Because our project and the source code for the HTML EDSL are
-part of the same project, and we have access the the <code>Html</code>
+part of the same project, and we have access to the <code>Html</code>
 module directly, we can always go and edit it if we want
 (and we are going to do that throughout the book).</p>
 <p>However, if we were planning to release our HTML EDSL as a <em>library</em>
-for other developers to use, it would be very nice of us
+for other developers to use, it would be nice
 to also expose the internal implementation as an <code>Internal</code>
 module. Just so we can save some trouble for potential users!</p>
 <p>We will see how to create a package from our source code in a later chapter.</p>

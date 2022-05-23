@@ -194,8 +194,8 @@ as well and finally returns a string.</p>
 <pre><code class="language-hs">makeHtml :: String -&gt; (String -&gt; String)
 </code></pre>
 <p>Consequently, the expression <code>makeHtml &quot;My title&quot;</code> is also a function!
-One that will take a string (the content, the second argument of <code>makeHtml</code>)
-and will return the expected HTML string with &quot;My title&quot; in the title.</p>
+One that takes a string (the content, the second argument of <code>makeHtml</code>)
+and returns the expected HTML string with &quot;My title&quot; in the title.</p>
 <p>This is called <strong>partial application</strong>.</p>
 <p>To illustrate, let's define <code>html_</code> and <code>body_</code> in a different way by
 defining a new function, <code>el</code>.</p>
@@ -203,7 +203,7 @@ defining a new function, <code>el</code>.</p>
 el tag content =
   &quot;&lt;&quot; &lt;&gt; tag &lt;&gt; &quot;&gt;&quot; &lt;&gt; content &lt;&gt; &quot;&lt;/&quot; &lt;&gt; tag &lt;&gt; &quot;&gt;&quot;
 </code></pre>
-<p>el is a function that takes a tag and content, and wraps the content
+<p>el is a function that takes a tag and a content, and wraps the content
 with the tag.</p>
 <p>We can now implement <code>html_</code> and <code>body_</code> by partially applying <code>el</code> and
 only provide the tag.</p>
@@ -218,7 +218,7 @@ equals sign because Haskell functions are &quot;<strong>first class</strong>&quo
 exactly like normal expressions. You can define names to them like
 regular values, put them in data structures, pass them to functions,
 everything you can do with regular values like <code>Int</code> or <code>String</code>.</p>
-<p>The way Haskell treats names is very similar to copy paste. anywhere
+<p>The way Haskell treats names is very similar to copy paste. Anywhere
 you see <code>html_</code> in the code, you can replace it with <code>el &quot;html&quot;</code>. They are
 the same (this is what the equals signs say, right? That the two sides
 are the same). This property, of being able to <em>substitute</em> the two sides of the

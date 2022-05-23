@@ -192,10 +192,10 @@ all&quot; pattern that will always succeed.</p>
 </li>
 </ol>
 <h2 id="linked-lists-briefly"><a class="header" href="#linked-lists-briefly">Linked lists briefly</a></h2>
-<p>Linked lists are a very common data structure in Haskell, so common that
+<p>Linked lists are very common data structures in Haskell, so common that
 they have their own special syntax:</p>
 <ol>
-<li>The type for lists are denoted with brackets and inside them is the type of the element. For example:
+<li>The list types are denoted with brackets and inside them is the type of the element. For example:
 <ul>
 <li><code>[Int]</code> - a list of integers</li>
 <li><code>[Char]</code> - a list of characters</li>
@@ -204,7 +204,7 @@ they have their own special syntax:</p>
 <li><code>[a]</code> - a list of any single type (all elements must be of the same type)</li>
 </ul>
 </li>
-<li>A value representing a empty list is written like this: <code>[]</code></li>
+<li>An empty list is written like this: <code>[]</code></li>
 <li>Prepending an element to a list is done with the operator <code>:</code> (pronounced cons) which is right-associative (like <code>-&gt;</code>).
 For example: <code>1 : []</code>, or <code>1 : 2 : 3 : []</code>.</li>
 <li>The above lists can also be written like this: <code>[1]</code> and <code>[1, 2, 3]</code>.</li>
@@ -213,9 +213,9 @@ For example: <code>1 : []</code>, or <code>1 : 2 : 3 : []</code>.</li>
 <code>type String = [Char]</code>, so we can use them the same way we use lists.</p>
 <blockquote>
 <p>Do note, however, that linked lists, despite their convenience, are often
-not the right tool for the job. They are not particularity space efficient
+not the right tool for the job. They are not particularly space efficient
 and are slow for appending, random access and more. That also makes <code>String</code>
-a lot less efficient than it could be. And I generally recommend using a
+a lot less efficient than what it could be. And I generally recommend using a
 different string type, <code>Text</code>, instead, which is available in an external package.
 We will talk about lists, <code>Text</code>, and other data structures in the future!</p>
 </blockquote>
@@ -244,8 +244,8 @@ and what we really want is a <code>String</code> and not <code>[String]</code>.<
 <pre><code class="language-hs">concat :: [[a]] -&gt; [a]
 </code></pre>
 <p>It flattens a list of list of something into a list of something.
-In our case it will flatten <code>[String]</code> into <code>String</code>, remember that this works
-because <code>String</code> is a <strong>type alias</strong> for <code>[Char]</code>, so we actually have
+In our case it will flatten <code>[String]</code> into <code>String</code>, remember that
+<code>String</code> is a <strong>type alias</strong> for <code>[Char]</code>, so we actually have
 <code>[[Char]] -&gt; [Char]</code>.</p>
 <h2 id="ghci"><a class="header" href="#ghci">GHCi</a></h2>
 <p>One way we can quickly see our code in action is using the interactive development environment <strong>GHCi</strong>.
@@ -297,7 +297,7 @@ ghci&gt; shiftL 32 1
 ghci&gt; clearBit 33 0
 32
 </code></pre>
-<p>We can even ask what the type of an expression is using the <code>:type</code> command
+<p>We can even ask the type of an expression using the <code>:type</code> command
 (<code>:t</code> for short):</p>
 <pre><code>λ&gt; :type escape
 escape :: String -&gt; String
@@ -307,10 +307,9 @@ escape :: String -&gt; String
 Leaving GHCi.
 </code></pre>
 <p>GHCi is a very useful tool for quick experiments and exploration.
-And it can be used to quickly test what our code does.</p>
-<p>We've seen a couple of examples of that above - passing the string <code>&quot;&lt;html&gt;&quot;</code> to our
+We've seen a couple of examples of that above - passing the string <code>&quot;&lt;html&gt;&quot;</code> to our
 <code>escape</code> function returns the string <code>&quot;&amp;lt;html&amp;gt;&quot;</code>, which can be rendered by
-a browser as <code>&lt;html&gt;</code> instead of the browser considering it as an HTML tag.</p>
+a browser as <code>&lt;html&gt;</code> instead of an HTML tag.</p>
 <p>If you are having a hard time figuring out what a particular function does, consider
 testing it in GHCi - pass it different inputs, and see if it matches your expectations.
 Concrete examples of running code can aid a lot in understanding it!</p>

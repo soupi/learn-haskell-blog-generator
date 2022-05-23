@@ -183,7 +183,7 @@ in which, as we defined earlier, <code>&lt;arg1&gt;</code> and <code>&lt;arg2&gt
 <h4 id="an-aside-about-operator-precedence-and-fixity"><a class="header" href="#an-aside-about-operator-precedence-and-fixity">An aside about operator precedence and fixity</a></h4>
 <p>operators (like <code>&lt;&gt;</code>) are infix functions which take two arguments - one from each side.</p>
 <p>When there are multiple operators in the same expression without parenthesis, the operator
-<em>fixity</em> (left or right) and <em>precedence</em> (a number between 0 and 10) determines which
+<em>fixity</em> (left or right) and <em>precedence</em> (a number between 0 and 10) determine which
 operator binds more tightly.</p>
 <p>In our case <code>&lt;&gt;</code> has <em>right</em> fixity, so Haskell adds invisible parenthesis on the right side
 of <code>&lt;&gt;</code>. So for example:</p>
@@ -229,7 +229,7 @@ and name them <code>head_</code> and <code>title_</code>.</p>
 <p>The output for:</p>
 <pre><code class="language-hs">makeHtml &quot;My page title&quot; &quot;My page content&quot;
 </code></pre>
-<p>Should be:</p>
+<p>should be:</p>
 <pre><code class="language-html">&lt;html&gt;&lt;head&gt;&lt;title&gt;My page title&lt;/title&gt;&lt;/head&gt;&lt;body&gt;My page content&lt;/body&gt;&lt;/html&gt;
 </code></pre>
 </li>

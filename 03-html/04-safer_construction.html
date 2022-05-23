@@ -299,7 +299,7 @@ p_ = el &quot;p&quot;
 p_ = Structure . el &quot;p&quot;
 </code></pre>
 <p>The function <code>p_</code> will take an arbitrary <code>String</code> which is the content
-of the paragraph we wish to create, will wrap it in <code>&lt;p&gt;</code> and <code>&lt;/p&gt;</code> tags,
+of the paragraph we wish to create, wrap it in <code>&lt;p&gt;</code> and <code>&lt;/p&gt;</code> tags,
 and then wrap it in the <code>Structure</code> constructor to produce the
 output type <code>Structure</code> (remember: newtype constructors can be used as functions!).</p>
 <p>Let's take a deeper look at the types:</p>
@@ -379,7 +379,7 @@ We need to replace <code>b</code> with the type that we wrote down before and
 check it against this type, so we match <code>String</code> with <code>String</code> 
 which, fortunately, type-check because they are the same.</li>
 </ol>
-<p>So far so good. We've type-checked the expression and discovered the following things
+<p>So far so good. We've type-checked the expression and discovered the following equivalences 
 about the type variables in it:</p>
 <ol>
 <li><code>a ~ String</code></li>
@@ -396,7 +396,7 @@ and <em>removing</em> the inputs we applied to it, so we started with:</p>
 <p>Then we replaced the type variables:</p>
 <pre><code class="language-hs">(.) :: (String -&gt; Structure) -&gt; (String -&gt; String) -&gt; (String -&gt; Structure)
 </code></pre>
-<p>And removed the two arguments when we apply the function:</p>
+<p>And removed the two arguments when we applied the function:</p>
 <pre><code class="language-hs">Structure . el &quot;p&quot; :: String -&gt; Structure
 </code></pre>
 <p>And we got the type of the expression!</p>
@@ -416,8 +416,8 @@ incrementChar :: Char -&gt; Char
 incrementChar c = chr (ord (id c) + id 1)
 </code></pre>
 <p>In the snippet above, we use <code>id</code> twice (for no good reason other than for demonstration purposes).
-The first <code>id</code> takes a <code>Char</code> as an argument, and its <code>a</code> is equivalent to <code>Char</code>.
-The second <code>id</code> takes an <code>Int</code> as an argument, and its <em>distinct</em> <code>a</code> is equivalent to <code>Int</code>.</p>
+The first <code>id</code> takes a <code>Char</code> as argument, and its <code>a</code> is equivalent to <code>Char</code>.
+The second <code>id</code> takes an <code>Int</code> as argument, and its <em>distinct</em> <code>a</code> is equivalent to <code>Int</code>.</p>
 <p>This unfortunately only applies to functions defined at the top-level. If we'd define a local function
 to be passed as an argument to <code>incrementChar</code> with the same type signature as <code>id</code>,
 the types must match in all uses. So this code:</p>
@@ -446,10 +446,10 @@ append_ (Structure a) (Structure b) =
 </code></pre>
 </details>
 <hr />
-<h2 id="converting-back-an-html-to-string"><a class="header" href="#converting-back-an-html-to-string">Converting back an <code>Html</code> to <code>String</code></a></h2>
+<h2 id="converting-back-html-to-string"><a class="header" href="#converting-back-html-to-string">Converting back <code>Html</code> to <code>String</code></a></h2>
 <p>After constructing a valid <code>Html</code> value, we want to be able to
 print it to the output so we can display it in our browser.
-For that, we need to write a function that takes an <code>Html</code> and converts it to a <code>String</code>, which we can then pass to <code>putStrLn</code>.</p>
+For that, we need a function that takes an <code>Html</code> and converts it to a <code>String</code>, which we can then pass to <code>putStrLn</code>.</p>
 <hr />
 <p>Implement the <code>render</code> function.</p>
 <details>
@@ -471,8 +471,8 @@ difference is that we reference the type name directly without a constructor:</p
 <pre><code class="language-hs">type Title = String
 </code></pre>
 <p><code>type</code>, in contrast with <code>newtype</code>, is just a type name alias.
-When we declare that <code>Title</code> is a <em>type alias</em> of <code>String</code>
-We mean that <code>Title</code> and <code>String</code> are interchangeable,
+When we declare <code>Title</code> as a <em>type alias</em> of <code>String</code>,
+we mean that <code>Title</code> and <code>String</code> are interchangeable,
 and we can use one or the other whenever we want:</p>
 <pre><code class="language-hs">&quot;hello&quot; :: Title
 
@@ -481,7 +481,7 @@ and we can use one or the other whenever we want:</p>
 <p>Both are valid in this case.</p>
 <p>We can sometimes use <code>type</code>s to give a bit more clarity to our code,
 but they are much less useful than <code>newtype</code>s which allow us to
-<em>distinguish</em> between two types that have the same type representation.</p>
+<em>distinguish</em> two types with the same type representation.</p>
 <h2 id="the-rest-of-the-owl"><a class="header" href="#the-rest-of-the-owl">The rest of the owl</a></h2>
 <hr />
 <p>Try changing the code we wrote in previous chapters to use the new types we created.</p>
@@ -492,7 +492,7 @@ by calling <code>el</code> directly in <code>html_</code>, which can now have th
 <code>Title -&gt; Structure -&gt; Html</code>.
 This will make our HTML EDSL less flexible but more compact.</p>
 <p>Alternatively, we could create <code>newtype</code>s for <code>HtmlHead</code> and <code>HtmlBody</code> and
-pass those to <code>html_</code>, and we might do that at later chapters, but I've chose
+pass those to <code>html_</code>, and we might do that at later chapters, but I've chosen
 to keep the API a bit simple for now, we can always refactor later!</p>
 </blockquote>
 <details>

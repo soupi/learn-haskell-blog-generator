@@ -153,7 +153,7 @@ Users who are interested in our library could use a package manager
 to include our library in their project and build their own HTML pages
 with it.</p>
 <p>It is important to note that users are building their project against
-the API that we expose to them, and the package manager don't generally
+the API that we expose to them, and the package manager doesn't generally
 provide access to the source code, so they can't, for example,
 modify the <code>Html</code> module (that we expose) in their project directly
 without jumping through some hoops.</p>
@@ -163,7 +163,7 @@ library is via the API we provide.</p>
 <p>This provides the safety we wanted to provide, but in this case it also
 <em>blocks</em> the user from extending our library <em>in their own project</em> with
 things we haven't implemented yet, such as lists or code blocks.</p>
-<p>When a user runs into trouble with using a library (such as missing features)
+<p>When a user runs into trouble with a library (such as missing features)
 the best course of action usually is to open an issue in the repository or
 submit a pull request, but sometimes the user needs things to work <em>now</em>.</p>
 <p>We admit that we are not perfect and can't think of all use cases for our
@@ -183,7 +183,7 @@ to only export the API we'd like to export (as before).</p>
 <p><code>Internal</code> modules are considered unstable and risky to use by convention.
 If you end up using one yourself when using an external Haskell library,
 make sure to open a ticket in the library's repository after the storm has passed!</p>
-<h3 id="lets-make-the-changes"><a class="header" href="#lets-make-the-changes">Lets make the changes</a></h3>
+<h3 id="lets-make-the-changes"><a class="header" href="#lets-make-the-changes">Let's make the changes</a></h3>
 <p>We will create a new directory named <code>Html</code> and inside it a new file
 named <code>Internal.hs</code>. The name of this module should be <code>Html.Internal</code>.</p>
 <p>This module will contain all of the code we previously had in the <code>Html</code>
@@ -306,11 +306,11 @@ escape =
 <h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
 <p>For our particular project, <code>Internal</code> modules aren't necessary.
 Because our project and the source code for the HTML EDSL are
-part of the same project, and we have access the the <code>Html</code>
+part of the same project, and we have access to the <code>Html</code>
 module directly, we can always go and edit it if we want
 (and we are going to do that throughout the book).</p>
 <p>However, if we were planning to release our HTML EDSL as a <em>library</em>
-for other developers to use, it would be very nice of us
+for other developers to use, it would be nice
 to also expose the internal implementation as an <code>Internal</code>
 module. Just so we can save some trouble for potential users!</p>
 <p>We will see how to create a package from our source code in a later chapter.</p>

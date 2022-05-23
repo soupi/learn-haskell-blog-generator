@@ -184,7 +184,7 @@ module declaration code at the top of the file:</p>
 <p>The constructors for our new types, only the types themselves.
 If we wanted to export the constructors as well we would've written
 <code>Html(Html)</code> or <code>Html(..)</code>. This way the user cannot create their own
-<code>Structure</code> simply by writing <code>Structure &quot;Hello&quot;</code>.</p>
+<code>Structure</code> by writing <code>Structure &quot;Hello&quot;</code>.</p>
 </li>
 <li>
 <p>Internal functions used by the library, such as <code>el</code> and <code>getStructureString</code>.</p>
@@ -234,8 +234,8 @@ render html =
   case html of
     Html str -&gt; str
 </code></pre>
-<p>Now, anyone importing our module (using the <code>import</code> statement which
-can be used below module declarations but above any other
+<p>Now, anyone importing our module (using the <code>import</code> statement
+below module declarations but above any other
 declaration), will only be able to import what we export.</p>
 <p>Add the following code at the top of the <code>hello.hs</code> file:</p>
 <pre><code class="language-hs">import Html
