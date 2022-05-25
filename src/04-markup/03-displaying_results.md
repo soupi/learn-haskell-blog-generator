@@ -43,9 +43,9 @@ instance Show Bool where
       False -> "False"
 ```
 
-Defining an instance means providing an implementation for the interface for a specific type.
-When we call the function `show` on a data type, the compiler will search the instance of
-the type it inferred, and use the implementation provided in the instance declaration.
+Defining an instance means providing an implementation for the interface of a specific type.
+When we call the function `show` on a data type, the compiler will search the type instance,
+and use the implementation provided in the instance declaration.
 
 ```hs
 ghci> show True
@@ -57,7 +57,7 @@ ghci> show "Hello"
 ```
 
 As can be seen above, the `show` function converts a value to its textual representation.
-Which is why `"Hello"` includes the quotes as well. The `Show` type class is usually
+That is why `"Hello"` includes the quotes as well. The `Show` type class is usually
 used for debugging purposes.
 
 ## Deriving instances
@@ -65,7 +65,7 @@ used for debugging purposes.
 It is also possible to automatically generate implementations of a few selected
 type classes. Fortunately, `Show` is one of them.
 
-If all the types we use in the definition of our data type already implement
+If all the types in the definition of our data type already implement
 an instance of `Show`, we can *automatically derive* it by adding `deriving Show` at the
 end of the data definition.
 
@@ -103,7 +103,7 @@ that can be derived automatically.
 Type classes often come with "rules" or "laws" that instances should satisfy,
 the purpose of these laws is to provide *predictable behaviour* across
 instances, so that when we run into a new instance we can be confident
-that it will behave in a certain expected way, and we can write code
+that it will behave in an expected way, and we can write code
 that works generically for all instances of a type class while expecting
 them to adhere to these rules.
 
@@ -139,18 +139,18 @@ form a `Semigroup`, and instances
 don't even have to look similar or have a common analogy/metaphor
 (and this is true for many other type classes as well).
 
-**Type classes are often just _interfaces_ with _laws_** (or expected behaviour if you will).
+**Type classes are often just _interfaces_ with _laws_** (or expected behaviours if you will).
 Approaching them with this mindset can be very liberating!
 
-To put it a differently, **type classes can be used to create abstractions** -
-interfaces with laws/expected behaviour where we don't actually care about the
+To put it differently, **type classes can be used to create abstractions** -
+interfaces with laws/expected behaviours where we don't actually care about the
 concrete details of the underlying type, just that it *implements a certain
 API and behaves in a certain way*.
 
 Regarding `Semigroup`, we have [previously](../03-html/04-safer_construction.html#appending-htmlstructure)
 created a function that looks like `<>` for our `Html` EDSL!
 We can add a `Semigroup` instance for our `Structure` data type
-and have a nicer to use API!
+and have a nicer API!
 
 ---
 
@@ -178,7 +178,7 @@ instance Semigroup Structure where
 And remove the export of `append_` in `Html.hs`. You won't need to further export anything
 as type class instances are exported automatically.
 
-You will also need replace the usage of `append_` with `<>` in `hello.hs`.
+You will also need to replace the usage of `append_` with `<>` in `hello.hs`.
 
 </details>
 

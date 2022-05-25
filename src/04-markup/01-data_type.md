@@ -1,7 +1,7 @@
 # Representing the markup language as a Haskell data type
 
-One of the clear differentiators between Haskell and other ML-family of languages
-from most mainstream languages is the ability to represent data precisely and succinctly.
+One of the clear differentiators between Haskell and the other mainstream languages 
+in the ML-family is the ability to represent data precisely and succinctly.
 
 So how do we represent our markup language using Haskell?
 
@@ -420,7 +420,7 @@ it, or create a table of content from headings. Or maybe we'd like to
 add other targets and not just HTML - maybe markdown format or a GUI reader?
 
 Parsing to an "abstract data type" (ADT) representation (one that does
-not contain the details of the language, that for example that we use '#' for
+not contain the details of the language, for example '#' for
 ordered lists) gives us the freedom to do so much more than just
 conversion to HTML that it's usually worth it in my opinion unless you
 really need to optimize the process.
