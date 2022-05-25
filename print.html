@@ -2019,7 +2019,7 @@ and parse documents written in this language into Haskell data structures.</p>
 <li>Ordered lists: a group of lines each prefixed with <code># </code></li>
 <li>Code blocks: a group of lines each prefixed with <code>&gt; </code></li>
 </ul>
-<p>Here's a sample document which we will use as an example:</p>
+<p>Here's a sample document:</p>
 <pre><code class="language-org">* Compiling programs with ghc
 
 Running ghc invokes the Glasgow Haskell Compiler (GHC),
@@ -2050,7 +2050,7 @@ GHC will produce an executable when the source file satisfies both conditions:
 
 Otherwise, it will only produce the .o and .hi files.
 </code></pre>
-<p>Which we will, eventually, want to convert into this (modulo formatting) HTML:</p>
+<p>which we will, eventually, convert into this (modulo formatting) HTML:</p>
 <pre><code class="language-html">&lt;h1&gt;Compiling programs with ghc&lt;/h1&gt;
 
 &lt;p&gt;Running ghc invokes the Glasgow Haskell Compiler (GHC),
@@ -2094,8 +2094,8 @@ Linking hello ...
 &lt;/p&gt;
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="representing-the-markup-language-as-a-haskell-data-type"><a class="header" href="#representing-the-markup-language-as-a-haskell-data-type">Representing the markup language as a Haskell data type</a></h1>
-<p>One of the clear differentiators between Haskell and other ML-family of languages
-from most mainstream languages is the ability to represent data precisely and succinctly.</p>
+<p>One of the clear differentiators between Haskell (also other ML-family of languages)
+and most mainstream languages is the ability to represent data precisely and succinctly.</p>
 <p>So how do we represent our markup language using Haskell?</p>
 <p>Previously, in our HTML builder library, we used <code>newtype</code>s to differentiate
 between HTML documents, structures and titles, but we didn't really need to
@@ -2424,7 +2424,7 @@ to take only a small part of the document (for summary) and present
 it, or create a table of content from headings. Or maybe we'd like to
 add other targets and not just HTML - maybe markdown format or a GUI reader?</p>
 <p>Parsing to an &quot;abstract data type&quot; (ADT) representation (one that does
-not contain the details of the language, that for example that we use '#' for
+not contain the details of the language, for example '#' for
 ordered lists) gives us the freedom to do so much more than just
 conversion to HTML that it's usually worth it in my opinion unless you
 really need to optimize the process.</p>
@@ -2449,7 +2449,7 @@ that does exactly what we want. The <code>Prelude</code> module is exposed in ev
 Haskell file by default so we don't need to import it.</p>
 <p>For the line processing part, let's start by ignoring all of the markup syntax
 and just group lines together into paragraphs (paragraphs are separated by an empty line),
-and iteratively add new features later in the chapter:</p>
+and iteratively add new features later in the chapter.</p>
 <p>A common solution in imperative programs would be to iterate over the lines
 using some <em>loop</em> construct and accumulate lines that should be grouped together
 into some intermediate mutable variable. When we reach an empty line, we insert
@@ -2500,7 +2500,7 @@ is the result of the function (this is called tail position), we can just drop t
 stack frame and then allocate one for the function we call, so we don't require <code>N</code> stack frames
 for <code>N</code> iterations.</p>
 <p>This is of course only one way to do tail call elimination and other
-strategies exists, such as translating code like our recursive <code>add</code> above to the iteration version.</p>
+strategies exist, such as translating code like our recursive <code>add</code> above to the iteration version.</p>
 <h4 id="laziness"><a class="header" href="#laziness">Laziness</a></h4>
 <p>Haskell plays by slightly different rules because it uses a <em>lazy evaluation strategy</em>
 instead of the much more common strict evaluation strategy. An <em>evaluation strategy</em>
@@ -2515,8 +2515,8 @@ will look like this:</p>
 </ol>
 <p>Or, alternatively (depending on the language) we reverse (1) and (2) and evaluate the arguments
 from right-to-left instead of left-to-right.</p>
-<p>On the other hand, with lazy evaluation, we <em>only evaluate computation when we need it</em>, where
-'<em>when do we need it?</em>' is when it is part of a computation that will have some effect on the
+<p>On the other hand, with lazy evaluation, we <em>only evaluate computation when we need it</em>, which
+is when it is part of a computation that will have some effect on the
 outside world, for example when writing a computation to standard output or sending it over the network.</p>
 <p>So unless this computation is required, it won't be evaluated. For example:</p>
 <pre><code class="language-hs">main =
@@ -2843,7 +2843,7 @@ module! The trick here is that this other <code>head</code> does not take a gene
 as input, it takes a different type entirely, one that promises to have
 at least one element, and therefore can deliver on its promise!</p>
 <p>We could also potentially use smart constructors with <code>newtype</code> and enforce some sort
-of a restriction in the type system, as we saw in earlier chapters.
+of restrictions in the type system, as we saw in earlier chapters.
 But this solution can sometimes be less ergonomic to use.</p>
 <p>An alternative approach is to use <code>data</code> types to encode the absence of a proper result,
 for example, using <code>Maybe</code>, as we'll see in a future chapter.</p>
@@ -2915,7 +2915,7 @@ list which contains the last element and the appended list, and so on.</p>
 </li>
 </ol>
 <p>This code above will group together paragraphs in a structure, but how do we view our result?
-In the next chapter will take a short detour and talk a bit about type classes, and how
+In the next chapter we will take a short detour and talk about type classes, and how
 they can help us in this scenario.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="displaying-the-parsing-results-type-classes"><a class="header" href="#displaying-the-parsing-results-type-classes">Displaying the parsing results (type classes)</a></h1>
 <p>We want to be able to print a textual representation of values
@@ -2950,9 +2950,9 @@ We can define an instance of a type class manually like this:</p>
       True -&gt; &quot;True&quot;
       False -&gt; &quot;False&quot;
 </code></pre>
-<p>Defining an instance means providing an implementation for the interface for a specific type.
-When we call the function <code>show</code> on a data type, the compiler will search the instance of
-the type it inferred, and use the implementation provided in the instance declaration.</p>
+<p>Defining an instance means providing an implementation for the interface of a specific type.
+When we call the function <code>show</code> on a data type, the compiler will search the type's <code>Show</code> instance,
+and use the implementation provided in the instance declaration.</p>
 <pre><code class="language-hs">ghci&gt; show True
 &quot;True&quot;
 ghci&gt; show 187
@@ -2961,12 +2961,12 @@ ghci&gt; show &quot;Hello&quot;
 &quot;\&quot;Hello\&quot;&quot;
 </code></pre>
 <p>As can be seen above, the <code>show</code> function converts a value to its textual representation.
-Which is why <code>&quot;Hello&quot;</code> includes the quotes as well. The <code>Show</code> type class is usually
+That is why <code>&quot;Hello&quot;</code> includes the quotes as well. The <code>Show</code> type class is usually
 used for debugging purposes.</p>
 <h2 id="deriving-instances"><a class="header" href="#deriving-instances">Deriving instances</a></h2>
 <p>It is also possible to automatically generate implementations of a few selected
 type classes. Fortunately, <code>Show</code> is one of them.</p>
-<p>If all the types we use in the definition of our data type already implement
+<p>If all the types in the definition of our data type already implement
 an instance of <code>Show</code>, we can <em>automatically derive</em> it by adding <code>deriving Show</code> at the
 end of the data definition.</p>
 <pre><code class="language-hs">data Structure
@@ -2994,7 +2994,7 @@ that can be derived automatically.</p>
 <p>Type classes often come with &quot;rules&quot; or &quot;laws&quot; that instances should satisfy,
 the purpose of these laws is to provide <em>predictable behaviour</em> across
 instances, so that when we run into a new instance we can be confident
-that it will behave in a certain expected way, and we can write code
+that it will behave in an expected way, and we can write code
 that works generically for all instances of a type class while expecting
 them to adhere to these rules.</p>
 <p>As an example, let's look at the <code>Semigroup</code> type class:</p>
@@ -3017,16 +3017,16 @@ satisfy these laws, but as a community we often shun unlawful instances.</p>
 form a <code>Semigroup</code>, and instances
 don't even have to look similar or have a common analogy/metaphor
 (and this is true for many other type classes as well).</p>
-<p><strong>Type classes are often just <em>interfaces</em> with <em>laws</em></strong> (or expected behaviour if you will).
+<p><strong>Type classes are often just <em>interfaces</em> with <em>laws</em></strong> (or expected behaviours if you will).
 Approaching them with this mindset can be very liberating!</p>
-<p>To put it a differently, <strong>type classes can be used to create abstractions</strong> -
-interfaces with laws/expected behaviour where we don't actually care about the
+<p>To put it differently, <strong>type classes can be used to create abstractions</strong> -
+interfaces with laws/expected behaviours where we don't actually care about the
 concrete details of the underlying type, just that it <em>implements a certain
 API and behaves in a certain way</em>.</p>
 <p>Regarding <code>Semigroup</code>, we have <a href="04-markup/../03-html/04-safer_construction.html#appending-htmlstructure">previously</a>
 created a function that looks like <code>&lt;&gt;</code> for our <code>Html</code> EDSL!
 We can add a <code>Semigroup</code> instance for our <code>Structure</code> data type
-and have a nicer to use API!</p>
+and have a nicer API!</p>
 <hr />
 <p>Exercise: Please do this and remove the <code>append_</code> function from the API.</p>
 <details>
@@ -3043,19 +3043,19 @@ append_ c1 c2 =
 </code></pre>
 <p>And remove the export of <code>append_</code> in <code>Html.hs</code>. You won't need to further export anything
 as type class instances are exported automatically.</p>
-<p>You will also need replace the usage of <code>append_</code> with <code>&lt;&gt;</code> in <code>hello.hs</code>.</p>
+<p>You will also need to replace the usage of <code>append_</code> with <code>&lt;&gt;</code> in <code>hello.hs</code>.</p>
 </details>
 <hr />
 <div style="break-before: page; page-break-before: always;"></div><h1 id="parsing-markup-part-02-pattern-matching"><a class="header" href="#parsing-markup-part-02-pattern-matching">Parsing markup part 02 (Pattern matching)</a></h1>
 <h2 id="maybe"><a class="header" href="#maybe">Maybe</a></h2>
-<p>Previously, when we talked about partial functions, we mentioned that one way to avoid
+<p>Previously on partial functions, we mentioned that one way to avoid
 writing partial functions is to encode the absence of a result using <code>Maybe</code>:</p>
 <pre><code class="language-hs">data Maybe a
   = Nothing
   | Just a
 </code></pre>
 <p><code>Maybe</code> is a data type from the standard library (named <a href="https://hackage.haskell.org/package/base">base</a>)
-that is used to add an additional value to a type: the absence of a value.
+for adding an additional value to a type: the absence of a value.
 For example, <code>Maybe Bool</code> has three values,
 two with the <code>Just</code> constructor to represent regular boolean values
 (<code>Just True</code> and <code>Just False</code>) and another value, <code>Nothing</code> to represent
@@ -3080,8 +3080,8 @@ It is an incredibly versatile feature of Haskell, we can use it to do two main t
 </ol>
 <p>As we've seen when discussing
 <a href="04-markup/../03-html/04-safer_construction.html#using-newtypes">newtypes</a>,
-we can use <strong>case expressions</strong> and <strong>function definitions</strong> to deconstruct a <code>newtype</code>,
-but we can do that for <code>data</code> types as well:</p>
+we can use <strong>case expressions</strong> and <strong>function definitions</strong> to deconstruct a <code>newtype</code>.
+Same for <code>data</code> types as well:</p>
 <pre><code class="language-hs">-- | A data type representing colors
 data Color
   = RGB Word8 Word8 Word8
@@ -3145,7 +3145,7 @@ but if you want to use it instead of case expressions, it is possible.</p>
 </blockquote>
 <h3 id="pattern-matching-on-linked-lists"><a class="header" href="#pattern-matching-on-linked-lists">Pattern matching on linked lists</a></h3>
 <p>Because linked lists have their own <a href="04-markup//03-html/06-escaping_characters.html#linked-lists-briefly">special syntax</a>,
-we also have slightly special syntax when we pattern match on them.
+we also have special syntax for their pattern match.
 We can use the same special syntax for creating lists when we pattern match on lists,
 replacing the <em>elements</em> of the list with patterns. For example:</p>
 <pre><code class="language-hs">safeHead :: [a] -&gt; Maybe a
@@ -3179,10 +3179,10 @@ exactlyTwoVersion2 list =
 <hr />
 <p>Exercises:</p>
 <ol>
-<li>Create a function <code>isBright :: AnsiColor -&gt; Bool</code> that checks whether a color is bright or not</li>
+<li>Create a function <code>isBright :: AnsiColor -&gt; Bool</code> that checks whether a color is bright</li>
 <li>Use <a href="https://en.wikipedia.org/wiki/ANSI_escape_code#3-bit_and_4-bit">this table</a> to write <code>ansiToUbuntu</code>.</li>
-<li>Create a function <code>isEmpty :: [a] -&gt; Bool</code> that uses <code>listToMaybe</code> to check whether a list is empty or not</li>
-<li>Create a function <code>isEmpty :: [a] -&gt; Bool</code> that <em>doesn't</em> use <code>listToMaybe</code> to check whether a list is empty or not</li>
+<li>Create a function <code>isEmpty :: [a] -&gt; Bool</code> that uses <code>listToMaybe</code> to check whether a list is empty</li>
+<li>Create a function <code>isEmpty :: [a] -&gt; Bool</code> that <em>doesn't</em> use <code>listToMaybe</code> to check whether a list is empty</li>
 </ol>
 <p>Solutions:</p>
 <details><summary>Solution for (1)</summary>
@@ -3292,8 +3292,8 @@ trim = unwords . words
 <p>Next, instead of using a <code>[String]</code> type to denote adjacent lines, we can instead use a <code>Structure</code> to denote the context.</p>
 <p>One issue we might have though with representing context with the <code>Structure</code> type,
 is that when we start parsing we don't have any context.
-But we learned of a way to represent the possibility of an absence of a value with <code>Maybe</code>! So our new context type can be <code>Maybe Structure</code> instead.</p>
-<p>Let's rewrite our code above to use our new context type:</p>
+But we have learned of a way to represent the absence of a value with <code>Maybe</code>! So our new context type can be <code>Maybe Structure</code> instead.</p>
+<p>Let's rewrite our code above with our new context type:</p>
 <pre><code class="language-hs">parse :: String -&gt; Document
 parse = parseLines Nothing . lines -- (1)
 
@@ -3338,7 +3338,7 @@ fairly common.</p>
 <li>
 <p>Hey! Didn't we say that appending <code>String</code>s/lists is slow (which is what <code>unwords</code> does)? Yes, it is.
 Because in our <code>Structure</code> data type, a paragraph is defined as <code>Paragraph String</code> and not <code>Paragraph [String]</code>,
-we can't use our trick of building a list of lines and the reverse it at the end.</p>
+we can't use our trick of building a list of lines and then reverse it in the end.</p>
 <p>So what do we do?
 There are many ways to handle that, one simple way is to create a different type with the right shape:</p>
 <pre><code class="language-hs">data Context
@@ -3350,7 +3350,7 @@ There are many ways to handle that, one simple way is to create a different type
 </code></pre>
 <p>Since creating new types in Haskell is cheap, this is a very viable solution.</p>
 <p>In this case I'm going with the approach of not worrying about it too much,
-because it's a very local piece of code that can easily be fixed later if we see that it's an issue.</p>
+because it's a very local piece of code that can easily be fixed later if needed.</p>
 </li>
 <li>
 <p>Anyway, if you've used <code>-Wall</code> like I've suggested,
@@ -3489,10 +3489,9 @@ trim = unwords . words
 <h3 id="how-do-we-know-our-parser-works-correctly"><a class="header" href="#how-do-we-know-our-parser-works-correctly">How do we know our parser works correctly?</a></h3>
 <p>In an earlier chapter, we parsed a few examples of our markup language <a href="04-markup/01-data_type.html#exercises">by hand</a>.
 Now, we can try to test our parser by comparing our solutions to our parser.
-By adding <code>Eq</code> to the list of type class instances to derive for our <code>Structure</code> data type
-(as shown on the line marked with (1) in &quot;final module&quot; above),
-we can add these to our module and use the <code>==</code> (equals) operator to compare our
-solutions to the result our parser gives.</p>
+By deriving <code>Eq</code> for our <code>Structure</code> data type
+(marked with (1) in &quot;final module&quot; above),
+we can compare solutions with the <code>==</code> (equals) operator.</p>
 <p>Try it in GHCi! You can read a text file in GHCi using the following syntax:</p>
 <pre><code class="language-hs">ghci&gt; txt &lt;- readFile &quot;/tmp/sample.txt&quot;
 </code></pre>
@@ -3500,8 +3499,8 @@ solutions to the result our parser gives.</p>
 (after adding them to the module and loading them in GHCi):</p>
 <pre><code class="language-hs">ghci&gt; parse txt == example4
 </code></pre>
-<p>In a later chapter, we'll discuss how to use a testing framework and
-write automated tests for our parser. But first, I'd like to glue things together
+<p>In a later chapter, we'll write automated tests for our parser using a testing framework.
+But before that, I'd like to glue things together
 so we'll be able to:</p>
 <ol>
 <li>Read markup text from a file</li>

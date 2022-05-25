@@ -165,7 +165,7 @@ that does exactly what we want. The <code>Prelude</code> module is exposed in ev
 Haskell file by default so we don't need to import it.</p>
 <p>For the line processing part, let's start by ignoring all of the markup syntax
 and just group lines together into paragraphs (paragraphs are separated by an empty line),
-and iteratively add new features later in the chapter:</p>
+and iteratively add new features later in the chapter.</p>
 <p>A common solution in imperative programs would be to iterate over the lines
 using some <em>loop</em> construct and accumulate lines that should be grouped together
 into some intermediate mutable variable. When we reach an empty line, we insert
@@ -216,7 +216,7 @@ is the result of the function (this is called tail position), we can just drop t
 stack frame and then allocate one for the function we call, so we don't require <code>N</code> stack frames
 for <code>N</code> iterations.</p>
 <p>This is of course only one way to do tail call elimination and other
-strategies exists, such as translating code like our recursive <code>add</code> above to the iteration version.</p>
+strategies exist, such as translating code like our recursive <code>add</code> above to the iteration version.</p>
 <h4 id="laziness"><a class="header" href="#laziness">Laziness</a></h4>
 <p>Haskell plays by slightly different rules because it uses a <em>lazy evaluation strategy</em>
 instead of the much more common strict evaluation strategy. An <em>evaluation strategy</em>
@@ -231,8 +231,8 @@ will look like this:</p>
 </ol>
 <p>Or, alternatively (depending on the language) we reverse (1) and (2) and evaluate the arguments
 from right-to-left instead of left-to-right.</p>
-<p>On the other hand, with lazy evaluation, we <em>only evaluate computation when we need it</em>, where
-'<em>when do we need it?</em>' is when it is part of a computation that will have some effect on the
+<p>On the other hand, with lazy evaluation, we <em>only evaluate computation when we need it</em>, which
+is when it is part of a computation that will have some effect on the
 outside world, for example when writing a computation to standard output or sending it over the network.</p>
 <p>So unless this computation is required, it won't be evaluated. For example:</p>
 <pre><code class="language-hs">main =
@@ -559,7 +559,7 @@ module! The trick here is that this other <code>head</code> does not take a gene
 as input, it takes a different type entirely, one that promises to have
 at least one element, and therefore can deliver on its promise!</p>
 <p>We could also potentially use smart constructors with <code>newtype</code> and enforce some sort
-of a restriction in the type system, as we saw in earlier chapters.
+of restrictions in the type system, as we saw in earlier chapters.
 But this solution can sometimes be less ergonomic to use.</p>
 <p>An alternative approach is to use <code>data</code> types to encode the absence of a proper result,
 for example, using <code>Maybe</code>, as we'll see in a future chapter.</p>
@@ -631,7 +631,7 @@ list which contains the last element and the appended list, and so on.</p>
 </li>
 </ol>
 <p>This code above will group together paragraphs in a structure, but how do we view our result?
-In the next chapter will take a short detour and talk a bit about type classes, and how
+In the next chapter we will take a short detour and talk about type classes, and how
 they can help us in this scenario.</p>
 
                     </main>

@@ -145,8 +145,8 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="representing-the-markup-language-as-a-haskell-data-type"><a class="header" href="#representing-the-markup-language-as-a-haskell-data-type">Representing the markup language as a Haskell data type</a></h1>
-<p>One of the clear differentiators between Haskell and other ML-family of languages
-from most mainstream languages is the ability to represent data precisely and succinctly.</p>
+<p>One of the clear differentiators between Haskell (also other ML-family of languages)
+and most mainstream languages is the ability to represent data precisely and succinctly.</p>
 <p>So how do we represent our markup language using Haskell?</p>
 <p>Previously, in our HTML builder library, we used <code>newtype</code>s to differentiate
 between HTML documents, structures and titles, but we didn't really need to
@@ -475,7 +475,7 @@ to take only a small part of the document (for summary) and present
 it, or create a table of content from headings. Or maybe we'd like to
 add other targets and not just HTML - maybe markdown format or a GUI reader?</p>
 <p>Parsing to an &quot;abstract data type&quot; (ADT) representation (one that does
-not contain the details of the language, that for example that we use '#' for
+not contain the details of the language, for example '#' for
 ordered lists) gives us the freedom to do so much more than just
 conversion to HTML that it's usually worth it in my opinion unless you
 really need to optimize the process.</p>

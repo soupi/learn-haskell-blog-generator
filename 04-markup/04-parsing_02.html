@@ -146,14 +146,14 @@
                     <main>
                         <h1 id="parsing-markup-part-02-pattern-matching"><a class="header" href="#parsing-markup-part-02-pattern-matching">Parsing markup part 02 (Pattern matching)</a></h1>
 <h2 id="maybe"><a class="header" href="#maybe">Maybe</a></h2>
-<p>Previously, when we talked about partial functions, we mentioned that one way to avoid
+<p>Previously on partial functions, we mentioned that one way to avoid
 writing partial functions is to encode the absence of a result using <code>Maybe</code>:</p>
 <pre><code class="language-hs">data Maybe a
   = Nothing
   | Just a
 </code></pre>
 <p><code>Maybe</code> is a data type from the standard library (named <a href="https://hackage.haskell.org/package/base">base</a>)
-that is used to add an additional value to a type: the absence of a value.
+for adding an additional value to a type: the absence of a value.
 For example, <code>Maybe Bool</code> has three values,
 two with the <code>Just</code> constructor to represent regular boolean values
 (<code>Just True</code> and <code>Just False</code>) and another value, <code>Nothing</code> to represent
@@ -178,8 +178,8 @@ It is an incredibly versatile feature of Haskell, we can use it to do two main t
 </ol>
 <p>As we've seen when discussing
 <a href="../03-html/04-safer_construction.html#using-newtypes">newtypes</a>,
-we can use <strong>case expressions</strong> and <strong>function definitions</strong> to deconstruct a <code>newtype</code>,
-but we can do that for <code>data</code> types as well:</p>
+we can use <strong>case expressions</strong> and <strong>function definitions</strong> to deconstruct a <code>newtype</code>.
+Same for <code>data</code> types as well:</p>
 <pre><code class="language-hs">-- | A data type representing colors
 data Color
   = RGB Word8 Word8 Word8
@@ -243,7 +243,7 @@ but if you want to use it instead of case expressions, it is possible.</p>
 </blockquote>
 <h3 id="pattern-matching-on-linked-lists"><a class="header" href="#pattern-matching-on-linked-lists">Pattern matching on linked lists</a></h3>
 <p>Because linked lists have their own <a href="/03-html/06-escaping_characters.html#linked-lists-briefly">special syntax</a>,
-we also have slightly special syntax when we pattern match on them.
+we also have special syntax for their pattern match.
 We can use the same special syntax for creating lists when we pattern match on lists,
 replacing the <em>elements</em> of the list with patterns. For example:</p>
 <pre><code class="language-hs">safeHead :: [a] -&gt; Maybe a
@@ -277,10 +277,10 @@ exactlyTwoVersion2 list =
 <hr />
 <p>Exercises:</p>
 <ol>
-<li>Create a function <code>isBright :: AnsiColor -&gt; Bool</code> that checks whether a color is bright or not</li>
+<li>Create a function <code>isBright :: AnsiColor -&gt; Bool</code> that checks whether a color is bright</li>
 <li>Use <a href="https://en.wikipedia.org/wiki/ANSI_escape_code#3-bit_and_4-bit">this table</a> to write <code>ansiToUbuntu</code>.</li>
-<li>Create a function <code>isEmpty :: [a] -&gt; Bool</code> that uses <code>listToMaybe</code> to check whether a list is empty or not</li>
-<li>Create a function <code>isEmpty :: [a] -&gt; Bool</code> that <em>doesn't</em> use <code>listToMaybe</code> to check whether a list is empty or not</li>
+<li>Create a function <code>isEmpty :: [a] -&gt; Bool</code> that uses <code>listToMaybe</code> to check whether a list is empty</li>
+<li>Create a function <code>isEmpty :: [a] -&gt; Bool</code> that <em>doesn't</em> use <code>listToMaybe</code> to check whether a list is empty</li>
 </ol>
 <p>Solutions:</p>
 <details><summary>Solution for (1)</summary>
@@ -390,8 +390,8 @@ trim = unwords . words
 <p>Next, instead of using a <code>[String]</code> type to denote adjacent lines, we can instead use a <code>Structure</code> to denote the context.</p>
 <p>One issue we might have though with representing context with the <code>Structure</code> type,
 is that when we start parsing we don't have any context.
-But we learned of a way to represent the possibility of an absence of a value with <code>Maybe</code>! So our new context type can be <code>Maybe Structure</code> instead.</p>
-<p>Let's rewrite our code above to use our new context type:</p>
+But we have learned of a way to represent the absence of a value with <code>Maybe</code>! So our new context type can be <code>Maybe Structure</code> instead.</p>
+<p>Let's rewrite our code above with our new context type:</p>
 <pre><code class="language-hs">parse :: String -&gt; Document
 parse = parseLines Nothing . lines -- (1)
 
@@ -436,7 +436,7 @@ fairly common.</p>
 <li>
 <p>Hey! Didn't we say that appending <code>String</code>s/lists is slow (which is what <code>unwords</code> does)? Yes, it is.
 Because in our <code>Structure</code> data type, a paragraph is defined as <code>Paragraph String</code> and not <code>Paragraph [String]</code>,
-we can't use our trick of building a list of lines and the reverse it at the end.</p>
+we can't use our trick of building a list of lines and then reverse it in the end.</p>
 <p>So what do we do?
 There are many ways to handle that, one simple way is to create a different type with the right shape:</p>
 <pre><code class="language-hs">data Context
@@ -448,7 +448,7 @@ There are many ways to handle that, one simple way is to create a different type
 </code></pre>
 <p>Since creating new types in Haskell is cheap, this is a very viable solution.</p>
 <p>In this case I'm going with the approach of not worrying about it too much,
-because it's a very local piece of code that can easily be fixed later if we see that it's an issue.</p>
+because it's a very local piece of code that can easily be fixed later if needed.</p>
 </li>
 <li>
 <p>Anyway, if you've used <code>-Wall</code> like I've suggested,
@@ -587,10 +587,9 @@ trim = unwords . words
 <h3 id="how-do-we-know-our-parser-works-correctly"><a class="header" href="#how-do-we-know-our-parser-works-correctly">How do we know our parser works correctly?</a></h3>
 <p>In an earlier chapter, we parsed a few examples of our markup language <a href="01-data_type.html#exercises">by hand</a>.
 Now, we can try to test our parser by comparing our solutions to our parser.
-By adding <code>Eq</code> to the list of type class instances to derive for our <code>Structure</code> data type
-(as shown on the line marked with (1) in &quot;final module&quot; above),
-we can add these to our module and use the <code>==</code> (equals) operator to compare our
-solutions to the result our parser gives.</p>
+By deriving <code>Eq</code> for our <code>Structure</code> data type
+(marked with (1) in &quot;final module&quot; above),
+we can compare solutions with the <code>==</code> (equals) operator.</p>
 <p>Try it in GHCi! You can read a text file in GHCi using the following syntax:</p>
 <pre><code class="language-hs">ghci&gt; txt &lt;- readFile &quot;/tmp/sample.txt&quot;
 </code></pre>
@@ -598,8 +597,8 @@ solutions to the result our parser gives.</p>
 (after adding them to the module and loading them in GHCi):</p>
 <pre><code class="language-hs">ghci&gt; parse txt == example4
 </code></pre>
-<p>In a later chapter, we'll discuss how to use a testing framework and
-write automated tests for our parser. But first, I'd like to glue things together
+<p>In a later chapter, we'll write automated tests for our parser using a testing framework.
+But before that, I'd like to glue things together
 so we'll be able to:</p>
 <ol>
 <li>Read markup text from a file</li>
