@@ -22,7 +22,7 @@ Haskell file by default so we don't need to import it.
 
 For the line processing part, let's start by ignoring all of the markup syntax
 and just group lines together into paragraphs (paragraphs are separated by an empty line),
-and iteratively add new features later in the chapter:
+and iteratively add new features later in the chapter.
 
 A common solution in imperative programs would be to iterate over the lines
 using some _loop_ construct and accumulate lines that should be grouped together
@@ -90,7 +90,7 @@ stack frame and then allocate one for the function we call, so we don't require 
 for `N` iterations.
 
 This is of course only one way to do tail call elimination and other
-strategies exists, such as translating code like our recursive `add` above to the iteration version.
+strategies exist, such as translating code like our recursive `add` above to the iteration version.
 
 #### Laziness
 
@@ -109,8 +109,8 @@ will look like this:
 Or, alternatively (depending on the language) we reverse (1) and (2) and evaluate the arguments
 from right-to-left instead of left-to-right.
 
-On the other hand, with lazy evaluation, we *only evaluate computation when we need it*, where
-'*when do we need it?*' is when it is part of a computation that will have some effect on the
+On the other hand, with lazy evaluation, we *only evaluate computation when we need it*, which
+is when it is part of a computation that will have some effect on the
 outside world, for example when writing a computation to standard output or sending it over the network.
 
 So unless this computation is required, it won't be evaluated. For example:
@@ -553,7 +553,7 @@ as input, it takes a different type entirely, one that promises to have
 at least one element, and therefore can deliver on its promise!
 
 We could also potentially use smart constructors with `newtype` and enforce some sort
-of a restriction in the type system, as we saw in earlier chapters.
+of restrictions in the type system, as we saw in earlier chapters.
 But this solution can sometimes be less ergonomic to use.
 
 An alternative approach is to use `data` types to encode the absence of a proper result,
@@ -622,5 +622,5 @@ Things to note:
 
 
 This code above will group together paragraphs in a structure, but how do we view our result?
-In the next chapter will take a short detour and talk a bit about type classes, and how
+In the next chapter we will take a short detour and talk about type classes, and how
 they can help us in this scenario.

@@ -2,7 +2,7 @@
 
 ## Maybe
 
-Previously, when we talked about partial functions, we mentioned that one way to avoid
+Previously on partial functions, we mentioned that one way to avoid
 writing partial functions is to encode the absence of a result using `Maybe`:
 
 ```hs
@@ -12,7 +12,7 @@ data Maybe a
 ```
 
 `Maybe` is a data type from the standard library (named [base](https://hackage.haskell.org/package/base))
-that is used to add an additional value to a type: the absence of a value.
+for adding an additional value to a type: the absence of a value.
 For example, `Maybe Bool` has three values,
 two with the `Just` constructor to represent regular boolean values
 (`Just True` and `Just False`) and another value, `Nothing` to represent
@@ -44,8 +44,8 @@ It is an incredibly versatile feature of Haskell, we can use it to do two main t
 
 As we've seen when discussing
 [newtypes](../03-html/04-safer_construction.html#using-newtypes),
-we can use **case expressions** and **function definitions** to deconstruct a `newtype`,
-but we can do that for `data` types as well:
+we can use **case expressions** and **function definitions** to deconstruct a `newtype`.
+Same for `data` types as well:
 
 ```hs
 -- | A data type representing colors
@@ -119,7 +119,7 @@ by passing the flag `-Wall` to `ghc` or `runghc`.
 ### Pattern matching on linked lists
 
 Because linked lists have their own [special syntax](/03-html/06-escaping_characters.html#linked-lists-briefly),
-we also have slightly special syntax when we pattern match on them.
+we also have special syntax for their pattern match.
 We can use the same special syntax for creating lists when we pattern match on lists,
 replacing the *elements* of the list with patterns. For example:
 
@@ -162,10 +162,10 @@ exactlyTwoVersion2 list =
 
 Exercises:
 
-1. Create a function `isBright :: AnsiColor -> Bool` that checks whether a color is bright or not
+1. Create a function `isBright :: AnsiColor -> Bool` that checks whether a color is bright
 2. Use [this table](https://en.wikipedia.org/wiki/ANSI_escape_code#3-bit_and_4-bit) to write `ansiToUbuntu`.
-3. Create a function `isEmpty :: [a] -> Bool` that uses `listToMaybe` to check whether a list is empty or not
-4. Create a function `isEmpty :: [a] -> Bool` that *doesn't* use `listToMaybe` to check whether a list is empty or not
+3. Create a function `isEmpty :: [a] -> Bool` that uses `listToMaybe` to check whether a list is empty
+4. Create a function `isEmpty :: [a] -> Bool` that *doesn't* use `listToMaybe` to check whether a list is empty
 
 Solutions:
 
@@ -304,9 +304,9 @@ Next, instead of using a `[String]` type to denote adjacent lines, we can instea
 
 One issue we might have though with representing context with the `Structure` type,
 is that when we start parsing we don't have any context.
-But we learned of a way to represent the possibility of an absence of a value with `Maybe`! So our new context type can be `Maybe Structure` instead.
+But we have learned of a way to represent the absence of a value with `Maybe`! So our new context type can be `Maybe Structure` instead.
 
-Let's rewrite our code above to use our new context type:
+Let's rewrite our code above with our new context type:
 
 ```hs
 parse :: String -> Document
@@ -348,7 +348,7 @@ trim = unwords . words
    Check out the types of `id`, `(:)` and `maybe id (:)` in GHCi!
 4. Hey! Didn't we say that appending `String`s/lists is slow (which is what `unwords` does)? Yes, it is.
    Because in our `Structure` data type, a paragraph is defined as `Paragraph String` and not `Paragraph [String]`,
-   we can't use our trick of building a list of lines and the reverse it at the end.
+   we can't use our trick of building a list of lines and then reverse it in the end.
 
    So what do we do?
    There are many ways to handle that, one simple way is to create a different type with the right shape:
@@ -365,7 +365,7 @@ trim = unwords . words
    Since creating new types in Haskell is cheap, this is a very viable solution.
 
    In this case I'm going with the approach of not worrying about it too much,
-   because it's a very local piece of code that can easily be fixed later if we see that it's an issue.
+   because it's a very local piece of code that can easily be fixed later if needed.
 
 5. Anyway, if you've used `-Wall` like I've suggested,
    you'd get a warning from GHC saying that the *"pattern matches are non-exhaustive"*.
@@ -512,10 +512,9 @@ trim = unwords . words
 
 In an earlier chapter, we parsed a few examples of our markup language [by hand](01-data_type.html#exercises).
 Now, we can try to test our parser by comparing our solutions to our parser.
-By adding `Eq` to the list of type class instances to derive for our `Structure` data type
-(as shown on the line marked with (1) in "final module" above),
-we can add these to our module and use the `==` (equals) operator to compare our
-solutions to the result our parser gives.
+By deriving `Eq` for our `Structure` data type
+(marked with (1) in "final module" above),
+we can compare solutions with the `==` (equals) operator.
 
 Try it in GHCi! You can read a text file in GHCi using the following syntax:
 
@@ -530,8 +529,8 @@ And then compare with the hand written example values from the solutions
 ghci> parse txt == example4
 ```
 
-In a later chapter, we'll discuss how to use a testing framework and
-write automated tests for our parser. But first, I'd like to glue things together
+In a later chapter, we'll write automated tests for our parser using a testing framework.
+But before that, I'd like to glue things together
 so we'll be able to:
 
 1. Read markup text from a file

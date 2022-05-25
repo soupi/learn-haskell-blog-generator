@@ -11,7 +11,7 @@ Our markup language will contain the following features:
 - Ordered lists: a group of lines each prefixed with `# `
 - Code blocks: a group of lines each prefixed with `> `
 
-Here's a sample document which we will use as an example:
+Here's a sample document:
 
 ```org
 * Compiling programs with ghc
@@ -45,7 +45,7 @@ GHC will produce an executable when the source file satisfies both conditions:
 Otherwise, it will only produce the .o and .hi files.
 ```
 
-Which we will, eventually, want to convert into this (modulo formatting) HTML:
+which we will, eventually, convert into this (modulo formatting) HTML:
 
 ```html
 <h1>Compiling programs with ghc</h1>
