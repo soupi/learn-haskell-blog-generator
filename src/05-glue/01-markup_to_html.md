@@ -22,26 +22,25 @@ For example, `parse` becomes `Markup.parse`.
 If we would've imported `Html.Internal` qualified, we'd have to write
 `Html.Internal.el` which is a bit long.
 
-We can also give a new name to the module to be used instead with the `as`
-keyword:
+We can also give a new name to the module with the `as` keyword:
 
 ```hs
 import qualified Html.Internal as HI
 ```
 
-And now write `HI.el` instead.
+And write `HI.el` instead.
 
 I like using qualified imports because readers do not have to guess where a
-name came from. Some modules are even designed to be imported qualified.
-For example, many container APIs such as maps, sets and vectors have very similar
-API. If we want to multiple containers in a single module we pretty much have
+name comes from. Some modules are even designed to be imported qualified.
+For example, many container APIs such as maps, sets, and vectors have very similar
+API. If we need multiple containers in a single module we pretty much have
 to use qualified imports so that when we write a function such as `singleton`,
-which creates a container with a single value, GHC will know to which `singleton`
-function from which module we are referring.
+which creates a container with a single value, GHC will know which `singleton`
+function we are referring to.
 
-Some people prefer to use import lists instead of qualified imports as well,
-because qualified names can be a bit verbose and noisy. I usually prefer them,
-but up to you. For more information about imports,
+Some people prefer to use import lists instead of qualified imports,
+because qualified names can be a bit verbose and noisy. I usually prefer them.
+For more information about imports,
 see this [wiki article](https://wiki.haskell.org/Import).
 
 ## Converting `Markup.Structure` to `Html.Structure`
@@ -75,8 +74,8 @@ is *non-exhaustive*. This is because we don't currently have a way to build
 headings that are not `h1`. There are a few ways to handle this:
 
 - Ignore the warning - this will likely fail at runtime one day and the user will be sad
-- Pattern match other cases and add a nice error with the `error` function, has
-  the same disadvantage above, but will also not notify that there's a possible issue
+- Pattern match other cases and add a nice error with the `error` function - it has
+  the same disadvantage above, but will also not notify any issue
   here at compile time.
 - Pattern match and do the wrong thing - user is still sad
 - Encode errors in the type system using `Either`, we'll see how to do this in later
