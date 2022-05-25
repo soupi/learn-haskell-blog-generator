@@ -303,7 +303,7 @@ Previously our context, `currentParagraph`, was used to group adjacent lines in 
 Next, instead of using a `[String]` type to denote adjacent lines, we can instead use a `Structure` to denote the context.
 
 One issue we might have though with representing context with the `Structure` type,
-is that we don't have any context while parsing.
+is that when we start parsing we don't have any context.
 But we have learned of a way to represent the absence of a value with `Maybe`! So our new context type can be `Maybe Structure` instead.
 
 Let's rewrite our code above with our new context type:

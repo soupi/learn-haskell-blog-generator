@@ -1,7 +1,7 @@
 # Representing the markup language as a Haskell data type
 
-One of the clear differentiators between Haskell and the other mainstream languages 
-in the ML-family is the ability to represent data precisely and succinctly.
+One of the clear differentiators between Haskell (also other ML-family of languages)
+and most mainstream languages is the ability to represent data precisely and succinctly.
 
 So how do we represent our markup language using Haskell?
 

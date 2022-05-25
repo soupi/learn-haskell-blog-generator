@@ -44,7 +44,7 @@ instance Show Bool where
 ```
 
 Defining an instance means providing an implementation for the interface of a specific type.
-When we call the function `show` on a data type, the compiler will search the type instance,
+When we call the function `show` on a data type, the compiler will search the type's `Show` instance,
 and use the implementation provided in the instance declaration.
 
 ```hs
