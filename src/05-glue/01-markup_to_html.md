@@ -22,26 +22,27 @@ For example, `parse` becomes `Markup.parse`.
 If we would've imported `Html.Internal` qualified, we'd have to write
 `Html.Internal.el` which is a bit long.
 
-We can also give a new name to the module to be used instead with the `as`
-keyword:
+We can also give the module a new name with the `as` keyword:
 
 ```hs
 import qualified Html.Internal as HI
 ```
 
-And now write `HI.el` instead.
+And write `HI.el` instead.
 
 I like using qualified imports because readers do not have to guess where a
-name came from. Some modules are even designed to be imported qualified.
-For example, many container APIs such as maps, sets and vectors have very similar
-API. If we want to multiple containers in a single module we pretty much have
+name comes from. Some modules are even designed to be imported qualified.
+For example, many container APIs such as maps, sets, and vectors have very similar
+API. If we want to use multiple containers in a single module we pretty much have
 to use qualified imports so that when we write a function such as `singleton`,
-which creates a container with a single value, GHC will know to which `singleton`
-function from which module we are referring.
+which creates a container with a single value, GHC will know which `singleton`
+function we are referring to.
 
-Some people prefer to use import lists instead of qualified imports as well,
-because qualified names can be a bit verbose and noisy. I usually prefer them,
-but up to you. For more information about imports,
+Some people prefer to use import lists instead of qualified imports,
+because qualified names can be a bit verbose and noisy.
+I will often prefer qualified imports to import lists, but feel free to
+try both solutions and see which fits you better.
+For more information about imports,
 see this [wiki article](https://wiki.haskell.org/Import).
 
 ## Converting `Markup.Structure` to `Html.Structure`
@@ -75,9 +76,9 @@ is *non-exhaustive*. This is because we don't currently have a way to build
 headings that are not `h1`. There are a few ways to handle this:
 
 - Ignore the warning - this will likely fail at runtime one day and the user will be sad
-- Pattern match other cases and add a nice error with the `error` function, has
-  the same disadvantage above, but will also not notify that there's a possible issue
-  here at compile time.
+- Pattern match other cases and add a nice error with the `error` function - it has
+  the same disadvantage above, but will also no longer notify of the unhandled
+  cases at compile time.
 - Pattern match and do the wrong thing - user is still sad
 - Encode errors in the type system using `Either`, we'll see how to do this in later
   chapters
@@ -139,7 +140,7 @@ convertStructure structure =
 In order to create an `Html` document, we need to use the `html_` function.
 This function expects two things: a `Title`, and a `Structure`.
 
-For a title we just could supply it from outside using the file name.
+For a title we could just supply it from outside using the file name.
 
 In order to convert our markup `Document` (which is a list of markup `Structure`)
 to an HTML `Structure`, we need to convert each markup `Structure` and then
@@ -153,8 +154,8 @@ us with the following function:
 map convertStructure :: Markup.Document -> [Html.Structure]
 ```
 
-To concatenate all of the `Html.Structure`, we could write a recursive
-function that tries to do that. However we will quickly run to an issue
+To concatenate all of the `Html.Structure`, we could try to write a recursive
+function. However we will quickly run into an issue
 with the base case, what to do when the list is empty?
 
 We could just provide dummy `Html.Structure` that represents an empty
@@ -186,21 +187,20 @@ concatStructure list =
 ---
 
 Remember the `<>` function we implemented as an instance of the `Semigroup`
-type class? We said that `Semigroup` is an **abstraction** for things
+type class? We mentioned that `Semigroup` is an **abstraction** for things
 that implements `(<>) :: a -> a -> a`, where  `<>` is associative
 (`a <> (b <> c) = (a <> b) <> c`).
 
-It turns out that things that have an "empty" value and are also
-an instance of `Semigroup` is quite a common thing. For example a string.
-And this is actually a well known **abstraction**. This abstraction
-is called a **monoid**.
+It turns out that having an instance of `Semigroup` and also having a value that represents
+an "empty" value is a fairly common pattern. For example a string can be concatenated, 
+and the empty string can serve as an "empty" value.
+And this is actually a well known **abstraction** called **monoid**.
 
 ## Monoids
 
-Actually, maybe "empty" isn't a very good description of what we want,
+Actually, "empty" isn't a very good description of what we want,
 and isn't very useful as an abstraction. Instead, we can describe it as
-what is often called an "identity" element.
-An identity element is one that satisfy the following laws:
+an "identity" element, which satisfies the following laws:
 
 - `x <> <identity> = x`
 - `<identity> <> x = x`
@@ -273,15 +273,15 @@ mconcat list =
     x : xs -> x <> mconcat xs
 ```
 
-(Notice that because `Semigroup` is a *super class* of `Monoid`,
+Notice that because `Semigroup` is a *super class* of `Monoid`,
 we can still use the `<>` function from the `Semigroup` class
 without adding the `Semigroup a` constraint to the left side of `=>`.
 By adding the `Monoid a` constraint we implicitly add a `Semigroup a`
-constraint as well!)
+constraint as well!
 
-This `mconcat` function we wrote is very similar to the `concatStructure` function we wrote,
+This `mconcat` function is very similar to the `concatStructure` function,
 but this one works for any `Monoid`, including `Structure`!
-Abstractions are useful and help us **reuse** code!
+Abstractions help us identify common patterns and **reuse** code!
 
 > Side note: integers with `+` and `0` aren't actually an instance of `Monoid` in Haskell.
 > This is because integers can also form a monoid with `*` and `1`! But **there can only
@@ -305,7 +305,7 @@ Abstractions are useful and help us **reuse** code!
 We've used `map` and then `mconcat` twice now. Surely there has to be a function
 that unifies this pattern. And indeed, it is called
 [`foldMap`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Foldable.html#v:foldMap),
-and it works not only for lists, it will work for any data structure that can be "folded",
+and it works not only for lists, but also for any data structure that can be "folded",
 or "reduced", into a summary value. This abstraction and type class is called **Foldable**.
 
 For a simpler understanding of `Foldable`, we can look at `fold`:
