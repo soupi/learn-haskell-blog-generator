@@ -2,7 +2,7 @@
 
 Up until now we've only used `base` and the libraries
 [included](https://downloads.haskell.org/ghc/latest/docs/html/users_guide/9.0.1-notes.html#included-libraries)
-with GHC. Because of that we didn't really need to do anything more fancy
+with GHC. Because of that we didn't really need to do anything fancier
 than `runghc` to run our program. However, we want to start using
 external libraries which are not included with GHC in our programs.
 
@@ -11,10 +11,10 @@ Haskell's central package archive, [Stackage](https://www.stackage.org/) -
 a subset of Hackage packages that are known to work together, or even
 from remote git repositories. Usually Haskellers use a **package manager** to
 download and manage packages for different projects. The most popular package
-managers for Haskell are [cabal](https://cabal.readthedocs.io) and
+managers are [cabal](https://cabal.readthedocs.io) and
 [stack](https://haskellstack.org).
 
-A major difference between the two tools is their philosophy.
+A major difference between the two is their philosophy.
 `cabal` tries to be a more minimalist tool that handles building Haskell projects,
 doing package management using the whole of Hackage, and uses complicated algorithms
 to make sure packages work together.
@@ -33,12 +33,12 @@ For quick experimentation, we can just
 [ask stack or cabal](https://gilmi.me/blog/post/2021/08/14/hs-core-tools#using-external-packages-in-ghci)
 to build or even run our program with external packages.
 But as programs get larger, use more dependencies, and require more functionality,
-it is better to just **create a project description** for our programs and even libraries.
+it is better to **create a project description** for our programs and libraries.
 
-Describing packages is done in a **cabal file**. We can ask cabal or stack
-to generate one for use using `cabal init --libandexe` or `stack new`,
+Project description is done in a **cabal file**. We can ask cabal or stack
+to generate one for us using `cabal init --libandexe` or `stack new`,
 along with many other files, but we will likely need to edit the file by hand
-later so let's just paste some sort of an initial example and then edit it.
+later. For now let's just paste an initial example in `hs-blog.cabal` and edit it.
 
 ```cabal
 cabal-version:       2.4
@@ -262,7 +262,7 @@ Executables' descriptions are very similar to libraries, here we define:
 - Where the source directory for this application is
 - Which file is the 'Main' file
 - Import our library, which is named `hs-blog`
-- Add additional flag for GHC: `-O` to compile with optimizations
+- Add additional flag for GHC, e.g., `-O` to compile with optimizations
 
 ```cabal
 executable hs-blog-gen
@@ -276,7 +276,7 @@ executable hs-blog-gen
     -O
 ```
 
-We can write many executables descriptions. In this case we only need one.
+We can write many executables descriptions. In this case we only have one.
 
 ---
 
@@ -480,7 +480,7 @@ fetches information from remote package repositories (specifically Hackage unles
 and updates the local package index which includes various information about available packages such as
 their names, versions and dependencies.
 
-Usually the first command to run before fetching package dependencies.
+Usually the first command to run before fetching package dependencies is
 
 ```sh
 cabal v2-build
@@ -599,7 +599,7 @@ when comparing packages, or considering whether a package is needed at all.
 
 ## Summary
 
-We've created a package description for our library and used `stack` or/and `cabal`
+We've created a package description for our library and used `stack` and/or `cabal`
 to build our program. In future chapters we'll start adding external packages,
 we'll only have to add them to the `build-depends` section in the cabal file and
 our package manager will download and install the required package for us!
@@ -626,7 +626,7 @@ We've made some change to our project directory, and it should now look like thi
 4 directories, 10 files
 ```
 
-Note that this package format is something we could release on [Hackage](https://hackage.haskell.org/)
+Note that this package format could be release on [Hackage](https://hackage.haskell.org/)
 for other Haskell developers to use!
 
 > You can view the git commit of

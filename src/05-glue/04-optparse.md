@@ -1,7 +1,7 @@
 # Fancy options parsing
 
-We'd like to define a nicer interface for our program. And while we could manage something
-ourselves with `getArgs` and pattern matching, using a library for this case is easier.
+We'd like to define a nicer interface for our program. While we could manage something
+ourselves with `getArgs` and pattern matching, using a library is easier.
 We are going to use a package called
 [optparse-applicative](https://hackage.haskell.org/package/optparse-applicative).
 
@@ -41,7 +41,7 @@ In general, there are four important things we need to do:
 1. Define our model - we want to define an ADT that describes the various options
    and commands for our program.
 
-2. Define a parser that will produce our value of our model type when run
+2. Define a parser that will produce value of our model type when run
 
 3. Run the parser on our program arguments input
 
@@ -49,10 +49,10 @@ In general, there are four important things we need to do:
 
 ### Define a model
 
-Let's envision our command-line interface for a second, what would we like it to
+Let's envision our command-line interface for a second, what would it
 look like?
 
-We want to be able to convert a single file or input stream and produce either a file
+We want to be able to convert a single file or input stream to either a file
 or an output stream, or we want to process a whole directory and create a new directory.
 We can model it in an ADT like this:
 
@@ -74,7 +74,7 @@ data SingleOutput
 ```
 
 > Note that we could technically also use `Maybe FilePath` to encode both `SingleInput`
-> and `SingleOutput`, but then we would have to remember what `Nothing` meant
+> and `SingleOutput`, but then we would have to remember what `Nothing` means
 > in each context. By creating a new type with properly named constructors
 > for each option we make it easier for readers of the code to understand
 > the meaning of our code.
@@ -83,7 +83,7 @@ In terms of interface, we could decide that when a user would like to convert
 a single input source, they would use the `convert` command, and supply the optional flags
 `--input FILEPATH` and `--output FILEPATH` to read or write from a file.
 When the user does not supply one or both flag, we will read or write from
-the standard input/output accordingly instead.
+the standard input/output accordingly.
 
 If the user would like to convert a directory, they can use the `convert-dir`
 command and supply the two mandatory flags `--input FILEPATH` and
@@ -99,20 +99,20 @@ The `optparse-applicative` library introduces a new type called `Parser`.
 is supplied with a saturated (or concrete) type such as `Int`, `Bool` or
 `Options`, it can become a saturated type (one that has values).
 
-A `Parser a` represents a specification of a parser for a set of options
-that will produce a value of type `a` when the command-line arguments are
+A `Parser a` represents a parser
+that produces a value of type `a` when the command-line arguments are
 successfully parsed.
-This is a bit similar to how `IO a` represents a description of a program
+This is similar to how `IO a` represents a description of a program
 that can produce a value of type `a`. The main difference between these
-two types is that while we can't really convert an `IO a` to an `a`
+two types is that while we can't convert an `IO a` to an `a`
 (we just chain IO operations and have the Haskell runtime execute them),
 we *can* convert a `Parser a` to a function that takes a list of strings
 representing the program arguments and produces an `a` if it manages
 to parse the arguments.
 
-As we've seen with previous EDSLs, this library uses the *combinator pattern*
-as well. We need to consider what are the basic primitives for building
-a parser, and what are the methods of composing small parsers into bigger
+As we've seen with the previous EDSLs, this library uses the *combinator pattern*
+as well. We need to consider the basic primitives for building
+a parser, and the methods of composing small parsers into bigger
 parsers.
 
 Let's see an example for a small parser:
@@ -147,10 +147,10 @@ and help messages.
 
 > Actually `strOption` can return any string type
 > that implements the interface `IsString`. There are a few such types,
-> such as `Text`, a much more efficient Unicode text type from the `text` package.
+> for example `Text`, a much more efficient Unicode text type from the `text` package.
 > It is more efficient than `String` because while `String` is implemented as a
 > linked list of `Char`, `Text` is implemented as an array of bytes.
-> `Text` is usually what we should use for text values. We haven't
+> We haven't
 > been using it up until now because it is slightly less ergonomic to use
 > than `String`. But it is often the preferred type to use for text!
 
@@ -228,7 +228,7 @@ fmap (f . g) == fmap f . fmap g
 ```
 
 Any type `f` that can implement `fmap` and follow these laws can be a valid
-instance of functor.
+instance of `Functor`.
 
 > Notice how `f` has a kind `* -> *`, we can infer the kind of `f`
 > by looking at the other types in the type signature of `fmap`:
@@ -248,14 +248,14 @@ mapMaybe :: (a -> b) -> Maybe a -> Maybe b
 mapMaybe func maybeX = Nothing
 ```
 
-check it yourself! It compiles and everything! But unfortunately it does not
+Check it yourself! It compiles! But unfortunately it does not
 satisfy the first law. `fmap id = id` means that
 `mapMaybe id (Just x) == Just x`, however from the definition we can
 clearly see that `mapMaybe id (Just x) == Nothing`.
 
 This is a good example of how Haskell doesn't help us make sure the laws
 are satisfied, and why they are important. Unlawful `Functor` instances
-will behave differently than we'd expect a `Functor` to behave.
+will behave differently from what we'd expect a `Functor` to behave.
 Let's try again!
 
 ```hs
@@ -279,7 +279,7 @@ and all allows us to map over their "payload" type.
 > analogy or a metaphor that fits them in all cases. It is easier to give up
 > on the metaphor and think about it as it is - an interface with laws.
 
-We can use `fmap` on `Parser` to make a parser that returns `FilePath`
+We can use `fmap` on `Parser` to make a parser that returns `FilePath` to
 return a `SingleInput` or `SingleOutput` instead:
 
 ```hs
@@ -352,15 +352,15 @@ a certain `f`, applicative functors allow us to apply a function to
 
 You should already be familiar with `pure`, we've seen it when we
 talked about `IO`. For `IO`, `pure` lets us create an `IO` action
-that would return a specific value without doing IO.
+with a specific return value without doing IO.
 With `pure` for `Parser`, we can create a `Parser` that when run
 will return a specific value as output.
 
 `liftA2` and `<*>` are two functions that can be implemented in
 terms of one another. `<*>` is actually the more useful one between
 the two. Because when combined with `fmap` (or rather the infix version `<$>`),
-it can be used to apply a function with many arguments over many values of the
-same type which is an instance of an applicative functor.
+it can be used to apply a function with many arguments over many values which
+are instances of the same applicative functor type.
 
 To combine our two parsers to one, we can use either `liftA2` or
 a combination of `<$>` and `<*>`:
@@ -412,7 +412,7 @@ ConvertSingle <$> pInputFile :: Parser (SingleOutput -> Options)
 ```
 
 With `<$>` and `<*>` we can chain as many parsers (or any applicative really)
-as we want. This is because of two things: currying and parametric polymorphism:
+as we want. This is because of two things: currying and parametric polymorphism.
 Because functions in Haskell take exactly one argument and return exactly one,
 any multiple argument function can be represented as `a -> b`.
 
@@ -420,7 +420,7 @@ any multiple argument function can be represented as `a -> b`.
 > [Typeclassopedia](https://wiki.haskell.org/Typeclassopedia#Laws_2), which
 > talks about various useful type classes and their laws.
 
-Applicative functors are a very important concept and will appear in various
+Applicative functor is a very important concept and will appear in various
 parser interfaces (not just for command-line arguments, but also JSON
 parsers and general parsers), I/O, concurrency, non-determinism, and more.
 The reason this library is called optparse-applicative is because
@@ -488,7 +488,7 @@ class Applicative f => Alternative f where
 but it works on applicative functors. This type class isn't
 very common and is mostly used for parsing libraries as far as I know.
 It provides us with an interface to combine two `Parser`s -
-if the first one fails to parse, we try the other.
+if the first one fails to parse, try the other.
 It also provides other useful functions such as `optional`,
 which will help us with our case:
 
@@ -934,8 +934,8 @@ Available commands:
 ```
 
 Along the way we've learned two powerful new abstractions, `Functor`
-and `Applicative`. As well as revisited an abstraction we were familiar
-with called `Monoid`. With this library we've seen (another) example
+and `Applicative`, as well as revisited an abstraction
+called `Monoid`. With this library we've seen another example
 of the usefulness of these abstractions for constructing APIs and EDSLs.
 
 We will continue to meet these abstractions in the rest of the book.

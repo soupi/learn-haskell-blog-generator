@@ -138,7 +138,7 @@ convertStructure structure =
 In order to create an `Html` document, we need to use the `html_` function.
 This function expects two things: a `Title`, and a `Structure`.
 
-For a title we just could supply it from outside using the file name.
+For a title we could just supply it from outside using the file name.
 
 In order to convert our markup `Document` (which is a list of markup `Structure`)
 to an HTML `Structure`, we need to convert each markup `Structure` and then
@@ -153,7 +153,7 @@ map convertStructure :: Markup.Document -> [Html.Structure]
 ```
 
 To concatenate all of the `Html.Structure`, we could write a recursive
-function that tries to do that. However we will quickly run to an issue
+function. However we will quickly run into an issue
 with the base case, what to do when the list is empty?
 
 We could just provide dummy `Html.Structure` that represents an empty
@@ -185,21 +185,19 @@ concatStructure list =
 ---
 
 Remember the `<>` function we implemented as an instance of the `Semigroup`
-type class? We said that `Semigroup` is an **abstraction** for things
+type class? `Semigroup` is an **abstraction** for things
 that implements `(<>) :: a -> a -> a`, where  `<>` is associative
 (`a <> (b <> c) = (a <> b) <> c`).
 
-It turns out that things that have an "empty" value and are also
-an instance of `Semigroup` is quite a common thing. For example a string.
-And this is actually a well known **abstraction**. This abstraction
-is called a **monoid**.
+It turns out to be a common pattern to have an instance of `Semigroup` with an "empty" value.
+For example a string.
+And this is actually a well known **abstraction** called **monoid**.
 
 ## Monoids
 
-Actually, maybe "empty" isn't a very good description of what we want,
+Actually, "empty" isn't a very good description of what we want,
 and isn't very useful as an abstraction. Instead, we can describe it as
-what is often called an "identity" element.
-An identity element is one that satisfy the following laws:
+an "identity" element, which satisfies the following laws:
 
 - `x <> <identity> = x`
 - `<identity> <> x = x`
@@ -272,15 +270,15 @@ mconcat list =
     x : xs -> x <> mconcat xs
 ```
 
-(Notice that because `Semigroup` is a *super class* of `Monoid`,
+Notice that because `Semigroup` is a *super class* of `Monoid`,
 we can still use the `<>` function from the `Semigroup` class
 without adding the `Semigroup a` constraint to the left side of `=>`.
 By adding the `Monoid a` constraint we implicitly add a `Semigroup a`
-constraint as well!)
+constraint as well!
 
-This `mconcat` function we wrote is very similar to the `concatStructure` function we wrote,
+This `mconcat` function is very similar to the `concatStructure` function,
 but this one works for any `Monoid`, including `Structure`!
-Abstractions are useful and help us **reuse** code!
+Abstractions help us **reuse** code!
 
 > Side note: integers with `+` and `0` aren't actually an instance of `Monoid` in Haskell.
 > This is because integers can also form a monoid with `*` and `1`! But **there can only
@@ -304,7 +302,7 @@ Abstractions are useful and help us **reuse** code!
 We've used `map` and then `mconcat` twice now. Surely there has to be a function
 that unifies this pattern. And indeed, it is called
 [`foldMap`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Foldable.html#v:foldMap),
-and it works not only for lists, it will work for any data structure that can be "folded",
+and it works not only for lists, but also for any data structure that can be "folded",
 or "reduced", into a summary value. This abstraction and type class is called **Foldable**.
 
 For a simpler understanding of `Foldable`, we can look at `fold`:
