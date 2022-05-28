@@ -147,7 +147,7 @@
                         <h1 id="defining-a-project-description"><a class="header" href="#defining-a-project-description">Defining a project description</a></h1>
 <p>Up until now we've only used <code>base</code> and the libraries
 <a href="https://downloads.haskell.org/ghc/latest/docs/html/users_guide/9.0.1-notes.html#included-libraries">included</a>
-with GHC. Because of that we didn't really need to do anything more fancy
+with GHC. Because of that we didn't really need to do anything fancier
 than <code>runghc</code> to run our program. However, we want to start using
 external libraries which are not included with GHC in our programs.</p>
 <p>External packages can be downloaded from <a href="https://hackage.haskell.org/">Hackage</a> -
@@ -157,7 +157,7 @@ from remote git repositories. Usually Haskellers use a <strong>package manager</
 download and manage packages for different projects. The most popular package
 managers for Haskell are <a href="https://cabal.readthedocs.io">cabal</a> and
 <a href="https://haskellstack.org">stack</a>.</p>
-<p>A major difference between the two tools is their philosophy.
+<p>A major difference between the two is their philosophy.
 <code>cabal</code> tries to be a more minimalist tool that handles building Haskell projects,
 doing package management using the whole of Hackage, and uses complicated algorithms
 to make sure packages work together.
@@ -173,11 +173,11 @@ For quick experimentation, we can just
 <a href="https://gilmi.me/blog/post/2021/08/14/hs-core-tools#using-external-packages-in-ghci">ask stack or cabal</a>
 to build or even run our program with external packages.
 But as programs get larger, use more dependencies, and require more functionality,
-it is better to just <strong>create a project description</strong> for our programs and even libraries.</p>
-<p>Describing packages is done in a <strong>cabal file</strong>. We can ask cabal or stack
-to generate one for use using <code>cabal init --libandexe</code> or <code>stack new</code>,
+it is better to <strong>create a project description</strong> for our programs and libraries.</p>
+<p>Project description is done in a <strong>cabal file</strong>. We can ask cabal or stack
+to generate one for us using <code>cabal init --libandexe</code> or <code>stack new</code>,
 along with many other files, but we will likely need to edit the file by hand
-later so let's just paste some sort of an initial example and then edit it.</p>
+later. For now let's just paste an initial example in <code>hs-blog.cabal</code> and edit it.</p>
 <pre><code class="language-cabal">cabal-version:       2.4
 
 name:                name should match with &lt;name&gt;.cabal
@@ -370,7 +370,7 @@ a thin executable over it.</p>
 <li>Where the source directory for this application is</li>
 <li>Which file is the 'Main' file</li>
 <li>Import our library, which is named <code>hs-blog</code></li>
-<li>Add additional flag for GHC: <code>-O</code> to compile with optimizations</li>
+<li>Additional flags for GHC, e.g., <code>-O</code> to compile with optimizations</li>
 </ul>
 <pre><code class="language-cabal">executable hs-blog-gen
   import: common-settings
@@ -382,7 +382,7 @@ a thin executable over it.</p>
   ghc-options:
     -O
 </code></pre>
-<p>We can write many executables descriptions. In this case we only need one.</p>
+<p>We can write many executables descriptions. In this case we only have one.</p>
 <hr />
 <p><strong>Exercise</strong>: Add a new file: <code>app/Main.hs</code> which imports <code>HsBlog</code> and runs <code>main</code>.</p>
 <details><summary>Solution</summary>
@@ -547,7 +547,7 @@ handling of sandboxes.</p>
 fetches information from remote package repositories (specifically Hackage unless specified otherwise)
 and updates the local package index which includes various information about available packages such as
 their names, versions and dependencies.</p>
-<p>Usually the first command to run before fetching package dependencies.</p>
+<p><code>cabal v2-update</code> is usually the first command to run before fetching package dependencies.</p>
 <pre><code class="language-sh">cabal v2-build
 </code></pre>
 <p><a href="https://cabal.readthedocs.io/en/3.6/cabal-commands.html#cabal-v2-build"><code>v2-build</code></a>
@@ -628,7 +628,7 @@ still experimental</li>
 will affect compilation time and code size. And it can sometimes be a good thing to consider
 when comparing packages, or considering whether a package is needed at all.</p>
 <h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
-<p>We've created a package description for our library and used <code>stack</code> or/and <code>cabal</code>
+<p>We've created a package description for our library and used <code>stack</code> and/or <code>cabal</code>
 to build our program. In future chapters we'll start adding external packages,
 we'll only have to add them to the <code>build-depends</code> section in the cabal file and
 our package manager will download and install the required package for us!</p>
@@ -651,7 +651,7 @@ our package manager will download and install the required package for us!</p>
 
 4 directories, 10 files
 </code></pre>
-<p>Note that this package format is something we could release on <a href="https://hackage.haskell.org/">Hackage</a>
+<p>Note that this package format could be release on <a href="https://hackage.haskell.org/">Hackage</a>
 for other Haskell developers to use!</p>
 <blockquote>
 <p>You can view the git commit of

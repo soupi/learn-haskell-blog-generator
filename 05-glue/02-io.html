@@ -149,18 +149,17 @@
 string to a Haskell representation of our markup language,
 and we built an EDSL for easy writing of HTML code.
 However, our program is still not useful to other users because
-we did not make this functionality accessible to a user via some sort of
+we did not make this functionality accessible via some sort of
 user interface.</p>
-<p>In our program, we'd like to learn from the user what they'd
-like our program to convert to HTML, and then convert that for them.
+<p>In our program, we'd like to take user input and then convert it to HTML.
 There are many ways to design this kind of interface, for example:</p>
 <ul>
-<li>Get text as input via the <em>standard input</em> and output HTML
+<li>Get text input via the <em>standard input</em> and output HTML
 via the <em>standard output</em></li>
 <li>Receive two file names as <em>command-line arguments</em>, read the contents
 of the first one, and write the output to the second one</li>
-<li>Ask for some fancier command-line arguments parsing and prefix
-the file with a flag saying what they are</li>
+<li>Ask for fancier command-line arguments parsing and prefix
+the file names with flags indicating what they are</li>
 <li>Some fancy GUI interface</li>
 <li>Combination of all of the above</li>
 </ul>
@@ -169,25 +168,25 @@ the file with a flag saying what they are</li>
 <li>If the user calls the program without arguments, we will read from
 the standard input, and write to the standard output</li>
 <li>If the user calls the program with two arguments, the first one
-will be the input file name which we will read, and the second one
-will be the output file name to which we will write</li>
+will be the input file name, and the second one
+will be the output file name</li>
 <li>If the output file already exists, we'll ask the user if they want
-to override the file</li>
-<li>On any other kind of input, we'll output a generic message explaining
-the usage as we described above</li>
+to overwrite the file</li>
+<li>On any other kind of input, we'll print a generic message explaining
+the proper usage</li>
 </ol>
-<p>In a later chapter, we will add a little fancier command-line interface
-using a library, and also read whole directories and not single files.</p>
-<p>But first, we need to learn a bit about I/O in Haskell, what makes
-it special, and why it's a bit different from other programming languages.</p>
+<p>In a later chapter, we will add a fancier command-line interface
+using a library, and also read whole directories in addition to single files.</p>
+<p>But first, we need to learn about I/O in Haskell, what makes
+it special, and why it's different from other programming languages.</p>
 <h2 id="purely-functional"><a class="header" href="#purely-functional">Purely functional</a></h2>
-<p>Originally, Haskell was designed in order to become an <em>open standard</em>
+<p>Originally, Haskell was designed as an <em>open standard</em>
 functional programming language with <strong>non-strict semantics</strong>, to serve
 as a unifying language for future research in functional language design.</p>
 <p>In GHC Haskell, we use a <em>lazy evaluation strategy</em> to implement non-strict
 semantics (We've talked about laziness
 <a href="../04-markup/02-parsing_01.html#laziness">before</a>).</p>
-<p>The requirement for non-strict semantics raises an interesting challenge:
+<p>The requirement for non-strict semantics raises interesting challenges:
 How do we design a language that can do more than just evaluate expressions,
 how do we model interaction with the outside world, how do we do I/O?</p>
 <p>The challenge with doing I/O operations in a language with a lazy evaluation strategy
@@ -207,18 +206,18 @@ main =
 <p>This hypothetical program will read 2 integers from the standard input,
 and then will subtract the second one (+2) from the first one (+1),
 or so we would expect if this was a strict language. In a strict language
-we expect the order of operations to to happen from the top-down.</p>
-<p>But in a lazy language we don't actually evaluate an expression until
+we expect the order of operations to happen from the top-down.</p>
+<p>But in a lazy language we don't evaluate an expression until
 it is needed, and so neither <code>result1</code> nor <code>result2</code> are evaluated
-until we wish to print the result of subtracting one from the other,
-and then when we try to evaluate <code>-</code>, it requires to evaluate the two arguments
-in order from left to right, so we first evaluate <code>result2</code>.</p>
+until we wish to print the result of subtracting one from the other.
+And then when we try to evaluate <code>-</code>, it evaluates the two arguments
+from left to right, so we first evaluate <code>result2</code>.</p>
 <p>Evaluating <code>result2</code>, with substitution, means to replace occurrences of <code>n</code>
 with the input <code>2</code>, and then evaluate the top level function (<code>+</code>), which is a
 primitive function. We then evaluate its arguments, <code>readIntFromStdin</code>
 and then <code>n</code>; at this point <em>we are reading the first integer from the stdin</em>.</p>
-<p>After calculating the result, we can move to evaluate <code>result1</code>, in which,
-during evaluation, <em>will read the second integer from stdin</em>. This is the
+<p>After calculating the result, we can move to evaluate <code>result1</code>, which
+<em>will read the second integer from stdin</em>. This is the
 complete opposite of what we wanted!</p>
 <p>Issues like these make lazy evaluation hard to work with in the presence of
 <strong>side effects</strong> - when the evaluation of an expression <em>can affect or be affected
@@ -226,22 +225,24 @@ by the outside world</em>, this includes reading/writing from mutable memory
 or performing I/O operations.</p>
 <p>We call functions that has side-effects such as <code>addWithInput</code> <strong>impure functions</strong>.
 And an unfortunate consequence of impure functions is that
-<strong>they can return different results even when they takes the same input</strong>.</p>
+<strong>they can return different results even when they take the same input</strong>.</p>
 <p>The presence of impure functions makes it harder for us to reason about lazy evaluation,
 and also messes up our ability to use <em>equational reasoning</em> to understand programs.</p>
 <p>Therefore, in Haskell, it was decided to only allow <strong>pure</strong> functions and expressions - ones that
 have <em>no side effects</em>. Pure functions will <em>always</em> return the same output (given the same input)
 and <strong>evaluating pure expressions is deterministic</strong>.</p>
-<p>But now, how can we do input/output operations? There are many possible solutions
-for the design space - for Haskell it was decided to design a first class interface
+<p>But now, how can we do I/O operations? There are many possible solutions</p>
+<ul>
+<li>for Haskell it was decided to design a first class interface
 with an accompanied type called <code>IO</code>. <code>IO</code>'s interface will force a distinction
-from non-I/O expressions, and will also require that in order to combine
-multiple <code>IO</code> operations, we will have to determine the order between them.</p>
+from non-I/O expressions, and will also require that in order to <em>combine</em>
+multiple <code>IO</code> operations, we will have to <em>specify the order</em> the operations.</li>
+</ul>
 <h2 id="io"><a class="header" href="#io">IO</a></h2>
-<p><code>IO</code> is an opaque type, like our <code>Html</code> type in which we hid its internal
+<p><code>IO</code> is an opaque type, like our <code>Html</code> type in which we hide its internal
 representation from the user behind an interface. But in this case <code>IO</code> is a
 built-in type that is hidden by the Haskell language rather than a module.</p>
-<p><code>IO</code> has a payload type like <code>Maybe</code> has which represents the
+<p>Similar to <code>Maybe</code>, <code>IO</code> has a payload type which represents the
 result of an <code>IO</code> operation/action/computation.
 When there isn't a meaningful result, we use the unit type,
 <code>()</code> (which only has one value: <code>()</code>) to represent that.</p>
@@ -268,12 +269,12 @@ Evaluating an <code>IO a</code> expression is pure - the <strong>evaluation</str
 the same <strong>description</strong> of a program. This helps us keep purity and equational reasoning!</p>
 <p>The Haskell runtime will <em>execute</em> the entry point to the program
 (the expression <code>main</code>, that must have the type <code>IO ()</code>) in order for our IO operation
-to also run it has to be <em>combined into</em> the <code>main</code> expression - let's see what that means.</p>
+to also run - it has to be <em>combined into</em> the <code>main</code> expression - let's see what that means.</p>
 <h2 id="combining-io-expressions"><a class="header" href="#combining-io-expressions">Combining IO expressions</a></h2>
 <p>Just like our <code>Html.Structure</code> type, the IO interface provides <strong>combinators</strong> for composing
 small <code>IO</code> operations into bigger ones. This interface also makes sure that the order
 of operations is well defined!</p>
-<p>Note that, just like with <code>&lt;&gt;</code> we've defined for <code>Html.Structure</code>, the combinators for <code>IO</code>
+<p>Note that, just like the <code>&lt;&gt;</code> we've defined for <code>Html.Structure</code>, the combinators for <code>IO</code>
 are implemented as <strong>type-class instances</strong> rather than specialized variants
 (for example our <code>append_</code> function was a specialized version of <code>&lt;&gt;</code> tailored only
 for <code>Structure</code>).</p>
@@ -294,8 +295,9 @@ a new <code>IO b</code> which is the final result.</p>
 <pre><code>getLine &gt;&gt;= (\line -&gt; putStrLn line)
 </code></pre>
 <p>We are reading a line from the standard input on the left of <code>&gt;&gt;=</code>,
-and receive the input to the left of <code>&gt;&gt;=</code>, and then write it to the
-standard output. <code>&gt;&gt;=</code>'s role here is to <strong>pass the result of the IO operation
+we receive the input to the right of <code>&gt;&gt;=</code> as an argument to the lambda function,
+and then write it to the standard output in the body of the lambda function.
+<code>&gt;&gt;=</code>'s role here is to <strong>pass the result of the IO operation
 on the left to the function returning an IO operation on the right</strong>.</p>
 <p>Notice how <code>&gt;&gt;=</code> <em>defines an order of operations - from left to right</em>.</p>
 <p>The type of each sub expression here is:</p>
@@ -310,7 +312,7 @@ line :: String
 <ul>
 <li>Question: what is the type of the whole expression? <details><summary>Answer</summary>IO ()</details></li>
 </ul>
-<p>Also note that this example above can be written in a more concise manner
+<p>Also note that this example can be written in a more concise manner
 in point free style <code>getLine &gt;&gt;= putStrLn</code>.</p>
 </li>
 <li>
@@ -337,8 +339,8 @@ in the body of the function for which it is its input, including the most inner 
 <pre><code class="language-hs">(*&gt;) :: IO a -&gt; IO b -&gt; IO b
 (&gt;&gt;) :: IO a -&gt; IO b -&gt; IO b
 </code></pre>
-<p><code>*&gt;</code> and <code>&gt;&gt;</code> have the same type signature for <code>IO</code> and mean the same thing,
-in fact, <code>*&gt;</code> is a slightly more generalized version of <code>&gt;&gt;</code> and can always
+<p><code>*&gt;</code> and <code>&gt;&gt;</code> have the same type signature for <code>IO</code> and mean the same thing.
+In fact, <code>*&gt;</code> is a slightly more generalized version of <code>&gt;&gt;</code> and can always
 be used instead of <code>&gt;&gt;</code>, which only still exists to avoid breaking backward
 compatibility.</p>
 <p><code>*&gt;</code> for <code>IO</code> means run the first IO operation, discard the result
@@ -387,15 +389,15 @@ should be the same as <code>String</code> in this instance, and</li>
 <pre><code class="language-hs">fmap :: (a -&gt; b) -&gt; IO a -&gt; IO b
 </code></pre>
 <p><code>&lt;$&gt;</code> is the infix version of <code>fmap</code>. Use it at your discretion.</p>
-<p>What if we wanted to write a function that reads a line from stdin
-and returns it with <code>!</code> at the end? We could write it using a combination
+<p>What if we want a function that reads a line from stdin
+and returns it with <code>!</code> at the end? We could use a combination
 of <code>&gt;&gt;=</code> and <code>pure</code>:</p>
 <pre><code>getLine &gt;&gt;= \line -&gt; pure (line ++ &quot;!&quot;)
 </code></pre>
 <p>The pattern is unified to the <code>fmap</code> function:</p>
 <pre><code>fmap (\line -&gt; line ++ &quot;!&quot;) getLine
 </code></pre>
-<p>What <code>fmap</code> does is apply a function to the value to be returning
+<p><code>fmap</code> applies a function to the value to be returned
 from the <code>IO</code> operation, also known as &quot;mapping&quot; over it.</p>
 <p>(By the way, Have you noticed the similarities between <code>fmap</code> and <code>map :: (a -&gt; b) -&gt; [a] -&gt; [b]</code>?)</p>
 <h3 id="summary"><a class="header" href="#summary">Summary</a></h3>
@@ -443,21 +445,21 @@ with <code>*&gt;</code> as part of the <code>main</code> expression.</p>
 In our <code>Html</code> type, we had a function <code>render :: Html -&gt; String</code>
 that could turn an <code>Html</code> to a string value.</p>
 <p>In Haskell, <strong>there is no way</strong> to implement a function such as <code>execute :: IO a -&gt; a</code>
-in a way that preserves purity and equational reasoning!</p>
-<p>Also, <code>IO</code> is <em>opaque</em>, it does not let us examine it. So we are really bound
+that preserves purity and equational reasoning!</p>
+<p>Also, <code>IO</code> is <em>opaque</em>. It does not let us examine it. So we are really bound
 to what the Haskell API for <code>IO</code> allows us to do.</p>
 <p>This means that <strong>we need to think about using IO differently</strong>!</p>
 <p>In Haskell, once we get into <code>IO</code>, there is no getting out.
-The only thing we can do is build bigger IO computations by <em>combining</em>
+The only thing we can do is to build bigger IO computations by <em>combining</em>
 it with more IO computations.</p>
-<p>We also can't use <code>IO a</code> in place of an <code>a</code>, so for example,
+<p>We also can't use <code>IO a</code> in place of an <code>a</code>. For example,
 we can't write <code>getLine ++ &quot;!&quot;</code> because <code>++</code> expects both
-sides to be Strings, and <code>getLine</code>'s type is <code>IO String</code>. The types do not match!
+sides to be <code>String</code>, but <code>getLine</code>'s type is <code>IO String</code>. The types do not match!
 We have to use <code>fmap</code> and the return type must be <code>IO String</code>, like we've seen before.</p>
 <p>In Haskell we like to keep <code>IO</code> usage minimal, and we like to push it to the edges
 of the program. This pattern is often called <em>Functional core, imperative shell</em>.</p>
 <h2 id="functional-core-imperative-shell"><a class="header" href="#functional-core-imperative-shell">Functional core, imperative shell</a></h2>
-<p>In our blog generator program, we want to read a file, parse it, and convert it to HTML,
+<p>In our blog generator program, we want to read a file, parse it, convert it to HTML,
 and then print the result to the console.</p>
 <p>In many programming languages, we might interleave reading from the file with parsing,
 and writing to the file with the HTML conversion. But we don't mix these here.
@@ -477,12 +479,12 @@ interface:</p>
 <li>If the user calls the program without arguments, we will read from
 the standard input, and write to the standard output</li>
 <li>If the user calls the program with two arguments, the first one
-will be the input file name which we will read, and the second one
-will be the output file name to which we will write</li>
+will be the input file name, and the second one
+will be the output file name</li>
 <li>If the output file already exists, we'll ask the user if they want
-to override the file</li>
-<li>On any other kind of input, we'll output a generic message explaining
-the usage as we described above</li>
+to overwrite the file</li>
+<li>On any other kind of input, we'll print a generic message explaining
+the proper usage</li>
 </ol>
 <p>We are going to need a few functions:</p>
 <pre><code class="language-hs">getArgs :: IO [String] -- Get the program arguments
@@ -737,11 +739,11 @@ whenIO cond action = do
 <hr />
 <h2 id="summary-1"><a class="header" href="#summary-1">Summary</a></h2>
 <p>In this chapter we discussed what &quot;purely functional&quot; means,
-where the initial motivation for being purely functional came from,
+where the initial motivation for being purely functional comes from,
 and how Haskell's I/O interface allows us to create descriptions of programs
 without breaking purity.</p>
-<p>We have also achieved a major milestone. With this chapter, we implemented
-enough pieces that we can finally run our program on a single document
+<p>We have also achieved a major milestone. With this chapter, we have implemented
+enough pieces to finally run our program on a single document
 and get an HTML rendered result!</p>
 <p>However, our command-line interface is still sub-par. We want to render a blog
 with multiple articles, create an index page, and more. We still have more to do

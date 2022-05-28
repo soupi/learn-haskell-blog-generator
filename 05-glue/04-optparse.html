@@ -145,8 +145,8 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="fancy-options-parsing"><a class="header" href="#fancy-options-parsing">Fancy options parsing</a></h1>
-<p>We'd like to define a nicer interface for our program. And while we could manage something
-ourselves with <code>getArgs</code> and pattern matching, using a library for this case is easier.
+<p>We'd like to define a nicer interface for our program. While we could manage something
+ourselves with <code>getArgs</code> and pattern matching, it is easier to get good results using a library.
 We are going to use a package called
 <a href="https://hackage.haskell.org/package/optparse-applicative">optparse-applicative</a>.</p>
 <p><code>optparse-applicative</code> provides us with an EDSL (yes, another one) to build
@@ -181,7 +181,7 @@ but we will cover a few important things to pay attention to in this chapter.</p
 and commands for our program.</p>
 </li>
 <li>
-<p>Define a parser that will produce our value of our model type when run</p>
+<p>Define a parser that will produce a value of our model type when run</p>
 </li>
 <li>
 <p>Run the parser on our program arguments input</p>
@@ -191,9 +191,9 @@ and commands for our program.</p>
 </li>
 </ol>
 <h3 id="define-a-model"><a class="header" href="#define-a-model">Define a model</a></h3>
-<p>Let's envision our command-line interface for a second, what would we like it to
+<p>Let's envision our command-line interface for a second, what should it
 look like?</p>
-<p>We want to be able to convert a single file or input stream and produce either a file
+<p>We want to be able to convert a single file or input stream to either a file
 or an output stream, or we want to process a whole directory and create a new directory.
 We can model it in an ADT like this:</p>
 <pre><code class="language-hs">data Options
@@ -213,7 +213,7 @@ data SingleOutput
 </code></pre>
 <blockquote>
 <p>Note that we could technically also use <code>Maybe FilePath</code> to encode both <code>SingleInput</code>
-and <code>SingleOutput</code>, but then we would have to remember what <code>Nothing</code> meant
+and <code>SingleOutput</code>, but then we would have to remember what <code>Nothing</code> means
 in each context. By creating a new type with properly named constructors
 for each option we make it easier for readers of the code to understand
 the meaning of our code.</p>
@@ -222,7 +222,7 @@ the meaning of our code.</p>
 a single input source, they would use the <code>convert</code> command, and supply the optional flags
 <code>--input FILEPATH</code> and <code>--output FILEPATH</code> to read or write from a file.
 When the user does not supply one or both flag, we will read or write from
-the standard input/output accordingly instead.</p>
+the standard input/output accordingly.</p>
 <p>If the user would like to convert a directory, they can use the <code>convert-dir</code>
 command and supply the two mandatory flags <code>--input FILEPATH</code> and
 <code>--output FILEPATH</code>.</p>
@@ -233,19 +233,19 @@ that fits our model?</p>
 <code>Parser</code>, similar to <code>Maybe</code> and <code>IO</code>, has the kind <code>* -&gt; *</code> - when it
 is supplied with a saturated (or concrete) type such as <code>Int</code>, <code>Bool</code> or
 <code>Options</code>, it can become a saturated type (one that has values).</p>
-<p>A <code>Parser a</code> represents a specification of a parser for a set of options
-that will produce a value of type <code>a</code> when the command-line arguments are
+<p>A <code>Parser a</code> represents a specification of a command-line options parser
+that produces a value of type <code>a</code> when the command-line arguments are
 successfully parsed.
-This is a bit similar to how <code>IO a</code> represents a description of a program
+This is similar to how <code>IO a</code> represents a description of a program
 that can produce a value of type <code>a</code>. The main difference between these
-two types is that while we can't really convert an <code>IO a</code> to an <code>a</code>
+two types is that while we can't convert an <code>IO a</code> to an <code>a</code>
 (we just chain IO operations and have the Haskell runtime execute them),
 we <em>can</em> convert a <code>Parser a</code> to a function that takes a list of strings
 representing the program arguments and produces an <code>a</code> if it manages
 to parse the arguments.</p>
-<p>As we've seen with previous EDSLs, this library uses the <em>combinator pattern</em>
-as well. We need to consider what are the basic primitives for building
-a parser, and what are the methods of composing small parsers into bigger
+<p>As we've seen with the previous EDSLs, this library uses the <em>combinator pattern</em>
+as well. We need to consider the basic primitives for building
+a parser, and the methods of composing small parsers into bigger
 parsers.</p>
 <p>Let's see an example for a small parser:</p>
 <pre><code class="language-hs">inp :: Parser FilePath
@@ -276,10 +276,10 @@ and help messages.</p>
 <blockquote>
 <p>Actually <code>strOption</code> can return any string type
 that implements the interface <code>IsString</code>. There are a few such types,
-such as <code>Text</code>, a much more efficient Unicode text type from the <code>text</code> package.
+for example <code>Text</code>, a much more efficient Unicode text type from the <code>text</code> package.
 It is more efficient than <code>String</code> because while <code>String</code> is implemented as a
 linked list of <code>Char</code>, <code>Text</code> is implemented as an array of bytes.
-<code>Text</code> is usually what we should use for text values. We haven't
+<code>Text</code> is usually what we should use for text values instead of <code>String</code>. We haven't
 been using it up until now because it is slightly less ergonomic to use
 than <code>String</code>. But it is often the preferred type to use for text!</p>
 </blockquote>
@@ -335,7 +335,7 @@ fmap id = id
 fmap (f . g) == fmap f . fmap g
 </code></pre>
 <p>Any type <code>f</code> that can implement <code>fmap</code> and follow these laws can be a valid
-instance of functor.</p>
+instance of <code>Functor</code>.</p>
 <blockquote>
 <p>Notice how <code>f</code> has a kind <code>* -&gt; *</code>, we can infer the kind of <code>f</code>
 by looking at the other types in the type signature of <code>fmap</code>:</p>
@@ -353,13 +353,13 @@ Here's one very simple (and wrong) implementation:</p>
 <pre><code class="language-hs">mapMaybe :: (a -&gt; b) -&gt; Maybe a -&gt; Maybe b
 mapMaybe func maybeX = Nothing
 </code></pre>
-<p>check it yourself! It compiles and everything! But unfortunately it does not
+<p>Check it yourself! It compiles successfully! But unfortunately it does not
 satisfy the first law. <code>fmap id = id</code> means that
 <code>mapMaybe id (Just x) == Just x</code>, however from the definition we can
 clearly see that <code>mapMaybe id (Just x) == Nothing</code>.</p>
 <p>This is a good example of how Haskell doesn't help us make sure the laws
 are satisfied, and why they are important. Unlawful <code>Functor</code> instances
-will behave differently than we'd expect a <code>Functor</code> to behave.
+will behave differently from what we'd expect a <code>Functor</code> to behave.
 Let's try again!</p>
 <pre><code class="language-hs">mapMaybe :: (a -&gt; b) -&gt; Maybe a -&gt; Maybe b
 mapMaybe func maybeX =
@@ -379,7 +379,7 @@ but type classes with funny names like <code>Functor</code> don't usually have a
 analogy or a metaphor that fits them in all cases. It is easier to give up
 on the metaphor and think about it as it is - an interface with laws.</p>
 </blockquote>
-<p>We can use <code>fmap</code> on <code>Parser</code> to make a parser that returns <code>FilePath</code>
+<p>We can use <code>fmap</code> on <code>Parser</code> to make a parser that returns <code>FilePath</code> to
 return a <code>SingleInput</code> or <code>SingleOutput</code> instead:</p>
 <pre><code class="language-hs">pInputFile :: Parser SingleInput
 pInputFile = fmap InputFile parser
@@ -436,14 +436,13 @@ a certain <code>f</code>, applicative functors allow us to apply a function to
 <em>multiple instances</em> of a certain <code>f</code>, as well as &quot;lift&quot; any value of type <code>a</code> into an <code>f a</code>.</p>
 <p>You should already be familiar with <code>pure</code>, we've seen it when we
 talked about <code>IO</code>. For <code>IO</code>, <code>pure</code> lets us create an <code>IO</code> action
-that would return a specific value without doing IO.
+with a specific return value without doing IO.
 With <code>pure</code> for <code>Parser</code>, we can create a <code>Parser</code> that when run
 will return a specific value as output.</p>
 <p><code>liftA2</code> and <code>&lt;*&gt;</code> are two functions that can be implemented in
 terms of one another. <code>&lt;*&gt;</code> is actually the more useful one between
 the two. Because when combined with <code>fmap</code> (or rather the infix version <code>&lt;$&gt;</code>),
-it can be used to apply a function with many arguments over many values of the
-same type which is an instance of an applicative functor.</p>
+it can be used to apply a function with many arguments, instead of just two.</p>
 <p>To combine our two parsers to one, we can use either <code>liftA2</code> or
 a combination of <code>&lt;$&gt;</code> and <code>&lt;*&gt;</code>:</p>
 <pre><code class="language-hs">-- with liftA2
@@ -485,7 +484,7 @@ ConvertSingle &lt;$&gt; pInputFile :: Parser (SingleOutput -&gt; Options)
 (ConvertSingle &lt;$&gt; pInputFile) &lt;*&gt; pOutputFile :: Parser Options
 </code></pre>
 <p>With <code>&lt;$&gt;</code> and <code>&lt;*&gt;</code> we can chain as many parsers (or any applicative really)
-as we want. This is because of two things: currying and parametric polymorphism:
+as we want. This is because of two things: currying and parametric polymorphism.
 Because functions in Haskell take exactly one argument and return exactly one,
 any multiple argument function can be represented as <code>a -&gt; b</code>.</p>
 <blockquote>
@@ -493,7 +492,7 @@ any multiple argument function can be represented as <code>a -&gt; b</code>.</p>
 <a href="https://wiki.haskell.org/Typeclassopedia#Laws_2">Typeclassopedia</a>, which
 talks about various useful type classes and their laws.</p>
 </blockquote>
-<p>Applicative functors are a very important concept and will appear in various
+<p>Applicative functor is a very important concept and will appear in various
 parser interfaces (not just for command-line arguments, but also JSON
 parsers and general parsers), I/O, concurrency, non-determinism, and more.
 The reason this library is called optparse-applicative is because
@@ -546,7 +545,7 @@ the function <code>optional</code> from <code>Control.Applicative</code>:</p>
 but it works on applicative functors. This type class isn't
 very common and is mostly used for parsing libraries as far as I know.
 It provides us with an interface to combine two <code>Parser</code>s -
-if the first one fails to parse, we try the other.
+if the first one fails to parse, try the other.
 It also provides other useful functions such as <code>optional</code>,
 which will help us with our case:</p>
 <pre><code class="language-hs">pSingleInput :: Parser SingleInput
@@ -926,8 +925,8 @@ Available commands:
   convert-dir              Convert a directory of markup files to html
 </code></pre>
 <p>Along the way we've learned two powerful new abstractions, <code>Functor</code>
-and <code>Applicative</code>. As well as revisited an abstraction we were familiar
-with called <code>Monoid</code>. With this library we've seen (another) example
+and <code>Applicative</code>, as well as revisited an abstraction
+called <code>Monoid</code>. With this library we've seen another example
 of the usefulness of these abstractions for constructing APIs and EDSLs.</p>
 <p>We will continue to meet these abstractions in the rest of the book.</p>
 <hr />

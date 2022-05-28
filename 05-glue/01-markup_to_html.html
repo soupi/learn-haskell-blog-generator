@@ -160,21 +160,22 @@ the general module name space, they now have to be prefixed with the module name
 <p>For example, <code>parse</code> becomes <code>Markup.parse</code>.
 If we would've imported <code>Html.Internal</code> qualified, we'd have to write
 <code>Html.Internal.el</code> which is a bit long.</p>
-<p>We can also give a new name to the module to be used instead with the <code>as</code>
-keyword:</p>
+<p>We can also give the module a new name with the <code>as</code> keyword:</p>
 <pre><code class="language-hs">import qualified Html.Internal as HI
 </code></pre>
-<p>And now write <code>HI.el</code> instead.</p>
+<p>And write <code>HI.el</code> instead.</p>
 <p>I like using qualified imports because readers do not have to guess where a
-name came from. Some modules are even designed to be imported qualified.
-For example, many container APIs such as maps, sets and vectors have very similar
-API. If we want to multiple containers in a single module we pretty much have
+name comes from. Some modules are even designed to be imported qualified.
+For example, many container APIs such as maps, sets, and vectors have very similar
+API. If we want to use multiple containers in a single module we pretty much have
 to use qualified imports so that when we write a function such as <code>singleton</code>,
-which creates a container with a single value, GHC will know to which <code>singleton</code>
-function from which module we are referring.</p>
-<p>Some people prefer to use import lists instead of qualified imports as well,
-because qualified names can be a bit verbose and noisy. I usually prefer them,
-but up to you. For more information about imports,
+which creates a container with a single value, GHC will know which <code>singleton</code>
+function we are referring to.</p>
+<p>Some people prefer to use import lists instead of qualified imports,
+because qualified names can be a bit verbose and noisy.
+I will often prefer qualified imports to import lists, but feel free to
+try both solutions and see which fits you better.
+For more information about imports,
 see this <a href="https://wiki.haskell.org/Import">wiki article</a>.</p>
 <h2 id="converting-markupstructure-to-htmlstructure"><a class="header" href="#converting-markupstructure-to-htmlstructure">Converting <code>Markup.Structure</code> to <code>Html.Structure</code></a></h2>
 <p>Converting a markup structure to an HTML structure is mostly straightforward
@@ -203,9 +204,9 @@ is <em>non-exhaustive</em>. This is because we don't currently have a way to bui
 headings that are not <code>h1</code>. There are a few ways to handle this:</p>
 <ul>
 <li>Ignore the warning - this will likely fail at runtime one day and the user will be sad</li>
-<li>Pattern match other cases and add a nice error with the <code>error</code> function, has
-the same disadvantage above, but will also not notify that there's a possible issue
-here at compile time.</li>
+<li>Pattern match other cases and add a nice error with the <code>error</code> function - it has
+the same disadvantage above, but will also no longer notify of the unhandled
+cases at compile time.</li>
 <li>Pattern match and do the wrong thing - user is still sad</li>
 <li>Encode errors in the type system using <code>Either</code>, we'll see how to do this in later
 chapters</li>
@@ -249,7 +250,7 @@ convertStructure structure =
 <h2 id="document---html"><a class="header" href="#document---html">Document -&gt; Html</a></h2>
 <p>In order to create an <code>Html</code> document, we need to use the <code>html_</code> function.
 This function expects two things: a <code>Title</code>, and a <code>Structure</code>.</p>
-<p>For a title we just could supply it from outside using the file name.</p>
+<p>For a title we could just supply it from outside using the file name.</p>
 <p>In order to convert our markup <code>Document</code> (which is a list of markup <code>Structure</code>)
 to an HTML <code>Structure</code>, we need to convert each markup <code>Structure</code> and then
 concatenate them together.</p>
@@ -258,8 +259,8 @@ concatenate them together.</p>
 us with the following function:</p>
 <pre><code>map convertStructure :: Markup.Document -&gt; [Html.Structure]
 </code></pre>
-<p>To concatenate all of the <code>Html.Structure</code>, we could write a recursive
-function that tries to do that. However we will quickly run to an issue
+<p>To concatenate all of the <code>Html.Structure</code>, we could try to write a recursive
+function. However we will quickly run into an issue
 with the base case, what to do when the list is empty?</p>
 <p>We could just provide dummy <code>Html.Structure</code> that represents an empty
 HTML structure.</p>
@@ -279,18 +280,17 @@ concatStructure list =
 </details>
 <hr />
 <p>Remember the <code>&lt;&gt;</code> function we implemented as an instance of the <code>Semigroup</code>
-type class? We said that <code>Semigroup</code> is an <strong>abstraction</strong> for things
+type class? We mentioned that <code>Semigroup</code> is an <strong>abstraction</strong> for things
 that implements <code>(&lt;&gt;) :: a -&gt; a -&gt; a</code>, where  <code>&lt;&gt;</code> is associative
 (<code>a &lt;&gt; (b &lt;&gt; c) = (a &lt;&gt; b) &lt;&gt; c</code>).</p>
-<p>It turns out that things that have an &quot;empty&quot; value and are also
-an instance of <code>Semigroup</code> is quite a common thing. For example a string.
-And this is actually a well known <strong>abstraction</strong>. This abstraction
-is called a <strong>monoid</strong>.</p>
+<p>It turns out that having an instance of <code>Semigroup</code> and also having a value that represents
+an &quot;empty&quot; value is a fairly common pattern. For example a string can be concatenated, 
+and the empty string can serve as an &quot;empty&quot; value.
+And this is actually a well known <strong>abstraction</strong> called <strong>monoid</strong>.</p>
 <h2 id="monoids"><a class="header" href="#monoids">Monoids</a></h2>
-<p>Actually, maybe &quot;empty&quot; isn't a very good description of what we want,
+<p>Actually, &quot;empty&quot; isn't a very good description of what we want,
 and isn't very useful as an abstraction. Instead, we can describe it as
-what is often called an &quot;identity&quot; element.
-An identity element is one that satisfy the following laws:</p>
+an &quot;identity&quot; element, which satisfies the following laws:</p>
 <ul>
 <li><code>x &lt;&gt; &lt;identity&gt; = x</code></li>
 <li><code>&lt;identity&gt; &lt;&gt; x = x</code></li>
@@ -342,14 +342,14 @@ mconcat list =
     [] -&gt; mempty
     x : xs -&gt; x &lt;&gt; mconcat xs
 </code></pre>
-<p>(Notice that because <code>Semigroup</code> is a <em>super class</em> of <code>Monoid</code>,
+<p>Notice that because <code>Semigroup</code> is a <em>super class</em> of <code>Monoid</code>,
 we can still use the <code>&lt;&gt;</code> function from the <code>Semigroup</code> class
 without adding the <code>Semigroup a</code> constraint to the left side of <code>=&gt;</code>.
 By adding the <code>Monoid a</code> constraint we implicitly add a <code>Semigroup a</code>
-constraint as well!)</p>
-<p>This <code>mconcat</code> function we wrote is very similar to the <code>concatStructure</code> function we wrote,
+constraint as well!</p>
+<p>This <code>mconcat</code> function is very similar to the <code>concatStructure</code> function,
 but this one works for any <code>Monoid</code>, including <code>Structure</code>!
-Abstractions are useful and help us <strong>reuse</strong> code!</p>
+Abstractions help us identify common patterns and <strong>reuse</strong> code!</p>
 <blockquote>
 <p>Side note: integers with <code>+</code> and <code>0</code> aren't actually an instance of <code>Monoid</code> in Haskell.
 This is because integers can also form a monoid with <code>*</code> and <code>1</code>! But <strong>there can only
@@ -370,7 +370,7 @@ ghci&gt; getProduct $ mconcat $ map Product [1..5]
 <p>We've used <code>map</code> and then <code>mconcat</code> twice now. Surely there has to be a function
 that unifies this pattern. And indeed, it is called
 <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Foldable.html#v:foldMap"><code>foldMap</code></a>,
-and it works not only for lists, it will work for any data structure that can be &quot;folded&quot;,
+and it works not only for lists, but also for any data structure that can be &quot;folded&quot;,
 or &quot;reduced&quot;, into a summary value. This abstraction and type class is called <strong>Foldable</strong>.</p>
 <p>For a simpler understanding of <code>Foldable</code>, we can look at <code>fold</code>:</p>
 <pre><code class="language-hs">fold :: (Foldable t, Monoid m) =&gt; t m -&gt; m

@@ -3545,21 +3545,22 @@ the general module name space, they now have to be prefixed with the module name
 <p>For example, <code>parse</code> becomes <code>Markup.parse</code>.
 If we would've imported <code>Html.Internal</code> qualified, we'd have to write
 <code>Html.Internal.el</code> which is a bit long.</p>
-<p>We can also give a new name to the module to be used instead with the <code>as</code>
-keyword:</p>
+<p>We can also give the module a new name with the <code>as</code> keyword:</p>
 <pre><code class="language-hs">import qualified Html.Internal as HI
 </code></pre>
-<p>And now write <code>HI.el</code> instead.</p>
+<p>And write <code>HI.el</code> instead.</p>
 <p>I like using qualified imports because readers do not have to guess where a
-name came from. Some modules are even designed to be imported qualified.
-For example, many container APIs such as maps, sets and vectors have very similar
-API. If we want to multiple containers in a single module we pretty much have
+name comes from. Some modules are even designed to be imported qualified.
+For example, many container APIs such as maps, sets, and vectors have very similar
+API. If we want to use multiple containers in a single module we pretty much have
 to use qualified imports so that when we write a function such as <code>singleton</code>,
-which creates a container with a single value, GHC will know to which <code>singleton</code>
-function from which module we are referring.</p>
-<p>Some people prefer to use import lists instead of qualified imports as well,
-because qualified names can be a bit verbose and noisy. I usually prefer them,
-but up to you. For more information about imports,
+which creates a container with a single value, GHC will know which <code>singleton</code>
+function we are referring to.</p>
+<p>Some people prefer to use import lists instead of qualified imports,
+because qualified names can be a bit verbose and noisy.
+I will often prefer qualified imports to import lists, but feel free to
+try both solutions and see which fits you better.
+For more information about imports,
 see this <a href="https://wiki.haskell.org/Import">wiki article</a>.</p>
 <h2 id="converting-markupstructure-to-htmlstructure"><a class="header" href="#converting-markupstructure-to-htmlstructure">Converting <code>Markup.Structure</code> to <code>Html.Structure</code></a></h2>
 <p>Converting a markup structure to an HTML structure is mostly straightforward
@@ -3588,9 +3589,9 @@ is <em>non-exhaustive</em>. This is because we don't currently have a way to bui
 headings that are not <code>h1</code>. There are a few ways to handle this:</p>
 <ul>
 <li>Ignore the warning - this will likely fail at runtime one day and the user will be sad</li>
-<li>Pattern match other cases and add a nice error with the <code>error</code> function, has
-the same disadvantage above, but will also not notify that there's a possible issue
-here at compile time.</li>
+<li>Pattern match other cases and add a nice error with the <code>error</code> function - it has
+the same disadvantage above, but will also no longer notify of the unhandled
+cases at compile time.</li>
 <li>Pattern match and do the wrong thing - user is still sad</li>
 <li>Encode errors in the type system using <code>Either</code>, we'll see how to do this in later
 chapters</li>
@@ -3634,7 +3635,7 @@ convertStructure structure =
 <h2 id="document---html"><a class="header" href="#document---html">Document -&gt; Html</a></h2>
 <p>In order to create an <code>Html</code> document, we need to use the <code>html_</code> function.
 This function expects two things: a <code>Title</code>, and a <code>Structure</code>.</p>
-<p>For a title we just could supply it from outside using the file name.</p>
+<p>For a title we could just supply it from outside using the file name.</p>
 <p>In order to convert our markup <code>Document</code> (which is a list of markup <code>Structure</code>)
 to an HTML <code>Structure</code>, we need to convert each markup <code>Structure</code> and then
 concatenate them together.</p>
@@ -3643,8 +3644,8 @@ concatenate them together.</p>
 us with the following function:</p>
 <pre><code>map convertStructure :: Markup.Document -&gt; [Html.Structure]
 </code></pre>
-<p>To concatenate all of the <code>Html.Structure</code>, we could write a recursive
-function that tries to do that. However we will quickly run to an issue
+<p>To concatenate all of the <code>Html.Structure</code>, we could try to write a recursive
+function. However we will quickly run into an issue
 with the base case, what to do when the list is empty?</p>
 <p>We could just provide dummy <code>Html.Structure</code> that represents an empty
 HTML structure.</p>
@@ -3664,18 +3665,17 @@ concatStructure list =
 </details>
 <hr />
 <p>Remember the <code>&lt;&gt;</code> function we implemented as an instance of the <code>Semigroup</code>
-type class? We said that <code>Semigroup</code> is an <strong>abstraction</strong> for things
+type class? We mentioned that <code>Semigroup</code> is an <strong>abstraction</strong> for things
 that implements <code>(&lt;&gt;) :: a -&gt; a -&gt; a</code>, where  <code>&lt;&gt;</code> is associative
 (<code>a &lt;&gt; (b &lt;&gt; c) = (a &lt;&gt; b) &lt;&gt; c</code>).</p>
-<p>It turns out that things that have an &quot;empty&quot; value and are also
-an instance of <code>Semigroup</code> is quite a common thing. For example a string.
-And this is actually a well known <strong>abstraction</strong>. This abstraction
-is called a <strong>monoid</strong>.</p>
+<p>It turns out that having an instance of <code>Semigroup</code> and also having a value that represents
+an &quot;empty&quot; value is a fairly common pattern. For example a string can be concatenated, 
+and the empty string can serve as an &quot;empty&quot; value.
+And this is actually a well known <strong>abstraction</strong> called <strong>monoid</strong>.</p>
 <h2 id="monoids"><a class="header" href="#monoids">Monoids</a></h2>
-<p>Actually, maybe &quot;empty&quot; isn't a very good description of what we want,
+<p>Actually, &quot;empty&quot; isn't a very good description of what we want,
 and isn't very useful as an abstraction. Instead, we can describe it as
-what is often called an &quot;identity&quot; element.
-An identity element is one that satisfy the following laws:</p>
+an &quot;identity&quot; element, which satisfies the following laws:</p>
 <ul>
 <li><code>x &lt;&gt; &lt;identity&gt; = x</code></li>
 <li><code>&lt;identity&gt; &lt;&gt; x = x</code></li>
@@ -3727,14 +3727,14 @@ mconcat list =
     [] -&gt; mempty
     x : xs -&gt; x &lt;&gt; mconcat xs
 </code></pre>
-<p>(Notice that because <code>Semigroup</code> is a <em>super class</em> of <code>Monoid</code>,
+<p>Notice that because <code>Semigroup</code> is a <em>super class</em> of <code>Monoid</code>,
 we can still use the <code>&lt;&gt;</code> function from the <code>Semigroup</code> class
 without adding the <code>Semigroup a</code> constraint to the left side of <code>=&gt;</code>.
 By adding the <code>Monoid a</code> constraint we implicitly add a <code>Semigroup a</code>
-constraint as well!)</p>
-<p>This <code>mconcat</code> function we wrote is very similar to the <code>concatStructure</code> function we wrote,
+constraint as well!</p>
+<p>This <code>mconcat</code> function is very similar to the <code>concatStructure</code> function,
 but this one works for any <code>Monoid</code>, including <code>Structure</code>!
-Abstractions are useful and help us <strong>reuse</strong> code!</p>
+Abstractions help us identify common patterns and <strong>reuse</strong> code!</p>
 <blockquote>
 <p>Side note: integers with <code>+</code> and <code>0</code> aren't actually an instance of <code>Monoid</code> in Haskell.
 This is because integers can also form a monoid with <code>*</code> and <code>1</code>! But <strong>there can only
@@ -3755,7 +3755,7 @@ ghci&gt; getProduct $ mconcat $ map Product [1..5]
 <p>We've used <code>map</code> and then <code>mconcat</code> twice now. Surely there has to be a function
 that unifies this pattern. And indeed, it is called
 <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Foldable.html#v:foldMap"><code>foldMap</code></a>,
-and it works not only for lists, it will work for any data structure that can be &quot;folded&quot;,
+and it works not only for lists, but also for any data structure that can be &quot;folded&quot;,
 or &quot;reduced&quot;, into a summary value. This abstraction and type class is called <strong>Foldable</strong>.</p>
 <p>For a simpler understanding of <code>Foldable</code>, we can look at <code>fold</code>:</p>
 <pre><code class="language-hs">fold :: (Foldable t, Monoid m) =&gt; t m -&gt; m
@@ -3844,18 +3844,17 @@ and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/ad34
 string to a Haskell representation of our markup language,
 and we built an EDSL for easy writing of HTML code.
 However, our program is still not useful to other users because
-we did not make this functionality accessible to a user via some sort of
+we did not make this functionality accessible via some sort of
 user interface.</p>
-<p>In our program, we'd like to learn from the user what they'd
-like our program to convert to HTML, and then convert that for them.
+<p>In our program, we'd like to take user input and then convert it to HTML.
 There are many ways to design this kind of interface, for example:</p>
 <ul>
-<li>Get text as input via the <em>standard input</em> and output HTML
+<li>Get text input via the <em>standard input</em> and output HTML
 via the <em>standard output</em></li>
 <li>Receive two file names as <em>command-line arguments</em>, read the contents
 of the first one, and write the output to the second one</li>
-<li>Ask for some fancier command-line arguments parsing and prefix
-the file with a flag saying what they are</li>
+<li>Ask for fancier command-line arguments parsing and prefix
+the file names with flags indicating what they are</li>
 <li>Some fancy GUI interface</li>
 <li>Combination of all of the above</li>
 </ul>
@@ -3864,25 +3863,25 @@ the file with a flag saying what they are</li>
 <li>If the user calls the program without arguments, we will read from
 the standard input, and write to the standard output</li>
 <li>If the user calls the program with two arguments, the first one
-will be the input file name which we will read, and the second one
-will be the output file name to which we will write</li>
+will be the input file name, and the second one
+will be the output file name</li>
 <li>If the output file already exists, we'll ask the user if they want
-to override the file</li>
-<li>On any other kind of input, we'll output a generic message explaining
-the usage as we described above</li>
+to overwrite the file</li>
+<li>On any other kind of input, we'll print a generic message explaining
+the proper usage</li>
 </ol>
-<p>In a later chapter, we will add a little fancier command-line interface
-using a library, and also read whole directories and not single files.</p>
-<p>But first, we need to learn a bit about I/O in Haskell, what makes
-it special, and why it's a bit different from other programming languages.</p>
+<p>In a later chapter, we will add a fancier command-line interface
+using a library, and also read whole directories in addition to single files.</p>
+<p>But first, we need to learn about I/O in Haskell, what makes
+it special, and why it's different from other programming languages.</p>
 <h2 id="purely-functional"><a class="header" href="#purely-functional">Purely functional</a></h2>
-<p>Originally, Haskell was designed in order to become an <em>open standard</em>
+<p>Originally, Haskell was designed as an <em>open standard</em>
 functional programming language with <strong>non-strict semantics</strong>, to serve
 as a unifying language for future research in functional language design.</p>
 <p>In GHC Haskell, we use a <em>lazy evaluation strategy</em> to implement non-strict
 semantics (We've talked about laziness
 <a href="05-glue/../04-markup/02-parsing_01.html#laziness">before</a>).</p>
-<p>The requirement for non-strict semantics raises an interesting challenge:
+<p>The requirement for non-strict semantics raises interesting challenges:
 How do we design a language that can do more than just evaluate expressions,
 how do we model interaction with the outside world, how do we do I/O?</p>
 <p>The challenge with doing I/O operations in a language with a lazy evaluation strategy
@@ -3902,18 +3901,18 @@ main =
 <p>This hypothetical program will read 2 integers from the standard input,
 and then will subtract the second one (+2) from the first one (+1),
 or so we would expect if this was a strict language. In a strict language
-we expect the order of operations to to happen from the top-down.</p>
-<p>But in a lazy language we don't actually evaluate an expression until
+we expect the order of operations to happen from the top-down.</p>
+<p>But in a lazy language we don't evaluate an expression until
 it is needed, and so neither <code>result1</code> nor <code>result2</code> are evaluated
-until we wish to print the result of subtracting one from the other,
-and then when we try to evaluate <code>-</code>, it requires to evaluate the two arguments
-in order from left to right, so we first evaluate <code>result2</code>.</p>
+until we wish to print the result of subtracting one from the other.
+And then when we try to evaluate <code>-</code>, it evaluates the two arguments
+from left to right, so we first evaluate <code>result2</code>.</p>
 <p>Evaluating <code>result2</code>, with substitution, means to replace occurrences of <code>n</code>
 with the input <code>2</code>, and then evaluate the top level function (<code>+</code>), which is a
 primitive function. We then evaluate its arguments, <code>readIntFromStdin</code>
 and then <code>n</code>; at this point <em>we are reading the first integer from the stdin</em>.</p>
-<p>After calculating the result, we can move to evaluate <code>result1</code>, in which,
-during evaluation, <em>will read the second integer from stdin</em>. This is the
+<p>After calculating the result, we can move to evaluate <code>result1</code>, which
+<em>will read the second integer from stdin</em>. This is the
 complete opposite of what we wanted!</p>
 <p>Issues like these make lazy evaluation hard to work with in the presence of
 <strong>side effects</strong> - when the evaluation of an expression <em>can affect or be affected
@@ -3921,22 +3920,24 @@ by the outside world</em>, this includes reading/writing from mutable memory
 or performing I/O operations.</p>
 <p>We call functions that has side-effects such as <code>addWithInput</code> <strong>impure functions</strong>.
 And an unfortunate consequence of impure functions is that
-<strong>they can return different results even when they takes the same input</strong>.</p>
+<strong>they can return different results even when they take the same input</strong>.</p>
 <p>The presence of impure functions makes it harder for us to reason about lazy evaluation,
 and also messes up our ability to use <em>equational reasoning</em> to understand programs.</p>
 <p>Therefore, in Haskell, it was decided to only allow <strong>pure</strong> functions and expressions - ones that
 have <em>no side effects</em>. Pure functions will <em>always</em> return the same output (given the same input)
 and <strong>evaluating pure expressions is deterministic</strong>.</p>
-<p>But now, how can we do input/output operations? There are many possible solutions
-for the design space - for Haskell it was decided to design a first class interface
+<p>But now, how can we do I/O operations? There are many possible solutions</p>
+<ul>
+<li>for Haskell it was decided to design a first class interface
 with an accompanied type called <code>IO</code>. <code>IO</code>'s interface will force a distinction
-from non-I/O expressions, and will also require that in order to combine
-multiple <code>IO</code> operations, we will have to determine the order between them.</p>
+from non-I/O expressions, and will also require that in order to <em>combine</em>
+multiple <code>IO</code> operations, we will have to <em>specify the order</em> the operations.</li>
+</ul>
 <h2 id="io"><a class="header" href="#io">IO</a></h2>
-<p><code>IO</code> is an opaque type, like our <code>Html</code> type in which we hid its internal
+<p><code>IO</code> is an opaque type, like our <code>Html</code> type in which we hide its internal
 representation from the user behind an interface. But in this case <code>IO</code> is a
 built-in type that is hidden by the Haskell language rather than a module.</p>
-<p><code>IO</code> has a payload type like <code>Maybe</code> has which represents the
+<p>Similar to <code>Maybe</code>, <code>IO</code> has a payload type which represents the
 result of an <code>IO</code> operation/action/computation.
 When there isn't a meaningful result, we use the unit type,
 <code>()</code> (which only has one value: <code>()</code>) to represent that.</p>
@@ -3963,12 +3964,12 @@ Evaluating an <code>IO a</code> expression is pure - the <strong>evaluation</str
 the same <strong>description</strong> of a program. This helps us keep purity and equational reasoning!</p>
 <p>The Haskell runtime will <em>execute</em> the entry point to the program
 (the expression <code>main</code>, that must have the type <code>IO ()</code>) in order for our IO operation
-to also run it has to be <em>combined into</em> the <code>main</code> expression - let's see what that means.</p>
+to also run - it has to be <em>combined into</em> the <code>main</code> expression - let's see what that means.</p>
 <h2 id="combining-io-expressions"><a class="header" href="#combining-io-expressions">Combining IO expressions</a></h2>
 <p>Just like our <code>Html.Structure</code> type, the IO interface provides <strong>combinators</strong> for composing
 small <code>IO</code> operations into bigger ones. This interface also makes sure that the order
 of operations is well defined!</p>
-<p>Note that, just like with <code>&lt;&gt;</code> we've defined for <code>Html.Structure</code>, the combinators for <code>IO</code>
+<p>Note that, just like the <code>&lt;&gt;</code> we've defined for <code>Html.Structure</code>, the combinators for <code>IO</code>
 are implemented as <strong>type-class instances</strong> rather than specialized variants
 (for example our <code>append_</code> function was a specialized version of <code>&lt;&gt;</code> tailored only
 for <code>Structure</code>).</p>
@@ -3989,8 +3990,9 @@ a new <code>IO b</code> which is the final result.</p>
 <pre><code>getLine &gt;&gt;= (\line -&gt; putStrLn line)
 </code></pre>
 <p>We are reading a line from the standard input on the left of <code>&gt;&gt;=</code>,
-and receive the input to the left of <code>&gt;&gt;=</code>, and then write it to the
-standard output. <code>&gt;&gt;=</code>'s role here is to <strong>pass the result of the IO operation
+we receive the input to the right of <code>&gt;&gt;=</code> as an argument to the lambda function,
+and then write it to the standard output in the body of the lambda function.
+<code>&gt;&gt;=</code>'s role here is to <strong>pass the result of the IO operation
 on the left to the function returning an IO operation on the right</strong>.</p>
 <p>Notice how <code>&gt;&gt;=</code> <em>defines an order of operations - from left to right</em>.</p>
 <p>The type of each sub expression here is:</p>
@@ -4005,7 +4007,7 @@ line :: String
 <ul>
 <li>Question: what is the type of the whole expression? <details><summary>Answer</summary>IO ()</details></li>
 </ul>
-<p>Also note that this example above can be written in a more concise manner
+<p>Also note that this example can be written in a more concise manner
 in point free style <code>getLine &gt;&gt;= putStrLn</code>.</p>
 </li>
 <li>
@@ -4032,8 +4034,8 @@ in the body of the function for which it is its input, including the most inner 
 <pre><code class="language-hs">(*&gt;) :: IO a -&gt; IO b -&gt; IO b
 (&gt;&gt;) :: IO a -&gt; IO b -&gt; IO b
 </code></pre>
-<p><code>*&gt;</code> and <code>&gt;&gt;</code> have the same type signature for <code>IO</code> and mean the same thing,
-in fact, <code>*&gt;</code> is a slightly more generalized version of <code>&gt;&gt;</code> and can always
+<p><code>*&gt;</code> and <code>&gt;&gt;</code> have the same type signature for <code>IO</code> and mean the same thing.
+In fact, <code>*&gt;</code> is a slightly more generalized version of <code>&gt;&gt;</code> and can always
 be used instead of <code>&gt;&gt;</code>, which only still exists to avoid breaking backward
 compatibility.</p>
 <p><code>*&gt;</code> for <code>IO</code> means run the first IO operation, discard the result
@@ -4082,15 +4084,15 @@ should be the same as <code>String</code> in this instance, and</li>
 <pre><code class="language-hs">fmap :: (a -&gt; b) -&gt; IO a -&gt; IO b
 </code></pre>
 <p><code>&lt;$&gt;</code> is the infix version of <code>fmap</code>. Use it at your discretion.</p>
-<p>What if we wanted to write a function that reads a line from stdin
-and returns it with <code>!</code> at the end? We could write it using a combination
+<p>What if we want a function that reads a line from stdin
+and returns it with <code>!</code> at the end? We could use a combination
 of <code>&gt;&gt;=</code> and <code>pure</code>:</p>
 <pre><code>getLine &gt;&gt;= \line -&gt; pure (line ++ &quot;!&quot;)
 </code></pre>
 <p>The pattern is unified to the <code>fmap</code> function:</p>
 <pre><code>fmap (\line -&gt; line ++ &quot;!&quot;) getLine
 </code></pre>
-<p>What <code>fmap</code> does is apply a function to the value to be returning
+<p><code>fmap</code> applies a function to the value to be returned
 from the <code>IO</code> operation, also known as &quot;mapping&quot; over it.</p>
 <p>(By the way, Have you noticed the similarities between <code>fmap</code> and <code>map :: (a -&gt; b) -&gt; [a] -&gt; [b]</code>?)</p>
 <h3 id="summary-3"><a class="header" href="#summary-3">Summary</a></h3>
@@ -4138,21 +4140,21 @@ with <code>*&gt;</code> as part of the <code>main</code> expression.</p>
 In our <code>Html</code> type, we had a function <code>render :: Html -&gt; String</code>
 that could turn an <code>Html</code> to a string value.</p>
 <p>In Haskell, <strong>there is no way</strong> to implement a function such as <code>execute :: IO a -&gt; a</code>
-in a way that preserves purity and equational reasoning!</p>
-<p>Also, <code>IO</code> is <em>opaque</em>, it does not let us examine it. So we are really bound
+that preserves purity and equational reasoning!</p>
+<p>Also, <code>IO</code> is <em>opaque</em>. It does not let us examine it. So we are really bound
 to what the Haskell API for <code>IO</code> allows us to do.</p>
 <p>This means that <strong>we need to think about using IO differently</strong>!</p>
 <p>In Haskell, once we get into <code>IO</code>, there is no getting out.
-The only thing we can do is build bigger IO computations by <em>combining</em>
+The only thing we can do is to build bigger IO computations by <em>combining</em>
 it with more IO computations.</p>
-<p>We also can't use <code>IO a</code> in place of an <code>a</code>, so for example,
+<p>We also can't use <code>IO a</code> in place of an <code>a</code>. For example,
 we can't write <code>getLine ++ &quot;!&quot;</code> because <code>++</code> expects both
-sides to be Strings, and <code>getLine</code>'s type is <code>IO String</code>. The types do not match!
+sides to be <code>String</code>, but <code>getLine</code>'s type is <code>IO String</code>. The types do not match!
 We have to use <code>fmap</code> and the return type must be <code>IO String</code>, like we've seen before.</p>
 <p>In Haskell we like to keep <code>IO</code> usage minimal, and we like to push it to the edges
 of the program. This pattern is often called <em>Functional core, imperative shell</em>.</p>
 <h2 id="functional-core-imperative-shell"><a class="header" href="#functional-core-imperative-shell">Functional core, imperative shell</a></h2>
-<p>In our blog generator program, we want to read a file, parse it, and convert it to HTML,
+<p>In our blog generator program, we want to read a file, parse it, convert it to HTML,
 and then print the result to the console.</p>
 <p>In many programming languages, we might interleave reading from the file with parsing,
 and writing to the file with the HTML conversion. But we don't mix these here.
@@ -4172,12 +4174,12 @@ interface:</p>
 <li>If the user calls the program without arguments, we will read from
 the standard input, and write to the standard output</li>
 <li>If the user calls the program with two arguments, the first one
-will be the input file name which we will read, and the second one
-will be the output file name to which we will write</li>
+will be the input file name, and the second one
+will be the output file name</li>
 <li>If the output file already exists, we'll ask the user if they want
-to override the file</li>
-<li>On any other kind of input, we'll output a generic message explaining
-the usage as we described above</li>
+to overwrite the file</li>
+<li>On any other kind of input, we'll print a generic message explaining
+the proper usage</li>
 </ol>
 <p>We are going to need a few functions:</p>
 <pre><code class="language-hs">getArgs :: IO [String] -- Get the program arguments
@@ -4432,11 +4434,11 @@ whenIO cond action = do
 <hr />
 <h2 id="summary-4"><a class="header" href="#summary-4">Summary</a></h2>
 <p>In this chapter we discussed what &quot;purely functional&quot; means,
-where the initial motivation for being purely functional came from,
+where the initial motivation for being purely functional comes from,
 and how Haskell's I/O interface allows us to create descriptions of programs
 without breaking purity.</p>
-<p>We have also achieved a major milestone. With this chapter, we implemented
-enough pieces that we can finally run our program on a single document
+<p>We have also achieved a major milestone. With this chapter, we have implemented
+enough pieces to finally run our program on a single document
 and get an HTML rendered result!</p>
 <p>However, our command-line interface is still sub-par. We want to render a blog
 with multiple articles, create an index page, and more. We still have more to do
@@ -4450,7 +4452,7 @@ and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/908e
 <div style="break-before: page; page-break-before: always;"></div><h1 id="defining-a-project-description"><a class="header" href="#defining-a-project-description">Defining a project description</a></h1>
 <p>Up until now we've only used <code>base</code> and the libraries
 <a href="https://downloads.haskell.org/ghc/latest/docs/html/users_guide/9.0.1-notes.html#included-libraries">included</a>
-with GHC. Because of that we didn't really need to do anything more fancy
+with GHC. Because of that we didn't really need to do anything fancier
 than <code>runghc</code> to run our program. However, we want to start using
 external libraries which are not included with GHC in our programs.</p>
 <p>External packages can be downloaded from <a href="https://hackage.haskell.org/">Hackage</a> -
@@ -4460,7 +4462,7 @@ from remote git repositories. Usually Haskellers use a <strong>package manager</
 download and manage packages for different projects. The most popular package
 managers for Haskell are <a href="https://cabal.readthedocs.io">cabal</a> and
 <a href="https://haskellstack.org">stack</a>.</p>
-<p>A major difference between the two tools is their philosophy.
+<p>A major difference between the two is their philosophy.
 <code>cabal</code> tries to be a more minimalist tool that handles building Haskell projects,
 doing package management using the whole of Hackage, and uses complicated algorithms
 to make sure packages work together.
@@ -4476,11 +4478,11 @@ For quick experimentation, we can just
 <a href="https://gilmi.me/blog/post/2021/08/14/hs-core-tools#using-external-packages-in-ghci">ask stack or cabal</a>
 to build or even run our program with external packages.
 But as programs get larger, use more dependencies, and require more functionality,
-it is better to just <strong>create a project description</strong> for our programs and even libraries.</p>
-<p>Describing packages is done in a <strong>cabal file</strong>. We can ask cabal or stack
-to generate one for use using <code>cabal init --libandexe</code> or <code>stack new</code>,
+it is better to <strong>create a project description</strong> for our programs and libraries.</p>
+<p>Project description is done in a <strong>cabal file</strong>. We can ask cabal or stack
+to generate one for us using <code>cabal init --libandexe</code> or <code>stack new</code>,
 along with many other files, but we will likely need to edit the file by hand
-later so let's just paste some sort of an initial example and then edit it.</p>
+later. For now let's just paste an initial example in <code>hs-blog.cabal</code> and edit it.</p>
 <pre><code class="language-cabal">cabal-version:       2.4
 
 name:                name should match with &lt;name&gt;.cabal
@@ -4673,7 +4675,7 @@ a thin executable over it.</p>
 <li>Where the source directory for this application is</li>
 <li>Which file is the 'Main' file</li>
 <li>Import our library, which is named <code>hs-blog</code></li>
-<li>Add additional flag for GHC: <code>-O</code> to compile with optimizations</li>
+<li>Additional flags for GHC, e.g., <code>-O</code> to compile with optimizations</li>
 </ul>
 <pre><code class="language-cabal">executable hs-blog-gen
   import: common-settings
@@ -4685,7 +4687,7 @@ a thin executable over it.</p>
   ghc-options:
     -O
 </code></pre>
-<p>We can write many executables descriptions. In this case we only need one.</p>
+<p>We can write many executables descriptions. In this case we only have one.</p>
 <hr />
 <p><strong>Exercise</strong>: Add a new file: <code>app/Main.hs</code> which imports <code>HsBlog</code> and runs <code>main</code>.</p>
 <details><summary>Solution</summary>
@@ -4850,7 +4852,7 @@ handling of sandboxes.</p>
 fetches information from remote package repositories (specifically Hackage unless specified otherwise)
 and updates the local package index which includes various information about available packages such as
 their names, versions and dependencies.</p>
-<p>Usually the first command to run before fetching package dependencies.</p>
+<p><code>cabal v2-update</code> is usually the first command to run before fetching package dependencies.</p>
 <pre><code class="language-sh">cabal v2-build
 </code></pre>
 <p><a href="https://cabal.readthedocs.io/en/3.6/cabal-commands.html#cabal-v2-build"><code>v2-build</code></a>
@@ -4931,7 +4933,7 @@ still experimental</li>
 will affect compilation time and code size. And it can sometimes be a good thing to consider
 when comparing packages, or considering whether a package is needed at all.</p>
 <h2 id="summary-5"><a class="header" href="#summary-5">Summary</a></h2>
-<p>We've created a package description for our library and used <code>stack</code> or/and <code>cabal</code>
+<p>We've created a package description for our library and used <code>stack</code> and/or <code>cabal</code>
 to build our program. In future chapters we'll start adding external packages,
 we'll only have to add them to the <code>build-depends</code> section in the cabal file and
 our package manager will download and install the required package for us!</p>
@@ -4954,7 +4956,7 @@ our package manager will download and install the required package for us!</p>
 
 4 directories, 10 files
 </code></pre>
-<p>Note that this package format is something we could release on <a href="https://hackage.haskell.org/">Hackage</a>
+<p>Note that this package format could be release on <a href="https://hackage.haskell.org/">Hackage</a>
 for other Haskell developers to use!</p>
 <blockquote>
 <p>You can view the git commit of
@@ -4962,8 +4964,8 @@ for other Haskell developers to use!</p>
 and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/8ca58aef80930db82cd20e85f44f5e34e1d74214">code up until now</a>.</p>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="fancy-options-parsing"><a class="header" href="#fancy-options-parsing">Fancy options parsing</a></h1>
-<p>We'd like to define a nicer interface for our program. And while we could manage something
-ourselves with <code>getArgs</code> and pattern matching, using a library for this case is easier.
+<p>We'd like to define a nicer interface for our program. While we could manage something
+ourselves with <code>getArgs</code> and pattern matching, it is easier to get good results using a library.
 We are going to use a package called
 <a href="https://hackage.haskell.org/package/optparse-applicative">optparse-applicative</a>.</p>
 <p><code>optparse-applicative</code> provides us with an EDSL (yes, another one) to build
@@ -4998,7 +5000,7 @@ but we will cover a few important things to pay attention to in this chapter.</p
 and commands for our program.</p>
 </li>
 <li>
-<p>Define a parser that will produce our value of our model type when run</p>
+<p>Define a parser that will produce a value of our model type when run</p>
 </li>
 <li>
 <p>Run the parser on our program arguments input</p>
@@ -5008,9 +5010,9 @@ and commands for our program.</p>
 </li>
 </ol>
 <h3 id="define-a-model"><a class="header" href="#define-a-model">Define a model</a></h3>
-<p>Let's envision our command-line interface for a second, what would we like it to
+<p>Let's envision our command-line interface for a second, what should it
 look like?</p>
-<p>We want to be able to convert a single file or input stream and produce either a file
+<p>We want to be able to convert a single file or input stream to either a file
 or an output stream, or we want to process a whole directory and create a new directory.
 We can model it in an ADT like this:</p>
 <pre><code class="language-hs">data Options
@@ -5030,7 +5032,7 @@ data SingleOutput
 </code></pre>
 <blockquote>
 <p>Note that we could technically also use <code>Maybe FilePath</code> to encode both <code>SingleInput</code>
-and <code>SingleOutput</code>, but then we would have to remember what <code>Nothing</code> meant
+and <code>SingleOutput</code>, but then we would have to remember what <code>Nothing</code> means
 in each context. By creating a new type with properly named constructors
 for each option we make it easier for readers of the code to understand
 the meaning of our code.</p>
@@ -5039,7 +5041,7 @@ the meaning of our code.</p>
 a single input source, they would use the <code>convert</code> command, and supply the optional flags
 <code>--input FILEPATH</code> and <code>--output FILEPATH</code> to read or write from a file.
 When the user does not supply one or both flag, we will read or write from
-the standard input/output accordingly instead.</p>
+the standard input/output accordingly.</p>
 <p>If the user would like to convert a directory, they can use the <code>convert-dir</code>
 command and supply the two mandatory flags <code>--input FILEPATH</code> and
 <code>--output FILEPATH</code>.</p>
@@ -5050,19 +5052,19 @@ that fits our model?</p>
 <code>Parser</code>, similar to <code>Maybe</code> and <code>IO</code>, has the kind <code>* -&gt; *</code> - when it
 is supplied with a saturated (or concrete) type such as <code>Int</code>, <code>Bool</code> or
 <code>Options</code>, it can become a saturated type (one that has values).</p>
-<p>A <code>Parser a</code> represents a specification of a parser for a set of options
-that will produce a value of type <code>a</code> when the command-line arguments are
+<p>A <code>Parser a</code> represents a specification of a command-line options parser
+that produces a value of type <code>a</code> when the command-line arguments are
 successfully parsed.
-This is a bit similar to how <code>IO a</code> represents a description of a program
+This is similar to how <code>IO a</code> represents a description of a program
 that can produce a value of type <code>a</code>. The main difference between these
-two types is that while we can't really convert an <code>IO a</code> to an <code>a</code>
+two types is that while we can't convert an <code>IO a</code> to an <code>a</code>
 (we just chain IO operations and have the Haskell runtime execute them),
 we <em>can</em> convert a <code>Parser a</code> to a function that takes a list of strings
 representing the program arguments and produces an <code>a</code> if it manages
 to parse the arguments.</p>
-<p>As we've seen with previous EDSLs, this library uses the <em>combinator pattern</em>
-as well. We need to consider what are the basic primitives for building
-a parser, and what are the methods of composing small parsers into bigger
+<p>As we've seen with the previous EDSLs, this library uses the <em>combinator pattern</em>
+as well. We need to consider the basic primitives for building
+a parser, and the methods of composing small parsers into bigger
 parsers.</p>
 <p>Let's see an example for a small parser:</p>
 <pre><code class="language-hs">inp :: Parser FilePath
@@ -5093,10 +5095,10 @@ and help messages.</p>
 <blockquote>
 <p>Actually <code>strOption</code> can return any string type
 that implements the interface <code>IsString</code>. There are a few such types,
-such as <code>Text</code>, a much more efficient Unicode text type from the <code>text</code> package.
+for example <code>Text</code>, a much more efficient Unicode text type from the <code>text</code> package.
 It is more efficient than <code>String</code> because while <code>String</code> is implemented as a
 linked list of <code>Char</code>, <code>Text</code> is implemented as an array of bytes.
-<code>Text</code> is usually what we should use for text values. We haven't
+<code>Text</code> is usually what we should use for text values instead of <code>String</code>. We haven't
 been using it up until now because it is slightly less ergonomic to use
 than <code>String</code>. But it is often the preferred type to use for text!</p>
 </blockquote>
@@ -5152,7 +5154,7 @@ fmap id = id
 fmap (f . g) == fmap f . fmap g
 </code></pre>
 <p>Any type <code>f</code> that can implement <code>fmap</code> and follow these laws can be a valid
-instance of functor.</p>
+instance of <code>Functor</code>.</p>
 <blockquote>
 <p>Notice how <code>f</code> has a kind <code>* -&gt; *</code>, we can infer the kind of <code>f</code>
 by looking at the other types in the type signature of <code>fmap</code>:</p>
@@ -5170,13 +5172,13 @@ Here's one very simple (and wrong) implementation:</p>
 <pre><code class="language-hs">mapMaybe :: (a -&gt; b) -&gt; Maybe a -&gt; Maybe b
 mapMaybe func maybeX = Nothing
 </code></pre>
-<p>check it yourself! It compiles and everything! But unfortunately it does not
+<p>Check it yourself! It compiles successfully! But unfortunately it does not
 satisfy the first law. <code>fmap id = id</code> means that
 <code>mapMaybe id (Just x) == Just x</code>, however from the definition we can
 clearly see that <code>mapMaybe id (Just x) == Nothing</code>.</p>
 <p>This is a good example of how Haskell doesn't help us make sure the laws
 are satisfied, and why they are important. Unlawful <code>Functor</code> instances
-will behave differently than we'd expect a <code>Functor</code> to behave.
+will behave differently from what we'd expect a <code>Functor</code> to behave.
 Let's try again!</p>
 <pre><code class="language-hs">mapMaybe :: (a -&gt; b) -&gt; Maybe a -&gt; Maybe b
 mapMaybe func maybeX =
@@ -5196,7 +5198,7 @@ but type classes with funny names like <code>Functor</code> don't usually have a
 analogy or a metaphor that fits them in all cases. It is easier to give up
 on the metaphor and think about it as it is - an interface with laws.</p>
 </blockquote>
-<p>We can use <code>fmap</code> on <code>Parser</code> to make a parser that returns <code>FilePath</code>
+<p>We can use <code>fmap</code> on <code>Parser</code> to make a parser that returns <code>FilePath</code> to
 return a <code>SingleInput</code> or <code>SingleOutput</code> instead:</p>
 <pre><code class="language-hs">pInputFile :: Parser SingleInput
 pInputFile = fmap InputFile parser
@@ -5253,14 +5255,13 @@ a certain <code>f</code>, applicative functors allow us to apply a function to
 <em>multiple instances</em> of a certain <code>f</code>, as well as &quot;lift&quot; any value of type <code>a</code> into an <code>f a</code>.</p>
 <p>You should already be familiar with <code>pure</code>, we've seen it when we
 talked about <code>IO</code>. For <code>IO</code>, <code>pure</code> lets us create an <code>IO</code> action
-that would return a specific value without doing IO.
+with a specific return value without doing IO.
 With <code>pure</code> for <code>Parser</code>, we can create a <code>Parser</code> that when run
 will return a specific value as output.</p>
 <p><code>liftA2</code> and <code>&lt;*&gt;</code> are two functions that can be implemented in
 terms of one another. <code>&lt;*&gt;</code> is actually the more useful one between
 the two. Because when combined with <code>fmap</code> (or rather the infix version <code>&lt;$&gt;</code>),
-it can be used to apply a function with many arguments over many values of the
-same type which is an instance of an applicative functor.</p>
+it can be used to apply a function with many arguments, instead of just two.</p>
 <p>To combine our two parsers to one, we can use either <code>liftA2</code> or
 a combination of <code>&lt;$&gt;</code> and <code>&lt;*&gt;</code>:</p>
 <pre><code class="language-hs">-- with liftA2
@@ -5302,7 +5303,7 @@ ConvertSingle &lt;$&gt; pInputFile :: Parser (SingleOutput -&gt; Options)
 (ConvertSingle &lt;$&gt; pInputFile) &lt;*&gt; pOutputFile :: Parser Options
 </code></pre>
 <p>With <code>&lt;$&gt;</code> and <code>&lt;*&gt;</code> we can chain as many parsers (or any applicative really)
-as we want. This is because of two things: currying and parametric polymorphism:
+as we want. This is because of two things: currying and parametric polymorphism.
 Because functions in Haskell take exactly one argument and return exactly one,
 any multiple argument function can be represented as <code>a -&gt; b</code>.</p>
 <blockquote>
@@ -5310,7 +5311,7 @@ any multiple argument function can be represented as <code>a -&gt; b</code>.</p>
 <a href="https://wiki.haskell.org/Typeclassopedia#Laws_2">Typeclassopedia</a>, which
 talks about various useful type classes and their laws.</p>
 </blockquote>
-<p>Applicative functors are a very important concept and will appear in various
+<p>Applicative functor is a very important concept and will appear in various
 parser interfaces (not just for command-line arguments, but also JSON
 parsers and general parsers), I/O, concurrency, non-determinism, and more.
 The reason this library is called optparse-applicative is because
@@ -5363,7 +5364,7 @@ the function <code>optional</code> from <code>Control.Applicative</code>:</p>
 but it works on applicative functors. This type class isn't
 very common and is mostly used for parsing libraries as far as I know.
 It provides us with an interface to combine two <code>Parser</code>s -
-if the first one fails to parse, we try the other.
+if the first one fails to parse, try the other.
 It also provides other useful functions such as <code>optional</code>,
 which will help us with our case:</p>
 <pre><code class="language-hs">pSingleInput :: Parser SingleInput
@@ -5743,8 +5744,8 @@ Available commands:
   convert-dir              Convert a directory of markup files to html
 </code></pre>
 <p>Along the way we've learned two powerful new abstractions, <code>Functor</code>
-and <code>Applicative</code>. As well as revisited an abstraction we were familiar
-with called <code>Monoid</code>. With this library we've seen (another) example
+and <code>Applicative</code>, as well as revisited an abstraction
+called <code>Monoid</code>. With this library we've seen another example
 of the usefulness of these abstractions for constructing APIs and EDSLs.</p>
 <p>We will continue to meet these abstractions in the rest of the book.</p>
 <hr />
