@@ -22,7 +22,7 @@ For example, `parse` becomes `Markup.parse`.
 If we would've imported `Html.Internal` qualified, we'd have to write
 `Html.Internal.el` which is a bit long.
 
-We can also give a new name to the module with the `as` keyword:
+We can also give the module a new name with the `as` keyword:
 
 ```hs
 import qualified Html.Internal as HI
@@ -33,13 +33,15 @@ And write `HI.el` instead.
 I like using qualified imports because readers do not have to guess where a
 name comes from. Some modules are even designed to be imported qualified.
 For example, many container APIs such as maps, sets, and vectors have very similar
-API. If we need multiple containers in a single module we pretty much have
+API. If we want to use multiple containers in a single module we pretty much have
 to use qualified imports so that when we write a function such as `singleton`,
 which creates a container with a single value, GHC will know which `singleton`
 function we are referring to.
 
 Some people prefer to use import lists instead of qualified imports,
-because qualified names can be a bit verbose and noisy. I usually prefer them.
+because qualified names can be a bit verbose and noisy.
+I will often prefer qualified imports to import lists, but feel free to
+try both solutions and see which fits you better.
 For more information about imports,
 see this [wiki article](https://wiki.haskell.org/Import).
 
@@ -75,8 +77,8 @@ headings that are not `h1`. There are a few ways to handle this:
 
 - Ignore the warning - this will likely fail at runtime one day and the user will be sad
 - Pattern match other cases and add a nice error with the `error` function - it has
-  the same disadvantage above, but will also not notify any issue
-  here at compile time.
+  the same disadvantage above, but will also no longer notify of the unhandled
+  cases at compile time.
 - Pattern match and do the wrong thing - user is still sad
 - Encode errors in the type system using `Either`, we'll see how to do this in later
   chapters
@@ -152,7 +154,7 @@ us with the following function:
 map convertStructure :: Markup.Document -> [Html.Structure]
 ```
 
-To concatenate all of the `Html.Structure`, we could write a recursive
+To concatenate all of the `Html.Structure`, we could try to write a recursive
 function. However we will quickly run into an issue
 with the base case, what to do when the list is empty?
 
@@ -185,12 +187,13 @@ concatStructure list =
 ---
 
 Remember the `<>` function we implemented as an instance of the `Semigroup`
-type class? `Semigroup` is an **abstraction** for things
+type class? We mentioned that `Semigroup` is an **abstraction** for things
 that implements `(<>) :: a -> a -> a`, where  `<>` is associative
 (`a <> (b <> c) = (a <> b) <> c`).
 
-It turns out to be a common pattern to have an instance of `Semigroup` with an "empty" value.
-For example a string.
+It turns out that having an instance of `Semigroup` and also having a value that represents
+an "empty" value is a fairly common pattern. For example a string can be concatenated, 
+and the empty string can serve as an "empty" value.
 And this is actually a well known **abstraction** called **monoid**.
 
 ## Monoids
@@ -278,7 +281,7 @@ constraint as well!
 
 This `mconcat` function is very similar to the `concatStructure` function,
 but this one works for any `Monoid`, including `Structure`!
-Abstractions help us **reuse** code!
+Abstractions help us identify common patterns and **reuse** code!
 
 > Side note: integers with `+` and `0` aren't actually an instance of `Monoid` in Haskell.
 > This is because integers can also form a monoid with `*` and `1`! But **there can only

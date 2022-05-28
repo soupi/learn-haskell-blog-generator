@@ -1,7 +1,7 @@
 # Fancy options parsing
 
 We'd like to define a nicer interface for our program. While we could manage something
-ourselves with `getArgs` and pattern matching, using a library is easier.
+ourselves with `getArgs` and pattern matching, it is easier to get good results using a library.
 We are going to use a package called
 [optparse-applicative](https://hackage.haskell.org/package/optparse-applicative).
 
@@ -41,7 +41,7 @@ In general, there are four important things we need to do:
 1. Define our model - we want to define an ADT that describes the various options
    and commands for our program.
 
-2. Define a parser that will produce value of our model type when run
+2. Define a parser that will produce a value of our model type when run
 
 3. Run the parser on our program arguments input
 
@@ -49,7 +49,7 @@ In general, there are four important things we need to do:
 
 ### Define a model
 
-Let's envision our command-line interface for a second, what would it
+Let's envision our command-line interface for a second, what should it
 look like?
 
 We want to be able to convert a single file or input stream to either a file
@@ -99,7 +99,7 @@ The `optparse-applicative` library introduces a new type called `Parser`.
 is supplied with a saturated (or concrete) type such as `Int`, `Bool` or
 `Options`, it can become a saturated type (one that has values).
 
-A `Parser a` represents a parser
+ A `Parser a` represents a specification of a command-line options parser
 that produces a value of type `a` when the command-line arguments are
 successfully parsed.
 This is similar to how `IO a` represents a description of a program
@@ -150,7 +150,7 @@ and help messages.
 > for example `Text`, a much more efficient Unicode text type from the `text` package.
 > It is more efficient than `String` because while `String` is implemented as a
 > linked list of `Char`, `Text` is implemented as an array of bytes.
-> We haven't
+> `Text` is usually what we should use for text values instead of `String`. We haven't
 > been using it up until now because it is slightly less ergonomic to use
 > than `String`. But it is often the preferred type to use for text!
 
@@ -248,7 +248,7 @@ mapMaybe :: (a -> b) -> Maybe a -> Maybe b
 mapMaybe func maybeX = Nothing
 ```
 
-Check it yourself! It compiles! But unfortunately it does not
+Check it yourself! It compiles successfully! But unfortunately it does not
 satisfy the first law. `fmap id = id` means that
 `mapMaybe id (Just x) == Just x`, however from the definition we can
 clearly see that `mapMaybe id (Just x) == Nothing`.
@@ -359,8 +359,7 @@ will return a specific value as output.
 `liftA2` and `<*>` are two functions that can be implemented in
 terms of one another. `<*>` is actually the more useful one between
 the two. Because when combined with `fmap` (or rather the infix version `<$>`),
-it can be used to apply a function with many arguments over many values which
-are instances of the same applicative functor type.
+it can be used to apply a function with many arguments, instead of just two.
 
 To combine our two parsers to one, we can use either `liftA2` or
 a combination of `<$>` and `<*>`:

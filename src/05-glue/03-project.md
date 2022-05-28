@@ -11,7 +11,7 @@ Haskell's central package archive, [Stackage](https://www.stackage.org/) -
 a subset of Hackage packages that are known to work together, or even
 from remote git repositories. Usually Haskellers use a **package manager** to
 download and manage packages for different projects. The most popular package
-managers are [cabal](https://cabal.readthedocs.io) and
+managers for Haskell are [cabal](https://cabal.readthedocs.io) and
 [stack](https://haskellstack.org).
 
 A major difference between the two is their philosophy.
@@ -262,7 +262,7 @@ Executables' descriptions are very similar to libraries, here we define:
 - Where the source directory for this application is
 - Which file is the 'Main' file
 - Import our library, which is named `hs-blog`
-- Add additional flag for GHC, e.g., `-O` to compile with optimizations
+- Additional flags for GHC, e.g., `-O` to compile with optimizations
 
 ```cabal
 executable hs-blog-gen
@@ -480,7 +480,7 @@ fetches information from remote package repositories (specifically Hackage unles
 and updates the local package index which includes various information about available packages such as
 their names, versions and dependencies.
 
-Usually the first command to run before fetching package dependencies is
+`cabal v2-update` is usually the first command to run before fetching package dependencies.
 
 ```sh
 cabal v2-build
