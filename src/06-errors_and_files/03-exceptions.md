@@ -121,7 +121,7 @@ ghc: <stdout>: hFlush: illegal operation (handle is closed)
 ```
 
 First, how do we know which exception we should handle? Some functions' documentation
-will include this, but unfortunately `putStrLn` does not. We could guess from the
+include this, but unfortunately `putStrLn`'s does not. We could guess from the
 [list of instances](https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html#i:Exception)
 the `Exception` type class has; I think
 [`IOException`](https://hackage.haskell.org/package/base-4.15.0.0/docs/GHC-IO-Exception.html#t:IOException) fits. Now, how can we handle this case as well? We can chain catches:
@@ -181,7 +181,7 @@ main = do
         hPutStrLn stderr "Error: we don't support dividing zeroes for some reason"
       ErrOdd n ->
         hPutStrLn stderr ("Error: " <> show n <> " is odd and cannot be divided by 2")
-    
+
     , Handler $ \(e :: IOException) ->
       -- we can check if the error was an illegal operation on the stderr handle
       if ioe_handle e /= Just stderr && ioe_type e /= IllegalOperation
@@ -231,8 +231,8 @@ a disadvantage of not encoding types as return values, and therefore does not fo
 to handle them.
 
 For Haskell, the language designers have made a choice for us by designing `IO` to
-use exceptions instead of `Either`. And this is what I would recommend to use for
+use exceptions instead of `Either`. And this is what I would recommend for
 handling your own effectful computations. However, I think that `Either` is more
-fitting for uneffectful code, because it forces us to acknowledge and handle errors
+appropriate for uneffectful code, because it forces us to acknowledge and handle errors
 (eventually) thus making our programs more robust. And also because we can only
 catch exceptions in `IO` code.

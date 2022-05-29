@@ -227,7 +227,7 @@ convertStructure structure =
 
 With our extended HTML EDSL, we can now create an index page with links to the other pages.
 
-To create an index page, we need a list of files with their *target destination*,
+To create an index page, we need a list of files with their *target destinations*,
 as well as their `Markup` (so we can extract information to include in our index page,
 such as the first heading and paragraph). Our output should be an `Html` page.
 
@@ -289,4 +289,4 @@ single file gave it some trouble. This is a good opportunity to learn about
 error handling in Haskell, both in uneffectful code and for I/O code.
 
 In the next few chapters we'll survey the landscape of error handling in Haskell
-before figuring out what is the right approach for our use case.
+before figuring out the right approach for our use case.
