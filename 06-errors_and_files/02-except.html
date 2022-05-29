@@ -154,27 +154,27 @@ that return <code>Either</code>, for example:</p>
 <pre><code class="language-hs">readFile :: FilePath -&gt; IO (Either ReadFileError String)
 writeFile :: FilePath -&gt; String -&gt; IO (Either WriteFileError ())
 </code></pre>
-<p>However there are a couple of issues here, the first is that now composing <code>IO</code> actions
-became more difficult. Previously we could write:</p>
+<p>However there are a couple of issues here, the first is that composing <code>IO</code> actions
+becomes more difficult. Previously we could write:</p>
 <pre><code class="language-hs">readFile &quot;input.txt&quot; &gt;&gt;= writeFile &quot;output.html&quot;
 </code></pre>
-<p>But now the types no longer match - <code>readFile</code> will return an <code>Either ReadFileError String</code>,
+<p>But now the types no longer match - <code>readFile</code> will return an <code>Either ReadFileError String</code> when executed,
 but <code>writeFile</code> wants to take a <code>String</code> as input. We are forced to handle the error
 before calling <code>writeFile</code>.</p>
 <h2 id="composing-io--either-using-exceptt"><a class="header" href="#composing-io--either-using-exceptt">Composing IO + Either using ExceptT</a></h2>
-<p>One way to handle this is by using <strong>monad transformers</strong>. Monad transformers are a method
+<p>One way to handle this is by using <strong>monad transformers</strong>. Monad transformers provide a way
 to stack monad capabilities on top of one another. They are called transformers because
 <strong>they take a type that has an instance of monad as input, and return a new type that
 implements the monad interface, stacking a new capability on top of it</strong>.</p>
-<p>For example, if we want to create a value with a type similar to <code>IO (Either Error a)</code>
-that we can compose using the monadic interface (the function <code>&gt;&gt;=</code>) with other values
-of a type similar to <code>IO (Either Error a)</code>, we can using a monad transformer
-called <a href="https://hackage.haskell.org/package/mtl-2.2.2/docs/Control-Monad-Except.html#g:2"><code>ExceptT</code></a>.
+<p>For example, if we want to compose values of a type that is equivalent to <code>IO (Either Error a)</code>,
+using the monadic interface (the function <code>&gt;&gt;=</code>), we can use a monad transformer
+called <a href="https://hackage.haskell.org/package/mtl-2.2.2/docs/Control-Monad-Except.html#g:2"><code>ExceptT</code></a>
+and stack it over <code>IO</code>.
 Let's see how <code>ExceptT</code> is defined:</p>
 <pre><code class="language-hs">newtype ExceptT e m a = ExceptT (m (Either e a))
 </code></pre>
 <p>Remember, a <code>newtype</code> is a new name for an existing type. And if we substitute
-<code>e</code> with <code>Error</code> and <code>m</code> with <code>IO</code> we'll get exactly <code>IO (Either Error a)</code> as we wanted.
+<code>e</code> with <code>Error</code> and <code>m</code> with <code>IO</code> we get exactly <code>IO (Either Error a)</code> as we wanted.
 And we can convert an <code>ExceptT Error IO a</code> into <code>IO (Either Error a)</code> using
 the function <code>runExceptT</code>:</p>
 <pre><code class="language-hs">runExceptT :: ExceptT e m a -&gt; m (Either e a)
@@ -241,9 +241,9 @@ a value of <code>ExceptT e m a</code> instead:</p>
 lift getLine :: ExceptT e IO String
 </code></pre>
 <blockquote>
-<p>(Actually, <code>lift</code> is also a type class function from <code>MonadTrans</code>, the type class
+<p>Actually, <code>lift</code> is also a type class function from <code>MonadTrans</code>, the type class
 of monad transformers. So technically <code>lift getLine :: MonadTrans t =&gt; t IO String</code>,
-but we are specializing for concreteness)</p>
+but we are specializing for concreteness.</p>
 </blockquote>
 <p>Now, if we had:</p>
 <pre><code class="language-hs">readFile :: FilePath -&gt; ExceptT IOError IO String
@@ -263,8 +263,8 @@ There are many many more possible IO errors! &quot;network unreachable&quot;, &q
 &quot;cancelled thread&quot;, we cannot require a user to handle all these errors, or
 even cover them all in a data type.</p>
 <p>So what do we do?</p>
-<p>We give up on this approach <strong>for IO code</strong>, and use a different one: Exceptions.
-As we'll see in the next chapter.</p>
+<p>We give up on this approach <strong>for IO code</strong>, and use a different one: Exceptions,
+as we'll see in the next chapter.</p>
 <blockquote>
 <p>Note - when we stack <code>ExceptT</code> on top of a different type called
 <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Functor-Identity.html"><code>Identity</code></a>

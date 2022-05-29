@@ -268,10 +268,10 @@ getDirFilesAndContent inputDir = do
 <ol>
 <li>Lists all the files in the directory</li>
 <li>Splits the files into 2 groups according to their file extension</li>
-<li>Reads the contents of the .txt files and report when files failed to be read</li>
-<li>Returns the results. We've defined a data type to make what each result is more obvious</li>
+<li>Reads the contents of the .txt files and report when files fail to be read</li>
+<li>Returns the results. We've defined a data type to make the result content more obvious</li>
 </ol>
-<p>Part (3) is a little bit more involved than the rest, lets explore it.</p>
+<p>Part (3) is a little bit more involved than the rest, let's explore it.</p>
 <h4 id="applyioonlist"><a class="header" href="#applyioonlist"><code>applyIoOnList</code></a></h4>
 <pre><code class="language-hs">-- | Try to apply an IO function on a list of values, document successes and failures
 applyIoOnList :: (a -&gt; IO b) -&gt; [a] -&gt; IO [(a, Either String b)]
@@ -286,12 +286,12 @@ applyIoOnList action files = do
     pure (file, maybeContent)
 </code></pre>
 <p><code>applyIoOnList</code> is a higher order function that applies a particular <code>IO</code> function
-(in our case <code>readFile</code>) on a list of things (in our case <code>FilePath</code>s),
-and for each thing, it returns the thing itself along with the result of
+(in our case <code>readFile</code>) on a list of things (in our case <code>FilePath</code>s).
+For each thing, it returns the thing itself along with the result of
 applying the <code>IO</code> function as an <code>Either</code>, where the <code>Left</code> side is a <code>String</code>
 representation of an error if one occurred.</p>
 <p>Notice how much the type of this function tells us about what it might do.
-Because the types are polymorphic, there is nothing else to do with with
+Because the types are polymorphic, there is nothing else to do with
 the <code>a</code>s other than apply them to the function, and nowhere to generate <code>b</code>
 from other than the result of the function.</p>
 <blockquote>
@@ -302,7 +302,7 @@ I refactored out the <code>action</code>, the input type and the return type.</p
 </blockquote>
 <p>This function uses exceptions to catch any error that might be thrown, and encodes
 both the failure and success cases in the type system using <code>Either</code>, delaying
-the handling of exceptions to the caller of the function while making sure it won't
+the handling of exceptions to the function caller while making sure it won't
 be forgotten!</p>
 <p>Next, let's look at the function that handles the errors by reporting and then filtering out
 all the cases that failed.</p>
@@ -327,11 +327,11 @@ with the types we are using, we learn that <code>IO [(a, b)]</code> is a monoid.
 And indeed - <code>[a]</code> is a monoid for any <code>a</code> with <code>[]</code> (the empty list) as <code>mempty</code>
 and <code>++</code> as <code>&lt;&gt;</code>, but also <code>IO a</code> is a monoid for any <code>a</code> that is itself
 a monoid with <code>pure mempty</code> as <code>mempty</code> and <code>liftA2 (&lt;&gt;)</code> as <code>&lt;&gt;</code>!</p>
-<p>Using these instances, we can <code>map</code> over the content, handling errors and returning
-an empty list to filter a failed case out, or a singleton list to keep the result.
-and the <code>fold</code> in <code>foldMap</code> will concatenate the resulting list where we return
+<p>Using these instances, we can <code>map</code> over the content, handle errors, and return
+an empty list to filter out a failed case, or a singleton list to keep the result.
+And the <code>fold</code> in <code>foldMap</code> will concatenate the resulting list where we return
 all of the successful cases!</p>
-<p>These functions were responsible for fetching the right information. Next,
+<p>These functions are responsible for fetching the right information. Next,
 let's look at the code for creating a new directory.</p>
 <h3 id="createoutputdirectoryorexit"><a class="header" href="#createoutputdirectoryorexit"><code>createOutputDirectoryOrExit</code></a></h3>
 <pre><code class="language-hs">-- | Creates an output directory or terminates the program
@@ -424,11 +424,11 @@ What do you think about the resulting code? Is it easier or more difficult to
 understand? Is it more modular or less? What are the pros and cons?</p>
 <hr />
 <h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
-<p>With that, we have completed our <code>HsBlog.Directory</code> module that handles converting
+<p>With that, we have completed our <code>HsBlog.Directory</code> module that is responsible for converting
 a directory safely. Note that the code could probably be simplified quite a bit if we
 were fine with errors crashing the entire program altogether, but sometimes this is
 the price we pay for robustness. It is up to you to choose what you can live with
-and what not, but I hope this saga has taught you how to approach handling errors
+and what not, but I hope this saga has taught you how to approach error handling
 in Haskell in case you need to.</p>
 <hr />
 <p>View the full module:</p>

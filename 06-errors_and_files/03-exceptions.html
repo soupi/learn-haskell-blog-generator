@@ -254,7 +254,7 @@ main = do
 <pre><code>ghc: &lt;stdout&gt;: hFlush: illegal operation (handle is closed)
 </code></pre>
 <p>First, how do we know which exception we should handle? Some functions' documentation
-will include this, but unfortunately <code>putStrLn</code> does not. We could guess from the
+include this, but unfortunately <code>putStrLn</code>'s does not. We could guess from the
 <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html#i:Exception">list of instances</a>
 the <code>Exception</code> type class has; I think
 <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/GHC-IO-Exception.html#t:IOException"><code>IOException</code></a> fits. Now, how can we handle this case as well? We can chain catches:</p>
@@ -310,7 +310,7 @@ main = do
         hPutStrLn stderr &quot;Error: we don't support dividing zeroes for some reason&quot;
       ErrOdd n -&gt;
         hPutStrLn stderr (&quot;Error: &quot; &lt;&gt; show n &lt;&gt; &quot; is odd and cannot be divided by 2&quot;)
-    
+
     , Handler $ \(e :: IOException) -&gt;
       -- we can check if the error was an illegal operation on the stderr handle
       if ioe_handle e /= Just stderr &amp;&amp; ioe_type e /= IllegalOperation
@@ -353,9 +353,9 @@ we can easily compose functions that may throw errors of different types, but al
 a disadvantage of not encoding types as return values, and therefore does not force us
 to handle them.</p>
 <p>For Haskell, the language designers have made a choice for us by designing <code>IO</code> to
-use exceptions instead of <code>Either</code>. And this is what I would recommend to use for
+use exceptions instead of <code>Either</code>. And this is what I would recommend for
 handling your own effectful computations. However, I think that <code>Either</code> is more
-fitting for uneffectful code, because it forces us to acknowledge and handle errors
+appropriate for uneffectful code, because it forces us to acknowledge and handle errors
 (eventually) thus making our programs more robust. And also because we can only
 catch exceptions in <code>IO</code> code.</p>
 
