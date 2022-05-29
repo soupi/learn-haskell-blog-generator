@@ -6,11 +6,16 @@ for HTML, and how they can help us avoid invalid construction of HTML strings.
 There are a few ways of defining new types in Haskell, in this section
 we are going to meet two ways: `newtype` and `type`.
 
-
 ## `newtype`
 
-`newtype` lets us give a new name to an already existing type in a
-way that the two cannot mix together.
+A `newtype` declaration is a way to define a new, distinct type for an existing set of values (a type).
+This is useful when we want to reuse existing values but give them different meaning,
+and make sure we can't mix the two.
+For example, we can represents seconds, minutes, grams and yens using integer values,
+but we don't want to accidentally mix grams and seconds.
+
+In our case we want to represent structured HTML using textual values,
+but distinguish them from everyday strings that are not valid HTML.
 
 A `newtype` declaration looks like this:
 
