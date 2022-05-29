@@ -150,8 +150,13 @@ for HTML, and how they can help us avoid invalid construction of HTML strings.</
 <p>There are a few ways of defining new types in Haskell, in this section
 we are going to meet two ways: <code>newtype</code> and <code>type</code>.</p>
 <h2 id="newtype"><a class="header" href="#newtype"><code>newtype</code></a></h2>
-<p><code>newtype</code> lets us give a new name to an already existing type in a
-way that the two cannot mix together.</p>
+<p>A <code>newtype</code> declaration is a way to define a new, distinct type for an existing set of values (a type).
+This is useful when we want to reuse existing values but give them different meaning,
+and make sure we can't mix the two.
+For example, we can represents seconds, minutes, grams and yens using integer values,
+but we don't want to accidentally mix grams and seconds.</p>
+<p>In our case we want to represent structured HTML using textual values,
+but distinguish them from everyday strings that are not valid HTML.</p>
 <p>A <code>newtype</code> declaration looks like this:</p>
 <pre><code>newtype &lt;type-name&gt; = &lt;constructor&gt; &lt;existing-type&gt;
 </code></pre>
