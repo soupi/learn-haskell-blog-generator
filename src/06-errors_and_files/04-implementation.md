@@ -144,10 +144,10 @@ This function does 4 important things:
 
 1. Lists all the files in the directory
 2. Splits the files into 2 groups according to their file extension
-3. Reads the contents of the .txt files and report when files failed to be read
-4. Returns the results. We've defined a data type to make what each result is more obvious
+3. Reads the contents of the .txt files and report when files fail to be read
+4. Returns the results. We've defined a data type to make the result content more obvious
 
-Part (3) is a little bit more involved than the rest, lets explore it.
+Part (3) is a little bit more involved than the rest, let's explore it.
 
 #### `applyIoOnList`
 
@@ -166,13 +166,13 @@ applyIoOnList action files = do
 ```
 
 `applyIoOnList` is a higher order function that applies a particular `IO` function
-(in our case `readFile`) on a list of things (in our case `FilePath`s),
-and for each thing, it returns the thing itself along with the result of
+(in our case `readFile`) on a list of things (in our case `FilePath`s).
+For each thing, it returns the thing itself along with the result of
 applying the `IO` function as an `Either`, where the `Left` side is a `String`
 representation of an error if one occurred.
 
 Notice how much the type of this function tells us about what it might do.
-Because the types are polymorphic, there is nothing else to do with with
+Because the types are polymorphic, there is nothing else to do with
 the `a`s other than apply them to the function, and nowhere to generate `b`
 from other than the result of the function.
 
@@ -183,7 +183,7 @@ from other than the result of the function.
 
 This function uses exceptions to catch any error that might be thrown, and encodes
 both the failure and success cases in the type system using `Either`, delaying
-the handling of exceptions to the caller of the function while making sure it won't
+the handling of exceptions to the function caller while making sure it won't
 be forgotten!
 
 Next, let's look at the function that handles the errors by reporting and then filtering out
@@ -217,12 +217,12 @@ And indeed - `[a]` is a monoid for any `a` with `[]` (the empty list) as `mempty
 and `++` as `<>`, but also `IO a` is a monoid for any `a` that is itself
 a monoid with `pure mempty` as `mempty` and `liftA2 (<>)` as `<>`!
 
-Using these instances, we can `map` over the content, handling errors and returning
-an empty list to filter a failed case out, or a singleton list to keep the result.
-and the `fold` in `foldMap` will concatenate the resulting list where we return
+Using these instances, we can `map` over the content, handle errors, and return
+an empty list to filter out a failed case, or a singleton list to keep the result.
+And the `fold` in `foldMap` will concatenate the resulting list where we return
 all of the successful cases!
 
-These functions were responsible for fetching the right information. Next,
+These functions are responsible for fetching the right information. Next,
 let's look at the code for creating a new directory.
 
 ### `createOutputDirectoryOrExit`
@@ -340,11 +340,11 @@ understand? Is it more modular or less? What are the pros and cons?
 
 ## Summary
 
-With that, we have completed our `HsBlog.Directory` module that handles converting
+With that, we have completed our `HsBlog.Directory` module that converts
 a directory safely. Note that the code could probably be simplified quite a bit if we
 were fine with errors crashing the entire program altogether, but sometimes this is
 the price we pay for robustness. It is up to you to choose what you can live with
-and what not, but I hope this saga has taught you how to approach handling errors
+and what not, but I hope this saga has taught you how to approach error handling
 in Haskell in case you need to.
 
 ---

@@ -20,7 +20,7 @@ Left True :: Either Bool b
 Right 'a' :: Either a Char
 ```
 
-Using this type, we can represent computations that may fail by using the
+With this type, we can use the
 `Left` constructor to indicate failure with some error value attached,
 and the `Right` constructor with one type to represent success with the
 expected result.
@@ -98,8 +98,8 @@ instance Applicative (Either e) where
 ```
 
 At some point, someone will actually want to **inspect** the result
-and see if we got an error (with the `Left` constructor) or the expected value
-(with the `Right` constructor) and they can do that by pattern matching on the result.
+and see if we get an error (with the `Left` constructor) or the expected value
+(with the `Right` constructor) and they can do that by pattern matching the result.
 
 ## Applicative + Traversable
 
@@ -188,8 +188,8 @@ and replace their contents right there in the map! Surely this will be useful la
 ## Multiple errors
 
 Note, since `Either` has the kind `* -> * -> *` (it takes two type
-parameters) `Either` cannot be an instance of `Functor` and `Applicative`,
-instances for these type classes can only be implemented for types that have the
+parameters) `Either` cannot be an instance of `Functor` or `Applicative`:
+instances of these type classes should have the
 kind `* -> *`.
 Remember that when we look at a type class function signature like:
 
@@ -199,7 +199,7 @@ fmap :: Functor f => (a -> b) -> f a -> f b
 
 And we want to implement it for a specific type (in place of the `f`),
 we need to be able to *substitute* the `f` with the target type. If we'd try
-to do it with `Either` we'll get:
+to do it with `Either` we would get:
 
 ```hs
 fmap :: (a -> b) -> Either a -> Either b
@@ -214,7 +214,7 @@ fmap :: (a -> b) -> Int a -> Int b
 
 Which also doesn't make sense.
 
-So while we can't use `Either`, we can use `Either e`, which has the kind
+While we can't use `Either`, we can use `Either e`, which has the kind
 `* -> *`. Now let's try substituting `f` with `Either e` in this signature:
 
 ```hs
@@ -234,8 +234,8 @@ So what can we do if we have two functions that can return different errors?
 There are a few approaches, the most prominent ones are:
 
 1. Make them return the same error type. Write an ADT that holds all possible
-   error descriptions. This can work in some cases but isn't always ideal
-   because for example a user calling `parseDigit` shouldn't be forced to
+   error descriptions. This can work in some cases but isn't always ideal.
+   For example a user calling `parseDigit` shouldn't be forced to
    handle a possible case that the input might be an empty string.
 2. Use a specialized error type for each type, and when they are composed together,
    map the error type of each function to a more general error type. This can
@@ -245,9 +245,9 @@ There are a few approaches, the most prominent ones are:
 
 ## Monadic interface
 
-The applicative interface allows us to lift a function on to work on multiple
-`Either` values (or other applicative functor instances such as `IO` and `Parser`). 
-But more often than not, we'd like to be able to use a value from one computation
+The applicative interface allows us to lift a function to work on multiple
+`Either` values (or other applicative functor instances such as `IO` and `Parser`).
+But more often than not, we'd like to use a value from one computation
 that might return an error in another computation that might return an error.
 
 For example, a compiler such has GHC operates in stages, such as lexical analysis,
@@ -259,14 +259,14 @@ tokenize :: String -> Either Error [Token]
 
 parse :: [Token] -> Either Error AST
 
-typcheck :: AST -> Either Error TypedAST
+typecheck :: AST -> Either Error TypedAST
 ```
 
 We want to compose these functions so that they work in a chain. The output of `tokenize`
-goes to `parse`, the output of `parse` goes into to `typecheck`.
+goes to `parse`, and the output of `parse` goes to `typecheck`.
 
 We know that we can lift a function over an `Either` (and other functors),
-we could also lift a function that returns an `Either`:
+we can also lift a function that returns an `Either`:
 
 ```hs
 -- reminder the type of fmap
@@ -285,7 +285,7 @@ layers of `Either Error` and we can't use this trick again with
 on `fmap parse (tokenize string)`, the `a` will be `Either Error AST`
 instead.
 
-What we would really like is to flatten this structure instead of building it.
+What we would really like is to flatten this structure instead of nesting it.
 If we look at the kind of values `Either Error (Either Error AST)` could have,
 it looks something like this:
 
@@ -429,11 +429,11 @@ Again, don't worry about analogies and metaphors, focus on the API and the
 
 > Hey, did you check the monad laws? left identity, right identity and associativity? We've already
 > discussed a type class with exactly these laws - the `Monoid` type class. Maybe this is related
-> to the famous quote about monads beings just monoids in something something...
+> to the famous quote about monads being just monoids in something something...
 
 ### Do notation?
 
-Remember [do notation](../05-glue/02-io.html#do-notation)? Turns out it works for any type that is
+Remember the [do notation](../05-glue/02-io.html#do-notation)? Turns out it works for any type that is
 an instance of `Monad`. How cool is that? Instead of writing:
 
 ```hs
@@ -445,7 +445,7 @@ pipeline string =
 ```
 
 We can write:
-  
+
 ```hs
 pipeline :: String -> Either Error TypedAST
 pipeline string = do
@@ -455,7 +455,7 @@ pipeline string = do
 ```
 
 And it will work! Still, in this particular case `tokenize string >>= parse >>= typecheck`
-is so concise it can only be beaten by using
+is so concise it can only be beaten by
 [>=>](https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Monad.html#v:-62--61--62-)
 
 ```hs
@@ -469,7 +469,7 @@ is so concise it can only be beaten by using
 pipeline = tokenize >=> parse >=> typecheck
 ```
 
-This ability of Haskell's to create very concise code using great abstractions makes it
+Hakell's ability to create very concise code using abstractions is
 great once one is familiar with the abstractions. Knowing the monad abstraction,
 we are now already familiar with the core composition API of many libraries - for example:
 
@@ -486,8 +486,8 @@ we are now already familiar with the core composition API of many libraries - fo
 Using `Either` for error handling is useful for two reasons:
 
 1. We encode possible errors using types, and we **force users to acknowledge and handle** them, thus
-   making our code more resilient to crashes and bad behaviour.
-2. The `Functor`, `Applicative` and `Monad` interfaces provide us with mechanisms for
+   making our code more resilient to crashes and bad behaviours.
+2. The `Functor`, `Applicative`, and `Monad` interfaces provide us with mechanisms for
    **composing** functions that might fail (almost) effortlessly - reducing boilerplate while
    maintaining strong guarantees about our code, and delaying the need to handle errors until
    it is appropriate.
