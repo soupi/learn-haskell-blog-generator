@@ -13,28 +13,28 @@ readFile :: FilePath -> IO (Either ReadFileError String)
 writeFile :: FilePath -> String -> IO (Either WriteFileError ())
 ```
 
-However there are a couple issues here, the first is that composing `IO` actions
+However there are a couple of issues here, the first is that composing `IO` actions
 becomes more difficult. Previously we could write:
 
 ```hs
 readFile "input.txt" >>= writeFile "output.html"
 ```
 
-But now the types no longer match - `readFile` will return an `IO(Either ReadFileError String)`,
+But now the types no longer match - `readFile` will return an `Either ReadFileError String` when executed,
 but `writeFile` wants to take a `String` as input. We are forced to handle the error
 before calling `writeFile`.
 
 ## Composing IO + Either using ExceptT
 
-One way to handle this is by using **monad transformers**, which
-stacks monad capabilities on top of one another. They are called transformers because
+One way to handle this is by using **monad transformers**. Monad transformers provide a way
+to stack monad capabilities on top of one another. They are called transformers because
 **they take a type that has an instance of monad as input, and return a new type that
 implements the monad interface, stacking a new capability on top of it**.
 
-For example, if we want to create a value with type `IO (Either Error a)`
-that we can compose using the monadic interface (the function `>>=`) with another value
-of type `IO (Either Error a)`, we can use a monad transformer
-called [`ExceptT`](https://hackage.haskell.org/package/mtl-2.2.2/docs/Control-Monad-Except.html#g:2).
+For example, if we want to compose values of a type that is equivalent to `IO (Either Error a)`,
+using the monadic interface (the function `>>=`), we can use a monad transformer
+called [`ExceptT`](https://hackage.haskell.org/package/mtl-2.2.2/docs/Control-Monad-Except.html#g:2)
+and stack it over `IO`.
 Let's see how `ExceptT` is defined:
 
 ```hs

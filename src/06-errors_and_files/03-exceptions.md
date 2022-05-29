@@ -120,7 +120,7 @@ Our program will crash with an error:
 ghc: <stdout>: hFlush: illegal operation (handle is closed)
 ```
 
-First, how do we know which exception we should handle? Some functions' documentations
+First, how do we know which exception we should handle? Some functions' documentation
 include this, but unfortunately `putStrLn`'s does not. We could guess from the
 [list of instances](https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html#i:Exception)
 the `Exception` type class has; I think

@@ -340,7 +340,7 @@ understand? Is it more modular or less? What are the pros and cons?
 
 ## Summary
 
-With that, we have completed our `HsBlog.Directory` module that converts
+With that, we have completed our `HsBlog.Directory` module that is responsible for converting
 a directory safely. Note that the code could probably be simplified quite a bit if we
 were fine with errors crashing the entire program altogether, but sometimes this is
 the price we pay for robustness. It is up to you to choose what you can live with

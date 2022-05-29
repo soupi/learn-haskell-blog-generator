@@ -189,7 +189,7 @@ and replace their contents right there in the map! Surely this will be useful la
 
 Note, since `Either` has the kind `* -> * -> *` (it takes two type
 parameters) `Either` cannot be an instance of `Functor` or `Applicative`:
-instances of these type classes should have the
+instances of these type classes must have the
 kind `* -> *`.
 Remember that when we look at a type class function signature like:
 
@@ -455,7 +455,7 @@ pipeline string = do
 ```
 
 And it will work! Still, in this particular case `tokenize string >>= parse >>= typecheck`
-is so concise it can only be beaten by
+is so concise it can only be beaten by using
 [>=>](https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Monad.html#v:-62--61--62-)
 
 ```hs
