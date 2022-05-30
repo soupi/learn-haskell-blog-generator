@@ -2,7 +2,7 @@
 
 Haskell is an incredibly rich and deep programming language.
 New cutting-edge techniques, concepts and features are still being discovered
-and sometimes integrated into GHC. This sometimes makes it seem impossible
+and sometimes integrated into GHC. This sometimes makes it seemingly impossible
 to catch up to.
 
 This phenomena is sometimes dubbed
@@ -32,11 +32,11 @@ If you'd like to extend this project, here are a few ideas for you:
       [mustache](https://hackage.haskell.org/package/mustache) or similar,
 	  and use that to generate a nice and customizable structure to the page
    3. You could add support for links and images in our markup language parser
-   4. Add support for configuration via files which would include things like
+   4. You could add support for configuration files which would include things like
       the blog title, description, or other meta information for things like
 	  [twitter cards](https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/abouts-cards)
 
-Or anything else you can think about, consider this project your playground and
+Or anything else you can think of, consider this project your playground and
 do whatever you like with it!
 
 ## Other resources
@@ -48,7 +48,7 @@ and learn new Haskell things when you need to or want to.
 
 I've compiled a list of resources for learning Haskell called
 [Haskell study plan](https://github.com/soupi/haskell-study-plan),
-it should include links to very useful articles, community hubs and news aggregators,
+which includes links to very useful articles, community hubs and news aggregators,
 project suggestions, and even cool open-source Haskell projects.
 You will also find alternative explanations to thing we've covered
 and even links to other Haskell tutorials, guides and books in case you need
@@ -56,10 +56,10 @@ a different view on things.
 
 Also, the [GHC User Guide](http://downloads.haskell.org/~ghc/latest/docs/html/users_guide/index.html)
 is a fantastic resource with loads of articles and information about the language and GHC tooling around it.
-It is often the best place to learn about Haskell the language.
+It is often the best place to learn about the Haskell language.
 
 However, don't feel pressured to learn everything Haskell
-has to offer right away, mastering Haskell is a journey that can take a lot of time.
+has to offer right away. Mastering Haskell is a journey that can take a lot of time.
 Most of us are definitely not there yet, but we can still be very productive with Haskell,
 build real-world projects, and even discover new techniques and concepts ourselves.
 

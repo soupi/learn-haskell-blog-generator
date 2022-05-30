@@ -172,7 +172,7 @@ Finished in 0.0004 seconds
 ```
 
 The output describes which tests are running in a hierarchy tree (module, group and test),
-whether the tests passed or failed, and if they failed, what was the output and what the expected output was.
+whether the tests pass or fail, and if they fail, the output and the expected output.
 
 We can fix our test by matching the expected output:
 
