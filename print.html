@@ -7260,7 +7260,7 @@ and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/a08d
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="passing-environment-variables"><a class="header" href="#passing-environment-variables">Passing environment variables</a></h1>
 <p>We'd like to add some sort of an environment to keep general information on
-the blog for various processing. Things like the blog name, stylesheet
+the blog for various processings, such as the blog name, stylesheet
 location, and so on.</p>
 <h2 id="environment"><a class="header" href="#environment">Environment</a></h2>
 <p>We can represent our environment as a record data type and build it from user input.
@@ -7294,27 +7294,27 @@ type from the <code>mtl</code> (or <code>transformers</code>) package.</p>
 that it also has an instance of <code>Functor</code>, <code>Applicative</code>, <code>Monad</code> and <code>MonadTrans</code>.</p>
 <p>As we can see in the definition, <code>ReaderT</code> is <em>a newtype</em> over a function that takes
 some value of type <code>r</code>, and returns a value of type <code>m a</code>. The <code>r</code> usually
-represents the environment we want to share between different functions that we want to
-compose together, and the <code>m a</code> represents the underlying result that we return.
+represents the environment we want to share between functions that we want to compose,
+and the <code>m a</code> represents the underlying result that we return.
 The <code>m</code> could be any type that implements <code>Monad</code> that we are familiar with.
-Usually goes well with <code>IO</code> or <code>Identity</code>, depending if we want to share
+Usually it goes well with <code>IO</code> or <code>Identity</code>, depending on if we want to share
 an environment between effectful or uneffectful computations.</p>
-<p>What <code>ReaderT</code> does is <em>carry</em> a value of type <code>r</code> and passes it around to
+<p><code>ReaderT</code> <em>carries</em> a value of type <code>r</code> and passes it around to
 other functions when we use the <code>Applicative</code> and <code>Monad</code> interfaces so that
 we don't have to pass the value around manually. And when we want to grab
 the <code>r</code> and use it, all we have to do is <code>ask</code>.</p>
-<p>For our case, this means that instead of Passing around <code>Env</code>, we can instead
+<p>For our case, this means that instead of passing around <code>Env</code>, we can instead
 convert our functions to use <code>ReaderT</code> - those that are uneffectful and don't use
 <code>IO</code>, can return <code>ReaderT Env Identity a</code>  instead of <code>a</code> (or the simplified version, <code>Reader Env a</code>),
 and those that are effectful can return <code>ReaderT Env IO a</code> instead of <code>IO a</code>.</p>
-<p>Note, as we've said before, <code>Functor</code>, <code>Applicative</code> and <code>Monad</code> all expect the type
-that implements their interface to have the kind <code>* -&gt; *</code>.
+<p>Note, as we've said before, <code>Functor</code>, <code>Applicative</code>, and <code>Monad</code> all expect the type
+that implements their interfaces to have the kind <code>* -&gt; *</code>.
 This means that it is <code>ReaderT r m</code> which implements these interfaces,
 and when we compose functions with <code>&lt;*&gt;</code> or <code>&gt;&gt;=</code> we replace the <code>f</code> or <code>m</code>
 in their type signature with <code>ReaderT r m</code>.</p>
 <p>This means that, as with <code>Either e</code> when we had composed functions with the same error type,
 so it is with <code>ReaderT r m</code> - we have to compose functions with the same <code>r</code> type and same
-<code>m</code> type, so we can't mix different environment types or different underlying <code>m</code> types.</p>
+<code>m</code> type, we can't mix different environment types or different underlying <code>m</code> types.</p>
 <p>We're going to use a specialized version of <code>ReaderT</code> that uses a specific <code>m</code> = <code>Identity</code>
 called <a href="https://hackage.haskell.org/package/mtl-2.2.2/docs/Control-Monad-Reader.html#g:2"><code>Reader</code></a>.
 The <code>Control.Monad.Reader</code> provides an alias: <code>Reader r a = ReaderT r Identity a</code>.</p>
@@ -7363,7 +7363,7 @@ That's the idea behind monad transformers.</p>
 <p>We define it like this:</p>
 <pre><code class="language-hs">txtsToRenderedHtml :: [(FilePath, String)] -&gt; Reader Env [(FilePath, String)]
 </code></pre>
-<p>Now that our code uses <code>Reader</code>, we have to accommodate that in the way we write our function:</p>
+<p>Now that our code uses <code>Reader</code>, we have to accommodate that in the way we write our functions.</p>
 <p>Before:</p>
 <pre><code class="language-hs">txtsToRenderedHtml :: Env -&gt; [(FilePath, String)] -&gt; [(FilePath, String)]
 txtsToRenderedHtml env txtFiles =
@@ -7421,7 +7421,7 @@ We can do that with the functions <code>runReader</code> and <code>runReaderT</c
 
 runReaderT :: ReaderT r m a -&gt; (r -&gt; m a)
 </code></pre>
-<p>These functions convert a <code>Reader</code> or <code>ReaderT</code> to a function that takes and <code>r</code>.
+<p>These functions convert a <code>Reader</code> or <code>ReaderT</code> to a function that takes <code>r</code>.
 Then we can pass the initial environment to that function:</p>
 <pre><code class="language-hs">convertDirectory :: Env -&gt; FilePath -&gt; FilePath -&gt; IO ()
 convertDirectory env inputDir outputDir = do
@@ -7439,7 +7439,7 @@ convertDirectory env inputDir outputDir = do
 For example, we may have a general <code>Env</code> type that contains a lot of information, and
 functions that only need a part of that information.</p>
 <p>If the functions we are calling are like <code>convert</code> and take the environment as an
-argument instead of using a <code>Reader</code>, we can just extract the environment
+argument instead of a <code>Reader</code>, we can just extract the environment
 with <code>ask</code>, apply a function to the extracted environment,
 and pass the result to the function, like this:</p>
 <pre><code class="language-hs">outer :: Reader BigEnv MyResult
@@ -7496,7 +7496,7 @@ to convert a <code>Reader</code> of <code>SmallEnv</code> to a <code>Reader</cod
 and is related to topics like variance and covariance, but isn't terribly important
 for us at the moment.</p>
 <h3 id="using-env-in-our-logic-code"><a class="header" href="#using-env-in-our-logic-code">Using <code>Env</code> in our logic code</a></h3>
-<p>One thing we haven't talked about yet is actually using our environment in the <code>convert</code>
+<p>One thing we haven't talked about yet is using our environment in the <code>convert</code>
 function to generate the pages we want. And actually, we don't even have the ability to add
 stylesheets to our HTML EDSL at the moment! We need to go back and extend it. Let's do all
 that now:</p>
@@ -7876,7 +7876,7 @@ Finished in 0.0004 seconds
 1 example, 1 failure
 </code></pre>
 <p>The output describes which tests are running in a hierarchy tree (module, group and test),
-whether the tests passed or failed, and if they failed, what was the output and what the expected output was.</p>
+whether the tests pass or fail, and if they fail, the output and the expected output.</p>
 <p>We can fix our test by matching the expected output:</p>
 <pre><code class="language-hs">      shouldBe
         (parse &quot;&quot;)
@@ -8136,7 +8136,7 @@ and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/da16
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="generating-documentation"><a class="header" href="#generating-documentation">Generating documentation</a></h1>
 <p>There are <a href="https://documentation.divio.com/">many ways</a>
-to make it easier for others to get started with our projects and libraries.
+to help others to get started with our projects and libraries.
 For example, we can write tutorials, provide runnable examples,
 describe the internals of the system, and create an API reference.</p>
 <p>In this chapter we will focus on generating API reference pages (the kind that can be seen on Hackage)
@@ -8432,7 +8432,7 @@ like it, you can <a href="https://ko-fi.com/gilmi">support me directly via Ko-fi
 <div style="break-before: page; page-break-before: always;"></div><h1 id="where-to-go-next"><a class="header" href="#where-to-go-next">Where to go next</a></h1>
 <p>Haskell is an incredibly rich and deep programming language.
 New cutting-edge techniques, concepts and features are still being discovered
-and sometimes integrated into GHC. This sometimes makes it seem impossible
+and sometimes integrated into GHC. This sometimes makes it seemingly impossible
 to catch up to.</p>
 <p>This phenomena is sometimes dubbed
 <a href="https://patrickmn.com/software/the-haskell-pyramid/">The Haskell pyramid</a>.
@@ -8460,13 +8460,13 @@ and use them when generating HTML, index page and even tags pages</li>
 <a href="https://hackage.haskell.org/package/mustache">mustache</a> or similar,
 and use that to generate a nice and customizable structure to the page</li>
 <li>You could add support for links and images in our markup language parser</li>
-<li>Add support for configuration via files which would include things like
+<li>You could add support for configuration files which would include things like
 the blog title, description, or other meta information for things like
 <a href="https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/abouts-cards">twitter cards</a></li>
 </ol>
 </li>
 </ol>
-<p>Or anything else you can think about, consider this project your playground and
+<p>Or anything else you can think of, consider this project your playground and
 do whatever you like with it!</p>
 <h2 id="other-resources"><a class="header" href="#other-resources">Other resources</a></h2>
 <p>At some point you are likely to run into new concepts, techniques,
@@ -8475,16 +8475,16 @@ I'd like to point you in the right direction so you can find additional informat
 and learn new Haskell things when you need to or want to.</p>
 <p>I've compiled a list of resources for learning Haskell called
 <a href="https://github.com/soupi/haskell-study-plan">Haskell study plan</a>,
-it should include links to very useful articles, community hubs and news aggregators,
+which includes links to very useful articles, community hubs and news aggregators,
 project suggestions, and even cool open-source Haskell projects.
 You will also find alternative explanations to thing we've covered
 and even links to other Haskell tutorials, guides and books in case you need
 a different view on things.</p>
 <p>Also, the <a href="http://downloads.haskell.org/%7Eghc/latest/docs/html/users_guide/index.html">GHC User Guide</a>
 is a fantastic resource with loads of articles and information about the language and GHC tooling around it.
-It is often the best place to learn about Haskell the language.</p>
+It is often the best place to learn about the Haskell language.</p>
 <p>However, don't feel pressured to learn everything Haskell
-has to offer right away, mastering Haskell is a journey that can take a lot of time.
+has to offer right away. Mastering Haskell is a journey that can take a lot of time.
 Most of us are definitely not there yet, but we can still be very productive with Haskell,
 build real-world projects, and even discover new techniques and concepts ourselves.</p>
 <p>Remember that in a lazy language we evaluate things only when we need them.
@@ -8540,8 +8540,8 @@ of the offending code, and by reading the code we can find the error without the
 We can even ask GHC for the expected type in a certain place by using
 <a href="http://downloads.haskell.org/%7Eghc/latest/docs/html/users_guide/exts/typed_holes.html">typed holes</a>.</p>
 <h3 id="my-program-is-slow-why"><a class="header" href="#my-program-is-slow-why">My program is slow. Why?</a></h3>
-<p>There could be various reasons. From using inefficient algorithms or using an
-<a href="https://github.com/soupi/haskell-study-plan#data-structures">unsuited data structure</a> for the task
+<p>There could be various reasons. From inefficient algorithms or
+<a href="https://github.com/soupi/haskell-study-plan#data-structures">unsuited data structures</a> for the task
 in terms of time complexity of the common operations, to less efficient memory representations
 (this is another reminder to use <code>Text</code> over <code>String</code> in most cases),
 and laziness issues (again, the evaluation strategy!).</p>
@@ -8552,7 +8552,7 @@ study plan links to various resources on Haskell evaluation, profiling and case 
 <p>Start with the imperative shell functional core approach, define EDSLs with the combinator
 pattern for logic if needed, use monadic capabilities such as State locally if needed,
 maybe add an environment configuration with ReaderT, see how it goes.</p>
-<p>If that approach fails you, look at why it failed and examine other solutions according to your needs.</p>
+<p>If that approach fails you, look at why it fails and examine other solutions according to your needs.</p>
 <h3 id="how-to-model-data"><a class="header" href="#how-to-model-data">How to model data</a></h3>
 <p>Modeling data using ADTs are usually the way to go. Often programmers coming from object oriented
 background tend to look at type classes as a way to define methods similar to inheritance,

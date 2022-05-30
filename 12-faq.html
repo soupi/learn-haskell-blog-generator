@@ -195,8 +195,8 @@ of the offending code, and by reading the code we can find the error without the
 We can even ask GHC for the expected type in a certain place by using
 <a href="http://downloads.haskell.org/%7Eghc/latest/docs/html/users_guide/exts/typed_holes.html">typed holes</a>.</p>
 <h3 id="my-program-is-slow-why"><a class="header" href="#my-program-is-slow-why">My program is slow. Why?</a></h3>
-<p>There could be various reasons. From using inefficient algorithms or using an
-<a href="https://github.com/soupi/haskell-study-plan#data-structures">unsuited data structure</a> for the task
+<p>There could be various reasons. From inefficient algorithms or
+<a href="https://github.com/soupi/haskell-study-plan#data-structures">unsuited data structures</a> for the task
 in terms of time complexity of the common operations, to less efficient memory representations
 (this is another reminder to use <code>Text</code> over <code>String</code> in most cases),
 and laziness issues (again, the evaluation strategy!).</p>
@@ -207,7 +207,7 @@ study plan links to various resources on Haskell evaluation, profiling and case 
 <p>Start with the imperative shell functional core approach, define EDSLs with the combinator
 pattern for logic if needed, use monadic capabilities such as State locally if needed,
 maybe add an environment configuration with ReaderT, see how it goes.</p>
-<p>If that approach fails you, look at why it failed and examine other solutions according to your needs.</p>
+<p>If that approach fails you, look at why it fails and examine other solutions according to your needs.</p>
 <h3 id="how-to-model-data"><a class="header" href="#how-to-model-data">How to model data</a></h3>
 <p>Modeling data using ADTs are usually the way to go. Often programmers coming from object oriented
 background tend to look at type classes as a way to define methods similar to inheritance,

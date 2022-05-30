@@ -292,7 +292,7 @@ Finished in 0.0004 seconds
 1 example, 1 failure
 </code></pre>
 <p>The output describes which tests are running in a hierarchy tree (module, group and test),
-whether the tests passed or failed, and if they failed, what was the output and what the expected output was.</p>
+whether the tests pass or fail, and if they fail, the output and the expected output.</p>
 <p>We can fix our test by matching the expected output:</p>
 <pre><code class="language-hs">      shouldBe
         (parse &quot;&quot;)

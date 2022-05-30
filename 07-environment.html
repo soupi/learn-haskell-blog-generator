@@ -146,7 +146,7 @@
                     <main>
                         <h1 id="passing-environment-variables"><a class="header" href="#passing-environment-variables">Passing environment variables</a></h1>
 <p>We'd like to add some sort of an environment to keep general information on
-the blog for various processing. Things like the blog name, stylesheet
+the blog for various processings, such as the blog name, stylesheet
 location, and so on.</p>
 <h2 id="environment"><a class="header" href="#environment">Environment</a></h2>
 <p>We can represent our environment as a record data type and build it from user input.
@@ -180,27 +180,27 @@ type from the <code>mtl</code> (or <code>transformers</code>) package.</p>
 that it also has an instance of <code>Functor</code>, <code>Applicative</code>, <code>Monad</code> and <code>MonadTrans</code>.</p>
 <p>As we can see in the definition, <code>ReaderT</code> is <em>a newtype</em> over a function that takes
 some value of type <code>r</code>, and returns a value of type <code>m a</code>. The <code>r</code> usually
-represents the environment we want to share between different functions that we want to
-compose together, and the <code>m a</code> represents the underlying result that we return.
+represents the environment we want to share between functions that we want to compose,
+and the <code>m a</code> represents the underlying result that we return.
 The <code>m</code> could be any type that implements <code>Monad</code> that we are familiar with.
-Usually goes well with <code>IO</code> or <code>Identity</code>, depending if we want to share
+Usually it goes well with <code>IO</code> or <code>Identity</code>, depending on if we want to share
 an environment between effectful or uneffectful computations.</p>
-<p>What <code>ReaderT</code> does is <em>carry</em> a value of type <code>r</code> and passes it around to
+<p><code>ReaderT</code> <em>carries</em> a value of type <code>r</code> and passes it around to
 other functions when we use the <code>Applicative</code> and <code>Monad</code> interfaces so that
 we don't have to pass the value around manually. And when we want to grab
 the <code>r</code> and use it, all we have to do is <code>ask</code>.</p>
-<p>For our case, this means that instead of Passing around <code>Env</code>, we can instead
+<p>For our case, this means that instead of passing around <code>Env</code>, we can instead
 convert our functions to use <code>ReaderT</code> - those that are uneffectful and don't use
 <code>IO</code>, can return <code>ReaderT Env Identity a</code>  instead of <code>a</code> (or the simplified version, <code>Reader Env a</code>),
 and those that are effectful can return <code>ReaderT Env IO a</code> instead of <code>IO a</code>.</p>
-<p>Note, as we've said before, <code>Functor</code>, <code>Applicative</code> and <code>Monad</code> all expect the type
-that implements their interface to have the kind <code>* -&gt; *</code>.
+<p>Note, as we've said before, <code>Functor</code>, <code>Applicative</code>, and <code>Monad</code> all expect the type
+that implements their interfaces to have the kind <code>* -&gt; *</code>.
 This means that it is <code>ReaderT r m</code> which implements these interfaces,
 and when we compose functions with <code>&lt;*&gt;</code> or <code>&gt;&gt;=</code> we replace the <code>f</code> or <code>m</code>
 in their type signature with <code>ReaderT r m</code>.</p>
 <p>This means that, as with <code>Either e</code> when we had composed functions with the same error type,
 so it is with <code>ReaderT r m</code> - we have to compose functions with the same <code>r</code> type and same
-<code>m</code> type, so we can't mix different environment types or different underlying <code>m</code> types.</p>
+<code>m</code> type, we can't mix different environment types or different underlying <code>m</code> types.</p>
 <p>We're going to use a specialized version of <code>ReaderT</code> that uses a specific <code>m</code> = <code>Identity</code>
 called <a href="https://hackage.haskell.org/package/mtl-2.2.2/docs/Control-Monad-Reader.html#g:2"><code>Reader</code></a>.
 The <code>Control.Monad.Reader</code> provides an alias: <code>Reader r a = ReaderT r Identity a</code>.</p>
@@ -249,7 +249,7 @@ That's the idea behind monad transformers.</p>
 <p>We define it like this:</p>
 <pre><code class="language-hs">txtsToRenderedHtml :: [(FilePath, String)] -&gt; Reader Env [(FilePath, String)]
 </code></pre>
-<p>Now that our code uses <code>Reader</code>, we have to accommodate that in the way we write our function:</p>
+<p>Now that our code uses <code>Reader</code>, we have to accommodate that in the way we write our functions.</p>
 <p>Before:</p>
 <pre><code class="language-hs">txtsToRenderedHtml :: Env -&gt; [(FilePath, String)] -&gt; [(FilePath, String)]
 txtsToRenderedHtml env txtFiles =
@@ -307,7 +307,7 @@ We can do that with the functions <code>runReader</code> and <code>runReaderT</c
 
 runReaderT :: ReaderT r m a -&gt; (r -&gt; m a)
 </code></pre>
-<p>These functions convert a <code>Reader</code> or <code>ReaderT</code> to a function that takes and <code>r</code>.
+<p>These functions convert a <code>Reader</code> or <code>ReaderT</code> to a function that takes <code>r</code>.
 Then we can pass the initial environment to that function:</p>
 <pre><code class="language-hs">convertDirectory :: Env -&gt; FilePath -&gt; FilePath -&gt; IO ()
 convertDirectory env inputDir outputDir = do
@@ -325,7 +325,7 @@ convertDirectory env inputDir outputDir = do
 For example, we may have a general <code>Env</code> type that contains a lot of information, and
 functions that only need a part of that information.</p>
 <p>If the functions we are calling are like <code>convert</code> and take the environment as an
-argument instead of using a <code>Reader</code>, we can just extract the environment
+argument instead of a <code>Reader</code>, we can just extract the environment
 with <code>ask</code>, apply a function to the extracted environment,
 and pass the result to the function, like this:</p>
 <pre><code class="language-hs">outer :: Reader BigEnv MyResult
@@ -382,7 +382,7 @@ to convert a <code>Reader</code> of <code>SmallEnv</code> to a <code>Reader</cod
 and is related to topics like variance and covariance, but isn't terribly important
 for us at the moment.</p>
 <h3 id="using-env-in-our-logic-code"><a class="header" href="#using-env-in-our-logic-code">Using <code>Env</code> in our logic code</a></h3>
-<p>One thing we haven't talked about yet is actually using our environment in the <code>convert</code>
+<p>One thing we haven't talked about yet is using our environment in the <code>convert</code>
 function to generate the pages we want. And actually, we don't even have the ability to add
 stylesheets to our HTML EDSL at the moment! We need to go back and extend it. Let's do all
 that now:</p>
