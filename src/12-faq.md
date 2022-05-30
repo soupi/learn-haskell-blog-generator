@@ -66,8 +66,8 @@ We can even ask GHC for the expected type in a certain place by using
 
 ### My program is slow. Why?
 
-There could be various reasons. From using inefficient algorithms or using an
-[unsuited data structure](https://github.com/soupi/haskell-study-plan#data-structures) for the task
+There could be various reasons. From inefficient algorithms or
+[unsuited data structures](https://github.com/soupi/haskell-study-plan#data-structures) for the task
 in terms of time complexity of the common operations, to less efficient memory representations
 (this is another reminder to use `Text` over `String` in most cases),
 and laziness issues (again, the evaluation strategy!).
@@ -83,7 +83,7 @@ Start with the imperative shell functional core approach, define EDSLs with the 
 pattern for logic if needed, use monadic capabilities such as State locally if needed,
 maybe add an environment configuration with ReaderT, see how it goes.
 
-If that approach fails you, look at why it failed and examine other solutions according to your needs.
+If that approach fails you, look at why it fails and examine other solutions according to your needs.
 
 ### How to model data
 

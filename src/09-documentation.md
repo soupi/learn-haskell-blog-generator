@@ -1,7 +1,7 @@
 # Generating documentation
 
 There are [many ways](https://documentation.divio.com/)
-to make it easier for others to get started with our projects and libraries.
+to help others to get started with our projects and libraries.
 For example, we can write tutorials, provide runnable examples,
 describe the internals of the system, and create an API reference.
 

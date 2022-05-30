@@ -1,7 +1,7 @@
 # Passing environment variables
 
 We'd like to add some sort of an environment to keep general information on
-the blog for various processing. Things like the blog name, stylesheet
+the blog for various processings, such as the blog name, stylesheet
 location, and so on.
 
 ## Environment
@@ -46,31 +46,31 @@ that it also has an instance of `Functor`, `Applicative`, `Monad` and `MonadTran
 
 As we can see in the definition, `ReaderT` is *a newtype* over a function that takes
 some value of type `r`, and returns a value of type `m a`. The `r` usually
-represents the environment we want to share between different functions that we want to
-compose together, and the `m a` represents the underlying result that we return.
+represents the environment we want to share between functions that we want to compose,
+and the `m a` represents the underlying result that we return.
 The `m` could be any type that implements `Monad` that we are familiar with.
-Usually goes well with `IO` or `Identity`, depending if we want to share
+Usually it goes well with `IO` or `Identity`, depending on if we want to share
 an environment between effectful or uneffectful computations.
 
-What `ReaderT` does is *carry* a value of type `r` and passes it around to
+`ReaderT` *carries* a value of type `r` and passes it around to
 other functions when we use the `Applicative` and `Monad` interfaces so that
 we don't have to pass the value around manually. And when we want to grab
 the `r` and use it, all we have to do is `ask`.
 
-For our case, this means that instead of Passing around `Env`, we can instead
+For our case, this means that instead of passing around `Env`, we can instead
 convert our functions to use `ReaderT` - those that are uneffectful and don't use
 `IO`, can return `ReaderT Env Identity a`  instead of `a` (or the simplified version, `Reader Env a`),
 and those that are effectful can return `ReaderT Env IO a` instead of `IO a`.
 
-Note, as we've said before, `Functor`, `Applicative` and `Monad` all expect the type
-that implements their interface to have the kind `* -> *`.
+Note, as we've said before, `Functor`, `Applicative`, and `Monad` all expect the type
+that implements their interfaces to have the kind `* -> *`.
 This means that it is `ReaderT r m` which implements these interfaces,
 and when we compose functions with `<*>` or `>>=` we replace the `f` or `m`
 in their type signature with `ReaderT r m`.
 
 This means that, as with `Either e` when we had composed functions with the same error type,
 so it is with `ReaderT r m` - we have to compose functions with the same `r` type and same
-`m` type, so we can't mix different environment types or different underlying `m` types.
+`m` type, we can't mix different environment types or different underlying `m` types.
 
 We're going to use a specialized version of `ReaderT` that uses a specific `m` = `Identity`
 called [`Reader`](https://hackage.haskell.org/package/mtl-2.2.2/docs/Control-Monad-Reader.html#g:2).
@@ -142,7 +142,7 @@ We define it like this:
 txtsToRenderedHtml :: [(FilePath, String)] -> Reader Env [(FilePath, String)]
 ```
 
-Now that our code uses `Reader`, we have to accommodate that in the way we write our function:
+Now that our code uses `Reader`, we have to accommodate that in the way we write our functions.
 
 Before:
 
@@ -224,7 +224,7 @@ runReader :: Reader r a -> (r -> a)
 runReaderT :: ReaderT r m a -> (r -> m a)
 ```
 
-These functions convert a `Reader` or `ReaderT` to a function that takes and `r`.
+These functions convert a `Reader` or `ReaderT` to a function that takes `r`.
 Then we can pass the initial environment to that function:
 
 ```hs
@@ -248,7 +248,7 @@ For example, we may have a general `Env` type that contains a lot of information
 functions that only need a part of that information.
 
 If the functions we are calling are like `convert` and take the environment as an
-argument instead of using a `Reader`, we can just extract the environment
+argument instead of a `Reader`, we can just extract the environment
 with `ask`, apply a function to the extracted environment,
 and pass the result to the function, like this:
 
@@ -328,7 +328,7 @@ for us at the moment.
 
 ### Using `Env` in our logic code
 
-One thing we haven't talked about yet is actually using our environment in the `convert`
+One thing we haven't talked about yet is using our environment in the `convert`
 function to generate the pages we want. And actually, we don't even have the ability to add
 stylesheets to our HTML EDSL at the moment! We need to go back and extend it. Let's do all
 that now:
