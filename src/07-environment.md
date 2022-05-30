@@ -26,7 +26,7 @@ defaultEnv = Env "My Blog" "style.css"
 
 After filling this record with the requested information, we can pass it as
 input to any function that might need it. This is a simple approach that can definitely
-work for small projects. But when the project gets bigger and many
+work for small projects. But sometimes when the project gets bigger and many
 nested functions need the same information, threading the environment can get
 tedious.
 
@@ -46,13 +46,13 @@ that it also has an instance of `Functor`, `Applicative`, `Monad` and `MonadTran
 
 As we can see in the definition, `ReaderT` is *a newtype* over a function that takes
 some value of type `r`, and returns a value of type `m a`. The `r` usually
-represents the environment we want to share between the nested functions,
+represents the environment we want to share between functions that we want to compose,
 and the `m a` represents the underlying result that we return.
 The `m` could be any type that implements `Monad` that we are familiar with.
 Usually it goes well with `IO` or `Identity`, depending on if we want to share
 an environment between effectful or uneffectful computations.
 
-What `ReaderT` does is to *carry* a value of type `r` and pass it around to
+`ReaderT` *carries* a value of type `r` and passes it around to
 other functions when we use the `Applicative` and `Monad` interfaces so that
 we don't have to pass the value around manually. And when we want to grab
 the `r` and use it, all we have to do is `ask`.
