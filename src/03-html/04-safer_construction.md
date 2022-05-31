@@ -8,7 +8,7 @@ we are going to meet two ways: `newtype` and `type`.
 
 ## `newtype`
 
-A `newtype` declaration is a way to define a new, distinct type for an existing set of values (a type).
+A `newtype` declaration is a way to define a new, distinct type for an existing set of values.
 This is useful when we want to reuse existing values but give them different meaning,
 and make sure we can't mix the two.
 For example, we can represents seconds, minutes, grams and yens using integer values,
