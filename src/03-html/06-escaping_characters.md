@@ -23,7 +23,7 @@ escape =
         '>' -> "&gt;"
         '&' -> "&amp;"
         '"' -> "&quot;"
-        '\'' -> "&#39;"
+        '\' -> "&#39;"
         _ -> [c]
   in
     concat . map escapeChar
