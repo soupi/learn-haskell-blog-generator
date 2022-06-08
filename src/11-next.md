@@ -19,7 +19,7 @@ If you'd like to extend this project, here are a few ideas for you:
 
 1. **Serve over HTTP** - You can use a web library such as
    [wai](https://www.youtube.com/watch?v=mz5_HmLGRXc) or
-   [scotty](https://gilmi.me/blog/post/2020/12/05/scotty-bulletin-board)
+   [twain](https://gilmi.me/blog/post/2022/04/24/learn-twain-bulletin-app)
    to serve this blog over HTTP instead of generating it statically
 2. **Rewrite it with libraries** - you could rewrite it and use a real-world
    [HTML package](https://hackage.haskell.org/package/blaze-html)
