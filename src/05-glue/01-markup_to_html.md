@@ -89,7 +89,8 @@ headings that are not `h1`. There are a few ways to handle this:
 
 ---
 
-Exercise: Implement `h_ :: Natural -> String -> Structure`.
+Exercise: Implement `h_ :: Natural -> String -> Structure`
+which we'll use to define arbitrary headings (such as `<h1>`, `<h2>`, and so on).
 
 <details><summary>Solution</summary>
 
