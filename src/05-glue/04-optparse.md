@@ -354,7 +354,7 @@ You should already be familiar with `pure`, we've seen it when we
 talked about `IO`. For `IO`, `pure` lets us create an `IO` action
 with a specific return value without doing IO.
 With `pure` for `Parser`, we can create a `Parser` that when run
-will return a specific value as output.
+will return a specific value as output without doing any parsing.
 
 `liftA2` and `<*>` are two functions that can be implemented in
 terms of one another. `<*>` is actually the more useful one between
