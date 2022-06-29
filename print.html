@@ -5263,7 +5263,7 @@ a certain <code>f</code>, applicative functors allow us to apply a function to
 talked about <code>IO</code>. For <code>IO</code>, <code>pure</code> lets us create an <code>IO</code> action
 with a specific return value without doing IO.
 With <code>pure</code> for <code>Parser</code>, we can create a <code>Parser</code> that when run
-will return a specific value as output.</p>
+will return a specific value as output without doing any parsing.</p>
 <p><code>liftA2</code> and <code>&lt;*&gt;</code> are two functions that can be implemented in
 terms of one another. <code>&lt;*&gt;</code> is actually the more useful one between
 the two. Because when combined with <code>fmap</code> (or rather the infix version <code>&lt;$&gt;</code>),
