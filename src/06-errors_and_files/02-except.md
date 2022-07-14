@@ -106,7 +106,7 @@ bindExceptT mx f = ExceptT $ do
   x <- runExceptT mx
   case x of
     Left err -> pure (Left err)
-    Right y -> f y
+    Right y -> runExceptT (f y)
 ```
 
 </details>
