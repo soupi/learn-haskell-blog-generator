@@ -6466,7 +6466,7 @@ bindExceptT mx f = ExceptT $ do
   x &lt;- runExceptT mx
   case x of
     Left err -&gt; pure (Left err)
-    Right y -&gt; f y
+    Right y -&gt; runExceptT (f y)
 </code></pre>
 </details>
 <hr />
