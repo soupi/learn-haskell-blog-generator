@@ -58,9 +58,11 @@ a specialized version of `>>=` would look like this:
 -- Generalized version
 (>>=) :: Monad m => m a -> (a -> m b) -> m b
 
--- Specialized version, replace `m` with `ExceptT e m`
-(>>=) :: ExceptT e m a -> (a -> ExceptT e m b) -> ExceptT e m b
+-- Specialized version, replace the `m` above with `ExceptT e m`.
+(>>=) :: Monad m => ExceptT e m a -> (a -> ExceptT e m b) -> ExceptT e m b
 ```
+
+Note that the `m` in the specialized version still needs to be an instance of `Monad`.
 
 ---
 
