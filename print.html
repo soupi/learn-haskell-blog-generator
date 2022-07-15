@@ -6432,9 +6432,10 @@ a specialized version of <code>&gt;&gt;=</code> would look like this:</p>
 <pre><code class="language-hs">-- Generalized version
 (&gt;&gt;=) :: Monad m =&gt; m a -&gt; (a -&gt; m b) -&gt; m b
 
--- Specialized version, replace `m` with `ExceptT e m`
-(&gt;&gt;=) :: ExceptT e m a -&gt; (a -&gt; ExceptT e m b) -&gt; ExceptT e m b
+-- Specialized version, replace the `m` above with `ExceptT e m`.
+(&gt;&gt;=) :: Monad m =&gt; ExceptT e m a -&gt; (a -&gt; ExceptT e m b) -&gt; ExceptT e m b
 </code></pre>
+<p>Note that the <code>m</code> in the specialized version still needs to be an instance of <code>Monad</code>.</p>
 <hr />
 <p>Unsure how this works? Try to implement <code>&gt;&gt;=</code> for <code>IO (Either Error a)</code>:</p>
 <pre><code class="language-hs">bindExceptT :: IO (Either Error a) -&gt; (a -&gt; IO (Either Error b)) -&gt; IO (Either Error b)
