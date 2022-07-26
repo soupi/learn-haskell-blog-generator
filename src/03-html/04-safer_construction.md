@@ -11,7 +11,7 @@ we are going to meet two ways: `newtype` and `type`.
 A `newtype` declaration is a way to define a new, distinct type for an existing set of values.
 This is useful when we want to reuse existing values but give them different meaning,
 and make sure we can't mix the two.
-For example, we can represents seconds, minutes, grams and yens using integer values,
+For example, we can represent seconds, minutes, grams and yens using integer values,
 but we don't want to accidentally mix grams and seconds.
 
 In our case we want to represent structured HTML using textual values,
