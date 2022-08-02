@@ -398,7 +398,7 @@ parse = parseLines Nothing . lines -- (1)
 parseLines :: Maybe Structure -&gt; [String] -&gt; Document
 parseLines context txts =
   case txts of
-    [] -&gt; maybeToList context   -- (2)
+    [] -&gt; maybeToList context -- (2)
     -- Paragraph case
     currentLine : rest -&gt;
       let
@@ -410,7 +410,7 @@ parseLines context txts =
           else
             case context of
               Just (Paragraph paragraph) -&gt;
-                parseLines (Just (Paragraph (unwords [paragraph, line]))) rest -- (4), (5)
+                parseLines (Just (Paragraph (unwords [paragraph, line]))) rest -- (4)
               _ -&gt;
                 maybe id (:) context (parseLines (Just (Paragraph line)) rest)
 
@@ -481,12 +481,9 @@ There are many ways to handle that, one simple way is to create a different type
 <p>In this case I'm going with the approach of not worrying about it too much,
 because it's a very local piece of code that can easily be fixed later if needed.</p>
 </li>
-<li>
-<p>Anyway, if you've used <code>-Wall</code> like I've suggested,
-you'd get a warning from GHC saying that the <em>&quot;pattern matches are non-exhaustive&quot;</em>.
-This is because we did not cover all cases. So let's cover more cases:</p>
-</li>
 </ol>
+<p>Let's cover more parsing cases, we want to handle headings and lists as well.
+We can do that by examining the first characters of a line:</p>
 <pre><code class="language-hs">parse :: String -&gt; Document
 parse = parseLines Nothing . lines
 
