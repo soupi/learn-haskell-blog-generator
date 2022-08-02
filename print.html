@@ -4868,11 +4868,9 @@ or <code>cabal</code> to build and run our program and package (I mostly use sta
 <p>Building the project - on the first run, cabal will download the package dependencies
 and use the GHC on PATH to build the project.</p>
 <p>Cabal caches packages between projects, so if a new project uses the same packages
-with the same versions (and the same flag settings) they will not need to be reinstalled.
-<code>cabal</code> commands are usually prefixed with <code>v2-</code> to note that we want to use the new
-build system implementation.</p>
+with the same versions (and the same flag settings) they will not need to be reinstalled.</p>
 <blockquote>
-<p>In older version of cabal, packages could be installed either globally, or in sandboxes.
+<p>In older versions of cabal, packages could be installed either globally, or in sandboxes.
 In each sandbox (and globally) there could only be one version of a package installed,
 and users would usually create different sandboxes for different projects, without caching
 packages between projects.</p>
@@ -4882,36 +4880,41 @@ package dependency such that they all work together, without needing sandboxing.
 This change helps us increase sharing of built packages while avoiding conflicts and manual
 handling of sandboxes.</p>
 </blockquote>
+<blockquote>
+<p>Note: The new build system implementation is now the default and Cabal commands do not need
+to be prefixed with <code>v2-</code>, but the Cabal documentation will still mention the prefix to
+refer to the new commands.</p>
+</blockquote>
 <p>A few important commands we should be familiar with:</p>
-<pre><code class="language-sh">cabal v2-update
+<pre><code class="language-sh">cabal update
 </code></pre>
-<p><a href="https://cabal.readthedocs.io/en/3.6/cabal-commands.html#cabal-v2-update"><code>v2-update</code></a>
+<p><a href="https://cabal.readthedocs.io/en/3.6/cabal-commands.html#cabal-v2-update"><code>update</code></a>
 fetches information from remote package repositories (specifically Hackage unless specified otherwise)
 and updates the local package index which includes various information about available packages such as
 their names, versions and dependencies.</p>
-<p><code>cabal v2-update</code> is usually the first command to run before fetching package dependencies.</p>
-<pre><code class="language-sh">cabal v2-build
+<p><code>cabal update</code> is usually the first command to run before fetching package dependencies.</p>
+<pre><code class="language-sh">cabal build
 </code></pre>
-<p><a href="https://cabal.readthedocs.io/en/3.6/cabal-commands.html#cabal-v2-build"><code>v2-build</code></a>
+<p><a href="https://cabal.readthedocs.io/en/3.6/cabal-commands.html#cabal-v2-build"><code>build</code></a>
 compiles the various targets (such as <code>library</code> and <code>executable</code>s).
 It will also fetch and install the package dependencies when they're not already installed.</p>
-<pre><code class="language-sh">cabal v2-run hs-blog-gen -- &lt;program arguments&gt;
+<pre><code class="language-sh">cabal run hs-blog-gen -- &lt;program arguments&gt;
 </code></pre>
-<p><a href="https://cabal.readthedocs.io/en/3.6/cabal-commands.html#cabal-v2-run"><code>v2-run</code></a>
+<p><a href="https://cabal.readthedocs.io/en/3.6/cabal-commands.html#cabal-v2-run"><code>run</code></a>
 Can be used to compile and then run a target (in our case our <code>executable</code> which we named <code>hs-blog-gen</code>).
 We separate arguments passed to <code>cabal</code> and arguments passed to our target program with <code>--</code>.</p>
-<pre><code class="language-sh">cabal v2-repl hs-blog
+<pre><code class="language-sh">cabal repl hs-blog
 </code></pre>
-<p><a href="https://cabal.readthedocs.io/en/3.6/cabal-commands.html#cabal-v2-repl"><code>v2-repl</code></a>
+<p><a href="https://cabal.readthedocs.io/en/3.6/cabal-commands.html#cabal-v2-repl"><code>repl</code></a>
 runs <code>ghci</code> in the context of the target (in our case our <code>library</code> which we named <code>hs-blog</code>) -
 it will load the target's package dependencies and modules to be available in <code>ghci</code>.</p>
-<pre><code class="language-sh">cabal v2-clean
+<pre><code class="language-sh">cabal clean
 </code></pre>
-<p><a href="https://cabal.readthedocs.io/en/3.6/cabal-commands.html#cabal-v2-clean"><code>v2-clean</code></a>
+<p><a href="https://cabal.readthedocs.io/en/3.6/cabal-commands.html#cabal-v2-clean"><code>clean</code></a>
 Deletes the build artifacts that we built.</p>
-<p>There are more interesting commands we could use, such as <code>cabal v2-freeze</code> to generate
+<p>There are more interesting commands we could use, such as <code>cabal freeze</code> to generate
 a file which records the packages versions and flags we used to build this project,
-and <code>cabal v2-sdist</code> to bundle the project source to a package tarball which can be
+and <code>cabal sdist</code> to bundle the project source to a package tarball which can be
 uploaded to Hackage. If you'd like to learn more visit the
 <a href="https://cabal.readthedocs.io/en/3.6/cabal-commands.html">Cabal user guide</a>.</p>
 <h3 id="for-stack"><a class="header" href="#for-stack">For stack:</a></h3>
@@ -7846,7 +7849,7 @@ to the &quot;main&quot; file of the test suite, for us this is <code>test/Spec.h
 <pre><code class="language-hs">{-# OPTIONS_GHC -F -pgmF hspec-discover #-}
 </code></pre>
 <p>That's it! <code>hspec-discover</code> will automatically define a <code>main</code> for us.
-Now we can run the tests using <code>stack test</code> or <code>cabal v2-test</code> (your choice).
+Now we can run the tests using <code>stack test</code> or <code>cabal test</code> (your choice).
 Because we haven't defined any tests, our output is:</p>
 <pre><code class="language-sh">Finished in 0.0000 seconds
 0 examples, 0 failures
@@ -8178,8 +8181,8 @@ from annotated Haskell source code using <a href="https://www.haskell.org/haddoc
 <p>We can generate API reference pages (a.k.a. haddocks in the Haskell world) for our project
 using our favorite package manager:</p>
 <h3 id="cabal"><a class="header" href="#cabal">Cabal</a></h3>
-<p>We can run <code>cabal v2-haddock</code> to generate haddocks:</p>
-<pre><code class="language-sh">➜ cabal v2-haddock
+<p>We can run <code>cabal haddock</code> to generate haddocks:</p>
+<pre><code class="language-sh">➜ cabal haddock
 Resolving dependencies...
 Build profile: -w ghc-9.0.1 -O1
 In order, the following will be built (use -v for more details):

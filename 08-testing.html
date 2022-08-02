@@ -229,7 +229,7 @@ to the &quot;main&quot; file of the test suite, for us this is <code>test/Spec.h
 <pre><code class="language-hs">{-# OPTIONS_GHC -F -pgmF hspec-discover #-}
 </code></pre>
 <p>That's it! <code>hspec-discover</code> will automatically define a <code>main</code> for us.
-Now we can run the tests using <code>stack test</code> or <code>cabal v2-test</code> (your choice).
+Now we can run the tests using <code>stack test</code> or <code>cabal test</code> (your choice).
 Because we haven't defined any tests, our output is:</p>
 <pre><code class="language-sh">Finished in 0.0000 seconds
 0 examples, 0 failures
