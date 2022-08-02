@@ -90,7 +90,7 @@ to the "main" file of the test suite, for us this is `test/Spec.hs`:
 ```
 
 That's it! `hspec-discover` will automatically define a `main` for us.
-Now we can run the tests using `stack test` or `cabal v2-test` (your choice).
+Now we can run the tests using `stack test` or `cabal test` (your choice).
 Because we haven't defined any tests, our output is:
 
 ```sh

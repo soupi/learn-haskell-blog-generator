@@ -455,10 +455,8 @@ and use the GHC on PATH to build the project.
 
 Cabal caches packages between projects, so if a new project uses the same packages
 with the same versions (and the same flag settings) they will not need to be reinstalled.
-`cabal` commands are usually prefixed with `v2-` to note that we want to use the new
-build system implementation.
 
-> In older version of cabal, packages could be installed either globally, or in sandboxes.
+> In older versions of cabal, packages could be installed either globally, or in sandboxes.
 > In each sandbox (and globally) there could only be one version of a package installed,
 > and users would usually create different sandboxes for different projects, without caching
 > packages between projects.
@@ -469,53 +467,57 @@ build system implementation.
 > This change helps us increase sharing of built packages while avoiding conflicts and manual
 > handling of sandboxes.
 
+> Note: The new build system implementation is now the default and Cabal commands do not need
+> to be prefixed with `v2-`, but the Cabal documentation will still mention the prefix to
+> refer to the new commands.
+
 A few important commands we should be familiar with:
 
 ```sh
-cabal v2-update
+cabal update
 ```
 
-[`v2-update`](https://cabal.readthedocs.io/en/3.6/cabal-commands.html#cabal-v2-update)
+[`update`](https://cabal.readthedocs.io/en/3.6/cabal-commands.html#cabal-v2-update)
 fetches information from remote package repositories (specifically Hackage unless specified otherwise)
 and updates the local package index which includes various information about available packages such as
 their names, versions and dependencies.
 
-`cabal v2-update` is usually the first command to run before fetching package dependencies.
+`cabal update` is usually the first command to run before fetching package dependencies.
 
 ```sh
-cabal v2-build
+cabal build
 ```
 
-[`v2-build`](https://cabal.readthedocs.io/en/3.6/cabal-commands.html#cabal-v2-build)
+[`build`](https://cabal.readthedocs.io/en/3.6/cabal-commands.html#cabal-v2-build)
 compiles the various targets (such as `library` and `executable`s).
 It will also fetch and install the package dependencies when they're not already installed.
 
 ```sh
-cabal v2-run hs-blog-gen -- <program arguments>
+cabal run hs-blog-gen -- <program arguments>
 ```
 
-[`v2-run`](https://cabal.readthedocs.io/en/3.6/cabal-commands.html#cabal-v2-run)
+[`run`](https://cabal.readthedocs.io/en/3.6/cabal-commands.html#cabal-v2-run)
 Can be used to compile and then run a target (in our case our `executable` which we named `hs-blog-gen`).
 We separate arguments passed to `cabal` and arguments passed to our target program with `--`.
 
 ```sh
-cabal v2-repl hs-blog
+cabal repl hs-blog
 ```
 
-[`v2-repl`](https://cabal.readthedocs.io/en/3.6/cabal-commands.html#cabal-v2-repl)
+[`repl`](https://cabal.readthedocs.io/en/3.6/cabal-commands.html#cabal-v2-repl)
 runs `ghci` in the context of the target (in our case our `library` which we named `hs-blog`) -
 it will load the target's package dependencies and modules to be available in `ghci`.
 
 ```sh
-cabal v2-clean
+cabal clean
 ```
 
-[`v2-clean`](https://cabal.readthedocs.io/en/3.6/cabal-commands.html#cabal-v2-clean)
+[`clean`](https://cabal.readthedocs.io/en/3.6/cabal-commands.html#cabal-v2-clean)
 Deletes the build artifacts that we built.
 
-There are more interesting commands we could use, such as `cabal v2-freeze` to generate
+There are more interesting commands we could use, such as `cabal freeze` to generate
 a file which records the packages versions and flags we used to build this project,
-and `cabal v2-sdist` to bundle the project source to a package tarball which can be
+and `cabal sdist` to bundle the project source to a package tarball which can be
 uploaded to Hackage. If you'd like to learn more visit the
 [Cabal user guide](https://cabal.readthedocs.io/en/3.6/cabal-commands.html).
 

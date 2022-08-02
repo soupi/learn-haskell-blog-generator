@@ -15,10 +15,10 @@ using our favorite package manager:
 
 ### Cabal
 
-We can run `cabal v2-haddock` to generate haddocks:
+We can run `cabal haddock` to generate haddocks:
 
 ```sh
-➜ cabal v2-haddock
+➜ cabal haddock
 Resolving dependencies...
 Build profile: -w ghc-9.0.1 -O1
 In order, the following will be built (use -v for more details):
