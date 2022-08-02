@@ -315,7 +315,7 @@ parse = parseLines Nothing . lines -- (1)
 parseLines :: Maybe Structure -> [String] -> Document
 parseLines context txts =
   case txts of
-    [] -> maybeToList context   -- (2)
+    [] -> maybeToList context -- (2)
     -- Paragraph case
     currentLine : rest ->
       let
@@ -327,7 +327,7 @@ parseLines context txts =
           else
             case context of
               Just (Paragraph paragraph) ->
-                parseLines (Just (Paragraph (unwords [paragraph, line]))) rest -- (4), (5)
+                parseLines (Just (Paragraph (unwords [paragraph, line]))) rest -- (4)
               _ ->
                 maybe id (:) context (parseLines (Just (Paragraph line)) rest)
 
@@ -409,10 +409,8 @@ trim = unwords . words
    In this case I'm going with the approach of not worrying about it too much,
    because it's a very local piece of code that can easily be fixed later if needed.
 
-5. Anyway, if you've used `-Wall` like I've suggested,
-   you'd get a warning from GHC saying that the *"pattern matches are non-exhaustive"*.
-   This is because we did not cover all cases. So let's cover more cases:
-
+Let's cover more parsing cases, we want to handle headings and lists as well.
+We can do that by examining the first characters of a line:
 
 ```hs
 parse :: String -> Document
