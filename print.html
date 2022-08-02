@@ -3332,12 +3332,43 @@ trim = unwords . words
 <p>Unsure what <code>maybeToList</code> does? <a href="https://hoogle.haskell.org">Hoogle</a> it!</p>
 </li>
 <li>
-<p><a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Prelude.html#v:maybe">maybe</a> is a function
+<p>We can split this line into two important parts:</p>
+<ol>
+<li><code>maybe id (:) context</code> - prepending the context to the rest of the document</li>
+<li><code>parseLines Nothing rest</code> - parsing the rest of the document</li>
+</ol>
+<p>Let's focus on the first part.
+We want to prepend <code>context</code> to the rest of the document, but we can't write
+<code>context : parseLines Nothing rest</code> because <code>context</code> has the type <code>Maybe Structure</code>
+and not <code>Structure</code>, meaning that we <em>might</em> have a <code>Structure</code> but maybe not,
+if we do have a <code>Structure</code> to prepend, we wish to prepend it. If not, we want to return
+the result of <code>parseLines Nothing rest</code> as is. Try writing this using pattern matching!</p>
+<details><summary>Solution</summary>
+<pre><code class="language-hs">case context of
+  Nothing -&gt; parseLines Nothing rest
+  Just structure -&gt; structure : parseLines Nothing rest
+</code></pre>
+</details>
+<p>The <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Prelude.html#v:maybe">maybe</a>
+function let's us do the same thing in a more compact way. It is a function
 that works similarly to pattern matching on a <code>Maybe</code>:
-the third argument to <code>maybe</code> is the value we pattern match on, the second argument is a function to apply
-to the value found in a <code>Just</code> case, and the first argument is the value to return in case the value
-we pattern match on is <code>Nothing</code>. This way to encode pattern matching using functions is actually
-fairly common.</p>
+the third argument to <code>maybe</code> is the value on which we pattern match,
+the second argument is a function to apply to the value found in a <code>Just</code> case,
+and the first argument is the value to return in case the value
+we pattern match on is <code>Nothing</code>. A more faithful translation of
+<code>maybe id (:) context (parseLines Nothing rest)</code>
+to pattern matching would look like this:</p>
+<details><summary>Solution</summary>
+<pre><code class="language-hs">( case context of
+    Nothing -&gt; id
+    Just structure -&gt; (:) structure
+) (parseLines Nothing rest)
+</code></pre>
+<p>Note how the result of this case expression is a function of type <code>Document -&gt; Document</code>,
+how we partially apply <code>(:)</code> with <code>structure</code> to create a function that prepends <code>structure</code>,
+and how we apply <code>parseLines Nothing rest</code> to the case expression.</p>
+</details>
+<p>This way of encoding pattern matching using functions is fairly common.</p>
 <p>Check out the types of <code>id</code>, <code>(:)</code> and <code>maybe id (:)</code> in GHCi!</p>
 </li>
 <li>
