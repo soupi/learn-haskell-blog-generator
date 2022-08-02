@@ -433,8 +433,8 @@ trim = unwords . words
 <p>Let's focus on the first part.
 We want to prepend <code>context</code> to the rest of the document, but we can't write
 <code>context : parseLines Nothing rest</code> because <code>context</code> has the type <code>Maybe Structure</code>
-and not <code>Structure</code>, meaning that we <em>might</em> have a <code>Structure</code> but maybe not,
-if we do have a <code>Structure</code> to prepend, we wish to prepend it. If not, we want to return
+and not <code>Structure</code>, meaning that we <em>might</em> have a <code>Structure</code> but maybe not.
+If we do have a <code>Structure</code> to prepend, we wish to prepend it. If not, we want to return
 the result of <code>parseLines Nothing rest</code> as is. Try writing this using pattern matching!</p>
 <details><summary>Solution</summary>
 <pre><code class="language-hs">case context of
