@@ -345,8 +345,8 @@ trim = unwords . words
    Let's focus on the first part.
    We want to prepend `context` to the rest of the document, but we can't write
    `context : parseLines Nothing rest` because `context` has the type `Maybe Structure`
-   and not `Structure`, meaning that we *might* have a `Structure` but maybe not,
-   if we do have a `Structure` to prepend, we wish to prepend it. If not, we want to return
+   and not `Structure`, meaning that we *might* have a `Structure` but maybe not.
+   If we do have a `Structure` to prepend, we wish to prepend it. If not, we want to return
    the result of `parseLines Nothing rest` as is. Try writing this using pattern matching!
 
    <details><summary>Solution</summary>
