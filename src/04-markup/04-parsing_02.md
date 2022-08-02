@@ -338,14 +338,56 @@ trim = unwords . words
 
 1. We can now pass `Nothing` when we don't have a context
 2. Unsure what `maybeToList` does? [Hoogle](https://hoogle.haskell.org) it!
-3. [maybe](https://hackage.haskell.org/package/base-4.15.0.0/docs/Prelude.html#v:maybe) is a function
+3. We can split this line into two important parts:
+   1. `maybe id (:) context` - prepending the context to the rest of the document
+   2. `parseLines Nothing rest` - parsing the rest of the document
+
+   Let's focus on the first part.
+   We want to prepend `context` to the rest of the document, but we can't write
+   `context : parseLines Nothing rest` because `context` has the type `Maybe Structure`
+   and not `Structure`, meaning that we *might* have a `Structure` but maybe not,
+   if we do have a `Structure` to prepend, we wish to prepend it. If not, we want to return
+   the result of `parseLines Nothing rest` as is. Try writing this using pattern matching!
+
+   <details><summary>Solution</summary>
+
+   ```hs
+   case context of
+     Nothing -> parseLines Nothing rest
+     Just structure -> structure : parseLines Nothing rest
+   ```
+
+   </details>
+
+   The [maybe](https://hackage.haskell.org/package/base-4.15.0.0/docs/Prelude.html#v:maybe)
+   function let's us do the same thing in a more compact way. It is a function
    that works similarly to pattern matching on a `Maybe`:
-   the third argument to `maybe` is the value we pattern match on, the second argument is a function to apply
-   to the value found in a `Just` case, and the first argument is the value to return in case the value
-   we pattern match on is `Nothing`. This way to encode pattern matching using functions is actually
-   fairly common.
+   the third argument to `maybe` is the value on which we pattern match,
+   the second argument is a function to apply to the value found in a `Just` case,
+   and the first argument is the value to return in case the value
+   we pattern match on is `Nothing`. A more faithful translation of
+   `maybe id (:) context (parseLines Nothing rest)`
+   to pattern matching would look like this:
+
+   <details><summary>Solution</summary>
+
+   ```hs
+   ( case context of
+       Nothing -> id
+       Just structure -> (:) structure
+   ) (parseLines Nothing rest)
+   ```
+
+   Note how the result of this case expression is a function of type `Document -> Document`,
+   how we partially apply `(:)` with `structure` to create a function that prepends `structure`,
+   and how we apply `parseLines Nothing rest` to the case expression.
+
+   </details>
+
+   This way of encoding pattern matching using functions is fairly common.
 
    Check out the types of `id`, `(:)` and `maybe id (:)` in GHCi!
+
 4. Hey! Didn't we say that appending `String`s/lists is slow (which is what `unwords` does)? Yes, it is.
    Because in our `Structure` data type, a paragraph is defined as `Paragraph String` and not `Paragraph [String]`,
    we can't use our trick of building a list of lines and then reverse it in the end.
