@@ -19,9 +19,8 @@ The most common type of definitions have the following form:
 
 Note that:
 
-1. We cannot write expressions without binding them to a name
-2. Names must start with a lowercase letter
-3. We cannot use the same name more than once in a file
+1. Names must start with a lowercase letter
+2. We cannot use the same name more than once in a file
 
 A source file containing a definition of the name `main` can be treated as an executable,
 and the expression `main` is bound to is the entry point to the program.
@@ -44,6 +43,10 @@ Running this program will result in the following text printed on the screen:
 ```
 <html><body>Hello, world!</body></html>
 ```
+
+Note that we cannot just write `putStrLn "<html><body>Hello, world!</body></html>"`
+without the `main =` part, because it is not a definition. This is something that is allowed
+in languages such as Python and OCaml, but not in Haskell or, for example, C.
 
 ## Compiling programs
 
@@ -106,4 +109,3 @@ myhtml = "<html><body>Hello, world!</body></html>"
 ```
 
 __Note__: the order in which we declare the bindings does not matter.
-
