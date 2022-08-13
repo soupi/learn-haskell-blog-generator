@@ -159,7 +159,6 @@ and install a Haskell toolchain.</p>
 </code></pre>
 <p>Note that:</p>
 <ol>
-<li>We cannot write expressions without binding them to a name</li>
 <li>Names must start with a lowercase letter</li>
 <li>We cannot use the same name more than once in a file</li>
 </ol>
@@ -175,6 +174,9 @@ as input. <code>putStrLn</code> takes a single string as input and prints that s
 <p>Running this program will result in the following text printed on the screen:</p>
 <pre><code>&lt;html&gt;&lt;body&gt;Hello, world!&lt;/body&gt;&lt;/html&gt;
 </code></pre>
+<p>Note that we cannot just write <code>putStrLn &quot;&lt;html&gt;&lt;body&gt;Hello, world!&lt;/body&gt;&lt;/html&gt;&quot;</code>
+without the <code>main =</code> part, because it is not a definition. This is something that is allowed
+in languages such as Python and OCaml, but not in Haskell or, for example, C.</p>
 <h2 id="compiling-programs"><a class="header" href="#compiling-programs">Compiling programs</a></h2>
 <p>To run this little program, we can compile it using the command line program <code>ghc</code>:</p>
 <pre><code class="language-sh">&gt; ghc hello.hs
