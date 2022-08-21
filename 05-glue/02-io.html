@@ -232,12 +232,10 @@ and also messes up our ability to use <em>equational reasoning</em> to understan
 have <em>no side effects</em>. Pure functions will <em>always</em> return the same output (given the same input)
 and <strong>evaluating pure expressions is deterministic</strong>.</p>
 <p>But now, how can we do I/O operations? There are many possible solutions</p>
-<ul>
-<li>for Haskell it was decided to design a first class interface
+<p>For Haskell it was decided to design a first class interface
 with an accompanied type called <code>IO</code>. <code>IO</code>'s interface will force a distinction
 from non-I/O expressions, and will also require that in order to <em>combine</em>
-multiple <code>IO</code> operations, we will have to <em>specify the order</em> the operations.</li>
-</ul>
+multiple <code>IO</code> operations, we will have to <em>specify the order</em> the operations.</p>
 <h2 id="io"><a class="header" href="#io">IO</a></h2>
 <p><code>IO</code> is an opaque type, like our <code>Html</code> type in which we hide its internal
 representation from the user behind an interface. But in this case <code>IO</code> is a
