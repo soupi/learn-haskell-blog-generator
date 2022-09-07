@@ -192,3 +192,10 @@ render html =
   case html of
     Html str -> str
 ```
+
+> As an aside, you might have notice that I've decided to suffix the functions used to
+> construct HTML values with an undescore (`_`). This mostly an aesthetic decision which,
+> in my opinion, makes the EDSL easier to recognize,
+> but it is also useful to avoid name clashes with
+> functions defined in the Haskell standard library, such as `head`.
+> I took this idea from a Haskell HTML library named `lucid`!
