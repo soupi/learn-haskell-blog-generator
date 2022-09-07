@@ -1367,6 +1367,14 @@ render html =
   case html of
     Html str -&gt; str
 </code></pre>
+<blockquote>
+<p>As an aside, you might have notice that I've decided to suffix the functions used to
+construct HTML values with an undescore (<code>_</code>). This mostly an aesthetic decision which,
+in my opinion, makes the EDSL easier to recognize,
+but it is also useful to avoid name clashes with
+functions defined in the Haskell standard library, such as <code>head</code>.
+I took this idea from a Haskell HTML library named <code>lucid</code>!</p>
+</blockquote>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="escaping-characters"><a class="header" href="#escaping-characters">Escaping characters</a></h1>
 <p>Now that <code>Html</code> has its own source file and module, and creating
 HTML code can be done only via the functions we exported,
