@@ -6005,7 +6005,7 @@ as well as their <code>Markup</code> (so we can extract information to include i
 such as the first heading and paragraph). Our output should be an <code>Html</code> page.</p>
 <hr />
 <p>We need to implement the following function:</p>
-<pre><code class="language-hs">buildIndex :: [(FilePath, Markup)] -&gt; Html
+<pre><code class="language-hs">buildIndex :: [(FilePath, Markup.Document)] -&gt; Html.Html
 </code></pre>
 <details><summary>Solution</summary>
 <pre><code class="language-hs">buildIndex :: [(FilePath, Markup.Document)] -&gt; Html.Html
