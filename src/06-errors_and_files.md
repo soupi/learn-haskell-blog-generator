@@ -236,7 +236,7 @@ such as the first heading and paragraph). Our output should be an `Html` page.
 We need to implement the following function:
 
 ```hs
-buildIndex :: [(FilePath, Markup)] -> Html
+buildIndex :: [(FilePath, Markup.Document)] -> Html.Html
 ```
 
 <details><summary>Solution</summary>
