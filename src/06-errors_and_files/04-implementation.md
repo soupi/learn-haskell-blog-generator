@@ -449,7 +449,7 @@ buildIndex files =
   in
     Html.html_
       "Blog"
-      ( Html.h1_ (Html.link_ "index.html" (Html.txt_ "Blog"))
+      ( Html.h_ 1 (Html.link_ "index.html" (Html.txt_ "Blog"))
         <> Html.h_ 2 (Html.txt_ "Posts")
         <> mconcat previews
       )
