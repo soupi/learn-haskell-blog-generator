@@ -473,7 +473,7 @@ pipeline  = tokenize >=> parse >=> typecheck
 pipeline' = typecheck <=< parse <=< tokenize
 ```
 
-Hakell's ability to create very concise code using abstractions is
+Haskell's ability to create very concise code using abstractions is
 great once one is familiar with the abstractions. Knowing the monad abstraction,
 we are now already familiar with the core composition API of many libraries - for example:
 
