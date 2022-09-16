@@ -457,19 +457,23 @@ pipeline string = do
 And it will work! Still, in this particular case `tokenize string >>= parse >>= typecheck`
 is so concise it can only be beaten by using
 [>=>](https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Monad.html#v:-62--61--62-)
+or
+[<=<](https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Monad.html#v:-60--61--60-)
 
 ```hs
 >=> :: Monad m => (a -> m b) -> (b -> m c) -> a -> m c
+<=< :: Monad m => (b -> m c) -> (a -> m b) -> a -> m c
 
 -- compare with function composition:
-(.) ::            (a ->   b) -> (b ->   c) -> a ->   c
+(.) ::            (b ->   c) -> (a ->   b) -> a ->   c
 ```
 
 ```hs
-pipeline = tokenize >=> parse >=> typecheck
+pipeline  = tokenize >=> parse >=> typecheck
+pipeline' = typecheck <=< parse <=< tokenize
 ```
 
-Hakell's ability to create very concise code using abstractions is
+Haskell's ability to create very concise code using abstractions is
 great once one is familiar with the abstractions. Knowing the monad abstraction,
 we are now already familiar with the core composition API of many libraries - for example:
 
