@@ -458,19 +458,24 @@ And it will work! Still, in this particular case `tokenize string >>= parse >>= 
 is so concise it can only be beaten by using
 [>=>](https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Monad.html#v:-62--61--62-)
 or
-[<=<](https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Monad.html#v:-60--61--60-)
+[<=<](https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Monad.html#v:-60--61--60-):
 
 ```hs
->=> :: Monad m => (a -> m b) -> (b -> m c) -> a -> m c
-<=< :: Monad m => (b -> m c) -> (a -> m b) -> a -> m c
+(>=>) :: Monad m => (a -> m b) -> (b -> m c) -> a -> m c
+(<=<) :: Monad m => (b -> m c) -> (a -> m b) -> a -> m c
 
 -- compare with function composition:
-(.) ::            (b ->   c) -> (a ->   b) -> a ->   c
+(.) ::              (b ->   c) -> (a ->   b) -> a ->   c
 ```
 
 ```hs
 pipeline  = tokenize >=> parse >=> typecheck
-pipeline' = typecheck <=< parse <=< tokenize
+```
+
+or
+
+```hs
+pipeline = typecheck <=< parse <=< tokenize
 ```
 
 Haskell's ability to create very concise code using abstractions is
