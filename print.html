@@ -6402,15 +6402,17 @@ pipeline string = do
 is so concise it can only be beaten by using
 <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Monad.html#v:-62--61--62-">&gt;=&gt;</a>
 or
-<a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Monad.html#v:-60--61--60-">&lt;=&lt;</a></p>
-<pre><code class="language-hs">&gt;=&gt; :: Monad m =&gt; (a -&gt; m b) -&gt; (b -&gt; m c) -&gt; a -&gt; m c
-&lt;=&lt; :: Monad m =&gt; (b -&gt; m c) -&gt; (a -&gt; m b) -&gt; a -&gt; m c
+<a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Monad.html#v:-60--61--60-">&lt;=&lt;</a>:</p>
+<pre><code class="language-hs">(&gt;=&gt;) :: Monad m =&gt; (a -&gt; m b) -&gt; (b -&gt; m c) -&gt; a -&gt; m c
+(&lt;=&lt;) :: Monad m =&gt; (b -&gt; m c) -&gt; (a -&gt; m b) -&gt; a -&gt; m c
 
 -- compare with function composition:
-(.) ::            (b -&gt;   c) -&gt; (a -&gt;   b) -&gt; a -&gt;   c
+(.) ::              (b -&gt;   c) -&gt; (a -&gt;   b) -&gt; a -&gt;   c
 </code></pre>
 <pre><code class="language-hs">pipeline  = tokenize &gt;=&gt; parse &gt;=&gt; typecheck
-pipeline' = typecheck &lt;=&lt; parse &lt;=&lt; tokenize
+</code></pre>
+<p>or</p>
+<pre><code class="language-hs">pipeline = typecheck &lt;=&lt; parse &lt;=&lt; tokenize
 </code></pre>
 <p>Haskell's ability to create very concise code using abstractions is
 great once one is familiar with the abstractions. Knowing the monad abstraction,
