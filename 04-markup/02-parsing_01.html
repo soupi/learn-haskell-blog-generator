@@ -534,12 +534,14 @@ odd n =
 </details>
 <hr />
 <h2 id="partial-functions"><a class="header" href="#partial-functions">Partial functions</a></h2>
-<p>Because we didn't handle negative cases in the example above, our functions will loop forever
-when a negative value is passed as input. A function that does not return a result for some value
+<p>Because we didn't handle the negative numbers cases in the example above,
+our functions will loop forever when a negative value is passed as input.
+A function that does not return a result for some value
 (either by not terminating or by throwing an error) is called <strong>a partial function</strong>
-(because it only returns a result of a part of the possible inputs).</p>
+(because it only returns a result for a part of the possible inputs).</p>
 <p>Partial functions are generally considered <strong>bad practice</strong> because they can have
-unexpected behaviour at runtime, so we want to <strong>avoid using</strong> partial functions
+undesired behaviour at runtime (a runtime exception or an infinite loop),
+so we want to <strong>avoid using</strong> partial functions
 as well as <strong>avoid writing</strong> partial functions.</p>
 <p>The best way to avoid writing partial functions is by covering all inputs!
 In the situation above, it is definitely possible to handle negative numbers
@@ -559,10 +561,13 @@ module! The trick here is that this other <code>head</code> does not take a gene
 as input, it takes a different type entirely, one that promises to have
 at least one element, and therefore can deliver on its promise!</p>
 <p>We could also potentially use smart constructors with <code>newtype</code> and enforce some sort
-of restrictions in the type system, as we saw in earlier chapters.
+of restrictions in the type system, as we saw in earlier chapters,
 But this solution can sometimes be less ergonomic to use.</p>
 <p>An alternative approach is to use <code>data</code> types to encode the absence of a proper result,
 for example, using <code>Maybe</code>, as we'll see in a future chapter.</p>
+<p>Make sure the functions you write return a result for every input,
+either by constraining the input using types, or by encoding the absence of a result using
+types.</p>
 <h2 id="parsing-markup"><a class="header" href="#parsing-markup">Parsing markup?</a></h2>
 <p>Let's get back to the task at hand.</p>
 <p>As stated previously, our strategy for parsing the markup text is:</p>
