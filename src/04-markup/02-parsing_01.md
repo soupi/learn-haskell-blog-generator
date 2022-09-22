@@ -522,13 +522,15 @@ odd n =
 
 ## Partial functions
 
-Because we didn't handle negative cases in the example above, our functions will loop forever
-when a negative value is passed as input. A function that does not return a result for some value
+Because we didn't handle the negative numbers cases in the example above,
+our functions will loop forever when a negative value is passed as input.
+A function that does not return a result for some value
 (either by not terminating or by throwing an error) is called **a partial function**
-(because it only returns a result of a part of the possible inputs).
+(because it only returns a result for a part of the possible inputs).
 
 Partial functions are generally considered **bad practice** because they can have
-unexpected behaviour at runtime, so we want to **avoid using** partial functions
+undesired behaviour at runtime (a runtime exception or an infinite loop),
+so we want to **avoid using** partial functions
 as well as **avoid writing** partial functions.
 
 The best way to avoid writing partial functions is by covering all inputs!
@@ -553,11 +555,15 @@ as input, it takes a different type entirely, one that promises to have
 at least one element, and therefore can deliver on its promise!
 
 We could also potentially use smart constructors with `newtype` and enforce some sort
-of restrictions in the type system, as we saw in earlier chapters.
+of restrictions in the type system, as we saw in earlier chapters,
 But this solution can sometimes be less ergonomic to use.
 
 An alternative approach is to use `data` types to encode the absence of a proper result,
 for example, using `Maybe`, as we'll see in a future chapter.
+
+Make sure the functions you write return a result for every input,
+either by constraining the input using types, or by encoding the absence of a result using
+types.
 
 ## Parsing markup?
 
