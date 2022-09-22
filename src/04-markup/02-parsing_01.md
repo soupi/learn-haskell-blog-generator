@@ -522,7 +522,7 @@ odd n =
 
 ## Partial functions
 
-because we didn't handle negative cases in the example above, our functions will loop forever
+Because we didn't handle negative cases in the example above, our functions will loop forever
 when a negative value is passed as input. A function that does not return a result for some value
 (either by not terminating or by throwing an error) is called **a partial function**
 (because it only returns a result of a part of the possible inputs).
