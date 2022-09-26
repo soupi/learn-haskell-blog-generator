@@ -389,7 +389,7 @@ cannot be a <code>Foldable</code>.</p>
 <p><code>foldMap</code> is a function that allows us to apply a function to the
 payload type of the <code>Foldable</code> type right before combining them
 with the <code>&lt;&gt;</code> function.</p>
-<pre><code class="language-hs">foldMap :: (Foldable t, Monoid m) -&gt; (a -&gt; m) -&gt; t a -&gt; m
+<pre><code class="language-hs">foldMap :: (Foldable t, Monoid m) =&gt; (a -&gt; m) -&gt; t a -&gt; m
 
 -- compare to a specialized version with:
 -- - t ~ []
