@@ -331,7 +331,7 @@ payload type of the `Foldable` type right before combining them
 with the `<>` function.
 
 ```hs
-foldMap :: (Foldable t, Monoid m) -> (a -> m) -> t a -> m
+foldMap :: (Foldable t, Monoid m) => (a -> m) -> t a -> m
 
 -- compare to a specialized version with:
 -- - t ~ []
