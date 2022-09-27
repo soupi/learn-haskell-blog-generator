@@ -7096,10 +7096,10 @@ we do nothing and report their decision.</p>
 <pre><code class="language-hs">let
   outputHtmls = txtsToRenderedHtml filesToProcess
 </code></pre>
+<hr />
 <p>In this part of the code we convert files to markup and change the
 input file paths to their respective output file paths (<code>.txt</code> -&gt; <code>.html</code>).
 We then build the index page, and convert everything to HTML.</p>
-<hr />
 <p>Implement <code>txtsToRenderedHtml</code>, which has the following type signature:</p>
 <pre><code class="language-hs">txtsToRenderedHtml :: [(FilePath, String)] -&gt; [(FilePath, String)]
 </code></pre>
