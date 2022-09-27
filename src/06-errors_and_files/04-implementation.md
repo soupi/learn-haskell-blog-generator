@@ -308,11 +308,11 @@ let
   outputHtmls = txtsToRenderedHtml filesToProcess
 ```
 
+---
+
 In this part of the code we convert files to markup and change the
 input file paths to their respective output file paths (`.txt` -> `.html`).
 We then build the index page, and convert everything to HTML.
-
----
 
 Implement `txtsToRenderedHtml`, which has the following type signature:
 
