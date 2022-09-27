@@ -346,6 +346,72 @@ handling for other scenarios.</p>
 <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html#v:bracket"><code>bracket</code></a>
 and <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html#v:finally"><code>finally</code></a>.
 These functions can help us handle resource acquisition more safely when errors are present.</p>
+<hr />
+<p>In our <code>main</code> in the <code>app/Main.hs</code> file, we do a small ritual opening and closing handles.
+Are there scenarios where we would clean-up after ourselves (meaning, close handles we've
+opened)? Which parts of the code could throw an exception? Which handles won't get closed?</p>
+<ul>
+<li>Try to use <code>bracket</code> to make sure we always close a handle afterwards, even if an exception
+is thrown, and avoid closing the handle for the <code>stdin</code> and <code>stdout</code> cases.<details><summary>Hint</summary>We might need to use continuation-passing style,
+passing a function that takes a parameter to a function that produces a parameter
+and calls it with that parameter.
+</details>
+</li>
+<li>How can we avoid duplicating the <code>outputHandle</code> code, for the <code>Stdin</code> and <code>InputFile</code>
+branches? <details><summary>Hint</summary> Use <code>let</code>.</details></li>
+</ul>
+<details><summary>Answer</summary>
+<pre><code class="language-hs">import Control.Exception (bracket)
+
+main :: IO ()
+main = do
+...
+
+    ConvertSingle input output -&gt;
+      let
+        -- Here, action is the next steps we want to do.
+        -- It takes as input the values we produce,
+        -- uses it, and then returns control for us to clean-up
+        -- afterwards.
+        withInputHandle :: (String -&gt; Handle -&gt; IO a) -&gt; IO a
+        withInputHandle action =
+          case input of
+            Stdin -&gt;
+              action &quot;&quot; stdin
+            InputFile file -&gt;
+              bracket
+                (openFile file ReadMode)
+                hClose
+                (action file)
+
+        -- Note that in both functions our action can return any `a`
+        -- it wants.
+        withOutputHandle :: (Handle -&gt; IO a) -&gt; IO a
+        withOutputHandle action =
+          case output of
+            Stdout -&gt;
+              action stdout
+            OutputFile file -&gt; do
+              exists &lt;- doesFileExist file
+              shouldOpenFile &lt;-
+                if exists
+                  then confirm
+                  else pure True
+              if shouldOpenFile
+                then
+                  bracket (openFile file WriteMode) hClose action
+                else
+                  exitFailure
+      in
+        withInputHandle (\title -&gt; withOutputHandle . HsBlog.convertSingle title)
+</code></pre>
+</details>
+<p>There's action a custom function that does similar thing to
+<code>bracket (openFile file &lt;mode&gt;) hClose</code>, it's called
+<a href="https://hackage.haskell.org/package/base-4.17.0.0/docs/System-IO.html#v:withFile">withFile</a>.
+Keep an eye to functions that start with the prefix <code>with</code>, they are probably using the
+same pattern of continuation-passing style.</p>
+<hr />
 <h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
 <p>Exceptions are useful and often necessary when we work with <code>IO</code> and want to make sure
 our program is handling errors gracefully. They have an advantage over <code>Either</code> in that
