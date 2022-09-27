@@ -151,19 +151,38 @@ Part (3) is a little bit more involved than the rest, let's explore it.
 
 #### `applyIoOnList`
 
+---
+
+`applyIoOnList` has the following type signature:
+
+```hs
+applyIoOnList :: (a -> IO b) -> [a] -> IO [(a, Either String b)]
+```
+
+It tries to apply an IO function on a list of values, and document successes and failures.
+
+Try to implement it! If you need a hint for which functions to use, see the import list
+we wrote earlier.
+
+<details><summary>Answer</summary>
+
 ```hs
 -- | Try to apply an IO function on a list of values, document successes and failures
 applyIoOnList :: (a -> IO b) -> [a] -> IO [(a, Either String b)]
-applyIoOnList action files = do
-  for files $ \file -> do
-    maybeContent <-
+applyIoOnList action inputs = do
+  for inputs $ \input -> do
+    maybeResult <-
       catch
-        (Right <$> action file)
+        (Right <$> action input)
         ( \(SomeException e) -> do
           pure $ Left (displayException e)
         )
-    pure (file, maybeContent)
+    pure (input, maybeResult)
 ```
+
+</details>
+
+---
 
 `applyIoOnList` is a higher order function that applies a particular `IO` function
 (in our case `readFile`) on a list of things (in our case `FilePath`s).
@@ -191,11 +210,25 @@ all the cases that failed.
 
 #### `filterAndReportFailures`
 
+---
+
+`filterAndReportFailures` has the following type signature:
+
+```hs
+filterAndReportFailures :: [(a, Either String b)] -> IO [(a, b)]
+```
+
+It filters out unsuccessful operations on files and reports errors to the stderr.
+
+Try to implement it!
+
+<details><summary>Answer</summary>
+
 ```hs
 -- | Filter out unsuccessful operations on files and report errors to stderr.
 filterAndReportFailures :: [(a, Either String b)] -> IO [(a, b)]
 filterAndReportFailures =
-  foldMap $ \ (file, contentOrErr) ->
+  foldMap $ \(file, contentOrErr) ->
     case contentOrErr of
       Left err -> do
         hPutStrLn stderr err
@@ -221,6 +254,13 @@ Using these instances, we can `map` over the content, handle errors, and return
 an empty list to filter out a failed case, or a singleton list to keep the result.
 And the `fold` in `foldMap` will concatenate the resulting list where we return
 all of the successful cases!
+
+If you've written this in a different way that does the same thing, that's fine too!
+It's just nice to see how sometimes abstractions can be used to write concise code.
+
+</details>
+
+---
 
 These functions are responsible for fetching the right information. Next,
 let's look at the code for creating a new directory.
@@ -272,6 +312,32 @@ In this part of the code we convert files to markup and change the
 input file paths to their respective output file paths (`.txt` -> `.html`).
 We then build the index page, and convert everything to HTML.
 
+---
+
+Implement `txtsToRenderedHtml`, which has the following type signature:
+
+```hs
+txtsToRenderedHtml :: [(FilePath, String)] -> [(FilePath, String)]
+```
+
+<details><summary>Hint</summary>
+
+I implemented this by defining three functions:
+
+```hs
+txtsToRenderedHtml :: [(FilePath, String)] -> [(FilePath, String)]
+
+toOutputMarkupFile :: (FilePath, String) -> (FilePath, Markup.Document)
+
+convertFile :: (FilePath, Markup.Document) -> (FilePath, Html.Html)
+```
+
+</details>
+
+.
+
+<details><summary>Answer</summary>
+
 ```hs
 -- | Convert text files to Markup, build an index, and render as html.
 txtsToRenderedHtml :: [(FilePath, String)] -> [(FilePath, String)]
@@ -293,6 +359,10 @@ convertFile (file, doc) = (file, convert file doc)
 One possibly surprising thing about this code could be the `map (fmap Html.render)`
 part. We can use `fmap` on the tuple because it is a `Functor` on the second
 argument, just like `Either`!
+
+</details>
+
+---
 
 ### `copyFiles` and `writeFiles`
 
@@ -346,8 +416,6 @@ were fine with errors crashing the entire program altogether, but sometimes this
 the price we pay for robustness. It is up to you to choose what you can live with
 and what not, but I hope this saga has taught you how to approach error handling
 in Haskell in case you need to.
-
----
 
 View the full module:
 
@@ -519,20 +587,20 @@ writeFiles outputDir files = do
 
 -- | Try to apply an IO function on a list of values, document successes and failures
 applyIoOnList :: (a -> IO b) -> [a] -> IO [(a, Either String b)]
-applyIoOnList action files = do
-  for files $ \file -> do
-    maybeContent <-
+applyIoOnList action inputs = do
+  for inputs $ \input -> do
+    maybeResult <-
       catch
-        (Right <$> action file)
+        (Right <$> action input)
         ( \(SomeException e) -> do
           pure $ Left (displayException e)
         )
-    pure (file, maybeContent)
+    pure (input, maybeResult)
 
 -- | Filter out unsuccessful operations on files and report errors to stderr.
 filterAndReportFailures :: [(a, Either String b)] -> IO [(a, b)]
 filterAndReportFailures =
-  foldMap $ \ (file, contentOrErr) ->
+  foldMap $ \(file, contentOrErr) ->
     case contentOrErr of
       Left err -> do
         hPutStrLn stderr err
@@ -563,5 +631,3 @@ whenIO cond action = do
 ```
 
 </details>
-
----
