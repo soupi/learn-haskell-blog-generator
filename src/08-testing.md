@@ -464,7 +464,7 @@ and another is by creating a /hook/ that will apply
 `parallel` to each `Spec` automatically with
 `hspec-discover`.
 
-Consult the [HSpec manual](https://hspec.github.io/parallel-spec-execution.html#running-all-tests-in-parallel-with-hspec-discover)
+Consult the [Hspec manual](https://hspec.github.io/parallel-spec-execution.html#running-all-tests-in-parallel-with-hspec-discover)
 on this topic and try both methods. Remember that
 we already enabled the threaded runtime and set it to
 use multiple cores in the cabal file.
