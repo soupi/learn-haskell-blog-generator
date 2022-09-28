@@ -43,37 +43,37 @@ test-suite hs-blog-gen-test
     hspec-discover:hspec-discover
 ```
 
-- `hs-source-dirs: test` - The directory of the source file for the test suite
-- `main-is: Spec.hs` - The entry point to the test suite source file
+- `hs-source-dirs: test` - The directory of the source files for the test suite.
+- `main-is: Spec.hs` - The entry point to the test suite.
 - `other-modules` - The modules in our test suite.
   Currently commented out because we haven't added any yet.
 - `build-depends` - The packages we are going to use:
   - [`base`](https://hackage.haskell.org/package/base) -
-    The standard library for Haskell, as we've used before
+    The standard library for Haskell, as we've used before.
   - [`hspec`](https://hackage.haskell.org/package/hspec) -
-    The test framework we are going to use
+    The test framework we are going to use.
   - [`hspec-discover`](https://hackage.haskell.org/package/hspec-discover) -
-    Automatic discovery of hspec tests
+    Automatic discovery of hspec tests.
   - [`raw-strings-qq`](https://hackage.haskell.org/package/raw-strings-qq) -
-    Additional syntax for writing raw string literals
-  - `hs-blog` - Our library
+    Additional syntax for writing raw string literals.
+  - `hs-blog` - Our library.
 - [`ghc-options`](https://cabal.readthedocs.io/en/3.6/cabal-package.html#pkg-field-ghc-options) -
-    Extra options and flags for GHC
+    Extra options and flags for GHC:
   - [`-O`](https://downloads.haskell.org/ghc/latest/docs/html/users_guide/using-optimisation.html#options-optimise) -
-    Compile with optimizations
+    Compile with optimizations.
   - [`-threaded`](https://downloads.haskell.org/ghc/latest/docs/html/users_guide/phases.html#ghc-flag--threaded) -
     Use the multi-core runtime instead of single-core runtime. The multi-core
     runtime is generally a bit slower in my experience, but when writing code that actually uses
-    multiple cores (such as a test framework that runs tests in parallel) it can gives a good
+    multiple cores (such as a test framework that runs tests in parallel) it can give a good
     performance boost.
   - [`-rtsopts`](https://downloads.haskell.org/ghc/latest/docs/html/users_guide/phases.html#ghc-flag--rtsopts[=%E2%9F%A8none|some|all|ignore|ignoreAll%E2%9F%A9]) -
-    lets us manipulate the Haskell runtime system by passing command-line arguments to our application
+    Let us configure the Haskell runtime system by passing command-line arguments to our application
   - [`-with-rtsopts=-N`](https://downloads.haskell.org/ghc/latest/docs/html/users_guide/phases.html#ghc-flag--with-rtsopts=%E2%9F%A8opts%E2%9F%A9) -
     Set specific default options for the program at link-time.
     Specifically, [`-N`](https://downloads.haskell.org/ghc/latest/docs/html/users_guide/using-concurrent.html#rts-flag--N%20%E2%9F%A8x%E2%9F%A9)
     Sets the number of cores to use in our program.
 - [`build-tool-depends`](https://cabal.readthedocs.io/en/3.6/cabal-package.html#pkg-field-build-tool-depends) -
-  Uses a specific executable from a package dependency in aid of building the package.
+  Use a specific executable from a package dependency in aid of building the package.
   In this case, we are using the `hspec-discover` executable from the
   [`hspec-discover`](https://hackage.haskell.org/package/hspec-discover) package, which
   goes over the source directory for the tests, finds all of the `Spec` files,
@@ -450,8 +450,24 @@ example4Result =
 
 </details>
 
-
 ---
+
+## Parallel test execution
+
+Without further configuration, `hspec` will run all
+of our tests on the main thread, sequentially.
+
+There are a couple of ways to configure tests to run
+in parallel. One is to manually mark a `Spec`
+as parallel by passing it to the `parallel` function,
+and another is by creating a /hook/ that will apply
+`parallel` to each `Spec` automatically with
+`hspec-discover`.
+
+Consult the [HSpec manual](https://hspec.github.io/parallel-spec-execution.html#running-all-tests-in-parallel-with-hspec-discover)
+on this topic and try both methods. Remember that
+we already enabled the threaded runtime and set it to
+use multiple cores in the cabal file.
 
 ## Summary
 
