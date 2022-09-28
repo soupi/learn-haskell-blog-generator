@@ -181,35 +181,35 @@ and options:</p>
     hspec-discover:hspec-discover
 </code></pre>
 <ul>
-<li><code>hs-source-dirs: test</code> - The directory of the source file for the test suite</li>
-<li><code>main-is: Spec.hs</code> - The entry point to the test suite source file</li>
+<li><code>hs-source-dirs: test</code> - The directory of the source files for the test suite.</li>
+<li><code>main-is: Spec.hs</code> - The entry point to the test suite.</li>
 <li><code>other-modules</code> - The modules in our test suite.
 Currently commented out because we haven't added any yet.</li>
 <li><code>build-depends</code> - The packages we are going to use:
 <ul>
 <li><a href="https://hackage.haskell.org/package/base"><code>base</code></a> -
-The standard library for Haskell, as we've used before</li>
+The standard library for Haskell, as we've used before.</li>
 <li><a href="https://hackage.haskell.org/package/hspec"><code>hspec</code></a> -
-The test framework we are going to use</li>
+The test framework we are going to use.</li>
 <li><a href="https://hackage.haskell.org/package/hspec-discover"><code>hspec-discover</code></a> -
-Automatic discovery of hspec tests</li>
+Automatic discovery of hspec tests.</li>
 <li><a href="https://hackage.haskell.org/package/raw-strings-qq"><code>raw-strings-qq</code></a> -
-Additional syntax for writing raw string literals</li>
-<li><code>hs-blog</code> - Our library</li>
+Additional syntax for writing raw string literals.</li>
+<li><code>hs-blog</code> - Our library.</li>
 </ul>
 </li>
 <li><a href="https://cabal.readthedocs.io/en/3.6/cabal-package.html#pkg-field-ghc-options"><code>ghc-options</code></a> -
-Extra options and flags for GHC
+Extra options and flags for GHC:
 <ul>
 <li><a href="https://downloads.haskell.org/ghc/latest/docs/html/users_guide/using-optimisation.html#options-optimise"><code>-O</code></a> -
-Compile with optimizations</li>
+Compile with optimizations.</li>
 <li><a href="https://downloads.haskell.org/ghc/latest/docs/html/users_guide/phases.html#ghc-flag--threaded"><code>-threaded</code></a> -
 Use the multi-core runtime instead of single-core runtime. The multi-core
 runtime is generally a bit slower in my experience, but when writing code that actually uses
-multiple cores (such as a test framework that runs tests in parallel) it can gives a good
+multiple cores (such as a test framework that runs tests in parallel) it can give a good
 performance boost.</li>
 <li><a href="https://downloads.haskell.org/ghc/latest/docs/html/users_guide/phases.html#ghc-flag--rtsopts%5B=%E2%9F%A8none%7Csome%7Call%7Cignore%7CignoreAll%E2%9F%A9%5D"><code>-rtsopts</code></a> -
-lets us manipulate the Haskell runtime system by passing command-line arguments to our application</li>
+Let us configure the Haskell runtime system by passing command-line arguments to our application</li>
 <li><a href="https://downloads.haskell.org/ghc/latest/docs/html/users_guide/phases.html#ghc-flag--with-rtsopts=%E2%9F%A8opts%E2%9F%A9"><code>-with-rtsopts=-N</code></a> -
 Set specific default options for the program at link-time.
 Specifically, <a href="https://downloads.haskell.org/ghc/latest/docs/html/users_guide/using-concurrent.html#rts-flag--N%20%E2%9F%A8x%E2%9F%A9"><code>-N</code></a>
@@ -217,7 +217,7 @@ Sets the number of cores to use in our program.</li>
 </ul>
 </li>
 <li><a href="https://cabal.readthedocs.io/en/3.6/cabal-package.html#pkg-field-build-tool-depends"><code>build-tool-depends</code></a> -
-Uses a specific executable from a package dependency in aid of building the package.
+Use a specific executable from a package dependency in aid of building the package.
 In this case, we are using the <code>hspec-discover</code> executable from the
 <a href="https://hackage.haskell.org/package/hspec-discover"><code>hspec-discover</code></a> package, which
 goes over the source directory for the tests, finds all of the <code>Spec</code> files,
@@ -534,6 +534,19 @@ example4Result =
 </code></pre>
 </details>
 <hr />
+<h2 id="parallel-test-execution"><a class="header" href="#parallel-test-execution">Parallel test execution</a></h2>
+<p>Without further configuration, <code>hspec</code> will run all
+of our tests on the main thread, sequentially.</p>
+<p>There are a couple of ways to configure tests to run
+in parallel. One is to manually mark a <code>Spec</code>
+as parallel by passing it to the <code>parallel</code> function,
+and another is by creating a /hook/ that will apply
+<code>parallel</code> to each <code>Spec</code> automatically with
+<code>hspec-discover</code>.</p>
+<p>Consult the <a href="https://hspec.github.io/parallel-spec-execution.html#running-all-tests-in-parallel-with-hspec-discover">HSpec manual</a>
+on this topic and try both methods. Remember that
+we already enabled the threaded runtime and set it to
+use multiple cores in the cabal file.</p>
 <h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
 <p>This chapter has been just the tip of the iceberg of the Haskell testing landscape.
 We haven't talked about
