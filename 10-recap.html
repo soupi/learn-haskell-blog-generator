@@ -5,10 +5,7 @@
         <meta charset="UTF-8">
         <title>Recap - Learn Haskell by building a blog generator</title>
         <!-- Custom HTML head -->
-        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="A project-oriented online book about Haskell">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="theme-color" content="#ffffff" />
+        <script defer data-domain="lhbg-book.link" src="https://analytics.gilmi.dev/js/plausible.js"></script>
 
         <meta name="twitter:card" content="summary">
         <meta name="twitter:title" content="Learn Haskell by building a blog generator">
@@ -16,6 +13,11 @@
         <meta name="twitter:site" content="@_gilmi">
         <meta name="twitter:image" content="https://soupi.github.io/learn-haskell-blog-generator/book-logo.png">
         <meta name="twitter:image-alt" content="drawing of a lambda that is also a book">
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="A project-oriented online book about Haskell">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
 
         <link rel="icon" href="favicon.svg">
         <link rel="shortcut icon" href="favicon.png">
@@ -35,13 +37,13 @@
     </head>
     <body>
         <!-- Provide site root to javascript -->
-        <script type="text/javascript">
+        <script>
             var path_to_root = "";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
-        <script type="text/javascript">
+        <script>
             try {
                 var theme = localStorage.getItem('mdbook-theme');
                 var sidebar = localStorage.getItem('mdbook-sidebar');
@@ -57,7 +59,7 @@
         </script>
 
         <!-- Set the theme before any content is loaded, prevents flash -->
-        <script type="text/javascript">
+        <script>
             var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
@@ -69,7 +71,7 @@
         </script>
 
         <!-- Hide / unhide sidebar before it is displayed -->
-        <script type="text/javascript">
+        <script>
             var html = document.querySelector('html');
             var sidebar = 'hidden';
             if (document.body.clientWidth >= 1080) {
@@ -134,7 +136,7 @@
                     </div>
                 </div>
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
-                <script type="text/javascript">
+                <script>
                     document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
                     document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
                     Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
@@ -210,15 +212,15 @@ like it, you can <a href="https://ko-fi.com/gilmi">support me directly via Ko-fi
 
         </div>
 
-        <script type="text/javascript">
+        <script>
             window.playground_copyable = true;
         </script>
-        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
-        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+        <script src="elasticlunr.min.js" charset="utf-8"></script>
+        <script src="mark.min.js" charset="utf-8"></script>
+        <script src="searcher.js" charset="utf-8"></script>
+        <script src="clipboard.min.js" charset="utf-8"></script>
+        <script src="highlight.js" charset="utf-8"></script>
+        <script src="book.js" charset="utf-8"></script>
 
         <!-- Custom JS scripts -->
     </body>
