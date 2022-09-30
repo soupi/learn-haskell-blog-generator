@@ -15,9 +15,9 @@ jobs:
       - name: Setup mdBook
         shell: bash
         run: |
-          wget https://gilmi.me/static/misc/mymdbook
-          chmod +x mymdbook
-          ./mymdbook build
+          wget https://gilmi.me/static/misc/mymdbook2
+          chmod +x mymdbook2
+          ./mymdbook2 build
           cp assets/book-logo.png book/
           echo "lhbg-book.link" > book/CNAME
 
