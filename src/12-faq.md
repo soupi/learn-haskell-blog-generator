@@ -11,7 +11,7 @@ VSCode or [VSCodium](https://vscodium.com/) together with the
 marketplace [Haskell extension](https://marketplace.visualstudio.com/items?itemName=haskell.haskell).
 
 The Haskell extension uses [haskell-language-server](https://github.com/haskell/haskell-language-server)
-which can be install via [GHCup](https://www.haskell.org/ghcup/) or even via the Haskell extension itself.
+which can be installed via [GHCup](https://www.haskell.org/ghcup/) or even via the Haskell extension itself.
 
 There are [other options](https://github.com/soupi/haskell-study-plan#tools)
 of course if this setup isn't your jam.
