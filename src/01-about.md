@@ -1,6 +1,6 @@
 # About this book
 
-> Note: This book is still fairly new. If you find errors, [please let me know](https://github.com/soupi/learn-haskell-blog-generator/issues).
+> Note: If you find errors, [please let me know](https://github.com/soupi/learn-haskell-blog-generator/issues)!
 
 <!--
 <div style="text-align: center">
