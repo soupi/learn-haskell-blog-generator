@@ -5,9 +5,9 @@ a few regression tests to make sure that if we extend or change our markup parsi
 HTML generation code, or translation from markup to HTML code, and make a mistake, we'll
 have a safety net alerting us of issues.
 
-We will use the [hspec](https://hspec.github.io/) testing framework to write our tests.
+We will use the [Hspec](https://hspec.github.io/) testing framework to write our tests.
 There are other testing frameworks in Haskell, for example
-[tasty](https://hackage.haskell.org/package/tasty), but I like `hspec`'s documentation,
+[tasty](https://hackage.haskell.org/package/tasty), but I like `Hspec`'s documentation,
 so we'll use that.
 
 ## Initial setup
@@ -43,41 +43,41 @@ test-suite hs-blog-gen-test
     hspec-discover:hspec-discover
 ```
 
-- `hs-source-dirs: test` - The directory of the source files for the test suite.
-- `main-is: Spec.hs` - The entry point to the test suite.
+- `hs-source-dirs: test` - The directory of the source files for the test suite
+- `main-is: Spec.hs` - The entry point to the test suite
 - `other-modules` - The modules in our test suite.
-  Currently commented out because we haven't added any yet.
+  Currently commented out because we haven't added any yet
 - `build-depends` - The packages we are going to use:
   - [`base`](https://hackage.haskell.org/package/base) -
-    The standard library for Haskell, as we've used before.
-  - [`hspec`](https://hackage.haskell.org/package/hspec) -
-    The test framework we are going to use.
+    The standard library for Haskell, as we've used before
+  - [`Hspec`](https://hackage.haskell.org/package/hspec) -
+    The test framework we are going to use
   - [`hspec-discover`](https://hackage.haskell.org/package/hspec-discover) -
-    Automatic discovery of hspec tests.
+    Automatic discovery of Hspec tests
   - [`raw-strings-qq`](https://hackage.haskell.org/package/raw-strings-qq) -
-    Additional syntax for writing raw string literals.
-  - `hs-blog` - Our library.
+    Additional syntax for writing raw string literals
+  - `hs-blog` - Our library
 - [`ghc-options`](https://cabal.readthedocs.io/en/3.6/cabal-package.html#pkg-field-ghc-options) -
     Extra options and flags for GHC:
   - [`-O`](https://downloads.haskell.org/ghc/latest/docs/html/users_guide/using-optimisation.html#options-optimise) -
-    Compile with optimizations.
+    Compile with optimizations
   - [`-threaded`](https://downloads.haskell.org/ghc/latest/docs/html/users_guide/phases.html#ghc-flag--threaded) -
     Use the multi-core runtime instead of single-core runtime. The multi-core
     runtime is generally a bit slower in my experience, but when writing code that actually uses
     multiple cores (such as a test framework that runs tests in parallel) it can give a good
-    performance boost.
+    performance boost
   - [`-rtsopts`](https://downloads.haskell.org/ghc/latest/docs/html/users_guide/phases.html#ghc-flag--rtsopts[=%E2%9F%A8none|some|all|ignore|ignoreAll%E2%9F%A9]) -
     Let us configure the Haskell runtime system by passing command-line arguments to our application
   - [`-with-rtsopts=-N`](https://downloads.haskell.org/ghc/latest/docs/html/users_guide/phases.html#ghc-flag--with-rtsopts=%E2%9F%A8opts%E2%9F%A9) -
     Set specific default options for the program at link-time.
     Specifically, [`-N`](https://downloads.haskell.org/ghc/latest/docs/html/users_guide/using-concurrent.html#rts-flag--N%20%E2%9F%A8x%E2%9F%A9)
-    Sets the number of cores to use in our program.
+    Sets the number of cores to use in our program
 - [`build-tool-depends`](https://cabal.readthedocs.io/en/3.6/cabal-package.html#pkg-field-build-tool-depends) -
   Use a specific executable from a package dependency in aid of building the package.
   In this case, we are using the `hspec-discover` executable from the
   [`hspec-discover`](https://hackage.haskell.org/package/hspec-discover) package, which
   goes over the source directory for the tests, finds all of the `Spec` files,
-  and creates an entry point for the program that will run all the tests it discovered.
+  and creates an entry point for the program that will run all the tests it discovered
 
 
 ### Hspec discovery
@@ -98,7 +98,7 @@ Finished in 0.0000 seconds
 0 examples, 0 failures
 ```
 
-When we add new hspec tests, `hspec-discover` will find and run them automatically
+When we add new Hspec tests, `hspec-discover` will find and run them automatically
 (though we will still need add them to the `other-modules` section in the cabal file).
 
 For `hspec-discover` to identify modules as test modules, the modules must follow
@@ -106,7 +106,7 @@ a convention:
 
 1. Their module names must end with `Spec`
 2. They must define a value `spec :: Spec` (which describes the test) and export it
-   outside of the module (by adding it to the export list of the module, for example).
+   outside of the module (by adding it to the export list of the module, for example)
 
 ## Writing tests
 
@@ -121,7 +121,7 @@ import Test.Hspec
 import HsBlog.Markup
 ```
 
-`hspec` provides us with a monadic interface for describing, composing and
+`Hspec` provides us with a monadic interface for describing, composing and
 nesting test specifications (`Spec`s).
 
 Using the `describe` function we can
@@ -226,7 +226,7 @@ Finished in 0.0003 seconds
 4 examples, 0 failures
 ```
 
-This is the gist of writing unit tests with `hspec`. It's important to note
+This is the gist of writing unit tests with `Hspec`. It's important to note
 that we can nest `Spec`s that are declared with `describe` to create trees,
 and of course refactor and move things to different functions and modules
 to make our test suite better organized.
@@ -264,7 +264,7 @@ simple = do
 ```
 
 Also, there are other "expectations" like `shouldBe` that we can use when writing tests.
-They are described in the [hspec tutorial](https://hspec.github.io/expectations.html)
+They are described in the [Hspec tutorial](https://hspec.github.io/expectations.html)
 and can be found in the
 [haddock documentation](https://hackage.haskell.org/package/hspec-expectations-0.8.2/docs/Test-Hspec-Expectations.html) as well.
 
@@ -454,7 +454,7 @@ example4Result =
 
 ## Parallel test execution
 
-Without further configuration, `hspec` will run all
+Without further configuration, `Hspec` will run all
 of our tests on the main thread, sequentially.
 
 There are a couple of ways to configure tests to run

@@ -80,7 +80,7 @@ data Structure
 ```
 
 Now we can use the function `show :: Show a => a -> String` for any
-type that implements an instance of the `Show` type class. For example, with print:
+type that implements an instance of the `Show` type class. For example, with `print`:
 
 ```hs
 print :: Show a => a -> IO ()

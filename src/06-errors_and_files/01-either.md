@@ -236,12 +236,12 @@ There are a few approaches, the most prominent ones are:
 1. Make them return the same error type. Write an ADT that holds all possible
    error descriptions. This can work in some cases but isn't always ideal.
    For example a user calling `parseDigit` shouldn't be forced to
-   handle a possible case that the input might be an empty string.
+   handle a possible case that the input might be an empty string
 2. Use a specialized error type for each type, and when they are composed together,
    map the error type of each function to a more general error type. This can
    be done with the function
    [`first`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Bifunctor.html#v:first)
-   from the `Bifunctor` type class.
+   from the `Bifunctor` type class
 
 ## Monadic interface
 
@@ -495,8 +495,8 @@ we are now already familiar with the core composition API of many libraries - fo
 Using `Either` for error handling is useful for two reasons:
 
 1. We encode possible errors using types, and we **force users to acknowledge and handle** them, thus
-   making our code more resilient to crashes and bad behaviours.
+   making our code more resilient to crashes and bad behaviours
 2. The `Functor`, `Applicative`, and `Monad` interfaces provide us with mechanisms for
    **composing** functions that might fail (almost) effortlessly - reducing boilerplate while
    maintaining strong guarantees about our code, and delaying the need to handle errors until
-   it is appropriate.
+   it is appropriate

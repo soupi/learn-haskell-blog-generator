@@ -11,8 +11,8 @@ differentiate between different kinds of structures such as paragraphs and headi
 not without parsing the data at least.
 
 In this case, we have a list of structures, and each structure could be
-one of a few specific options (a paragraph, a heading, a list, etc),
-and we want to be able to know which structure is which so we can easily
+one of a few specific options (a paragraph, a heading, a list, etc.),
+and we want to be able to know which structure is which, so we can easily
 convert it into the equivalent HTML representation.
 
 For that, we have `data` definitions. `data` gives us the ability to
@@ -129,7 +129,7 @@ Let's see a few of examples of data types:
 
    Unfortunately, having specialized functions for each field also means that if we
    defined a different data type with the field `age`, the functions which GHC needs
-   to generate will clash.
+   to generate, will clash.
 
    The easiest way to solve this is to give fields unique names, for example
    by adding a prefix:
@@ -221,7 +221,7 @@ Let's see a few of examples of data types:
 
 In our program we use `data` types to model the different kinds of content types
 in our markup language. We tag each structure using the data constructor
-and provide the rest of the information (the paragraph text, the list items, etc)
+and provide the rest of the information (the paragraph text, the list items, etc.)
 in the `<types>` section of the data declaration for each constructor:
 
 ```hs

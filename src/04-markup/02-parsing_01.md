@@ -606,7 +606,7 @@ Things to note:
 
 1. We pass a list that contains the currently grouped paragraph (paragraphs are separated by an empty line)
 2. Because of laziness, `paragraph` is not computed until it's needed, so we don't have to worry about
-  the performance implications in the case the we are still grouping lines
+  the performance implications in the case that we are still grouping lines
 3. Why do we reverse `currentParagraph`? (See point (6))
 4. We saw case expressions used to deconstruct `newtype`s and `Char`s,
    but we can also pattern match on lists and other ADTs as well!

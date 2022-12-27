@@ -67,7 +67,7 @@ module Html.Internal where
 ```
 
 And now in `Html.hs`, we will remove the code that we moved to `Html/Internal.hs`
-and in its stead we'll import the internal module:
+and instead we'll import the internal module:
 
 ```hs
 -- Html.hs

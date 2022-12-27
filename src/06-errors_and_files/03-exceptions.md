@@ -65,11 +65,11 @@ main =
 > 1. Guards as seen in `sayDiv2` are just a nicer syntax around `if-then-else` expressions.
 >    Using guards we can have multiple `if` branches and finally use the `else` branch
 >    by using `otherwise`. After each guard (`|`) there's a condition, after the condition there's
->    a `=` and then the expression (the part after `then` in an `if` expression).
+>    a `=` and then the expression (the part after `then` in an `if` expression)
 >
 > 2. LambdaCase as seen in `catch`, is just a syntactic sugar to save a few characters,
 >    instead of writing `\e -> case e of`, we can write `\case`. It requires enabling the
->    `LambdaCase` extension.
+>    `LambdaCase` extension
 >
 >    #### Language extensions
 >
@@ -129,6 +129,7 @@ the `Exception` type class has; I think
 ```hs
 -- need to add these at the top
 
+{-# language LambdaCase #-}
 {-# language ScopedTypeVariables #-}
 
 import GHC.IO.Exception (IOException(..))
@@ -229,7 +230,7 @@ Are there scenarios where we would clean-up after ourselves (meaning, close hand
 opened)? Which parts of the code could throw an exception? Which handles won't get closed?
 
 - Try to use `bracket` to make sure we always close a handle afterwards, even if an exception
-  is thrown, and avoid closing the handle for the `stdin` and `stdout` cases.
+  is thrown, and avoid closing the handle for the `stdin` and `stdout` cases
   <details><summary>Hint</summary>We might need to use continuation-passing style,
   passing a function that takes a parameter to a function that produces a parameter
   and calls it with that parameter.

@@ -98,11 +98,11 @@ Let's break it down to a few parts, the
 The first part should be fairly straightforward from the comments, maybe except for:
 
 - `cabal-version`: Defines which cabal versions can build this project. We've specified 2.4 and above.
-  [More info on different versions](https://cabal.readthedocs.io/en/3.6/file-format-changelog.html).
-- `name`: The name of your library and package. Must match with the .cabal filename. Usually starts with a lowercase. [Check if your package name is already taken on Hackage](https://hackage.haskell.org/packages/search?terms=name).
-- `version`: Some Haskell packages use [semver](https://semver.org/), most use [PvP](https://pvp.haskell.org/).
-- `license`: Most Haskell packages use [BSD-3-Clause](https://choosealicense.com/licenses/bsd-3-clause/). [Neil Mitchell blogged about this](https://neilmitchell.blogspot.com/2018/08/licensing-my-haskell-packages.html). You can find more licenses if you'd like at [choosealicense.com](https://choosealicense.com).
-- `extra-doc-files`: Include extra doc files here, such as `README` or `CHANGELOG`.
+  [More info on different versions](https://cabal.readthedocs.io/en/3.6/file-format-changelog.html)
+- `name`: The name of your library and package. Must match with the .cabal filename. Usually starts with a lowercase. [Check if your package name is already taken on Hackage](https://hackage.haskell.org/packages/search?terms=name)
+- `version`: Some Haskell packages use [semver](https://semver.org/), most use [PvP](https://pvp.haskell.org/)
+- `license`: Most Haskell packages use [BSD-3-Clause](https://choosealicense.com/licenses/bsd-3-clause/). [Neil Mitchell blogged about this](https://neilmitchell.blogspot.com/2018/08/licensing-my-haskell-packages.html). You can find more licenses if you'd like at [choosealicense.com](https://choosealicense.com)
+- `extra-doc-files`: Include extra doc files here, such as `README` or `CHANGELOG`
 
 Let's fill this with the metadata of our project:
 
@@ -164,7 +164,7 @@ In a `library` target, we define:
   these could be any module you don't wish to export, such as an internal utility
   functions module.
   In our case we don't have anything like this, so we commented out the `other-modules`
-  label.
+  label
 
 Note that it is common to specify **version bounds** for packages.
 Version bounds specify *which package versions this library works with*.
@@ -428,9 +428,9 @@ There are two important fields a `stack.yaml` file must have:
   We will choose the latest (at time of writing) on the `lts` branch: `lts-18.22`.
   Visit [this link](https://www.stackage.org/lts-18.22) to find out which packages this
   snapshot includes, what their versions are, and which GHC version is used
-  with this snapshot.
+  with this snapshot
 - `packages`: Describes the location of packages we plan to build. In our case
-  we have only one and it can be found in the current directory.
+  we have only one and it can be found in the current directory
 
 We'll add `stack.yaml` to our project directory:
 
@@ -532,7 +532,7 @@ so future projects with the same resolver and future runs of this project won't
 require reinstallation. This approach is kind of a middle ground between full packages
 sharing and sandboxes.
 
-Let's look at the (somewhat) equivalent commands for Stack:
+Let's look at the (somewhat) equivalent commands for stack:
 
 ```sh
 stack build
@@ -628,7 +628,7 @@ We've made some change to our project directory, and it should now look like thi
 4 directories, 10 files
 ```
 
-Note that this package format could be release on [Hackage](https://hackage.haskell.org/)
+Note that this package format could be released on [Hackage](https://hackage.haskell.org/)
 for other Haskell developers to use!
 
 > You can view the git commit of
