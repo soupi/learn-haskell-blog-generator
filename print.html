@@ -1718,7 +1718,7 @@ module Html.Internal where
 ...
 </code></pre>
 <p>And now in <code>Html.hs</code>, we will remove the code that we moved to <code>Html/Internal.hs</code>
-and instead we'll import the internal module:</p>
+and in its stead we'll import the internal module:</p>
 <pre><code class="language-hs">-- Html.hs
 
 module Html
@@ -2120,7 +2120,7 @@ differentiate between different kinds of structures such as paragraphs and headi
 not without parsing the data at least.</p>
 <p>In this case, we have a list of structures, and each structure could be
 one of a few specific options (a paragraph, a heading, a list, etc.),
-and we want to be able to know which structure is which, so we can easily
+and we want to be able to know which structure is which so we can easily
 convert it into the equivalent HTML representation.</p>
 <p>For that, we have <code>data</code> definitions. <code>data</code> gives us the ability to
 create custom types by grouping multiple types together and having
@@ -4586,11 +4586,11 @@ executable hs-blog-gen
 <p>The first part should be fairly straightforward from the comments, maybe except for:</p>
 <ul>
 <li><code>cabal-version</code>: Defines which cabal versions can build this project. We've specified 2.4 and above.
-<a href="https://cabal.readthedocs.io/en/3.6/file-format-changelog.html">More info on different versions</a></li>
-<li><code>name</code>: The name of your library and package. Must match with the <code>.cabal</code> filename. Usually starts with a lowercase. <a href="https://hackage.haskell.org/packages/search?terms=name">Check if your package name is already taken on Hackage</a></li>
-<li><code>version</code>: Some Haskell packages use <a href="https://semver.org/">semver</a>, most use <a href="https://pvp.haskell.org/">PvP</a></li>
-<li><code>license</code>: Most Haskell packages use <a href="https://choosealicense.com/licenses/bsd-3-clause/">BSD-3-Clause</a>. <a href="https://neilmitchell.blogspot.com/2018/08/licensing-my-haskell-packages.html">Neil Mitchell blogged about this</a>. You can find more licenses if you'd like at <a href="https://choosealicense.com">choosealicense.com</a></li>
-<li><code>extra-doc-files</code>: Include extra doc files here, such as <code>README</code> or <code>CHANGELOG</code></li>
+<a href="https://cabal.readthedocs.io/en/3.6/file-format-changelog.html">More info on different versions</a>.</li>
+<li><code>name</code>: The name of your library and package. Must match with the <code>.cabal</code> filename. Usually starts with a lowercase. <a href="https://hackage.haskell.org/packages/search?terms=name">Check if your package name is already taken on Hackage</a>.</li>
+<li><code>version</code>: Some Haskell packages use <a href="https://semver.org/">semver</a>, most use <a href="https://pvp.haskell.org/">PvP</a>.</li>
+<li><code>license</code>: Most Haskell packages use <a href="https://choosealicense.com/licenses/bsd-3-clause/">BSD-3-Clause</a>. <a href="https://neilmitchell.blogspot.com/2018/08/licensing-my-haskell-packages.html">Neil Mitchell blogged about this</a>. You can find more licenses if you'd like at <a href="https://choosealicense.com">choosealicense.com</a>.</li>
+<li><code>extra-doc-files</code>: Include extra doc files here, such as <code>README</code> or <code>CHANGELOG</code>.</li>
 </ul>
 <p>Let's fill this with the metadata of our project:</p>
 <pre><code class="language-cabal">cabal-version:       2.4
@@ -4642,7 +4642,7 @@ and all of these settings will be automatically added.</p>
 these could be any module you don't wish to export, such as an internal utility
 functions module.
 In our case we don't have anything like this, so we commented out the <code>other-modules</code>
-label</li>
+label.</li>
 </ul>
 <p>Note that it is common to specify <strong>version bounds</strong> for packages.
 Version bounds specify <em>which package versions this library works with</em>.
@@ -8563,21 +8563,21 @@ of the program and the various parts - sometimes the best way to learn something
 <p>In this book we've implemented a very simple static blog generator while learning Haskell as we go.</p>
 <ul>
 <li>We've learned about basic Haskell building blocks, such as definitions, functions,
-types, modules, recursion, pattern matching, type classes, IO and exceptions</li>
+types, modules, recursion, pattern matching, type classes, IO and exceptions.</li>
 <li>We've learned about <a href="./03-html/03-edsls.html">EDSLs</a> and used the <em>combinator pattern</em> to implement
-a composable html generation library</li>
+a composable html generation library.</li>
 <li>We've learned how to leverage types, modules and smart constructors
-to <a href="./03-html/04-safer_construction.html">make invalid states unrepresentable</a></li>
-<li>We've learned how to represent complex data using <a href="./04-markup/01-data_type.html">ADTs</a></li>
+to <a href="./03-html/04-safer_construction.html">make invalid states unrepresentable</a>.</li>
+<li>We've learned how to represent complex data using <a href="./04-markup/01-data_type.html">ADTs</a>.</li>
 <li>We've learned how to use <a href="./04-markup/04-parsing_02.html#pattern-matching">pattern matching</a> to transform ADTs,
-and how to use <a href="./04-markup/02-parsing_01.html#recursion-and-accumulating-information">recursion</a> to solve problems</li>
+and how to use <a href="./04-markup/02-parsing_01.html#recursion-and-accumulating-information">recursion</a> to solve problems.</li>
 <li>We've used the <em>functional core, imperative shell</em> approach to build a program that handles IO and applies
-our domain logic to user inputs</li>
+our domain logic to user inputs.</li>
 <li>We've learned about abstractions such as <a href="./05-glue/01-markup_to_html.html#monoids">monoids</a>,
 <a href="./05-glue/04-optparse.html#functor">functors</a> and <a href="./06-errors_and_files/01-either.html#monadic-interface">monads</a>,
-and how they can help us reuse code and convey information about shared interfaces</li>
+and how they can help us reuse code and convey information about shared interfaces.</li>
 <li>We've learned how to create fancy <a href="./05-glue/04-optparse.html">command-line interfaces</a>, <a href="./08-testing.html">write tests</a>,
-and <a href="./09-documentation.html">generate documentation</a></li>
+and <a href="./09-documentation.html">generate documentation</a>.</li>
 </ul>
 <p>While Haskell is a very big and complex language, and there's always more to be learned,
 I think we've reached an important milestone where

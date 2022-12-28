@@ -234,11 +234,11 @@ executable hs-blog-gen
 <p>The first part should be fairly straightforward from the comments, maybe except for:</p>
 <ul>
 <li><code>cabal-version</code>: Defines which cabal versions can build this project. We've specified 2.4 and above.
-<a href="https://cabal.readthedocs.io/en/3.6/file-format-changelog.html">More info on different versions</a></li>
-<li><code>name</code>: The name of your library and package. Must match with the <code>.cabal</code> filename. Usually starts with a lowercase. <a href="https://hackage.haskell.org/packages/search?terms=name">Check if your package name is already taken on Hackage</a></li>
-<li><code>version</code>: Some Haskell packages use <a href="https://semver.org/">semver</a>, most use <a href="https://pvp.haskell.org/">PvP</a></li>
-<li><code>license</code>: Most Haskell packages use <a href="https://choosealicense.com/licenses/bsd-3-clause/">BSD-3-Clause</a>. <a href="https://neilmitchell.blogspot.com/2018/08/licensing-my-haskell-packages.html">Neil Mitchell blogged about this</a>. You can find more licenses if you'd like at <a href="https://choosealicense.com">choosealicense.com</a></li>
-<li><code>extra-doc-files</code>: Include extra doc files here, such as <code>README</code> or <code>CHANGELOG</code></li>
+<a href="https://cabal.readthedocs.io/en/3.6/file-format-changelog.html">More info on different versions</a>.</li>
+<li><code>name</code>: The name of your library and package. Must match with the <code>.cabal</code> filename. Usually starts with a lowercase. <a href="https://hackage.haskell.org/packages/search?terms=name">Check if your package name is already taken on Hackage</a>.</li>
+<li><code>version</code>: Some Haskell packages use <a href="https://semver.org/">semver</a>, most use <a href="https://pvp.haskell.org/">PvP</a>.</li>
+<li><code>license</code>: Most Haskell packages use <a href="https://choosealicense.com/licenses/bsd-3-clause/">BSD-3-Clause</a>. <a href="https://neilmitchell.blogspot.com/2018/08/licensing-my-haskell-packages.html">Neil Mitchell blogged about this</a>. You can find more licenses if you'd like at <a href="https://choosealicense.com">choosealicense.com</a>.</li>
+<li><code>extra-doc-files</code>: Include extra doc files here, such as <code>README</code> or <code>CHANGELOG</code>.</li>
 </ul>
 <p>Let's fill this with the metadata of our project:</p>
 <pre><code class="language-cabal">cabal-version:       2.4
@@ -290,7 +290,7 @@ and all of these settings will be automatically added.</p>
 these could be any module you don't wish to export, such as an internal utility
 functions module.
 In our case we don't have anything like this, so we commented out the <code>other-modules</code>
-label</li>
+label.</li>
 </ul>
 <p>Note that it is common to specify <strong>version bounds</strong> for packages.
 Version bounds specify <em>which package versions this library works with</em>.
