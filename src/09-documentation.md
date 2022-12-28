@@ -281,16 +281,16 @@ modules or not after splitting it into sections using headings.
 As we saw earlier, we can also add formatting in the content of our comments.
 For example, we can:
 
-- Hyperlink identifiers by surrounding them with `` ` ``.
+- Hyperlink identifiers by surrounding them with `` ` ``
 
   For example: `` `Heading` ``
-- Write `monospaced text` by surrounding it with `@`.
+- Write `monospaced text` by surrounding it with `@`
 
   For example: `@Paragraph "Hello"@`
-- Add _emphasis_ to text by surrounding it with `/`.
+- Add _emphasis_ to text by surrounding it with `/`
 
   For example: `/this is emphasised/`
-- Add __bold__ to text by surrounding it with `__`.
+- Add __bold__ to text by surrounding it with `__`
 
   For example: `__this is bold__`
 

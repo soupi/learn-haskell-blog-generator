@@ -143,7 +143,7 @@ arguments:
    But first let's meet another operator that will make our code more concise.
 
 One very cool thing about `newtype` is that wrapping and extracting expressions doesn't actually
-have a performance cost! The compiler knows to remove any wrapping and extraction
+have a performance cost! The compiler knows how to remove any wrapping and extraction
 of the `newtype` constructor and use the underlying type.
 
 The new type and the constructor we defined are only there to help us *distinguish* between

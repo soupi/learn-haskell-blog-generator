@@ -163,7 +163,7 @@ exactlyTwoVersion2 list =
 Exercises:
 
 1. Create a function `isBright :: AnsiColor -> Bool` that checks whether a color is bright
-2. Use [this table](https://en.wikipedia.org/wiki/ANSI_escape_code#3-bit_and_4-bit) to write `ansiToUbuntu`.
+2. Use [this table](https://en.wikipedia.org/wiki/ANSI_escape_code#3-bit_and_4-bit) to write `ansiToUbuntu`
 3. Create a function `isEmpty :: [a] -> Bool` that uses `listToMaybe` to check whether a list is empty
 4. Create a function `isEmpty :: [a] -> Bool` that *doesn't* use `listToMaybe` to check whether a list is empty
 

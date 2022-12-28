@@ -22,7 +22,7 @@ This was a long info dump. Let's practice what we've learned. We want to:
 
 Let's create a new module, `HsBlog.Directory`, which will be responsible for handling
 directories and multiple files. From this module we will export the `convertDirectory`
-and `buildIndex` functions we've defined before.
+and `buildIndex` functions we've defined before:
 
 ```hs
 -- | Process multiple files and convert directories
@@ -122,7 +122,7 @@ getDirFilesAndContent :: FilePath -> IO DirContents
 
 `getDirFilesAndContent` is responsible for providing the relevant files for processing --
 both the ones we need to convert to markup (and their textual content) and other files we
-might want to copy as-is (such as images and style-sheets).
+might want to copy as-is (such as images and style-sheets):
 
 ```hs
 -- | Returns the directory content
@@ -159,7 +159,7 @@ Part (3) is a little bit more involved than the rest, let's explore it.
 applyIoOnList :: (a -> IO b) -> [a] -> IO [(a, Either String b)]
 ```
 
-It tries to apply an IO function on a list of values, and document successes and failures.
+It tries to apply an `IO` function on a list of values, and document successes and failures.
 
 Try to implement it! If you need a hint for which functions to use, see the import list
 we wrote earlier.
@@ -383,7 +383,7 @@ instead of reading from a file, it copies from the input path to a newly generat
 output path. Then we pass the result (which has the type `[(FilePath, Either String ())]`)
 to `filterAndReportFailures` to print the errors and filter out the unsuccessful copies.
 Because we are not really interested in the output of `filterAndReportFailures`,
-we discard it with `void`, returning `()` as a result instead.
+we discard it with `void`, returning `()` as a result instead:
 
 ```hs
 -- | Write files to a directory, recording errors to stderr.

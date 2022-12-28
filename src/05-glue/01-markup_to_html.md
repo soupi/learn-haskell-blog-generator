@@ -1,6 +1,6 @@
 # Converting Markup to HTML
 
-One key part is missing before we can do glue everything together, and that is
+One key part is missing before we can glue everything together, and that is
 to convert our `Markup` data types to `Html`.
 
 We'll start by creating a new module and import both the `Markup` and the `Html` modules.
@@ -32,8 +32,8 @@ And write `HI.el` instead.
 
 I like using qualified imports because readers do not have to guess where a
 name comes from. Some modules are even designed to be imported qualified.
-For example, many container APIs such as maps, sets, and vectors have very similar
-API. If we want to use multiple containers in a single module we pretty much have
+For example, the APIs of many container types such as maps, sets, and vectors, are very similar.
+If we want to use multiple containers in a single module we pretty much have
 to use qualified imports so that when we write a function such as `singleton`,
 which creates a container with a single value, GHC will know which `singleton`
 function we are referring to.
@@ -78,14 +78,14 @@ headings that are not `h1`. There are a few ways to handle this:
 - Ignore the warning - this will likely fail at runtime one day and the user will be sad
 - Pattern match other cases and add a nice error with the `error` function - it has
   the same disadvantage above, but will also no longer notify of the unhandled
-  cases at compile time.
+  cases at compile time
 - Pattern match and do the wrong thing - user is still sad
 - Encode errors in the type system using `Either`, we'll see how to do this in later
   chapters
 - Restrict the input - change `Markup.Heading` to not include a number but rather
-  specific supported headings. This is a reasonable approach.
+  specific supported headings. This is a reasonable approach
 - Implement an HTML function supporting arbitrary headings. Should be straightforward
-  to do.
+  to do
 
 ---
 
@@ -258,7 +258,7 @@ instance Monoid Structure where
   mempty = empty_
 ```
 
-And now, instead of using our own `concatStructure`, we can use the library function
+And now, instead of using our own `concatStructure`, we can use the library function:
 
 ```hs
 mconcat :: Monoid a => [a] -> a

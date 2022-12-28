@@ -24,7 +24,7 @@ module <module-name>
 
 The export list can be omitted if you want to export everything
 defined in the module, but we don't. We will list exactly the
-functions and type we want to export. This will give us control
+functions and types we want to export. This will give us control
 on how people can use our tiny library.
 
 We will create a new source file named `Html.hs` and add the following
@@ -193,7 +193,7 @@ render html =
     Html str -> str
 ```
 
-> As an aside, you might have notice that I've decided to suffix the functions used to
+> As an aside, you might have noticed that I've decided to suffix the functions used to
 > construct HTML values with an undescore (`_`). This mostly an aesthetic decision which,
 > in my opinion, makes the EDSL easier to recognize,
 > but it is also useful to avoid name clashes with

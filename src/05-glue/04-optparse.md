@@ -39,7 +39,7 @@ but we will cover a few important things to pay attention to in this chapter.
 In general, there are four important things we need to do:
 
 1. Define our model - we want to define an ADT that describes the various options
-   and commands for our program.
+   and commands for our program
 
 2. Define a parser that will produce a value of our model type when run
 
@@ -82,7 +82,7 @@ data SingleOutput
 In terms of interface, we could decide that when a user would like to convert
 a single input source, they would use the `convert` command, and supply the optional flags
 `--input FILEPATH` and `--output FILEPATH` to read or write from a file.
-When the user does not supply one or both flag, we will read or write from
+When the user does not supply one or both flags, we will read or write from
 the standard input/output accordingly.
 
 If the user would like to convert a directory, they can use the `convert-dir`
@@ -520,7 +520,7 @@ selecting the right operation would be via commands.
 If the user would like to convert a single source, they can use
 `convert`, for a directory, `convert-dir`.
 
-We can create a a parser with commands with the `subparser` and `command`
+We can create a parser with commands with the `subparser` and `command`
 functions:
 
 ```hs
@@ -593,7 +593,7 @@ pOptions =
 #### ParserInfo
 
 Since we finished building a parser, we should wrap it up in a `ParserInfo`
-and add some information to it to make it ready to run.
+and add some information to it to make it ready to run:
 
 ```hs
 opts :: ParserInfo Options

@@ -8,7 +8,7 @@ location, and so on.
 
 We can represent our environment as a record data type and build it from user input.
 The user input can be from command-line arguments, a configuration file,
-or something else.
+or something else:
 
 ```hs
 module HsBlog.Env where
@@ -38,7 +38,7 @@ type from the `mtl` (or `transformers`) package.
 ### ReaderT
 
 ```hs
-newType ReaderT r m a = ReaderT (r -> m a)
+newtype ReaderT r m a = ReaderT (r -> m a)
 ```
 
 `ReaderT` is another *monad transformer* like `ExceptT`, which means
@@ -81,8 +81,8 @@ The `Control.Monad.Reader` provides an alias: `Reader r a = ReaderT r Identity a
 > try doing the following exercise:
 > 1. Choose an `Applicative` or `Monad` interface function, I recommend `liftA2`,
 >    and specialize its type signature by replacing `f` (or `m`) with a concrete `ReaderT` type such as
->    `ReaderT Int IO`.
-> 2. Unpack the `ReaderT` newtype, replacing `ReaderT Int IO t` with `Int -> IO t`.
+>    `ReaderT Int IO`
+> 2. Unpack the `ReaderT` newtype, replacing `ReaderT Int IO t` with `Int -> IO t`
 > 3. Implement this specialized version of the function you've chosen
 >
 > <details><summary>Solution for liftA2</summary>
