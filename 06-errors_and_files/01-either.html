@@ -326,12 +326,12 @@ There are a few approaches, the most prominent ones are:</p>
 <li>Make them return the same error type. Write an ADT that holds all possible
 error descriptions. This can work in some cases but isn't always ideal.
 For example a user calling <code>parseDigit</code> shouldn't be forced to
-handle a possible case that the input might be an empty string.</li>
+handle a possible case that the input might be an empty string</li>
 <li>Use a specialized error type for each type, and when they are composed together,
 map the error type of each function to a more general error type. This can
 be done with the function
 <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Bifunctor.html#v:first"><code>first</code></a>
-from the <code>Bifunctor</code> type class.</li>
+from the <code>Bifunctor</code> type class</li>
 </ol>
 <h2 id="monadic-interface"><a class="header" href="#monadic-interface">Monadic interface</a></h2>
 <p>The applicative interface allows us to lift a function to work on multiple
@@ -518,11 +518,11 @@ and <a href="https://hackage.haskell.org/package/async">asynchronous programming
 <p>Using <code>Either</code> for error handling is useful for two reasons:</p>
 <ol>
 <li>We encode possible errors using types, and we <strong>force users to acknowledge and handle</strong> them, thus
-making our code more resilient to crashes and bad behaviours.</li>
+making our code more resilient to crashes and bad behaviours</li>
 <li>The <code>Functor</code>, <code>Applicative</code>, and <code>Monad</code> interfaces provide us with mechanisms for
 <strong>composing</strong> functions that might fail (almost) effortlessly - reducing boilerplate while
 maintaining strong guarantees about our code, and delaying the need to handle errors until
-it is appropriate.</li>
+it is appropriate</li>
 </ol>
 
                     </main>

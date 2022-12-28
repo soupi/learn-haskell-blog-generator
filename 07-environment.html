@@ -153,7 +153,7 @@ location, and so on.</p>
 <h2 id="environment"><a class="header" href="#environment">Environment</a></h2>
 <p>We can represent our environment as a record data type and build it from user input.
 The user input can be from command-line arguments, a configuration file,
-or something else.</p>
+or something else:</p>
 <pre><code class="language-hs">module HsBlog.Env where
 
 data Env
@@ -176,7 +176,7 @@ and that is using the
 <a href="https://hackage.haskell.org/package/mtl-2.2.2/docs/Control-Monad-Reader.html#g:2"><code>ReaderT</code></a>
 type from the <code>mtl</code> (or <code>transformers</code>) package.</p>
 <h3 id="readert"><a class="header" href="#readert">ReaderT</a></h3>
-<pre><code class="language-hs">newType ReaderT r m a = ReaderT (r -&gt; m a)
+<pre><code class="language-hs">newtype ReaderT r m a = ReaderT (r -&gt; m a)
 </code></pre>
 <p><code>ReaderT</code> is another <em>monad transformer</em> like <code>ExceptT</code>, which means
 that it also has an instance of <code>Functor</code>, <code>Applicative</code>, <code>Monad</code> and <code>MonadTrans</code>.</p>
@@ -213,8 +213,8 @@ try doing the following exercise:</p>
 <ol>
 <li>Choose an <code>Applicative</code> or <code>Monad</code> interface function, I recommend <code>liftA2</code>,
 and specialize its type signature by replacing <code>f</code> (or <code>m</code>) with a concrete <code>ReaderT</code> type such as
-<code>ReaderT Int IO</code>.</li>
-<li>Unpack the <code>ReaderT</code> newtype, replacing <code>ReaderT Int IO t</code> with <code>Int -&gt; IO t</code>.</li>
+<code>ReaderT Int IO</code></li>
+<li>Unpack the <code>ReaderT</code> newtype, replacing <code>ReaderT Int IO t</code> with <code>Int -&gt; IO t</code></li>
 <li>Implement this specialized version of the function you've chosen</li>
 </ol>
 <details><summary>Solution for liftA2</summary>

@@ -151,9 +151,9 @@
 a few regression tests to make sure that if we extend or change our markup parsing code,
 HTML generation code, or translation from markup to HTML code, and make a mistake, we'll
 have a safety net alerting us of issues.</p>
-<p>We will use the <a href="https://hspec.github.io/">hspec</a> testing framework to write our tests.
+<p>We will use the <a href="https://hspec.github.io/">Hspec</a> testing framework to write our tests.
 There are other testing frameworks in Haskell, for example
-<a href="https://hackage.haskell.org/package/tasty">tasty</a>, but I like <code>hspec</code>'s documentation,
+<a href="https://hackage.haskell.org/package/tasty">tasty</a>, but I like Hspec's documentation,
 so we'll use that.</p>
 <h2 id="initial-setup"><a class="header" href="#initial-setup">Initial setup</a></h2>
 <h3 id="cabal-file-additions"><a class="header" href="#cabal-file-additions">Cabal file additions</a></h3>
@@ -183,39 +183,39 @@ and options:</p>
     hspec-discover:hspec-discover
 </code></pre>
 <ul>
-<li><code>hs-source-dirs: test</code> - The directory of the source files for the test suite.</li>
-<li><code>main-is: Spec.hs</code> - The entry point to the test suite.</li>
+<li><code>hs-source-dirs: test</code> - The directory of the source files for the test suite</li>
+<li><code>main-is: Spec.hs</code> - The entry point to the test suite</li>
 <li><code>other-modules</code> - The modules in our test suite.
-Currently commented out because we haven't added any yet.</li>
+Currently commented out because we haven't added any yet</li>
 <li><code>build-depends</code> - The packages we are going to use:
 <ul>
 <li><a href="https://hackage.haskell.org/package/base"><code>base</code></a> -
-The standard library for Haskell, as we've used before.</li>
+The standard library for Haskell, as we've used before</li>
 <li><a href="https://hackage.haskell.org/package/hspec"><code>hspec</code></a> -
-The test framework we are going to use.</li>
+The test framework we are going to use</li>
 <li><a href="https://hackage.haskell.org/package/hspec-discover"><code>hspec-discover</code></a> -
-Automatic discovery of hspec tests.</li>
+Automatic discovery of Hspec tests</li>
 <li><a href="https://hackage.haskell.org/package/raw-strings-qq"><code>raw-strings-qq</code></a> -
-Additional syntax for writing raw string literals.</li>
-<li><code>hs-blog</code> - Our library.</li>
+Additional syntax for writing raw string literals</li>
+<li><code>hs-blog</code> - Our library</li>
 </ul>
 </li>
 <li><a href="https://cabal.readthedocs.io/en/3.6/cabal-package.html#pkg-field-ghc-options"><code>ghc-options</code></a> -
 Extra options and flags for GHC:
 <ul>
 <li><a href="https://downloads.haskell.org/ghc/latest/docs/html/users_guide/using-optimisation.html#options-optimise"><code>-O</code></a> -
-Compile with optimizations.</li>
+Compile with optimizations</li>
 <li><a href="https://downloads.haskell.org/ghc/latest/docs/html/users_guide/phases.html#ghc-flag--threaded"><code>-threaded</code></a> -
 Use the multi-core runtime instead of single-core runtime. The multi-core
 runtime is generally a bit slower in my experience, but when writing code that actually uses
 multiple cores (such as a test framework that runs tests in parallel) it can give a good
-performance boost.</li>
+performance boost</li>
 <li><a href="https://downloads.haskell.org/ghc/latest/docs/html/users_guide/phases.html#ghc-flag--rtsopts%5B=%E2%9F%A8none%7Csome%7Call%7Cignore%7CignoreAll%E2%9F%A9%5D"><code>-rtsopts</code></a> -
 Let us configure the Haskell runtime system by passing command-line arguments to our application</li>
 <li><a href="https://downloads.haskell.org/ghc/latest/docs/html/users_guide/phases.html#ghc-flag--with-rtsopts=%E2%9F%A8opts%E2%9F%A9"><code>-with-rtsopts=-N</code></a> -
 Set specific default options for the program at link-time.
 Specifically, <a href="https://downloads.haskell.org/ghc/latest/docs/html/users_guide/using-concurrent.html#rts-flag--N%20%E2%9F%A8x%E2%9F%A9"><code>-N</code></a>
-Sets the number of cores to use in our program.</li>
+Sets the number of cores to use in our program</li>
 </ul>
 </li>
 <li><a href="https://cabal.readthedocs.io/en/3.6/cabal-package.html#pkg-field-build-tool-depends"><code>build-tool-depends</code></a> -
@@ -223,7 +223,7 @@ Use a specific executable from a package dependency in aid of building the packa
 In this case, we are using the <code>hspec-discover</code> executable from the
 <a href="https://hackage.haskell.org/package/hspec-discover"><code>hspec-discover</code></a> package, which
 goes over the source directory for the tests, finds all of the <code>Spec</code> files,
-and creates an entry point for the program that will run all the tests it discovered.</li>
+and creates an entry point for the program that will run all the tests it discovered</li>
 </ul>
 <h3 id="hspec-discovery"><a class="header" href="#hspec-discovery">Hspec discovery</a></h3>
 <p>In order for <code>hspec-discover</code> to work, we need to add the following
@@ -236,14 +236,14 @@ Because we haven't defined any tests, our output is:</p>
 <pre><code class="language-sh">Finished in 0.0000 seconds
 0 examples, 0 failures
 </code></pre>
-<p>When we add new hspec tests, <code>hspec-discover</code> will find and run them automatically
+<p>When we add new Hspec tests, <code>hspec-discover</code> will find and run them automatically
 (though we will still need add them to the <code>other-modules</code> section in the cabal file).</p>
 <p>For <code>hspec-discover</code> to identify modules as test modules, the modules must follow
 a convention:</p>
 <ol>
 <li>Their module names must end with <code>Spec</code></li>
 <li>They must define a value <code>spec :: Spec</code> (which describes the test) and export it
-outside of the module (by adding it to the export list of the module, for example).</li>
+outside of the module (by adding it to the export list of the module, for example)</li>
 </ol>
 <h2 id="writing-tests"><a class="header" href="#writing-tests">Writing tests</a></h2>
 <p>Let's write our first test. We'll create a new module to test
@@ -254,7 +254,7 @@ the following imports as well:</p>
 import Test.Hspec
 import HsBlog.Markup
 </code></pre>
-<p><code>hspec</code> provides us with a monadic interface for describing, composing and
+<p><code>Hspec</code> provides us with a monadic interface for describing, composing and
 nesting test specifications (<code>Spec</code>s).</p>
 <p>Using the <code>describe</code> function we can
 describe a group of tests, using the <code>it</code> function we can add a new test,
@@ -335,7 +335,7 @@ Finished in 0.0001 seconds
 Finished in 0.0003 seconds
 4 examples, 0 failures
 </code></pre>
-<p>This is the gist of writing unit tests with <code>hspec</code>. It's important to note
+<p>This is the gist of writing unit tests with Hspec. It's important to note
 that we can nest <code>Spec</code>s that are declared with <code>describe</code> to create trees,
 and of course refactor and move things to different functions and modules
 to make our test suite better organized.</p>
@@ -369,7 +369,7 @@ simple = do
         [CodeBlock [&quot;main = putStrLn \&quot;hello world!\&quot;&quot;]]
 </code></pre>
 <p>Also, there are other &quot;expectations&quot; like <code>shouldBe</code> that we can use when writing tests.
-They are described in the <a href="https://hspec.github.io/expectations.html">hspec tutorial</a>
+They are described in the <a href="https://hspec.github.io/expectations.html">Hspec tutorial</a>
 and can be found in the
 <a href="https://hackage.haskell.org/package/hspec-expectations-0.8.2/docs/Test-Hspec-Expectations.html">haddock documentation</a> as well.</p>
 <h3 id="raw-strings"><a class="header" href="#raw-strings">Raw strings</a></h3>
@@ -537,7 +537,7 @@ example4Result =
 </details>
 <hr />
 <h2 id="parallel-test-execution"><a class="header" href="#parallel-test-execution">Parallel test execution</a></h2>
-<p>Without further configuration, <code>hspec</code> will run all
+<p>Without further configuration, Hspec will run all
 of our tests on the main thread, sequentially.</p>
 <p>There are a couple of ways to configure tests to run
 in parallel. One is to manually mark a <code>Spec</code>

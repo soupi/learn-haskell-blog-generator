@@ -208,12 +208,12 @@ main =
 <p>Guards as seen in <code>sayDiv2</code> are just a nicer syntax around <code>if-then-else</code> expressions.
 Using guards we can have multiple <code>if</code> branches and finally use the <code>else</code> branch
 by using <code>otherwise</code>. After each guard (<code>|</code>) there's a condition, after the condition there's
-a <code>=</code> and then the expression (the part after <code>then</code> in an <code>if</code> expression).</p>
+a <code>=</code> and then the expression (the part after <code>then</code> in an <code>if</code> expression)</p>
 </li>
 <li>
 <p>LambdaCase as seen in <code>catch</code>, is just a syntactic sugar to save a few characters,
 instead of writing <code>\e -&gt; case e of</code>, we can write <code>\case</code>. It requires enabling the
-<code>LambdaCase</code> extension.</p>
+<code>LambdaCase</code> extension</p>
 <h4 id="language-extensions"><a class="header" href="#language-extensions">Language extensions</a></h4>
 <p>Haskell is a standardized language. However, GHC provides <em>extensions</em> to the language -
 additional features that aren't covered in the 98 or 2010 standards of Haskell.
@@ -354,7 +354,7 @@ Are there scenarios where we would clean-up after ourselves (meaning, close hand
 opened)? Which parts of the code could throw an exception? Which handles won't get closed?</p>
 <ul>
 <li>Try to use <code>bracket</code> to make sure we always close a handle afterwards, even if an exception
-is thrown, and avoid closing the handle for the <code>stdin</code> and <code>stdout</code> cases.<details><summary>Hint</summary>We might need to use continuation-passing style,
+is thrown, and avoid closing the handle for the <code>stdin</code> and <code>stdout</code> cases<details><summary>Hint</summary>We might need to use continuation-passing style,
 passing a function that takes a parameter to a function that produces a parameter
 and calls it with that parameter.
 </details>

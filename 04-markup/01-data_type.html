@@ -155,8 +155,8 @@ between HTML documents, structures and titles, but we didn't really need to
 differentiate between different kinds of structures such as paragraphs and headings,
 not without parsing the data at least.</p>
 <p>In this case, we have a list of structures, and each structure could be
-one of a few specific options (a paragraph, a heading, a list, etc),
-and we want to be able to know which structure is which so we can easily
+one of a few specific options (a paragraph, a heading, a list, etc.),
+and we want to be able to know which structure is which, so we can easily
 convert it into the equivalent HTML representation.</p>
 <p>For that, we have <code>data</code> definitions. <code>data</code> gives us the ability to
 create custom types by grouping multiple types together and having
@@ -309,7 +309,7 @@ custom error type).</p>
 </ol>
 <p>In our program we use <code>data</code> types to model the different kinds of content types
 in our markup language. We tag each structure using the data constructor
-and provide the rest of the information (the paragraph text, the list items, etc)
+and provide the rest of the information (the paragraph text, the list items, etc.)
 in the <code>&lt;types&gt;</code> section of the data declaration for each constructor:</p>
 <pre><code class="language-hs">type Document
   = [Structure]

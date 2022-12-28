@@ -207,7 +207,7 @@ end of the data definition.</p>
   deriving Show
 </code></pre>
 <p>Now we can use the function <code>show :: Show a =&gt; a -&gt; String</code> for any
-type that implements an instance of the <code>Show</code> type class. For example, with print:</p>
+type that implements an instance of the <code>Show</code> type class. For example, with <code>print</code>:</p>
 <pre><code class="language-hs">print :: Show a =&gt; a -&gt; IO ()
 print = putStrLn . show
 </code></pre>

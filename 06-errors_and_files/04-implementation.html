@@ -168,7 +168,7 @@ it over time, and that principle holds when writing new software as well!</p>
 <h2 id="new-module"><a class="header" href="#new-module">New module</a></h2>
 <p>Let's create a new module, <code>HsBlog.Directory</code>, which will be responsible for handling
 directories and multiple files. From this module we will export the <code>convertDirectory</code>
-and <code>buildIndex</code> functions we've defined before.</p>
+and <code>buildIndex</code> functions we've defined before:</p>
 <pre><code class="language-hs">-- | Process multiple files and convert directories
 
 module HsBlog.Directory
@@ -251,7 +251,7 @@ getDirFilesAndContent :: FilePath -&gt; IO DirContents
 </code></pre>
 <p><code>getDirFilesAndContent</code> is responsible for providing the relevant files for processing --
 both the ones we need to convert to markup (and their textual content) and other files we
-might want to copy as-is (such as images and style-sheets).</p>
+might want to copy as-is (such as images and style-sheets):</p>
 <pre><code class="language-hs">-- | Returns the directory content
 getDirFilesAndContent :: FilePath -&gt; IO DirContents
 getDirFilesAndContent inputDir = do
@@ -279,7 +279,7 @@ getDirFilesAndContent inputDir = do
 <p><code>applyIoOnList</code> has the following type signature:</p>
 <pre><code class="language-hs">applyIoOnList :: (a -&gt; IO b) -&gt; [a] -&gt; IO [(a, Either String b)]
 </code></pre>
-<p>It tries to apply an IO function on a list of values, and document successes and failures.</p>
+<p>It tries to apply an <code>IO</code> function on a list of values, and document successes and failures.</p>
 <p>Try to implement it! If you need a hint for which functions to use, see the import list
 we wrote earlier.</p>
 <details><summary>Answer</summary>
@@ -445,7 +445,7 @@ instead of reading from a file, it copies from the input path to a newly generat
 output path. Then we pass the result (which has the type <code>[(FilePath, Either String ())]</code>)
 to <code>filterAndReportFailures</code> to print the errors and filter out the unsuccessful copies.
 Because we are not really interested in the output of <code>filterAndReportFailures</code>,
-we discard it with <code>void</code>, returning <code>()</code> as a result instead.</p>
+we discard it with <code>void</code>, returning <code>()</code> as a result instead:</p>
 <pre><code class="language-hs">-- | Write files to a directory, recording errors to stderr.
 writeFiles :: FilePath -&gt; [(FilePath, String)] -&gt; IO ()
 writeFiles outputDir files = do

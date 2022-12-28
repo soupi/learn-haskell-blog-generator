@@ -356,7 +356,7 @@ the other that might not return anything meaningful, such as <code>putStrLn</cod
 </code></pre>
 <p>like <code>*&gt;</code> and <code>&gt;&gt;</code>, <code>pure</code> is a more general version of <code>return</code>. <code>pure</code> also has the
 advantage of not having a resemblance to an unrelated keyword in other languages.</p>
-<p>Remember that we said <code>IO a</code> is description of a program
+<p>Remember that we said <code>IO a</code> is a description of a program
 that when executed will produce some value of type <code>a</code> and may do some I/O effects
 during execution?</p>
 <p>With <code>pure</code>, we can build an <code>IO a</code> that does no I/O, and will produce a

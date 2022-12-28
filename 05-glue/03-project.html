@@ -234,11 +234,11 @@ executable hs-blog-gen
 <p>The first part should be fairly straightforward from the comments, maybe except for:</p>
 <ul>
 <li><code>cabal-version</code>: Defines which cabal versions can build this project. We've specified 2.4 and above.
-<a href="https://cabal.readthedocs.io/en/3.6/file-format-changelog.html">More info on different versions</a>.</li>
-<li><code>name</code>: The name of your library and package. Must match with the .cabal filename. Usually starts with a lowercase. <a href="https://hackage.haskell.org/packages/search?terms=name">Check if your package name is already taken on Hackage</a>.</li>
-<li><code>version</code>: Some Haskell packages use <a href="https://semver.org/">semver</a>, most use <a href="https://pvp.haskell.org/">PvP</a>.</li>
-<li><code>license</code>: Most Haskell packages use <a href="https://choosealicense.com/licenses/bsd-3-clause/">BSD-3-Clause</a>. <a href="https://neilmitchell.blogspot.com/2018/08/licensing-my-haskell-packages.html">Neil Mitchell blogged about this</a>. You can find more licenses if you'd like at <a href="https://choosealicense.com">choosealicense.com</a>.</li>
-<li><code>extra-doc-files</code>: Include extra doc files here, such as <code>README</code> or <code>CHANGELOG</code>.</li>
+<a href="https://cabal.readthedocs.io/en/3.6/file-format-changelog.html">More info on different versions</a></li>
+<li><code>name</code>: The name of your library and package. Must match with the <code>.cabal</code> filename. Usually starts with a lowercase. <a href="https://hackage.haskell.org/packages/search?terms=name">Check if your package name is already taken on Hackage</a></li>
+<li><code>version</code>: Some Haskell packages use <a href="https://semver.org/">semver</a>, most use <a href="https://pvp.haskell.org/">PvP</a></li>
+<li><code>license</code>: Most Haskell packages use <a href="https://choosealicense.com/licenses/bsd-3-clause/">BSD-3-Clause</a>. <a href="https://neilmitchell.blogspot.com/2018/08/licensing-my-haskell-packages.html">Neil Mitchell blogged about this</a>. You can find more licenses if you'd like at <a href="https://choosealicense.com">choosealicense.com</a></li>
+<li><code>extra-doc-files</code>: Include extra doc files here, such as <code>README</code> or <code>CHANGELOG</code></li>
 </ul>
 <p>Let's fill this with the metadata of our project:</p>
 <pre><code class="language-cabal">cabal-version:       2.4
@@ -290,7 +290,7 @@ and all of these settings will be automatically added.</p>
 these could be any module you don't wish to export, such as an internal utility
 functions module.
 In our case we don't have anything like this, so we commented out the <code>other-modules</code>
-label.</li>
+label</li>
 </ul>
 <p>Note that it is common to specify <strong>version bounds</strong> for packages.
 Version bounds specify <em>which package versions this library works with</em>.
@@ -510,9 +510,9 @@ is necessary in order to use <code>stack</code>, so we will cover it briefly.</p
 We will choose the latest (at time of writing) on the <code>lts</code> branch: <code>lts-18.22</code>.
 Visit <a href="https://www.stackage.org/lts-18.22">this link</a> to find out which packages this
 snapshot includes, what their versions are, and which GHC version is used
-with this snapshot.</li>
+with this snapshot</li>
 <li><code>packages</code>: Describes the location of packages we plan to build. In our case
-we have only one and it can be found in the current directory.</li>
+we have only one and it can be found in the current directory</li>
 </ul>
 <p>We'll add <code>stack.yaml</code> to our project directory:</p>
 <pre><code class="language-yaml">resolver: lts-18.22
@@ -656,7 +656,7 @@ our package manager will download and install the required package for us!</p>
 
 4 directories, 10 files
 </code></pre>
-<p>Note that this package format could be release on <a href="https://hackage.haskell.org/">Hackage</a>
+<p>Note that this package format could be released on <a href="https://hackage.haskell.org/">Hackage</a>
 for other Haskell developers to use!</p>
 <blockquote>
 <p>You can view the git commit of

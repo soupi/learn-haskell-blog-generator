@@ -147,7 +147,7 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="converting-markup-to-html"><a class="header" href="#converting-markup-to-html">Converting Markup to HTML</a></h1>
-<p>One key part is missing before we can do glue everything together, and that is
+<p>One key part is missing before we can glue everything together, and that is
 to convert our <code>Markup</code> data types to <code>Html</code>.</p>
 <p>We'll start by creating a new module and import both the <code>Markup</code> and the <code>Html</code> modules.</p>
 <pre><code class="language-hs">module Convert where
@@ -168,8 +168,8 @@ If we would've imported <code>Html.Internal</code> qualified, we'd have to write
 <p>And write <code>HI.el</code> instead.</p>
 <p>I like using qualified imports because readers do not have to guess where a
 name comes from. Some modules are even designed to be imported qualified.
-For example, many container APIs such as maps, sets, and vectors have very similar
-API. If we want to use multiple containers in a single module we pretty much have
+For example, the APIs of many container types such as maps, sets, and vectors, are very similar.
+If we want to use multiple containers in a single module we pretty much have
 to use qualified imports so that when we write a function such as <code>singleton</code>,
 which creates a container with a single value, GHC will know which <code>singleton</code>
 function we are referring to.</p>
@@ -208,14 +208,14 @@ headings that are not <code>h1</code>. There are a few ways to handle this:</p>
 <li>Ignore the warning - this will likely fail at runtime one day and the user will be sad</li>
 <li>Pattern match other cases and add a nice error with the <code>error</code> function - it has
 the same disadvantage above, but will also no longer notify of the unhandled
-cases at compile time.</li>
+cases at compile time</li>
 <li>Pattern match and do the wrong thing - user is still sad</li>
 <li>Encode errors in the type system using <code>Either</code>, we'll see how to do this in later
 chapters</li>
 <li>Restrict the input - change <code>Markup.Heading</code> to not include a number but rather
-specific supported headings. This is a reasonable approach.</li>
+specific supported headings. This is a reasonable approach</li>
 <li>Implement an HTML function supporting arbitrary headings. Should be straightforward
-to do.</li>
+to do</li>
 </ul>
 <hr />
 <p>Exercise: Implement <code>h_ :: Natural -&gt; String -&gt; Structure</code>
@@ -335,7 +335,7 @@ is a bit more complicated because of backwards compatibility and performance rea
 <pre><code class="language-hs">instance Monoid Structure where
   mempty = empty_
 </code></pre>
-<p>And now, instead of using our own <code>concatStructure</code>, we can use the library function</p>
+<p>And now, instead of using our own <code>concatStructure</code>, we can use the library function:</p>
 <pre><code class="language-hs">mconcat :: Monoid a =&gt; [a] -&gt; a
 </code></pre>
 <p>Which could theoretically be implemented as:</p>

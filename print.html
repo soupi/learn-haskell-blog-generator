@@ -873,7 +873,7 @@ namely <code>html_</code>, <code>body_</code>, <code>p_</code>, etc, to operate 
 </li>
 </ol>
 <p>One very cool thing about <code>newtype</code> is that wrapping and extracting expressions doesn't actually
-have a performance cost! The compiler knows to remove any wrapping and extraction
+have a performance cost! The compiler knows how to remove any wrapping and extraction
 of the <code>newtype</code> constructor and use the underlying type.</p>
 <p>The new type and the constructor we defined are only there to help us <em>distinguish</em> between
 the type we created and the underlying type when <em>we write our code</em>, they are not
@@ -1214,7 +1214,7 @@ file names could have any name they want.</p>
 </code></pre>
 <p>The export list can be omitted if you want to export everything
 defined in the module, but we don't. We will list exactly the
-functions and type we want to export. This will give us control
+functions and types we want to export. This will give us control
 on how people can use our tiny library.</p>
 <p>We will create a new source file named <code>Html.hs</code> and add the following
 module declaration code at the top of the file:</p>
@@ -1370,7 +1370,7 @@ render html =
     Html str -&gt; str
 </code></pre>
 <blockquote>
-<p>As an aside, you might have notice that I've decided to suffix the functions used to
+<p>As an aside, you might have noticed that I've decided to suffix the functions used to
 construct HTML values with an undescore (<code>_</code>). This mostly an aesthetic decision which,
 in my opinion, makes the EDSL easier to recognize,
 but it is also useful to avoid name clashes with
@@ -1718,7 +1718,7 @@ module Html.Internal where
 ...
 </code></pre>
 <p>And now in <code>Html.hs</code>, we will remove the code that we moved to <code>Html/Internal.hs</code>
-and in its stead we'll import the internal module:</p>
+and instead we'll import the internal module:</p>
 <pre><code class="language-hs">-- Html.hs
 
 module Html
@@ -2119,8 +2119,8 @@ between HTML documents, structures and titles, but we didn't really need to
 differentiate between different kinds of structures such as paragraphs and headings,
 not without parsing the data at least.</p>
 <p>In this case, we have a list of structures, and each structure could be
-one of a few specific options (a paragraph, a heading, a list, etc),
-and we want to be able to know which structure is which so we can easily
+one of a few specific options (a paragraph, a heading, a list, etc.),
+and we want to be able to know which structure is which, so we can easily
 convert it into the equivalent HTML representation.</p>
 <p>For that, we have <code>data</code> definitions. <code>data</code> gives us the ability to
 create custom types by grouping multiple types together and having
@@ -2273,7 +2273,7 @@ custom error type).</p>
 </ol>
 <p>In our program we use <code>data</code> types to model the different kinds of content types
 in our markup language. We tag each structure using the data constructor
-and provide the rest of the information (the paragraph text, the list items, etc)
+and provide the rest of the information (the paragraph text, the list items, etc.)
 in the <code>&lt;types&gt;</code> section of the data declaration for each constructor:</p>
 <pre><code class="language-hs">type Document
   = [Structure]
@@ -2908,7 +2908,7 @@ trim = unwords . words
 </li>
 <li>
 <p>Because of laziness, <code>paragraph</code> is not computed until it's needed, so we don't have to worry about
-the performance implications in the case the we are still grouping lines</p>
+the performance implications in the case that we are still grouping lines</p>
 </li>
 <li>
 <p>Why do we reverse <code>currentParagraph</code>? (See point (6))</p>
@@ -3000,7 +3000,7 @@ end of the data definition.</p>
   deriving Show
 </code></pre>
 <p>Now we can use the function <code>show :: Show a =&gt; a -&gt; String</code> for any
-type that implements an instance of the <code>Show</code> type class. For example, with print:</p>
+type that implements an instance of the <code>Show</code> type class. For example, with <code>print</code>:</p>
 <pre><code class="language-hs">print :: Show a =&gt; a -&gt; IO ()
 print = putStrLn . show
 </code></pre>
@@ -3202,7 +3202,7 @@ exactlyTwoVersion2 list =
 <p>Exercises:</p>
 <ol>
 <li>Create a function <code>isBright :: AnsiColor -&gt; Bool</code> that checks whether a color is bright</li>
-<li>Use <a href="https://en.wikipedia.org/wiki/ANSI_escape_code#3-bit_and_4-bit">this table</a> to write <code>ansiToUbuntu</code>.</li>
+<li>Use <a href="https://en.wikipedia.org/wiki/ANSI_escape_code#3-bit_and_4-bit">this table</a> to write <code>ansiToUbuntu</code></li>
 <li>Create a function <code>isEmpty :: [a] -&gt; Bool</code> that uses <code>listToMaybe</code> to check whether a list is empty</li>
 <li>Create a function <code>isEmpty :: [a] -&gt; Bool</code> that <em>doesn't</em> use <code>listToMaybe</code> to check whether a list is empty</li>
 </ol>
@@ -3580,7 +3580,7 @@ and build an actual blog generator. We will:</p>
 <li>How to import external libraries to process whole directories and create a simple command-line interface</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="converting-markup-to-html"><a class="header" href="#converting-markup-to-html">Converting Markup to HTML</a></h1>
-<p>One key part is missing before we can do glue everything together, and that is
+<p>One key part is missing before we can glue everything together, and that is
 to convert our <code>Markup</code> data types to <code>Html</code>.</p>
 <p>We'll start by creating a new module and import both the <code>Markup</code> and the <code>Html</code> modules.</p>
 <pre><code class="language-hs">module Convert where
@@ -3601,8 +3601,8 @@ If we would've imported <code>Html.Internal</code> qualified, we'd have to write
 <p>And write <code>HI.el</code> instead.</p>
 <p>I like using qualified imports because readers do not have to guess where a
 name comes from. Some modules are even designed to be imported qualified.
-For example, many container APIs such as maps, sets, and vectors have very similar
-API. If we want to use multiple containers in a single module we pretty much have
+For example, the APIs of many container types such as maps, sets, and vectors, are very similar.
+If we want to use multiple containers in a single module we pretty much have
 to use qualified imports so that when we write a function such as <code>singleton</code>,
 which creates a container with a single value, GHC will know which <code>singleton</code>
 function we are referring to.</p>
@@ -3641,14 +3641,14 @@ headings that are not <code>h1</code>. There are a few ways to handle this:</p>
 <li>Ignore the warning - this will likely fail at runtime one day and the user will be sad</li>
 <li>Pattern match other cases and add a nice error with the <code>error</code> function - it has
 the same disadvantage above, but will also no longer notify of the unhandled
-cases at compile time.</li>
+cases at compile time</li>
 <li>Pattern match and do the wrong thing - user is still sad</li>
 <li>Encode errors in the type system using <code>Either</code>, we'll see how to do this in later
 chapters</li>
 <li>Restrict the input - change <code>Markup.Heading</code> to not include a number but rather
-specific supported headings. This is a reasonable approach.</li>
+specific supported headings. This is a reasonable approach</li>
 <li>Implement an HTML function supporting arbitrary headings. Should be straightforward
-to do.</li>
+to do</li>
 </ul>
 <hr />
 <p>Exercise: Implement <code>h_ :: Natural -&gt; String -&gt; Structure</code>
@@ -3768,7 +3768,7 @@ is a bit more complicated because of backwards compatibility and performance rea
 <pre><code class="language-hs">instance Monoid Structure where
   mempty = empty_
 </code></pre>
-<p>And now, instead of using our own <code>concatStructure</code>, we can use the library function</p>
+<p>And now, instead of using our own <code>concatStructure</code>, we can use the library function:</p>
 <pre><code class="language-hs">mconcat :: Monoid a =&gt; [a] -&gt; a
 </code></pre>
 <p>Which could theoretically be implemented as:</p>
@@ -4100,7 +4100,7 @@ the other that might not return anything meaningful, such as <code>putStrLn</cod
 </code></pre>
 <p>like <code>*&gt;</code> and <code>&gt;&gt;</code>, <code>pure</code> is a more general version of <code>return</code>. <code>pure</code> also has the
 advantage of not having a resemblance to an unrelated keyword in other languages.</p>
-<p>Remember that we said <code>IO a</code> is description of a program
+<p>Remember that we said <code>IO a</code> is a description of a program
 that when executed will produce some value of type <code>a</code> and may do some I/O effects
 during execution?</p>
 <p>With <code>pure</code>, we can build an <code>IO a</code> that does no I/O, and will produce a
@@ -4586,11 +4586,11 @@ executable hs-blog-gen
 <p>The first part should be fairly straightforward from the comments, maybe except for:</p>
 <ul>
 <li><code>cabal-version</code>: Defines which cabal versions can build this project. We've specified 2.4 and above.
-<a href="https://cabal.readthedocs.io/en/3.6/file-format-changelog.html">More info on different versions</a>.</li>
-<li><code>name</code>: The name of your library and package. Must match with the .cabal filename. Usually starts with a lowercase. <a href="https://hackage.haskell.org/packages/search?terms=name">Check if your package name is already taken on Hackage</a>.</li>
-<li><code>version</code>: Some Haskell packages use <a href="https://semver.org/">semver</a>, most use <a href="https://pvp.haskell.org/">PvP</a>.</li>
-<li><code>license</code>: Most Haskell packages use <a href="https://choosealicense.com/licenses/bsd-3-clause/">BSD-3-Clause</a>. <a href="https://neilmitchell.blogspot.com/2018/08/licensing-my-haskell-packages.html">Neil Mitchell blogged about this</a>. You can find more licenses if you'd like at <a href="https://choosealicense.com">choosealicense.com</a>.</li>
-<li><code>extra-doc-files</code>: Include extra doc files here, such as <code>README</code> or <code>CHANGELOG</code>.</li>
+<a href="https://cabal.readthedocs.io/en/3.6/file-format-changelog.html">More info on different versions</a></li>
+<li><code>name</code>: The name of your library and package. Must match with the <code>.cabal</code> filename. Usually starts with a lowercase. <a href="https://hackage.haskell.org/packages/search?terms=name">Check if your package name is already taken on Hackage</a></li>
+<li><code>version</code>: Some Haskell packages use <a href="https://semver.org/">semver</a>, most use <a href="https://pvp.haskell.org/">PvP</a></li>
+<li><code>license</code>: Most Haskell packages use <a href="https://choosealicense.com/licenses/bsd-3-clause/">BSD-3-Clause</a>. <a href="https://neilmitchell.blogspot.com/2018/08/licensing-my-haskell-packages.html">Neil Mitchell blogged about this</a>. You can find more licenses if you'd like at <a href="https://choosealicense.com">choosealicense.com</a></li>
+<li><code>extra-doc-files</code>: Include extra doc files here, such as <code>README</code> or <code>CHANGELOG</code></li>
 </ul>
 <p>Let's fill this with the metadata of our project:</p>
 <pre><code class="language-cabal">cabal-version:       2.4
@@ -4642,7 +4642,7 @@ and all of these settings will be automatically added.</p>
 these could be any module you don't wish to export, such as an internal utility
 functions module.
 In our case we don't have anything like this, so we commented out the <code>other-modules</code>
-label.</li>
+label</li>
 </ul>
 <p>Note that it is common to specify <strong>version bounds</strong> for packages.
 Version bounds specify <em>which package versions this library works with</em>.
@@ -4862,9 +4862,9 @@ is necessary in order to use <code>stack</code>, so we will cover it briefly.</p
 We will choose the latest (at time of writing) on the <code>lts</code> branch: <code>lts-18.22</code>.
 Visit <a href="https://www.stackage.org/lts-18.22">this link</a> to find out which packages this
 snapshot includes, what their versions are, and which GHC version is used
-with this snapshot.</li>
+with this snapshot</li>
 <li><code>packages</code>: Describes the location of packages we plan to build. In our case
-we have only one and it can be found in the current directory.</li>
+we have only one and it can be found in the current directory</li>
 </ul>
 <p>We'll add <code>stack.yaml</code> to our project directory:</p>
 <pre><code class="language-yaml">resolver: lts-18.22
@@ -5008,7 +5008,7 @@ our package manager will download and install the required package for us!</p>
 
 4 directories, 10 files
 </code></pre>
-<p>Note that this package format could be release on <a href="https://hackage.haskell.org/">Hackage</a>
+<p>Note that this package format could be released on <a href="https://hackage.haskell.org/">Hackage</a>
 for other Haskell developers to use!</p>
 <blockquote>
 <p>You can view the git commit of
@@ -5049,7 +5049,7 @@ but we will cover a few important things to pay attention to in this chapter.</p
 <ol>
 <li>
 <p>Define our model - we want to define an ADT that describes the various options
-and commands for our program.</p>
+and commands for our program</p>
 </li>
 <li>
 <p>Define a parser that will produce a value of our model type when run</p>
@@ -5092,7 +5092,7 @@ the meaning of our code.</p>
 <p>In terms of interface, we could decide that when a user would like to convert
 a single input source, they would use the <code>convert</code> command, and supply the optional flags
 <code>--input FILEPATH</code> and <code>--output FILEPATH</code> to read or write from a file.
-When the user does not supply one or both flag, we will read or write from
+When the user does not supply one or both flags, we will read or write from
 the standard input/output accordingly.</p>
 <p>If the user would like to convert a directory, they can use the <code>convert-dir</code>
 command and supply the two mandatory flags <code>--input FILEPATH</code> and
@@ -5440,7 +5440,7 @@ convert a single source, or convert a directory. A nice interface for
 selecting the right operation would be via commands.
 If the user would like to convert a single source, they can use
 <code>convert</code>, for a directory, <code>convert-dir</code>.</p>
-<p>We can create a a parser with commands with the <code>subparser</code> and <code>command</code>
+<p>We can create a parser with commands with the <code>subparser</code> and <code>command</code>
 functions:</p>
 <pre><code class="language-hs">subparser :: Mod CommandFields a -&gt; Parser a
 
@@ -5493,7 +5493,7 @@ pOptions =
 </details>
 <h4 id="parserinfo"><a class="header" href="#parserinfo">ParserInfo</a></h4>
 <p>Since we finished building a parser, we should wrap it up in a <code>ParserInfo</code>
-and add some information to it to make it ready to run.</p>
+and add some information to it to make it ready to run:</p>
 <pre><code class="language-hs">opts :: ParserInfo Options
 opts =
   info (helper &lt;*&gt; pOptions)
@@ -6245,12 +6245,12 @@ There are a few approaches, the most prominent ones are:</p>
 <li>Make them return the same error type. Write an ADT that holds all possible
 error descriptions. This can work in some cases but isn't always ideal.
 For example a user calling <code>parseDigit</code> shouldn't be forced to
-handle a possible case that the input might be an empty string.</li>
+handle a possible case that the input might be an empty string</li>
 <li>Use a specialized error type for each type, and when they are composed together,
 map the error type of each function to a more general error type. This can
 be done with the function
 <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Bifunctor.html#v:first"><code>first</code></a>
-from the <code>Bifunctor</code> type class.</li>
+from the <code>Bifunctor</code> type class</li>
 </ol>
 <h2 id="monadic-interface"><a class="header" href="#monadic-interface">Monadic interface</a></h2>
 <p>The applicative interface allows us to lift a function to work on multiple
@@ -6437,11 +6437,11 @@ and <a href="https://hackage.haskell.org/package/async">asynchronous programming
 <p>Using <code>Either</code> for error handling is useful for two reasons:</p>
 <ol>
 <li>We encode possible errors using types, and we <strong>force users to acknowledge and handle</strong> them, thus
-making our code more resilient to crashes and bad behaviours.</li>
+making our code more resilient to crashes and bad behaviours</li>
 <li>The <code>Functor</code>, <code>Applicative</code>, and <code>Monad</code> interfaces provide us with mechanisms for
 <strong>composing</strong> functions that might fail (almost) effortlessly - reducing boilerplate while
 maintaining strong guarantees about our code, and delaying the need to handle errors until
-it is appropriate.</li>
+it is appropriate</li>
 </ol>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="either-with-io"><a class="header" href="#either-with-io">Either with IO?</a></h1>
 <p>When we create <code>IO</code> actions that may require I/O we risk running into all kinds of errors.
@@ -6635,12 +6635,12 @@ main =
 <p>Guards as seen in <code>sayDiv2</code> are just a nicer syntax around <code>if-then-else</code> expressions.
 Using guards we can have multiple <code>if</code> branches and finally use the <code>else</code> branch
 by using <code>otherwise</code>. After each guard (<code>|</code>) there's a condition, after the condition there's
-a <code>=</code> and then the expression (the part after <code>then</code> in an <code>if</code> expression).</p>
+a <code>=</code> and then the expression (the part after <code>then</code> in an <code>if</code> expression)</p>
 </li>
 <li>
 <p>LambdaCase as seen in <code>catch</code>, is just a syntactic sugar to save a few characters,
 instead of writing <code>\e -&gt; case e of</code>, we can write <code>\case</code>. It requires enabling the
-<code>LambdaCase</code> extension.</p>
+<code>LambdaCase</code> extension</p>
 <h4 id="language-extensions"><a class="header" href="#language-extensions">Language extensions</a></h4>
 <p>Haskell is a standardized language. However, GHC provides <em>extensions</em> to the language -
 additional features that aren't covered in the 98 or 2010 standards of Haskell.
@@ -6781,7 +6781,7 @@ Are there scenarios where we would clean-up after ourselves (meaning, close hand
 opened)? Which parts of the code could throw an exception? Which handles won't get closed?</p>
 <ul>
 <li>Try to use <code>bracket</code> to make sure we always close a handle afterwards, even if an exception
-is thrown, and avoid closing the handle for the <code>stdin</code> and <code>stdout</code> cases.<details><summary>Hint</summary>We might need to use continuation-passing style,
+is thrown, and avoid closing the handle for the <code>stdin</code> and <code>stdout</code> cases<details><summary>Hint</summary>We might need to use continuation-passing style,
 passing a function that takes a parameter to a function that produces a parameter
 and calls it with that parameter.
 </details>
@@ -6875,7 +6875,7 @@ it over time, and that principle holds when writing new software as well!</p>
 <h2 id="new-module"><a class="header" href="#new-module">New module</a></h2>
 <p>Let's create a new module, <code>HsBlog.Directory</code>, which will be responsible for handling
 directories and multiple files. From this module we will export the <code>convertDirectory</code>
-and <code>buildIndex</code> functions we've defined before.</p>
+and <code>buildIndex</code> functions we've defined before:</p>
 <pre><code class="language-hs">-- | Process multiple files and convert directories
 
 module HsBlog.Directory
@@ -6958,7 +6958,7 @@ getDirFilesAndContent :: FilePath -&gt; IO DirContents
 </code></pre>
 <p><code>getDirFilesAndContent</code> is responsible for providing the relevant files for processing --
 both the ones we need to convert to markup (and their textual content) and other files we
-might want to copy as-is (such as images and style-sheets).</p>
+might want to copy as-is (such as images and style-sheets):</p>
 <pre><code class="language-hs">-- | Returns the directory content
 getDirFilesAndContent :: FilePath -&gt; IO DirContents
 getDirFilesAndContent inputDir = do
@@ -6986,7 +6986,7 @@ getDirFilesAndContent inputDir = do
 <p><code>applyIoOnList</code> has the following type signature:</p>
 <pre><code class="language-hs">applyIoOnList :: (a -&gt; IO b) -&gt; [a] -&gt; IO [(a, Either String b)]
 </code></pre>
-<p>It tries to apply an IO function on a list of values, and document successes and failures.</p>
+<p>It tries to apply an <code>IO</code> function on a list of values, and document successes and failures.</p>
 <p>Try to implement it! If you need a hint for which functions to use, see the import list
 we wrote earlier.</p>
 <details><summary>Answer</summary>
@@ -7152,7 +7152,7 @@ instead of reading from a file, it copies from the input path to a newly generat
 output path. Then we pass the result (which has the type <code>[(FilePath, Either String ())]</code>)
 to <code>filterAndReportFailures</code> to print the errors and filter out the unsuccessful copies.
 Because we are not really interested in the output of <code>filterAndReportFailures</code>,
-we discard it with <code>void</code>, returning <code>()</code> as a result instead.</p>
+we discard it with <code>void</code>, returning <code>()</code> as a result instead:</p>
 <pre><code class="language-hs">-- | Write files to a directory, recording errors to stderr.
 writeFiles :: FilePath -&gt; [(FilePath, String)] -&gt; IO ()
 writeFiles outputDir files = do
@@ -7392,21 +7392,21 @@ whenIO cond action = do
 <p>We discussed several ways to handle errors in Haskell:</p>
 <ol>
 <li>Encoding errors as a data type and using the <code>Either</code> type to encode &quot;a value or an error&quot;.
-Useful approach for uneffectful code.</li>
+Useful approach for uneffectful code</li>
 <li>Using <code>ExceptT</code> when we want to combine the approach in (1) on top on an existing
-type with monadic capabilities.</li>
-<li>Using exceptions for IO code.</li>
+type with monadic capabilities</li>
+<li>Using exceptions for IO code</li>
 </ol>
 <p>We've also learned a few new abstractions and techniques:</p>
 <ol>
 <li>The <code>Traversable</code> type class, for data structures that can be traversed from left to right
 such as linked lists, binary trees and <code>Map</code>s.
-Pretty useful when combined with another applicative functor type like <code>Either</code> or <code>IO</code>.</li>
+Pretty useful when combined with another applicative functor type like <code>Either</code> or <code>IO</code></li>
 <li>The <code>Monad</code> type class extends the <code>Applicative</code> type class with the <code>join :: m (m a) -&gt; m a</code>
-function. We learned that <code>Either</code> implements this type class interface and so does <code>IO</code>.</li>
+function. We learned that <code>Either</code> implements this type class interface and so does <code>IO</code></li>
 <li>The <code>MonadTrans</code> type class for <em>monad transformers</em> for types that take other monads as inputs
 and provide a monadic interface (<code>&gt;&gt;=</code>, do notation, etc.) while combining both their capabilities.
-We saw how to stack an <code>Either</code>-like monad transformer, <code>ExceptT</code>, on top of <code>IO</code>.</li>
+We saw how to stack an <code>Either</code>-like monad transformer, <code>ExceptT</code>, on top of <code>IO</code></li>
 </ol>
 <p>We are almost done. Only a couple more things left to do with this project. Let's go!</p>
 <blockquote>
@@ -7421,7 +7421,7 @@ location, and so on.</p>
 <h2 id="environment"><a class="header" href="#environment">Environment</a></h2>
 <p>We can represent our environment as a record data type and build it from user input.
 The user input can be from command-line arguments, a configuration file,
-or something else.</p>
+or something else:</p>
 <pre><code class="language-hs">module HsBlog.Env where
 
 data Env
@@ -7444,7 +7444,7 @@ and that is using the
 <a href="https://hackage.haskell.org/package/mtl-2.2.2/docs/Control-Monad-Reader.html#g:2"><code>ReaderT</code></a>
 type from the <code>mtl</code> (or <code>transformers</code>) package.</p>
 <h3 id="readert"><a class="header" href="#readert">ReaderT</a></h3>
-<pre><code class="language-hs">newType ReaderT r m a = ReaderT (r -&gt; m a)
+<pre><code class="language-hs">newtype ReaderT r m a = ReaderT (r -&gt; m a)
 </code></pre>
 <p><code>ReaderT</code> is another <em>monad transformer</em> like <code>ExceptT</code>, which means
 that it also has an instance of <code>Functor</code>, <code>Applicative</code>, <code>Monad</code> and <code>MonadTrans</code>.</p>
@@ -7481,8 +7481,8 @@ try doing the following exercise:</p>
 <ol>
 <li>Choose an <code>Applicative</code> or <code>Monad</code> interface function, I recommend <code>liftA2</code>,
 and specialize its type signature by replacing <code>f</code> (or <code>m</code>) with a concrete <code>ReaderT</code> type such as
-<code>ReaderT Int IO</code>.</li>
-<li>Unpack the <code>ReaderT</code> newtype, replacing <code>ReaderT Int IO t</code> with <code>Int -&gt; IO t</code>.</li>
+<code>ReaderT Int IO</code></li>
+<li>Unpack the <code>ReaderT</code> newtype, replacing <code>ReaderT Int IO t</code> with <code>Int -&gt; IO t</code></li>
 <li>Implement this specialized version of the function you've chosen</li>
 </ol>
 <details><summary>Solution for liftA2</summary>
@@ -7889,9 +7889,9 @@ and the <a href="https://github.com/soupi/learn-haskell-blog-generator/tree/f9fe
 a few regression tests to make sure that if we extend or change our markup parsing code,
 HTML generation code, or translation from markup to HTML code, and make a mistake, we'll
 have a safety net alerting us of issues.</p>
-<p>We will use the <a href="https://hspec.github.io/">hspec</a> testing framework to write our tests.
+<p>We will use the <a href="https://hspec.github.io/">Hspec</a> testing framework to write our tests.
 There are other testing frameworks in Haskell, for example
-<a href="https://hackage.haskell.org/package/tasty">tasty</a>, but I like <code>hspec</code>'s documentation,
+<a href="https://hackage.haskell.org/package/tasty">tasty</a>, but I like Hspec's documentation,
 so we'll use that.</p>
 <h2 id="initial-setup"><a class="header" href="#initial-setup">Initial setup</a></h2>
 <h3 id="cabal-file-additions"><a class="header" href="#cabal-file-additions">Cabal file additions</a></h3>
@@ -7921,39 +7921,39 @@ and options:</p>
     hspec-discover:hspec-discover
 </code></pre>
 <ul>
-<li><code>hs-source-dirs: test</code> - The directory of the source files for the test suite.</li>
-<li><code>main-is: Spec.hs</code> - The entry point to the test suite.</li>
+<li><code>hs-source-dirs: test</code> - The directory of the source files for the test suite</li>
+<li><code>main-is: Spec.hs</code> - The entry point to the test suite</li>
 <li><code>other-modules</code> - The modules in our test suite.
-Currently commented out because we haven't added any yet.</li>
+Currently commented out because we haven't added any yet</li>
 <li><code>build-depends</code> - The packages we are going to use:
 <ul>
 <li><a href="https://hackage.haskell.org/package/base"><code>base</code></a> -
-The standard library for Haskell, as we've used before.</li>
+The standard library for Haskell, as we've used before</li>
 <li><a href="https://hackage.haskell.org/package/hspec"><code>hspec</code></a> -
-The test framework we are going to use.</li>
+The test framework we are going to use</li>
 <li><a href="https://hackage.haskell.org/package/hspec-discover"><code>hspec-discover</code></a> -
-Automatic discovery of hspec tests.</li>
+Automatic discovery of Hspec tests</li>
 <li><a href="https://hackage.haskell.org/package/raw-strings-qq"><code>raw-strings-qq</code></a> -
-Additional syntax for writing raw string literals.</li>
-<li><code>hs-blog</code> - Our library.</li>
+Additional syntax for writing raw string literals</li>
+<li><code>hs-blog</code> - Our library</li>
 </ul>
 </li>
 <li><a href="https://cabal.readthedocs.io/en/3.6/cabal-package.html#pkg-field-ghc-options"><code>ghc-options</code></a> -
 Extra options and flags for GHC:
 <ul>
 <li><a href="https://downloads.haskell.org/ghc/latest/docs/html/users_guide/using-optimisation.html#options-optimise"><code>-O</code></a> -
-Compile with optimizations.</li>
+Compile with optimizations</li>
 <li><a href="https://downloads.haskell.org/ghc/latest/docs/html/users_guide/phases.html#ghc-flag--threaded"><code>-threaded</code></a> -
 Use the multi-core runtime instead of single-core runtime. The multi-core
 runtime is generally a bit slower in my experience, but when writing code that actually uses
 multiple cores (such as a test framework that runs tests in parallel) it can give a good
-performance boost.</li>
+performance boost</li>
 <li><a href="https://downloads.haskell.org/ghc/latest/docs/html/users_guide/phases.html#ghc-flag--rtsopts%5B=%E2%9F%A8none%7Csome%7Call%7Cignore%7CignoreAll%E2%9F%A9%5D"><code>-rtsopts</code></a> -
 Let us configure the Haskell runtime system by passing command-line arguments to our application</li>
 <li><a href="https://downloads.haskell.org/ghc/latest/docs/html/users_guide/phases.html#ghc-flag--with-rtsopts=%E2%9F%A8opts%E2%9F%A9"><code>-with-rtsopts=-N</code></a> -
 Set specific default options for the program at link-time.
 Specifically, <a href="https://downloads.haskell.org/ghc/latest/docs/html/users_guide/using-concurrent.html#rts-flag--N%20%E2%9F%A8x%E2%9F%A9"><code>-N</code></a>
-Sets the number of cores to use in our program.</li>
+Sets the number of cores to use in our program</li>
 </ul>
 </li>
 <li><a href="https://cabal.readthedocs.io/en/3.6/cabal-package.html#pkg-field-build-tool-depends"><code>build-tool-depends</code></a> -
@@ -7961,7 +7961,7 @@ Use a specific executable from a package dependency in aid of building the packa
 In this case, we are using the <code>hspec-discover</code> executable from the
 <a href="https://hackage.haskell.org/package/hspec-discover"><code>hspec-discover</code></a> package, which
 goes over the source directory for the tests, finds all of the <code>Spec</code> files,
-and creates an entry point for the program that will run all the tests it discovered.</li>
+and creates an entry point for the program that will run all the tests it discovered</li>
 </ul>
 <h3 id="hspec-discovery"><a class="header" href="#hspec-discovery">Hspec discovery</a></h3>
 <p>In order for <code>hspec-discover</code> to work, we need to add the following
@@ -7974,14 +7974,14 @@ Because we haven't defined any tests, our output is:</p>
 <pre><code class="language-sh">Finished in 0.0000 seconds
 0 examples, 0 failures
 </code></pre>
-<p>When we add new hspec tests, <code>hspec-discover</code> will find and run them automatically
+<p>When we add new Hspec tests, <code>hspec-discover</code> will find and run them automatically
 (though we will still need add them to the <code>other-modules</code> section in the cabal file).</p>
 <p>For <code>hspec-discover</code> to identify modules as test modules, the modules must follow
 a convention:</p>
 <ol>
 <li>Their module names must end with <code>Spec</code></li>
 <li>They must define a value <code>spec :: Spec</code> (which describes the test) and export it
-outside of the module (by adding it to the export list of the module, for example).</li>
+outside of the module (by adding it to the export list of the module, for example)</li>
 </ol>
 <h2 id="writing-tests"><a class="header" href="#writing-tests">Writing tests</a></h2>
 <p>Let's write our first test. We'll create a new module to test
@@ -7992,7 +7992,7 @@ the following imports as well:</p>
 import Test.Hspec
 import HsBlog.Markup
 </code></pre>
-<p><code>hspec</code> provides us with a monadic interface for describing, composing and
+<p><code>Hspec</code> provides us with a monadic interface for describing, composing and
 nesting test specifications (<code>Spec</code>s).</p>
 <p>Using the <code>describe</code> function we can
 describe a group of tests, using the <code>it</code> function we can add a new test,
@@ -8073,7 +8073,7 @@ Finished in 0.0001 seconds
 Finished in 0.0003 seconds
 4 examples, 0 failures
 </code></pre>
-<p>This is the gist of writing unit tests with <code>hspec</code>. It's important to note
+<p>This is the gist of writing unit tests with Hspec. It's important to note
 that we can nest <code>Spec</code>s that are declared with <code>describe</code> to create trees,
 and of course refactor and move things to different functions and modules
 to make our test suite better organized.</p>
@@ -8107,7 +8107,7 @@ simple = do
         [CodeBlock [&quot;main = putStrLn \&quot;hello world!\&quot;&quot;]]
 </code></pre>
 <p>Also, there are other &quot;expectations&quot; like <code>shouldBe</code> that we can use when writing tests.
-They are described in the <a href="https://hspec.github.io/expectations.html">hspec tutorial</a>
+They are described in the <a href="https://hspec.github.io/expectations.html">Hspec tutorial</a>
 and can be found in the
 <a href="https://hackage.haskell.org/package/hspec-expectations-0.8.2/docs/Test-Hspec-Expectations.html">haddock documentation</a> as well.</p>
 <h3 id="raw-strings"><a class="header" href="#raw-strings">Raw strings</a></h3>
@@ -8275,7 +8275,7 @@ example4Result =
 </details>
 <hr />
 <h2 id="parallel-test-execution"><a class="header" href="#parallel-test-execution">Parallel test execution</a></h2>
-<p>Without further configuration, <code>hspec</code> will run all
+<p>Without further configuration, Hspec will run all
 of our tests on the main thread, sequentially.</p>
 <p>There are a couple of ways to configure tests to run
 in parallel. One is to manually mark a <code>Spec</code>
@@ -8528,19 +8528,19 @@ modules or not after splitting it into sections using headings.</p>
 For example, we can:</p>
 <ul>
 <li>
-<p>Hyperlink identifiers by surrounding them with <code>`</code>.</p>
+<p>Hyperlink identifiers by surrounding them with <code>`</code></p>
 <p>For example: <code>`Heading`</code></p>
 </li>
 <li>
-<p>Write <code>monospaced text</code> by surrounding it with <code>@</code>.</p>
+<p>Write <code>monospaced text</code> by surrounding it with <code>@</code></p>
 <p>For example: <code>@Paragraph &quot;Hello&quot;@</code></p>
 </li>
 <li>
-<p>Add <em>emphasis</em> to text by surrounding it with <code>/</code>.</p>
+<p>Add <em>emphasis</em> to text by surrounding it with <code>/</code></p>
 <p>For example: <code>/this is emphasised/</code></p>
 </li>
 <li>
-<p>Add <strong>bold</strong> to text by surrounding it with <code>__</code>.</p>
+<p>Add <strong>bold</strong> to text by surrounding it with <code>__</code></p>
 <p>For example: <code>__this is bold__</code></p>
 </li>
 </ul>
@@ -8563,23 +8563,23 @@ of the program and the various parts - sometimes the best way to learn something
 <p>In this book we've implemented a very simple static blog generator while learning Haskell as we go.</p>
 <ul>
 <li>We've learned about basic Haskell building blocks, such as definitions, functions,
-types, modules, recursion, pattern matching, type classes, IO and exceptions.</li>
+types, modules, recursion, pattern matching, type classes, IO and exceptions</li>
 <li>We've learned about <a href="./03-html/03-edsls.html">EDSLs</a> and used the <em>combinator pattern</em> to implement
-a composable html generation library.</li>
+a composable html generation library</li>
 <li>We've learned how to leverage types, modules and smart constructors
-to <a href="./03-html/04-safer_construction.html">make invalid states unrepresentable</a>.</li>
-<li>We've learned how to represent complex data using <a href="./04-markup/01-data_type.html">ADTs</a>.</li>
+to <a href="./03-html/04-safer_construction.html">make invalid states unrepresentable</a></li>
+<li>We've learned how to represent complex data using <a href="./04-markup/01-data_type.html">ADTs</a></li>
 <li>We've learned how to use <a href="./04-markup/04-parsing_02.html#pattern-matching">pattern matching</a> to transform ADTs,
-and how to use <a href="./04-markup/02-parsing_01.html#recursion-and-accumulating-information">recursion</a> to solve problems.</li>
+and how to use <a href="./04-markup/02-parsing_01.html#recursion-and-accumulating-information">recursion</a> to solve problems</li>
 <li>We've used the <em>functional core, imperative shell</em> approach to build a program that handles IO and applies
-our domain logic to user inputs.</li>
+our domain logic to user inputs</li>
 <li>We've learned about abstractions such as <a href="./05-glue/01-markup_to_html.html#monoids">monoids</a>,
-<a href="./05-glue/04-optparse.html#functor">functors</a> and <a href="./06-errors_and_files/01-either.html#monadic-interface">monads</a>, 
-and how they can help us reuse code and convey information about shared interfaces.</li>
+<a href="./05-glue/04-optparse.html#functor">functors</a> and <a href="./06-errors_and_files/01-either.html#monadic-interface">monads</a>,
+and how they can help us reuse code and convey information about shared interfaces</li>
 <li>We've learned how to create fancy <a href="./05-glue/04-optparse.html">command-line interfaces</a>, <a href="./08-testing.html">write tests</a>,
-and <a href="./09-documentation.html">generate documentation</a>.</li>
+and <a href="./09-documentation.html">generate documentation</a></li>
 </ul>
-<p>While Haskell is a very big and complex language, and there's always more to be learned, 
+<p>While Haskell is a very big and complex language, and there's always more to be learned,
 I think we've reached an important milestone where
 you can start building your own Haskell projects and be productive with Haskell!</p>
 <p>This is a good time to celebrate and pat yourself on the back for getting this far! Great job, you!</p>
