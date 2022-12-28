@@ -12,7 +12,7 @@ not without parsing the data at least.
 
 In this case, we have a list of structures, and each structure could be
 one of a few specific options (a paragraph, a heading, a list, etc.),
-and we want to be able to know which structure is which, so we can easily
+and we want to be able to know which structure is which so we can easily
 convert it into the equivalent HTML representation.
 
 For that, we have `data` definitions. `data` gives us the ability to
