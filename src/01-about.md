@@ -1,6 +1,6 @@
 # About this book
 
-> Note: If you find errors, [please let me know](https://github.com/soupi/learn-haskell-blog-generator/issues)!
+> <img src="book-logo-transparent.png" alt="book logo" style="max-height: 1.5em; vertical-align: top"> This book is actively maintained. If you find errors, [please let me know](https://github.com/soupi/learn-haskell-blog-generator/issues).
 
 <!--
 <div style="text-align: center">
