@@ -99,7 +99,7 @@ The first part should be fairly straightforward from the comments, maybe except 
 
 - `cabal-version`: Defines which cabal versions can build this project. We've specified 2.4 and above.
   [More info on different versions](https://cabal.readthedocs.io/en/3.6/file-format-changelog.html)
-- `name`: The name of your library and package. Must match with the .cabal filename. Usually starts with a lowercase. [Check if your package name is already taken on Hackage](https://hackage.haskell.org/packages/search?terms=name)
+- `name`: The name of your library and package. Must match with the `.cabal` filename. Usually starts with a lowercase. [Check if your package name is already taken on Hackage](https://hackage.haskell.org/packages/search?terms=name)
 - `version`: Some Haskell packages use [semver](https://semver.org/), most use [PvP](https://pvp.haskell.org/)
 - `license`: Most Haskell packages use [BSD-3-Clause](https://choosealicense.com/licenses/bsd-3-clause/). [Neil Mitchell blogged about this](https://neilmitchell.blogspot.com/2018/08/licensing-my-haskell-packages.html). You can find more licenses if you'd like at [choosealicense.com](https://choosealicense.com)
 - `extra-doc-files`: Include extra doc files here, such as `README` or `CHANGELOG`
@@ -532,7 +532,7 @@ so future projects with the same resolver and future runs of this project won't
 require reinstallation. This approach is kind of a middle ground between full packages
 sharing and sandboxes.
 
-Let's look at the (somewhat) equivalent commands for stack:
+Let's look at the (somewhat) equivalent commands for Stack:
 
 ```sh
 stack build

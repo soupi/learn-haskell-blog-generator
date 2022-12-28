@@ -129,7 +129,6 @@ the `Exception` type class has; I think
 ```hs
 -- need to add these at the top
 
-{-# language LambdaCase #-}
 {-# language ScopedTypeVariables #-}
 
 import GHC.IO.Exception (IOException(..))

@@ -32,8 +32,8 @@ And write `HI.el` instead.
 
 I like using qualified imports because readers do not have to guess where a
 name comes from. Some modules are even designed to be imported qualified.
-For example, many container APIs such as maps, sets, and vectors have a very similar
-API. If we want to use multiple containers in a single module we pretty much have
+For example, the APIs of many container types such as maps, sets, and vectors, are very similar.
+If we want to use multiple containers in a single module we pretty much have
 to use qualified imports so that when we write a function such as `singleton`,
 which creates a container with a single value, GHC will know which `singleton`
 function we are referring to.

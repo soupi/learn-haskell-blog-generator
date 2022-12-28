@@ -129,7 +129,7 @@ Let's see a few of examples of data types:
 
    Unfortunately, having specialized functions for each field also means that if we
    defined a different data type with the field `age`, the functions which GHC needs
-   to generate, will clash.
+to generate will clash.
 
    The easiest way to solve this is to give fields unique names, for example
    by adding a prefix:

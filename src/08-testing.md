@@ -7,7 +7,7 @@ have a safety net alerting us of issues.
 
 We will use the [Hspec](https://hspec.github.io/) testing framework to write our tests.
 There are other testing frameworks in Haskell, for example
-[tasty](https://hackage.haskell.org/package/tasty), but I like `Hspec`'s documentation,
+[tasty](https://hackage.haskell.org/package/tasty), but I like Hspec's documentation,
 so we'll use that.
 
 ## Initial setup
@@ -50,7 +50,7 @@ test-suite hs-blog-gen-test
 - `build-depends` - The packages we are going to use:
   - [`base`](https://hackage.haskell.org/package/base) -
     The standard library for Haskell, as we've used before
-  - [`Hspec`](https://hackage.haskell.org/package/hspec) -
+  - [`hspec`](https://hackage.haskell.org/package/hspec) -
     The test framework we are going to use
   - [`hspec-discover`](https://hackage.haskell.org/package/hspec-discover) -
     Automatic discovery of Hspec tests
@@ -226,7 +226,7 @@ Finished in 0.0003 seconds
 4 examples, 0 failures
 ```
 
-This is the gist of writing unit tests with `Hspec`. It's important to note
+This is the gist of writing unit tests with Hspec. It's important to note
 that we can nest `Spec`s that are declared with `describe` to create trees,
 and of course refactor and move things to different functions and modules
 to make our test suite better organized.
@@ -454,7 +454,7 @@ example4Result =
 
 ## Parallel test execution
 
-Without further configuration, `Hspec` will run all
+Without further configuration, Hspec will run all
 of our tests on the main thread, sequentially.
 
 There are a couple of ways to configure tests to run
