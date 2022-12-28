@@ -397,7 +397,7 @@ writeFiles outputDir files = do
 
 Once again, this code looks almost exactly like `copyFiles`, but the types are different.
 Haskell's combination of parametric polymorphism + type class for abstractions is really
-powerful, and has helped us to reduce quite a bit of code.
+powerful, and has helped us reduce quite a bit of code.
 
 ---
 
