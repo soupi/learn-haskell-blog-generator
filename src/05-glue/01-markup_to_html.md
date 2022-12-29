@@ -250,7 +250,7 @@ class Semigroup a => Monoid a where
 > is a bit more complicated because of backwards compatibility and performance reasons.
 > `Semigroup` was actually introduced in Haskell after `Monoid`!
 
-We could add an instance of `Monoid` for our markup `Structure` data type:
+We could add an instance of `Monoid` for our HTML `Structure` data type:
 
 
 ```hs
