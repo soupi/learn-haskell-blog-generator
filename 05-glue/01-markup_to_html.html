@@ -331,7 +331,7 @@ that could work for any monoid</li>
 is a bit more complicated because of backwards compatibility and performance reasons.
 <code>Semigroup</code> was actually introduced in Haskell after <code>Monoid</code>!</p>
 </blockquote>
-<p>We could add an instance of <code>Monoid</code> for our markup <code>Structure</code> data type:</p>
+<p>We could add an instance of <code>Monoid</code> for our HTML <code>Structure</code> data type:</p>
 <pre><code class="language-hs">instance Monoid Structure where
   mempty = empty_
 </code></pre>
