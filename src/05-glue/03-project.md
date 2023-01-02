@@ -253,7 +253,7 @@ We have separated our code into two sections: a library and an executable, why?
 First, libraries can be used by others. If we publish our code and someone wants to
 use it and build upon it, they can. Executables can't be imported by other projects.
 Second, we can write unit tests for libraries. It is usually
-benefitical to write most, if not all, of our logic as a library, and provide
+beneficial to write most, if not all, of our logic as a library, and provide
 a thin executable over it.
 
 Executables' descriptions are very similar to libraries, here we define:
