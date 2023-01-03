@@ -161,7 +161,7 @@ so we'll use that.</p>
 This section is called <code>test-suite</code> and it is fairly similar to the <code>library</code> and
 <code>executable</code> sections.</p>
 <p>The interfaces for how to define a test suite are described in the
-<a href="https://cabal.readthedocs.io/en/3.6/cabal-package.html#test-suites">Cabal documentation</a>.
+<a href="https://cabal.readthedocs.io/en/stable/cabal-package.html#test-suites">Cabal documentation</a>.
 We are going to use the <code>exitcode-stdio-1.0</code> interface. Let's go over the different settings
 and options:</p>
 <pre><code class="language-cabal">test-suite hs-blog-gen-test
@@ -200,7 +200,7 @@ Additional syntax for writing raw string literals</li>
 <li><code>hs-blog</code> - Our library</li>
 </ul>
 </li>
-<li><a href="https://cabal.readthedocs.io/en/3.6/cabal-package.html#pkg-field-ghc-options"><code>ghc-options</code></a> -
+<li><a href="https://cabal.readthedocs.io/en/stable/cabal-package.html#pkg-field-ghc-options"><code>ghc-options</code></a> -
 Extra options and flags for GHC:
 <ul>
 <li><a href="https://downloads.haskell.org/ghc/latest/docs/html/users_guide/using-optimisation.html#options-optimise"><code>-O</code></a> -
@@ -218,7 +218,7 @@ Specifically, <a href="https://downloads.haskell.org/ghc/latest/docs/html/users_
 Sets the number of cores to use in our program</li>
 </ul>
 </li>
-<li><a href="https://cabal.readthedocs.io/en/3.6/cabal-package.html#pkg-field-build-tool-depends"><code>build-tool-depends</code></a> -
+<li><a href="https://cabal.readthedocs.io/en/stable/cabal-package.html#pkg-field-build-tool-depends"><code>build-tool-depends</code></a> -
 Use a specific executable from a package dependency in aid of building the package.
 In this case, we are using the <code>hspec-discover</code> executable from the
 <a href="https://hackage.haskell.org/package/hspec-discover"><code>hspec-discover</code></a> package, which

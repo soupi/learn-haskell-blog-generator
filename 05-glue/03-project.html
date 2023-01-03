@@ -234,7 +234,7 @@ executable hs-blog-gen
 <p>The first part should be fairly straightforward from the comments, maybe except for:</p>
 <ul>
 <li><code>cabal-version</code>: Defines which cabal versions can build this project. We've specified 2.4 and above.
-<a href="https://cabal.readthedocs.io/en/3.6/file-format-changelog.html">More info on different versions</a>.</li>
+<a href="https://cabal.readthedocs.io/en/stable/file-format-changelog.html">More info on different versions</a>.</li>
 <li><code>name</code>: The name of your library and package. Must match with the <code>.cabal</code> filename. Usually starts with a lowercase. <a href="https://hackage.haskell.org/packages/search?terms=name">Check if your package name is already taken on Hackage</a>.</li>
 <li><code>version</code>: Some Haskell packages use <a href="https://semver.org/">semver</a>, most use <a href="https://pvp.haskell.org/">PvP</a>.</li>
 <li><code>license</code>: Most Haskell packages use <a href="https://choosealicense.com/licenses/bsd-3-clause/">BSD-3-Clause</a>. <a href="https://neilmitchell.blogspot.com/2018/08/licensing-my-haskell-packages.html">Neil Mitchell blogged about this</a>. You can find more licenses if you'd like at <a href="https://choosealicense.com">choosealicense.com</a>.</li>
@@ -267,7 +267,7 @@ extra-doc-files:
 <h3 id="common-settings"><a class="header" href="#common-settings">Common settings</a></h3>
 <p>Cabal package descriptions can include multiple &quot;targets&quot;: libraries, executables,
 and test suites. Since Cabal 2.2, we can use
-<a href="https://cabal.readthedocs.io/en/3.6/cabal-package.html#common-stanzas">common stanzas</a>
+<a href="https://cabal.readthedocs.io/en/stable/cabal-package.html#common-stanzas">common stanzas</a>
 to group settings to be shared between different targets, so we don't have to repeat them for each target.</p>
 <p>In our case we've created a new common stanza (or block) called <code>common-settings</code> and
 defined the default language (Haskell has two standards, 98 and 2010),
@@ -499,7 +499,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </code></pre>
 </details>
 <h2 id="cabalproject-and-stackyaml"><a class="header" href="#cabalproject-and-stackyaml"><code>cabal.project</code> and <code>stack.yaml</code></a></h2>
-<p>The <a href="https://cabal.readthedocs.io/en/3.6/cabal-project.html">cabal.project</a> and
+<p>The <a href="https://cabal.readthedocs.io/en/stable/cabal-project.html">cabal.project</a> and
 <a href="https://docs.haskellstack.org/en/stable/yaml_configuration/#project-specific-config">stack.yaml</a>
 files are used by <code>cabal</code> and <code>stack</code> respectively to add additional information on <em>how
 to build the package</em>. While <code>cabal.project</code> isn't necessary to use <code>cabal</code>, <code>stack.yaml</code>
@@ -548,35 +548,35 @@ refer to the new commands.</p>
 <p>A few important commands we should be familiar with:</p>
 <pre><code class="language-sh">cabal update
 </code></pre>
-<p><a href="https://cabal.readthedocs.io/en/3.6/cabal-commands.html#cabal-v2-update"><code>update</code></a>
+<p><a href="https://cabal.readthedocs.io/en/stable/cabal-commands.html#cabal-update"><code>update</code></a>
 fetches information from remote package repositories (specifically Hackage unless specified otherwise)
 and updates the local package index which includes various information about available packages such as
 their names, versions and dependencies.</p>
 <p><code>cabal update</code> is usually the first command to run before fetching package dependencies.</p>
 <pre><code class="language-sh">cabal build
 </code></pre>
-<p><a href="https://cabal.readthedocs.io/en/3.6/cabal-commands.html#cabal-v2-build"><code>build</code></a>
+<p><a href="https://cabal.readthedocs.io/en/stable/cabal-commands.html#cabal-build"><code>build</code></a>
 compiles the various targets (such as <code>library</code> and <code>executable</code>s).
 It will also fetch and install the package dependencies when they're not already installed.</p>
 <pre><code class="language-sh">cabal run hs-blog-gen -- &lt;program arguments&gt;
 </code></pre>
-<p><a href="https://cabal.readthedocs.io/en/3.6/cabal-commands.html#cabal-v2-run"><code>run</code></a>
+<p><a href="https://cabal.readthedocs.io/en/stable/cabal-commands.html#cabal-run"><code>run</code></a>
 Can be used to compile and then run a target (in our case our <code>executable</code> which we named <code>hs-blog-gen</code>).
 We separate arguments passed to <code>cabal</code> and arguments passed to our target program with <code>--</code>.</p>
 <pre><code class="language-sh">cabal repl hs-blog
 </code></pre>
-<p><a href="https://cabal.readthedocs.io/en/3.6/cabal-commands.html#cabal-v2-repl"><code>repl</code></a>
+<p><a href="https://cabal.readthedocs.io/en/stable/cabal-commands.html#cabal-repl"><code>repl</code></a>
 runs <code>ghci</code> in the context of the target (in our case our <code>library</code> which we named <code>hs-blog</code>) -
 it will load the target's package dependencies and modules to be available in <code>ghci</code>.</p>
 <pre><code class="language-sh">cabal clean
 </code></pre>
-<p><a href="https://cabal.readthedocs.io/en/3.6/cabal-commands.html#cabal-v2-clean"><code>clean</code></a>
+<p><a href="https://cabal.readthedocs.io/en/stable/cabal-commands.html#cabal-clean"><code>clean</code></a>
 Deletes the build artifacts that we built.</p>
 <p>There are more interesting commands we could use, such as <code>cabal freeze</code> to generate
 a file which records the packages versions and flags we used to build this project,
 and <code>cabal sdist</code> to bundle the project source to a package tarball which can be
 uploaded to Hackage. If you'd like to learn more visit the
-<a href="https://cabal.readthedocs.io/en/3.6/cabal-commands.html">Cabal user guide</a>.</p>
+<a href="https://cabal.readthedocs.io/en/stable/cabal-commands.html">Cabal user guide</a>.</p>
 <h3 id="for-stack"><a class="header" href="#for-stack">For stack:</a></h3>
 <p>Building the project - on the first run, stack will install the right GHC for this project
 which is specified by the <code>resolver</code> field in the <code>stack.yaml</code> file,
@@ -619,7 +619,7 @@ dist-newstyle
 <p>Finding packages isn't a very straightforward process at the moment.
 People have written on
 <a href="https://www.haskellforall.com/2018/05/how-i-evaluate-haskell-packages.html">how they choose packages</a>,
-<a href="https://github.com/soupi/haskell-study-plan#useful-packages">recommendation</a> <a href="https://haskelliseasy.readthedocs.io/en/latest/">lists</a>, and more.</p>
+<a href="https://github.com/soupi/haskell-study-plan#useful-packages">recommendation lists</a>, <a href="https://leanpub.com/haskell-stdlibs">books</a>, and more.</p>
 <p>My suggestion is:</p>
 <ul>
 <li>Search for a tutorial on something you'd like to do, and see which packages come up</li>
