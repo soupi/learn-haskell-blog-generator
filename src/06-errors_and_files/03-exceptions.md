@@ -82,7 +82,7 @@ main =
 >    (the `language` part is case insensitive)
 >    to the top of a Haskell source file, or they can be set globally for an entire project by
 >    specifying them in the
->    [default-extensions](https://cabal.readthedocs.io/en/3.6/cabal-package.html#pkg-field-default-extensions)
+>    [default-extensions](https://cabal.readthedocs.io/en/stable/cabal-package.html#pkg-field-default-extensions)
 >    section in the `.cabal file`.
 >
 >    The list of language extensions can be found in the
