@@ -4910,6 +4910,8 @@ their names, versions and dependencies.</p>
 <p><a href="https://cabal.readthedocs.io/en/stable/cabal-commands.html#cabal-build"><code>build</code></a>
 compiles the various targets (such as <code>library</code> and <code>executable</code>s).
 It will also fetch and install the package dependencies when they're not already installed.</p>
+<p>When building executables, <code>cabal build</code> will report where the executable has been created,
+and it is also possible to find the path to the executable using <code>cabal exec -- which hs-blog-gen</code>.</p>
 <pre><code class="language-sh">cabal run hs-blog-gen -- &lt;program arguments&gt;
 </code></pre>
 <p><a href="https://cabal.readthedocs.io/en/stable/cabal-commands.html#cabal-run"><code>run</code></a>
@@ -4943,6 +4945,8 @@ sharing and sandboxes.</p>
 <p><a href="https://docs.haskellstack.org/en/stable/build_command/#build-command"><code>build</code></a>
 will compile the project as described above - installing GHC and package dependencies if they are not
 installed.</p>
+<p>When building executables, <code>stack build</code> will report where the executable has been created,
+and it is also possible to find the path to the executable using <code>stack exec -- which hs-blog-gen</code>.</p>
 <pre><code class="language-sh">stack exec hs-blog-gen -- &lt;program arguments&gt;
 </code></pre>
 <p><a href="https://docs.haskellstack.org/en/stable/GUIDE/#stack-exec"><code>exec</code></a>
@@ -5782,7 +5786,8 @@ the <code>executable</code>.</p>
 <h2 id="summary-6"><a class="header" href="#summary-6">Summary</a></h2>
 <p>We've learned about a new fancy library called <code>optparse-applicative</code>
 and used it to create a fancier command-line interface in a declarative way.
-See the result of running <code>hs-blog-gen --help</code>:</p>
+See the result of running <code>hs-blog-gen --help</code> (or the equivalent
+<code>cabal</code>/<code>stack</code> commands we discussed in the last chapter):</p>
 <pre><code>hs-blog-gen - a static blog generator
 
 Usage: hs-blog-gen COMMAND
