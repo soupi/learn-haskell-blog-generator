@@ -916,7 +916,8 @@ the `executable`.
 
 We've learned about a new fancy library called `optparse-applicative`
 and used it to create a fancier command-line interface in a declarative way.
-See the result of running `hs-blog-gen --help`:
+See the result of running `hs-blog-gen --help` (or the equivalent
+`cabal`/`stack` commands we discussed in the last chapter):
 
 ```
 hs-blog-gen - a static blog generator

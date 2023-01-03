@@ -492,6 +492,9 @@ cabal build
 compiles the various targets (such as `library` and `executable`s).
 It will also fetch and install the package dependencies when they're not already installed.
 
+When building executables, `cabal build` will report where the executable has been created,
+and it is also possible to find the path to the executable using `cabal exec -- which hs-blog-gen`.
+
 ```sh
 cabal run hs-blog-gen -- <program arguments>
 ```
@@ -541,6 +544,9 @@ stack build
 [`build`](https://docs.haskellstack.org/en/stable/build_command/#build-command)
 will compile the project as described above - installing GHC and package dependencies if they are not
 installed.
+
+When building executables, `stack build` will report where the executable has been created,
+and it is also possible to find the path to the executable using `stack exec -- which hs-blog-gen`.
 
 ```sh
 stack exec hs-blog-gen -- <program arguments>
