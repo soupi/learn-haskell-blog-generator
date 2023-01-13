@@ -225,25 +225,25 @@ complete opposite of what we wanted!</p>
 <strong>side effects</strong> - when the evaluation of an expression <em>can affect or be affected
 by the outside world</em>, this includes reading/writing from mutable memory
 or performing I/O operations.</p>
-<p>We call functions that has side-effects such as <code>addWithInput</code> <strong>impure functions</strong>.
+<p>We call functions that have side-effects, such as <code>addWithInput</code>, <strong>impure functions</strong>.
 And an unfortunate consequence of impure functions is that
 <strong>they can return different results even when they take the same input</strong>.</p>
 <p>The presence of impure functions makes it harder for us to reason about lazy evaluation,
-and also messes up our ability to use <em>equational reasoning</em> to understand programs.</p>
+and also messes up our ability to use <strong>equational reasoning</strong> to understand programs.</p>
 <p>Therefore, in Haskell, it was decided to only allow <strong>pure</strong> functions and expressions - ones that
-have <em>no side effects</em>. Pure functions will <em>always</em> return the same output (given the same input)
+have <strong>no side effects</strong>. Pure functions will <em>always</em> return the same output (given the same input)
 and <strong>evaluating pure expressions is deterministic</strong>.</p>
 <p>But now, how can we do I/O operations? There are many possible solutions</p>
-<p>For Haskell it was decided to design a first class interface
+<p>For Haskell it was decided to design an interface
 with an accompanied type called <code>IO</code>. <code>IO</code>'s interface will force a distinction
 from non-I/O expressions, and will also require that in order to <em>combine</em>
-multiple <code>IO</code> operations, we will have to <em>specify the order</em> the operations.</p>
+multiple <code>IO</code> operations, we will have to <strong>specify the order the operations</strong>.</p>
 <h2 id="io"><a class="header" href="#io">IO</a></h2>
 <p><code>IO</code> is an opaque type, like our <code>Html</code> type in which we hide its internal
 representation from the user behind an interface. But in this case <code>IO</code> is a
 built-in type that is hidden by the Haskell language rather than a module.</p>
 <p>Similar to <code>Maybe</code>, <code>IO</code> has a payload type which represents the
-result of an <code>IO</code> operation/action/computation.
+result of an <code>IO</code> operation.
 When there isn't a meaningful result, we use the unit type,
 <code>()</code> (which only has one value: <code>()</code>) to represent that.</p>
 <p>Here are a few <code>IO</code> operations and functions that return <code>IO</code> operations:</p>
@@ -272,7 +272,7 @@ the same <strong>description</strong> of a program. This helps us keep purity an
 to also run - it has to be <em>combined into</em> the <code>main</code> expression - let's see what that means.</p>
 <h2 id="combining-io-expressions"><a class="header" href="#combining-io-expressions">Combining IO expressions</a></h2>
 <p>Just like our <code>Html.Structure</code> type, the IO interface provides <strong>combinators</strong> for composing
-small <code>IO</code> operations into bigger ones. This interface also makes sure that the order
+small <code>IO</code> operations into bigger ones. This interface also ensures that the order
 of operations is well defined!</p>
 <p>Note that, just like the <code>&lt;&gt;</code> we've defined for <code>Html.Structure</code>, the combinators for <code>IO</code>
 are implemented as <strong>type-class instances</strong> rather than specialized variants
@@ -286,7 +286,7 @@ later.</p>
 <pre><code class="language-hs">(&gt;&gt;=) :: IO a -&gt; (a -&gt; IO b) -&gt; IO b
 </code></pre>
 <p>This combinator takes two arguments, the first is an IO operation, and the second is
-a function that <em>takes as input the result of the first IO operation</em> and returns
+a function that takes as input <em>the result of the first IO operation</em> and returns
 a new <code>IO b</code> which is the final result.</p>
 <p>Here are a few examples using the functions we described above:</p>
 <ol>
