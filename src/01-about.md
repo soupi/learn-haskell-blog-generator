@@ -4,7 +4,7 @@
 
 <!--
 <div style="text-align: center">
-  <img src="book-logo.png" alt="book logo" style="max-width: 40%">
+  <img src="book-logo-transparent.png" alt="book logo" style="max-width: 40%">
 </div>
 -->
 
@@ -30,15 +30,16 @@ There are many Haskell tutorials, guides and books out there. Why read this one?
 
 There are probably more, but here are a few possible pros:
 
-- It's **relatively short** - most Haskell books out there are hundreds of pages long.
+- It is **relatively short** - most Haskell books are hundreds of pages long.
   This book (when exported to PDF) is roughly 200 pages long.
-- It's **project oriented**. Many Haskell books teach Haskell by teaching the underlying
-  concepts and features in a neat progression. In this book we try to build a program,
-  and learn Haskell on the way. This will be a pro to some, and a con to others.
+- It is **project oriented**. Many Haskell books teach Haskell by teaching the underlying
+  concepts and features in a neat progression. In this book we **build a Haskell program**,
+  and learn Haskell on the way. This will be a pro to some, and a con to others.<br>
   There are other tutorials like this. The most notable ones are
   [Beginning Haskell](https://www.apress.com/gp/book/9781430262510#otherversion=9781430262503)
   and [Haskell via Sokoban](https://haskell-via-sokoban.nomeata.de/).
 - It touches on **important topics** such as design patterns, testing and documentation.
+- It has **many exercises** as well as **solutions** to those exercises.
 - It's **online**, which means corrections are easy to make.
 - It's **free**.
 
@@ -46,15 +47,15 @@ There are probably more, but here are a few possible pros:
 
 There are probably more, but here are a few possible cons:
 
-- It may **lack depth** - many, much longer Haskell tutorials are long because they go
-  deeper into the nuts and bolts of each feature.
-- It may **not cover as many features or techniques** as other tutorials -
+- It **may lack depth** - many, much longer Haskell tutorials are long because they go
+  deeper into the nuts and bolts of each feature, and I tried to keep this book relatively short.
+- It **may not cover as many features or techniques** as other tutorials -
   we try to cover features as they pop up in our implementation, but we will
   probably miss features that aren't as important for our tasks,
   while other resources may try to cover many different use cases.
-- It is **very new** and not "battle-tested". Who knows if this is a good approach to
-  learning Haskell? Maybe you could help with that!
-- It **doesn't have a technical editor**, making the book not as good as it could've been.
+- It is **relatively new** and not "battle-tested". Who knows if this is a good approach to
+  learning Haskell? Maybe you could help with that and let me know!
+- It **does not have a technical editor**, though it has seen quite a bit of editing.
 
 ### Other learning resources
 
