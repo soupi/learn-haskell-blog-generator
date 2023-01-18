@@ -322,7 +322,7 @@ that function and get a new function of the type <code>Parser a -&gt; Parser b</
 fmap :: (a -&gt; b) -&gt; IO a -&gt; IO b
 </code></pre>
 <p><code>fmap</code> is a type class function like <code>&lt;&gt;</code> and <code>show</code>. It belongs
-to the type class <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Functor.html#t:Functor"><code>Functor</code></a>:</p>
+to the type class <a href="https://hackage.haskell.org/package/base-4.16.4.0/docs/Data-Functor.html#t:Functor"><code>Functor</code></a>:</p>
 <pre><code class="language-hs">class Functor f where
   fmap :: (a -&gt; b) -&gt; f a -&gt; f b
 </code></pre>
@@ -428,7 +428,7 @@ primary functions:</p>
   liftA2 :: (a -&gt; b -&gt; c) -&gt; f a -&gt; f b -&gt; f c
   (&lt;*&gt;) :: f (a -&gt; b) -&gt; f a -&gt; f b
 </code></pre>
-<p><a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Applicative.html#t:Applicative"><code>Applicative</code></a>
+<p><a href="https://hackage.haskell.org/package/base-4.16.4.0/docs/Control-Applicative.html#t:Applicative"><code>Applicative</code></a>
 is another very popular type class with many instances.</p>
 <p>Just like any <code>Monoid</code> is a <code>Semigroup</code>, any <code>Applicative</code>
 is a <code>Functor</code>. This means that any type that wants to implement
@@ -538,7 +538,7 @@ the function <code>optional</code> from <code>Control.Applicative</code>:</p>
 <pre><code class="language-hs">optional :: Alternative f =&gt; f a -&gt; f (Maybe a)
 </code></pre>
 <p><code>optional</code> works on types which implement instances of the
-<a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Applicative.html#t:Alternative"><code>Alternative</code></a> type class:</p>
+<a href="https://hackage.haskell.org/package/base-4.16.4.0/docs/Control-Applicative.html#t:Alternative"><code>Alternative</code></a> type class:</p>
 <pre><code class="language-hs">class Applicative f =&gt; Alternative f where
   (&lt;|&gt;) :: f a -&gt; f a -&gt; f a
   empty :: f a
@@ -789,7 +789,7 @@ add two new functions instead:</p>
 
 convertDirectory :: FilePath -&gt; FilePath -&gt; IO ()
 </code></pre>
-<p><a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/System-IO.html#t:Handle"><code>Handle</code></a>
+<p><a href="https://hackage.haskell.org/package/base-4.16.4.0/docs/System-IO.html#t:Handle"><code>Handle</code></a>
 is an I/O abstraction over file system objects, including <code>stdin</code> and <code>stdout</code>.
 Before, we used <code>writeFile</code> and <code>getContents</code> - these functions either
 get a <code>FilePath</code> to open and work on, or they assume the <code>Handle</code> is the standard I/O.

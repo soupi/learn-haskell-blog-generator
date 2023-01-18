@@ -169,11 +169,11 @@ You might also find the quite a bit of Haskell presence on
 <h2 id="debugging"><a class="header" href="#debugging">Debugging</a></h2>
 <h3 id="how-to-debug-haskell-code"><a class="header" href="#how-to-debug-haskell-code">How to debug Haskell code</a></h3>
 <p>Most imperative languages provide a step debugger. While the
-<a href="http://downloads.haskell.org/%7Eghc/latest/docs/html/users_guide/ghci.html#the-ghci-debugger">GHCi debugger</a>,
+<a href="https://downloads.haskell.org/ghc/latest/docs/users_guide/ghci.html#the-ghci-debugger">GHCi debugger</a>,
 exists it is not particularly easy to use, especially because of Haskell's lazy evaluation where things
 might not evaluated at the order we might intuitively expect. Because of that,
 Haskellers tend to use
-<a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Debug-Trace.html#g:1">trace debugging</a> and
+<a href="https://hackage.haskell.org/package/base-4.16.4.0/docs/Debug-Trace.html#g:1">trace debugging</a> and
 equational reasoning. With trace debugging, we try to <em>verify our assumptions</em> about the code -
 we use the various <code>trace</code> functions as a &quot;hack&quot; to print variables, functions inputs, functions output
 or even just say &quot;got here&quot;, from anywhere at the code.</p>
@@ -195,7 +195,7 @@ As you gain experience, it is likely that the most important part of an error wi
 of the offending code, and by reading the code we can find the error without the actual error message.</p>
 <p>Adding type signatures and annotations to test your understanding of the types also helps greatly.
 We can even ask GHC for the expected type in a certain place by using
-<a href="http://downloads.haskell.org/%7Eghc/latest/docs/html/users_guide/exts/typed_holes.html">typed holes</a>.</p>
+<a href="https://downloads.haskell.org/ghc/latest/docs/users_guide/exts/typed_holes.html">typed holes</a>.</p>
 <h3 id="my-program-is-slow-why"><a class="header" href="#my-program-is-slow-why">My program is slow. Why?</a></h3>
 <p>There could be various reasons. From inefficient algorithms or
 <a href="https://github.com/soupi/haskell-study-plan#data-structures">unsuited data structures</a> for the task

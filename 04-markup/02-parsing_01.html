@@ -159,10 +159,10 @@ information from previous lines if necessary</li>
 <p>So the first thing we want to do is to process the string line by line.
 We can do that by converting the string to a list of string.
 Fortunately the Haskell
-<a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Prelude.html#v:lines"><code>Prelude</code></a>
+<a href="https://hackage.haskell.org/package/base-4.16.4.0/docs/Prelude.html#v:lines"><code>Prelude</code></a>
 module from the Haskell standard library
 <a href="https://hackage.haskell.org/package/base"><code>base</code></a> exposes the function
-<a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Prelude.html#v:lines"><code>lines</code></a>
+<a href="https://hackage.haskell.org/package/base-4.16.4.0/docs/Prelude.html#v:lines"><code>lines</code></a>
 that does exactly what we want. The <code>Prelude</code> module is exposed in every
 Haskell file by default so we don't need to import it.</p>
 <p>For the line processing part, let's start by ignoring all of the markup syntax
@@ -558,7 +558,7 @@ to return the first element (the head) of a list, but we know that lists
 could possibly be empty, so how can this function deliver on its promise?</p>
 <p>Unfortunately, it can't. But there exists a different function that can:
 <code>head :: NonEmpty a -&gt; a</code> from the
-<a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-List-NonEmpty.html"><code>Data.List.NonEmpty</code></a>
+<a href="https://hackage.haskell.org/package/base-4.16.4.0/docs/Data-List-NonEmpty.html"><code>Data.List.NonEmpty</code></a>
 module! The trick here is that this other <code>head</code> does not take a general list
 as input, it takes a different type entirely, one that promises to have
 at least one element, and therefore can deliver on its promise!</p>
@@ -575,7 +575,7 @@ types.</p>
 <p>As stated previously, our strategy for parsing the markup text is:</p>
 <ol>
 <li>Split the string to a list where each element is a separate line
-(which we can do with <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Prelude.html#v:lines"><code>lines</code></a>), and</li>
+(which we can do with <a href="https://hackage.haskell.org/package/base-4.16.4.0/docs/Prelude.html#v:lines"><code>lines</code></a>), and</li>
 <li>Go over the list line by line and process it, remembering
 information from previous lines if necessary</li>
 </ol>

@@ -173,7 +173,7 @@ nested functions need the same information, threading the environment can get
 tedious.</p>
 <p>There is an alternative solution to threading the environment as input to functions,
 and that is using the
-<a href="https://hackage.haskell.org/package/mtl-2.2.2/docs/Control-Monad-Reader.html#g:2"><code>ReaderT</code></a>
+<a href="https://hackage.haskell.org/package/mtl-2.3.1/docs/Control-Monad-Reader.html#g:2"><code>ReaderT</code></a>
 type from the <code>mtl</code> (or <code>transformers</code>) package.</p>
 <h3 id="readert"><a class="header" href="#readert">ReaderT</a></h3>
 <pre><code class="language-hs">newtype ReaderT r m a = ReaderT (r -&gt; m a)
@@ -204,7 +204,7 @@ in their type signature with <code>ReaderT r m</code>.</p>
 so it is with <code>ReaderT r m</code> - we have to compose functions with the same <code>r</code> type and same
 <code>m</code> type, we can't mix different environment types or different underlying <code>m</code> types.</p>
 <p>We're going to use a specialized version of <code>ReaderT</code> that uses a specific <code>m</code> = <code>Identity</code>
-called <a href="https://hackage.haskell.org/package/mtl-2.2.2/docs/Control-Monad-Reader.html#g:2"><code>Reader</code></a>.
+called <a href="https://hackage.haskell.org/package/mtl-2.3.1/docs/Control-Monad-Reader.html#g:2"><code>Reader</code></a>.
 The <code>Control.Monad.Reader</code> provides an alias: <code>Reader r a = ReaderT r Identity a</code>.</p>
 <blockquote>
 <p>If the idea behind <code>ReaderT</code> is still a bit fuzzy to you and you want

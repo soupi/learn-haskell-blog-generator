@@ -147,13 +147,13 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="exceptions"><a class="header" href="#exceptions">Exceptions</a></h1>
-<p>The <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html">Control.Exception</a>
+<p>The <a href="https://hackage.haskell.org/package/base-4.16.4.0/docs/Control-Exception.html">Control.Exception</a>
 module provides us with the ability to
-<a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html#v:throwIO">throw</a>
+<a href="https://hackage.haskell.org/package/base-4.16.4.0/docs/Control-Exception.html#v:throwIO">throw</a>
 exceptions from <code>IO</code> code,
-<a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html#g:5"><code>catch</code></a>
+<a href="https://hackage.haskell.org/package/base-4.16.4.0/docs/Control-Exception.html#g:5"><code>catch</code></a>
 Haskell exceptions in <code>IO</code> code, and even convert them to <code>IO (Either ...)</code>
-with the function <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html#g:7"><code>try</code></a>:</p>
+with the function <a href="https://hackage.haskell.org/package/base-4.16.4.0/docs/Control-Exception.html#g:7"><code>try</code></a>:</p>
 <pre><code class="language-hs">throwIO :: Exception e =&gt; e -&gt; IO a
 
 catch
@@ -165,7 +165,7 @@ catch
 try :: Exception e =&gt; IO a -&gt; IO (Either e a)
 </code></pre>
 <p>The important part of these type signatures is the
-<a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html#t:Exception"><code>Exception</code></a>
+<a href="https://hackage.haskell.org/package/base-4.16.4.0/docs/Control-Exception.html#t:Exception"><code>Exception</code></a>
 type class. By making a type an instance of the <code>Exception</code> type class, we can throw it
 and catch it in <code>IO</code> code:</p>
 <pre><code class="language-hs">{-# language LambdaCase #-}
@@ -257,9 +257,9 @@ main = do
 </code></pre>
 <p>First, how do we know which exception we should handle? Some functions' documentation
 include this, but unfortunately <code>putStrLn</code>'s does not. We could guess from the
-<a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html#i:Exception">list of instances</a>
+<a href="https://hackage.haskell.org/package/base-4.16.4.0/docs/Control-Exception.html#i:Exception">list of instances</a>
 the <code>Exception</code> type class has; I think
-<a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/GHC-IO-Exception.html#t:IOException"><code>IOException</code></a> fits. Now, how can we handle this case as well? We can chain catches:</p>
+<a href="https://hackage.haskell.org/package/base-4.16.4.0/docs/GHC-IO-Exception.html#t:IOException"><code>IOException</code></a> fits. Now, how can we handle this case as well? We can chain catches:</p>
 <pre><code class="language-hs">-- need to add these at the top
 
 {-# language ScopedTypeVariables #-}
@@ -295,9 +295,9 @@ main = do
 lambdas, pattern matching and more.</p>
 </blockquote>
 <p>Or we could use the convenient function
-<a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html#v:catches"><code>catches</code></a>
+<a href="https://hackage.haskell.org/package/base-4.16.4.0/docs/Control-Exception.html#v:catches"><code>catches</code></a>
 to pass a list of exception
-<a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html#t:Handler">handlers</a>:</p>
+<a href="https://hackage.haskell.org/package/base-4.16.4.0/docs/Control-Exception.html#t:Handler">handlers</a>:</p>
 <pre><code class="language-hs">main :: IO ()
 main = do
   hClose stdout
@@ -345,8 +345,8 @@ main = do
 <p>This could also go in <code>catches</code> as the last element in the list if we wanted specialized
 handling for other scenarios.</p>
 <p>A couple more functions worth knowing are
-<a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html#v:bracket"><code>bracket</code></a>
-and <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html#v:finally"><code>finally</code></a>.
+<a href="https://hackage.haskell.org/package/base-4.16.4.0/docs/Control-Exception.html#v:bracket"><code>bracket</code></a>
+and <a href="https://hackage.haskell.org/package/base-4.16.4.0/docs/Control-Exception.html#v:finally"><code>finally</code></a>.
 These functions can help us handle resource acquisition more safely when errors are present.</p>
 <hr />
 <p>In our <code>main</code> in the <code>app/Main.hs</code> file, we do a small ritual opening and closing handles.

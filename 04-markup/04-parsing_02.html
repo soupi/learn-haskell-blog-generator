@@ -166,9 +166,9 @@ the first element of a list, without creating a partial function:</p>
 </code></pre>
 <p>This way, when the list is empty, we can return <code>Nothing</code>, and when it has at least
 one element, we can return <code>Just &lt;first element&gt;</code>. This function can be found in
-the <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Maybe.html">Data.Maybe</a>
+the <a href="https://hackage.haskell.org/package/base-4.16.4.0/docs/Data-Maybe.html">Data.Maybe</a>
 module under the name
-<a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Maybe.html#v:listToMaybe">listToMaybe</a>.</p>
+<a href="https://hackage.haskell.org/package/base-4.16.4.0/docs/Data-Maybe.html#v:listToMaybe">listToMaybe</a>.</p>
 <p>In order to <em>consume</em> values of type <code>Maybe &lt;something&gt;</code>, and other types created with
 <code>data</code>, we can use pattern matching.</p>
 <h2 id="pattern-matching"><a class="header" href="#pattern-matching">Pattern Matching</a></h2>
@@ -444,7 +444,7 @@ the result of <code>parseLines Nothing rest</code> as is. Try writing this using
   Just structure -&gt; structure : parseLines Nothing rest
 </code></pre>
 </details>
-<p>The <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Prelude.html#v:maybe">maybe</a>
+<p>The <a href="https://hackage.haskell.org/package/base-4.16.4.0/docs/Prelude.html#v:maybe">maybe</a>
 function let's us do the same thing in a more compact way. It is a function
 that works similarly to pattern matching on a <code>Maybe</code>:
 the third argument to <code>maybe</code> is the value on which we pattern match,

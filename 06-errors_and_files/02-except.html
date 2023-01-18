@@ -170,7 +170,7 @@ to stack monad capabilities on top of one another. They are called transformers 
 implements the monad interface, stacking a new capability on top of it</strong>.</p>
 <p>For example, if we want to compose values of a type that is equivalent to <code>IO (Either Error a)</code>,
 using the monadic interface (the function <code>&gt;&gt;=</code>), we can use a monad transformer
-called <a href="https://hackage.haskell.org/package/mtl-2.2.2/docs/Control-Monad-Except.html#g:2"><code>ExceptT</code></a>
+called <a href="https://hackage.haskell.org/package/mtl-2.3.1/docs/Control-Monad-Except.html#g:2"><code>ExceptT</code></a>
 and stack it over <code>IO</code>.
 Let's see how <code>ExceptT</code> is defined:</p>
 <pre><code class="language-hs">newtype ExceptT e m a = ExceptT (m (Either e a))
@@ -270,7 +270,7 @@ even cover them all in a data type.</p>
 as we'll see in the next chapter.</p>
 <blockquote>
 <p>Note - when we stack <code>ExceptT</code> on top of a different type called
-<a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Functor-Identity.html"><code>Identity</code></a>
+<a href="https://hackage.haskell.org/package/base-4.16.4.0/docs/Data-Functor-Identity.html"><code>Identity</code></a>
 that also implements the <code>Monad</code> interface, we get a type that is exactly like <code>Either</code>
 called <a href="https://hackage.haskell.org/package/transformers-0.6.0.2/docs/Control-Monad-Trans-Except.html#t:Except"><code>Except</code></a>
 (without the <code>T</code> at the end). You might sometimes want to use <code>Except</code> instead of <code>Either</code>

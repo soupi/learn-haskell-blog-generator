@@ -327,7 +327,7 @@ that could work for any monoid</li>
 </code></pre>
 <blockquote>
 <p>Note: this is actually a simplified version. The
-<a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Prelude.html#t:Monoid">actual</a>
+<a href="https://hackage.haskell.org/package/base-4.16.4.0/docs/Prelude.html#t:Monoid">actual</a>
 is a bit more complicated because of backwards compatibility and performance reasons.
 <code>Semigroup</code> was actually introduced in Haskell after <code>Monoid</code>!</p>
 </blockquote>
@@ -357,8 +357,8 @@ Abstractions help us identify common patterns and <strong>reuse</strong> code!</
 <p>Side note: integers with <code>+</code> and <code>0</code> aren't actually an instance of <code>Monoid</code> in Haskell.
 This is because integers can also form a monoid with <code>*</code> and <code>1</code>! But <strong>there can only
 be one instance per type</strong>. Instead, two other <code>newtype</code>s exist that provide that
-functionality, <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Monoid.html#t:Sum">Sum</a>
-and <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Monoid.html#t:Product">Product</a>.
+functionality, <a href="https://hackage.haskell.org/package/base-4.16.4.0/docs/Data-Monoid.html#t:Sum">Sum</a>
+and <a href="https://hackage.haskell.org/package/base-4.16.4.0/docs/Data-Monoid.html#t:Product">Product</a>.
 See how they can be used in <code>ghci</code>:</p>
 <pre><code class="language-hs">ghci&gt; import Data.Monoid
 ghci&gt; Product 2 &lt;&gt; Product 3 -- note, Product is a data constructor
@@ -372,7 +372,7 @@ ghci&gt; getProduct $ mconcat $ map Product [1..5]
 <h2 id="another-abstraction"><a class="header" href="#another-abstraction">Another abstraction?</a></h2>
 <p>We've used <code>map</code> and then <code>mconcat</code> twice now. Surely there has to be a function
 that unifies this pattern. And indeed, it is called
-<a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Foldable.html#v:foldMap"><code>foldMap</code></a>,
+<a href="https://hackage.haskell.org/package/base-4.16.4.0/docs/Data-Foldable.html#v:foldMap"><code>foldMap</code></a>,
 and it works not only for lists, but also for any data structure that can be &quot;folded&quot;,
 or &quot;reduced&quot;, into a summary value. This abstraction and type class is called <strong>Foldable</strong>.</p>
 <p>For a simpler understanding of <code>Foldable</code>, we can look at <code>fold</code>:</p>
