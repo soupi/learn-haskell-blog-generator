@@ -1,12 +1,12 @@
 # Exceptions
 
-The [Control.Exception](https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html)
+The [Control.Exception](https://hackage.haskell.org/package/base-4.16.4.0/docs/Control-Exception.html)
 module provides us with the ability to
-[throw](https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html#v:throwIO)
+[throw](https://hackage.haskell.org/package/base-4.16.4.0/docs/Control-Exception.html#v:throwIO)
 exceptions from `IO` code,
-[`catch`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html#g:5)
+[`catch`](https://hackage.haskell.org/package/base-4.16.4.0/docs/Control-Exception.html#g:5)
 Haskell exceptions in `IO` code, and even convert them to `IO (Either ...)`
-with the function [`try`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html#g:7):
+with the function [`try`](https://hackage.haskell.org/package/base-4.16.4.0/docs/Control-Exception.html#g:7):
 
 ```hs
 throwIO :: Exception e => e -> IO a
@@ -21,7 +21,7 @@ try :: Exception e => IO a -> IO (Either e a)
 ```
 
 The important part of these type signatures is the
-[`Exception`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html#t:Exception)
+[`Exception`](https://hackage.haskell.org/package/base-4.16.4.0/docs/Control-Exception.html#t:Exception)
 type class. By making a type an instance of the `Exception` type class, we can throw it
 and catch it in `IO` code:
 
@@ -122,9 +122,9 @@ ghc: <stdout>: hFlush: illegal operation (handle is closed)
 
 First, how do we know which exception we should handle? Some functions' documentation
 include this, but unfortunately `putStrLn`'s does not. We could guess from the
-[list of instances](https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html#i:Exception)
+[list of instances](https://hackage.haskell.org/package/base-4.16.4.0/docs/Control-Exception.html#i:Exception)
 the `Exception` type class has; I think
-[`IOException`](https://hackage.haskell.org/package/base-4.15.0.0/docs/GHC-IO-Exception.html#t:IOException) fits. Now, how can we handle this case as well? We can chain catches:
+[`IOException`](https://hackage.haskell.org/package/base-4.16.4.0/docs/GHC-IO-Exception.html#t:IOException) fits. Now, how can we handle this case as well? We can chain catches:
 
 ```hs
 -- need to add these at the top
@@ -162,9 +162,9 @@ main = do
 > lambdas, pattern matching and more.
 
 Or we could use the convenient function
-[`catches`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html#v:catches)
+[`catches`](https://hackage.haskell.org/package/base-4.16.4.0/docs/Control-Exception.html#v:catches)
 to pass a list of exception
-[handlers](https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html#t:Handler):
+[handlers](https://hackage.haskell.org/package/base-4.16.4.0/docs/Control-Exception.html#t:Handler):
 
 ```hs
 main :: IO ()
@@ -218,8 +218,8 @@ This could also go in `catches` as the last element in the list if we wanted spe
 handling for other scenarios.
 
 A couple more functions worth knowing are
-[`bracket`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html#v:bracket)
-and [`finally`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Exception.html#v:finally).
+[`bracket`](https://hackage.haskell.org/package/base-4.16.4.0/docs/Control-Exception.html#v:bracket)
+and [`finally`](https://hackage.haskell.org/package/base-4.16.4.0/docs/Control-Exception.html#v:finally).
 These functions can help us handle resource acquisition more safely when errors are present.
 
 ---

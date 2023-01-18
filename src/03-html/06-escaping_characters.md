@@ -80,9 +80,9 @@ We can implement our own operations on lists by using pattern matching and recur
 And we'll touch on this subject later when talking about ADTs.
 
 For now, we will use the various functions found in the
-[Data.List](https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-List.html) module.
-Specifically, [map](https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-List.html#v:map)
-and [concat](https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-List.html#v:concat).
+[Data.List](https://hackage.haskell.org/package/base-4.16.4.0/docs/Data-List.html) module.
+Specifically, [map](https://hackage.haskell.org/package/base-4.16.4.0/docs/Data-List.html#v:map)
+and [concat](https://hackage.haskell.org/package/base-4.16.4.0/docs/Data-List.html#v:concat).
 
 ### `map`
 
@@ -215,7 +215,7 @@ testing it in GHCi - pass it different inputs, and see if it matches your expect
 Concrete examples of running code can aid a lot in understanding it!
 
 > If you'd like to learn more about GHCi, you can find a more thorough introduction in the
-> [GHC user guide](https://downloads.haskell.org/~ghc/9.0.1/docs/html/users_guide/ghci.html).
+> [GHC user guide](https://downloads.haskell.org/ghc/latest/docs/users_guide/ghci.html).
 
 ## Escaping
 

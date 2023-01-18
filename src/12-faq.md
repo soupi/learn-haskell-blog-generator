@@ -30,11 +30,11 @@ You might also find the quite a bit of Haskell presence on
 ### How to debug Haskell code
 
 Most imperative languages provide a step debugger. While the
-[GHCi debugger](http://downloads.haskell.org/~ghc/latest/docs/html/users_guide/ghci.html#the-ghci-debugger),
+[GHCi debugger](https://downloads.haskell.org/ghc/latest/docs/users_guide/ghci.html#the-ghci-debugger),
 exists it is not particularly easy to use, especially because of Haskell's lazy evaluation where things
 might not evaluated at the order we might intuitively expect. Because of that,
 Haskellers tend to use
-[trace debugging](https://hackage.haskell.org/package/base-4.15.0.0/docs/Debug-Trace.html#g:1) and
+[trace debugging](https://hackage.haskell.org/package/base-4.16.4.0/docs/Debug-Trace.html#g:1) and
 equational reasoning. With trace debugging, we try to *verify our assumptions* about the code -
 we use the various `trace` functions as a "hack" to print variables, functions inputs, functions output
 or even just say "got here", from anywhere at the code.
@@ -62,7 +62,7 @@ of the offending code, and by reading the code we can find the error without the
 
 Adding type signatures and annotations to test your understanding of the types also helps greatly.
 We can even ask GHC for the expected type in a certain place by using
-[typed holes](http://downloads.haskell.org/~ghc/latest/docs/html/users_guide/exts/typed_holes.html).
+[typed holes](https://downloads.haskell.org/ghc/latest/docs/users_guide/exts/typed_holes.html).
 
 ### My program is slow. Why?
 

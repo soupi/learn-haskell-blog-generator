@@ -246,7 +246,7 @@ class Semigroup a => Monoid a where
 ```
 
 > Note: this is actually a simplified version. The
-> [actual](https://hackage.haskell.org/package/base-4.15.0.0/docs/Prelude.html#t:Monoid)
+> [actual](https://hackage.haskell.org/package/base-4.16.4.0/docs/Prelude.html#t:Monoid)
 > is a bit more complicated because of backwards compatibility and performance reasons.
 > `Semigroup` was actually introduced in Haskell after `Monoid`!
 
@@ -287,8 +287,8 @@ Abstractions help us identify common patterns and **reuse** code!
 > Side note: integers with `+` and `0` aren't actually an instance of `Monoid` in Haskell.
 > This is because integers can also form a monoid with `*` and `1`! But **there can only
 > be one instance per type**. Instead, two other `newtype`s exist that provide that
-> functionality, [Sum](https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Monoid.html#t:Sum)
-> and [Product](https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Monoid.html#t:Product).
+> functionality, [Sum](https://hackage.haskell.org/package/base-4.16.4.0/docs/Data-Monoid.html#t:Sum)
+> and [Product](https://hackage.haskell.org/package/base-4.16.4.0/docs/Data-Monoid.html#t:Product).
 > See how they can be used in `ghci`:
 >
 > ```hs
@@ -305,7 +305,7 @@ Abstractions help us identify common patterns and **reuse** code!
 
 We've used `map` and then `mconcat` twice now. Surely there has to be a function
 that unifies this pattern. And indeed, it is called
-[`foldMap`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Foldable.html#v:foldMap),
+[`foldMap`](https://hackage.haskell.org/package/base-4.16.4.0/docs/Data-Foldable.html#v:foldMap),
 and it works not only for lists, but also for any data structure that can be "folded",
 or "reduced", into a summary value. This abstraction and type class is called **Foldable**.
 

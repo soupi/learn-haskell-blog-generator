@@ -13,10 +13,10 @@ Our strategy is to take the string of markup text, and:
 So the first thing we want to do is to process the string line by line.
 We can do that by converting the string to a list of string.
 Fortunately the Haskell
-[`Prelude`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Prelude.html#v:lines)
+[`Prelude`](https://hackage.haskell.org/package/base-4.16.4.0/docs/Prelude.html#v:lines)
 module from the Haskell standard library
 [`base`](https://hackage.haskell.org/package/base) exposes the function
-[`lines`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Prelude.html#v:lines)
+[`lines`](https://hackage.haskell.org/package/base-4.16.4.0/docs/Prelude.html#v:lines)
 that does exactly what we want. The `Prelude` module is exposed in every
 Haskell file by default so we don't need to import it.
 
@@ -549,7 +549,7 @@ could possibly be empty, so how can this function deliver on its promise?
 
 Unfortunately, it can't. But there exists a different function that can:
 `head :: NonEmpty a -> a` from the
-[`Data.List.NonEmpty`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-List-NonEmpty.html)
+[`Data.List.NonEmpty`](https://hackage.haskell.org/package/base-4.16.4.0/docs/Data-List-NonEmpty.html)
 module! The trick here is that this other `head` does not take a general list
 as input, it takes a different type entirely, one that promises to have
 at least one element, and therefore can deliver on its promise!
@@ -572,7 +572,7 @@ Let's get back to the task at hand.
 As stated previously, our strategy for parsing the markup text is:
 
 1. Split the string to a list where each element is a separate line
-   (which we can do with [`lines`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Prelude.html#v:lines)), and
+   (which we can do with [`lines`](https://hackage.haskell.org/package/base-4.16.4.0/docs/Prelude.html#v:lines)), and
 2. Go over the list line by line and process it, remembering
    information from previous lines if necessary
 

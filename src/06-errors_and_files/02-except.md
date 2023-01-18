@@ -33,7 +33,7 @@ implements the monad interface, stacking a new capability on top of it**.
 
 For example, if we want to compose values of a type that is equivalent to `IO (Either Error a)`,
 using the monadic interface (the function `>>=`), we can use a monad transformer
-called [`ExceptT`](https://hackage.haskell.org/package/mtl-2.2.2/docs/Control-Monad-Except.html#g:2)
+called [`ExceptT`](https://hackage.haskell.org/package/mtl-2.3.1/docs/Control-Monad-Except.html#g:2)
 and stack it over `IO`.
 Let's see how `ExceptT` is defined:
 
@@ -175,7 +175,7 @@ We give up on this approach **for IO code**, and use a different one: Exceptions
 as we'll see in the next chapter.
 
 > Note - when we stack `ExceptT` on top of a different type called
-> [`Identity`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Functor-Identity.html)
+> [`Identity`](https://hackage.haskell.org/package/base-4.16.4.0/docs/Data-Functor-Identity.html)
 > that also implements the `Monad` interface, we get a type that is exactly like `Either`
 > called [`Except`](https://hackage.haskell.org/package/transformers-0.6.0.2/docs/Control-Monad-Trans-Except.html#t:Except)
 > (without the `T` at the end). You might sometimes want to use `Except` instead of `Either`

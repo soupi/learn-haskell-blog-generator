@@ -22,8 +22,8 @@ If you'd like to extend this project, here are a few ideas for you:
    [twain](https://gilmi.me/blog/post/2022/04/24/learn-twain-bulletin-app)
    to serve this blog over HTTP instead of generating it statically
 2. **Rewrite it with libraries** - you could rewrite it and use a real-world
-   [HTML package](https://hackage.haskell.org/package/blaze-html)
-   and [markdown parser](https://hackage.haskell.org/package/cheapskate)
+   [HTML package](https://hackage.haskell.org/package/lucid)
+   and [markdown parser](https://hackage.haskell.org/package/cmark-gfm)
 3. **Add features**
    1. You could add a metadata block at the top of each article
       which would include the title, publish date and tags of a blog post,
@@ -54,7 +54,7 @@ You will also find alternative explanations to thing we've covered
 and even links to other Haskell tutorials, guides and books in case you need
 a different view on things.
 
-Also, the [GHC User Guide](http://downloads.haskell.org/~ghc/latest/docs/html/users_guide/index.html)
+Also, the [GHC User Guide](https://downloads.haskell.org/ghc/latest/docs/users_guide/index.html)
 is a fantastic resource with loads of articles and information about the language and GHC tooling around it.
 It is often the best place to learn about the Haskell language.
 

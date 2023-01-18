@@ -32,7 +32,7 @@ tedious.
 
 There is an alternative solution to threading the environment as input to functions,
 and that is using the
-[`ReaderT`](https://hackage.haskell.org/package/mtl-2.2.2/docs/Control-Monad-Reader.html#g:2)
+[`ReaderT`](https://hackage.haskell.org/package/mtl-2.3.1/docs/Control-Monad-Reader.html#g:2)
 type from the `mtl` (or `transformers`) package.
 
 ### ReaderT
@@ -73,7 +73,7 @@ so it is with `ReaderT r m` - we have to compose functions with the same `r` typ
 `m` type, we can't mix different environment types or different underlying `m` types.
 
 We're going to use a specialized version of `ReaderT` that uses a specific `m` = `Identity`
-called [`Reader`](https://hackage.haskell.org/package/mtl-2.2.2/docs/Control-Monad-Reader.html#g:2).
+called [`Reader`](https://hackage.haskell.org/package/mtl-2.3.1/docs/Control-Monad-Reader.html#g:2).
 The `Control.Monad.Reader` provides an alias: `Reader r a = ReaderT r Identity a`.
 
 > If the idea behind `ReaderT` is still a bit fuzzy to you and you want

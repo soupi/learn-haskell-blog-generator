@@ -27,9 +27,9 @@ safeHead :: [a] -> Maybe a
 
 This way, when the list is empty, we can return `Nothing`, and when it has at least
 one element, we can return `Just <first element>`. This function can be found in
-the [Data.Maybe](https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Maybe.html)
+the [Data.Maybe](https://hackage.haskell.org/package/base-4.16.4.0/docs/Data-Maybe.html)
 module under the name
-[listToMaybe](https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Maybe.html#v:listToMaybe).
+[listToMaybe](https://hackage.haskell.org/package/base-4.16.4.0/docs/Data-Maybe.html#v:listToMaybe).
 
 In order to *consume* values of type `Maybe <something>`, and other types created with
 `data`, we can use pattern matching.
@@ -359,7 +359,7 @@ trim = unwords . words
 
    </details>
 
-   The [maybe](https://hackage.haskell.org/package/base-4.15.0.0/docs/Prelude.html#v:maybe)
+   The [maybe](https://hackage.haskell.org/package/base-4.16.4.0/docs/Prelude.html#v:maybe)
    function let's us do the same thing in a more compact way. It is a function
    that works similarly to pattern matching on a `Maybe`:
    the third argument to `maybe` is the value on which we pattern match,

@@ -207,7 +207,7 @@ fmap :: (a -> b) -> IO a -> IO b
 ```
 
 `fmap` is a type class function like `<>` and `show`. It belongs
-to the type class [`Functor`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Functor.html#t:Functor):
+to the type class [`Functor`](https://hackage.haskell.org/package/base-4.16.4.0/docs/Data-Functor.html#t:Functor):
 
 ```hs
 class Functor f where
@@ -339,7 +339,7 @@ class Functor f => Applicative f where
   (<*>) :: f (a -> b) -> f a -> f b
 ```
 
-[`Applicative`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Applicative.html#t:Applicative)
+[`Applicative`](https://hackage.haskell.org/package/base-4.16.4.0/docs/Control-Applicative.html#t:Applicative)
 is another very popular type class with many instances.
 
 Just like any `Monoid` is a `Semigroup`, any `Applicative`
@@ -475,7 +475,7 @@ optional :: Alternative f => f a -> f (Maybe a)
 ```
 
 `optional` works on types which implement instances of the
-[`Alternative`](https://hackage.haskell.org/package/base-4.15.0.0/docs/Control-Applicative.html#t:Alternative) type class:
+[`Alternative`](https://hackage.haskell.org/package/base-4.16.4.0/docs/Control-Applicative.html#t:Alternative) type class:
 
 ```hs
 class Applicative f => Alternative f where
@@ -772,7 +772,7 @@ convertSingle :: Html.Title -> Handle -> Handle -> IO ()
 convertDirectory :: FilePath -> FilePath -> IO ()
 ```
 
-[`Handle`](https://hackage.haskell.org/package/base-4.15.0.0/docs/System-IO.html#t:Handle)
+[`Handle`](https://hackage.haskell.org/package/base-4.16.4.0/docs/System-IO.html#t:Handle)
 is an I/O abstraction over file system objects, including `stdin` and `stdout`.
 Before, we used `writeFile` and `getContents` - these functions either
 get a `FilePath` to open and work on, or they assume the `Handle` is the standard I/O.
