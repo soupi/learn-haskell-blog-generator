@@ -13,8 +13,10 @@ marketplace [Haskell extension](https://marketplace.visualstudio.com/items?itemN
 The Haskell extension uses [haskell-language-server](https://github.com/haskell/haskell-language-server)
 which can be installed via [GHCup](https://www.haskell.org/ghcup/) or even via the Haskell extension itself.
 
-There are [other options](https://github.com/soupi/haskell-study-plan#tools)
-of course if this setup isn't your jam.
+If you already have a preferred editor,
+[see if HLS supports it](https://haskell-language-server.readthedocs.io/en/latest/configuration.html#configuring-your-editor),
+or alternatively use [GHCid](https://github.com/ndmitchell/ghcid#readme)
+which provides rapid feedback independently from an editor.
 
 ### How to learn new things
 
@@ -80,8 +82,8 @@ study plan links to various resources on Haskell evaluation, profiling and case 
 ### How to structure programs
 
 Start with the imperative shell functional core approach, define EDSLs with the combinator
-pattern for logic if needed, use monadic capabilities such as State locally if needed,
-maybe add an environment configuration with ReaderT, see how it goes.
+pattern for logic if needed, use capabilities such as `State` locally if needed,
+maybe add an environment configuration with `ReaderT`, see how it goes.
 
 If that approach fails you, look at why it fails and examine other solutions according to your needs.
 

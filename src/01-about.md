@@ -64,3 +64,8 @@ There are probably more, but here are a few possible cons:
 The [haskell.org/documentation](https://www.haskell.org/documentation/) page lists
 many tutorials, books, guides and courses. You can find a few alternatives that I can
 recommend [in this list](https://github.com/soupi/haskell-study-plan#about-this-guide).
+
+## Discussions
+
+Do you want to discuss the book? Maybe ask a question?
+Try the [discussion board](https://github.com/soupi/learn-haskell-blog-generator/discussions)!
