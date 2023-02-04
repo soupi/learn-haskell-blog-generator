@@ -204,6 +204,9 @@ learning Haskell? Maybe you could help with that and let me know!</li>
 <p>The <a href="https://www.haskell.org/documentation/">haskell.org/documentation</a> page lists
 many tutorials, books, guides and courses. You can find a few alternatives that I can
 recommend <a href="https://github.com/soupi/haskell-study-plan#about-this-guide">in this list</a>.</p>
+<h2 id="discussions"><a class="header" href="#discussions">Discussions</a></h2>
+<p>Do you want to discuss the book? Maybe ask a question?
+Try the <a href="https://github.com/soupi/learn-haskell-blog-generator/discussions">discussion board</a>!</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="hello-world"><a class="header" href="#hello-world">Hello, world!</a></h1>
 <p>In this chapter we will create a simple HTML &quot;hello world&quot; program and use the Haskell toolchain
 to compile and run it.</p>
@@ -8676,8 +8679,10 @@ VSCode or <a href="https://vscodium.com/">VSCodium</a> together with the
 marketplace <a href="https://marketplace.visualstudio.com/items?itemName=haskell.haskell">Haskell extension</a>.</p>
 <p>The Haskell extension uses <a href="https://github.com/haskell/haskell-language-server">haskell-language-server</a>
 which can be installed via <a href="https://www.haskell.org/ghcup/">GHCup</a> or even via the Haskell extension itself.</p>
-<p>There are <a href="https://github.com/soupi/haskell-study-plan#tools">other options</a>
-of course if this setup isn't your jam.</p>
+<p>If you already have a preferred editor,
+<a href="https://haskell-language-server.readthedocs.io/en/latest/configuration.html#configuring-your-editor">see if HLS supports it</a>,
+or alternatively use <a href="https://github.com/ndmitchell/ghcid#readme">GHCid</a>
+which provides rapid feedback independently from an editor.</p>
 <h3 id="how-to-learn-new-things"><a class="header" href="#how-to-learn-new-things">How to learn new things</a></h3>
 <p>The Haskell community keeps marching forward, developing new libraries, tools and techniques
 as well as creating new material for older concepts.
@@ -8726,8 +8731,8 @@ study plan links to various resources on Haskell evaluation, profiling and case 
 <h2 id="design"><a class="header" href="#design">Design</a></h2>
 <h3 id="how-to-structure-programs"><a class="header" href="#how-to-structure-programs">How to structure programs</a></h3>
 <p>Start with the imperative shell functional core approach, define EDSLs with the combinator
-pattern for logic if needed, use monadic capabilities such as State locally if needed,
-maybe add an environment configuration with ReaderT, see how it goes.</p>
+pattern for logic if needed, use capabilities such as <code>State</code> locally if needed,
+maybe add an environment configuration with <code>ReaderT</code>, see how it goes.</p>
 <p>If that approach fails you, look at why it fails and examine other solutions according to your needs.</p>
 <h3 id="how-to-model-data"><a class="header" href="#how-to-model-data">How to model data</a></h3>
 <p>Modeling data using ADTs are usually the way to go. Often programmers coming from object oriented
