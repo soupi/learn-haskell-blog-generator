@@ -4,6 +4,13 @@
 
 ## General questions
 
+### Why should I learn Haskell
+
+I've written a couple of articles on the topic:
+
+- [Consider Haskell](https://gilmi.me/blog/post/2020/04/28/consider-haskell) (Alternative title, 'What can I do with Haskell?')
+- [7 things I learned from Haskell](https://gilmi.me/blog/post/2022/12/13/learned-from-haskell)
+
 ### How to install editor tools
 
 As far as I know, the most recommended setup today for Haskell development is using
