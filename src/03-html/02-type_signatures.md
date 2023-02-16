@@ -99,17 +99,17 @@ body_ = el "body"
 
 Note that we didn't need to add the argument on the left side of
 equals sign because Haskell functions are "**first class**" - they behave
-exactly like normal expressions. You can define names to them like
-regular values, put them in data structures, pass them to functions,
-everything you can do with regular values like `Int` or `String`.
+exactly like values of primitive types like `Int` or `String`.
+We can name a function like any other value,
+put it in data structures, pass it to functions, and so on!
 
 The way Haskell treats names is very similar to copy paste. Anywhere
 you see `html_` in the code, you can replace it with `el "html"`. They are
 the same (this is what the equals signs say, right? That the two sides
 are the same). This property, of being able to *substitute* the two sides of the
 equals sign with one another, is called **referential transparency**. And
-it is pretty unique to Haskell (and a few languages that are very
-similar to it like PureScript and Elm)! We'll talk more about this in a later chapter.
+it is pretty unique to Haskell (and a few similar languages such as PureScript and Elm)!
+We'll talk more about referential transparency in a later chapter.
 
 ### Anonymous/lambda functions
 
@@ -118,12 +118,13 @@ all functions take exactly one argument,
 I'll mention that the syntax we've been using up until
 now to define function is just syntactic sugar! We can also define
 **anonymous functions** - functions without a name, anywhere we'd like.
-Anonymous functions are also known as **lambda functions**.
-This is a tribute to the original, most primitive
-functional programming language - the lambda calculus.
+Anonymous functions are also known as **lambda functions**
+as a tribute to the formal mathematical system
+which is at the heart of all functional programming
+languages - the lambda calculus.
 
-We can create an anonymous function anywhere we'd expect an expression
-such as `"hello"` with the following syntax:
+We can create an anonymous function anywhere we'd expect an expression,
+such as `"hello"`, using the following syntax:
 
 ```hs
 \<argument> -> <expression>
@@ -166,7 +167,7 @@ might suggest otherwise.
 
 I'll mention one more syntactic sugar for anonymous functions:
 We don't actually have to write multiple argument anonymous functions
-this way, we can just write: 
+this way, we can just write:
 
 ```hs
 \<arg1> <arg2> ... <argN> -> <expression>
@@ -198,13 +199,15 @@ Exercises:
 4. Replace our `Hello, world!` string with richer content, use `h1_` and `p_`.
    We can append HTML strings created by `h1_` and `p_` using the append operator `<>`.
 
+Bonus: rewrite a couple of functions using lambda functions, just for fun!
+
 ---
 
 Solutions:
 
 <details>
   <summary>Solution for exercise #1</summary>
-  
+
   ```hs
   myhtml :: String
   myhtml = makeHtml "Hello title" "Hello, world!"
@@ -214,7 +217,7 @@ Solutions:
 
   html_ :: String -> String
   html_ content = "<html>" <> content <> "</html>"
-     
+
   body_ :: String -> String
   body_ content = "<body>" <> content <> "</body>"
 
@@ -229,11 +232,11 @@ Solutions:
 
 <details>
   <summary>Solution for exercise #2</summary>
-  
+
   ```hs
   html_ :: String -> String
   html_ = el "html"
-     
+
   body_ :: String -> String
   body_ = el "body"
 
@@ -249,7 +252,7 @@ Solutions:
 
 <details>
   <summary>Solution for exercise #3</summary>
-  
+
   ```hs
   p_ :: String -> String
   p_ = el "p"
@@ -262,7 +265,7 @@ Solutions:
 
 <details>
   <summary>Solution for exercise #4</summary>
-  
+
   ```hs
   myhtml :: String
   myhtml =
@@ -279,7 +282,7 @@ Solutions:
 
 <details>
   <summary>Our final program</summary>
-  
+
   ```hs
   -- hello.hs
 
@@ -298,7 +301,7 @@ Solutions:
 
   html_ :: String -> String
   html_ = el "html"
-     
+
   body_ :: String -> String
   body_ = el "body"
 
