@@ -20,7 +20,7 @@ We will:
 5. Write tests and documentation
 
 In each chapter of the book we will focus on a particular task we wish to achieve,
-and through the chapter we'll learn just enough Haskell to complete the task.
+and throughout the chapter learn just enough Haskell to complete the task.
 
 ## Why should you read this book?
 
@@ -55,8 +55,6 @@ There are probably more, but here are a few possible cons:
   we try to cover features as they pop up in our implementation, but we will
   probably miss features that aren't as important for our tasks,
   while other resources may try to cover many different use cases.
-- It is **relatively new** and not "battle-tested". Who knows if this is a good approach to
-  learning Haskell? Maybe you could help with that and let me know!
 - It **does not have a technical editor**, though it has seen quite a bit of editing.
 
 ### Other learning resources
