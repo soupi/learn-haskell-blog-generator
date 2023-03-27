@@ -3113,7 +3113,9 @@ It is an incredibly versatile feature of Haskell, we can use it to do two main t
 <a href="04-markup/../03-html/04-safer_construction.html#using-newtypes">newtypes</a>,
 we can use <strong>case expressions</strong> and <strong>function definitions</strong> to deconstruct a <code>newtype</code>.
 Same for <code>data</code> types as well:</p>
-<pre><code class="language-hs">-- | A data type representing colors
+<pre><code class="language-hs">import Data.Word (Word8) -- Word8 is an 8-bit unsigned integer type
+
+-- | A data type representing colors
 data Color
   = RGB Word8 Word8 Word8
 
@@ -3232,47 +3234,47 @@ ansiToUbuntu ansiColor =
       case brightness of
         Dark -&gt;
           case color of
-            Black -&gt; RGB 0 0 0
-            Red -&gt; RGB 194 54 33
-            Green -&gt; RGB 37 188 36
-            Yellow -&gt; RGB 173 173 39
-            Blue -&gt; RGB 73 46 225
-            Magenta -&gt; RGB 211 56 211
-            Cyan -&gt; RGB 51 187 200
-            White -&gt; RGB 203 204 205
+            Black -&gt; RGB 1 1 1
+            Red -&gt; RGB 22 56 43
+            Green -&gt; RGB 57 181 74
+            Yellow -&gt; RGB 255 199 6
+            Blue -&gt; RGB 0 111 184
+            Magenta -&gt; RGB 118 38 113
+            Cyan -&gt; RGB 44 181 233
+            White -&gt; RGB 204 204 204
 
         Bright -&gt;
           case color of
-            Black -&gt; RGB 129 131 131
-            Red -&gt; RGB 252 57 31
-            Green -&gt; RGB 49 231 34
-            Yellow -&gt; RGB 234 236 35
-            Blue -&gt; RGB 88 51 255
-            Magenta -&gt; RGB 249 53 248
-            Cyan -&gt; RGB 20 240 240
-            White -&gt; RGB 233 235 235
+            Black -&gt; RGB 128 128 128
+            Red -&gt; RGB 255 0 0
+            Green -&gt; RGB 0 255 0
+            Yellow -&gt; RGB 255 255 0
+            Blue -&gt; RGB 0 0 255
+            Magenta -&gt; RGB 255 0 255
+            Cyan -&gt; RGB 0 255 255
+            White -&gt; RGB 255 255 255
 </code></pre>
 <p>Since pattern matching goes arbitrarily deep as we saw before, we could instead
 pattern match all the way through in one case expression:</p>
 <pre><code class="language-hs">ansiToUbuntu :: AnsiColor -&gt; Color
 ansiToUbuntu ansiColor =
   case ansiColor of
-    AnsiColor Dark Black -&gt; RGB 0 0 0
-    AnsiColor Dark Red -&gt; RGB 194 54 33
-    AnsiColor Dark Green -&gt; RGB 37 188 36
-    AnsiColor Dark Yellow -&gt; RGB 173 173 39
-    AnsiColor Dark Blue -&gt; RGB 73 46 225
-    AnsiColor Dark Magenta -&gt; RGB 211 56 211
-    AnsiColor Dark Cyan -&gt; RGB 51 187 200
-    AnsiColor Dark White -&gt; RGB 203 204 205
-    AnsiColor Bright Black -&gt; RGB 129 131 131
-    AnsiColor Bright Red -&gt; RGB 252 57 31
-    AnsiColor Bright Green -&gt; RGB 49 231 34
-    AnsiColor Bright Yellow -&gt; RGB 234 236 35
-    AnsiColor Bright Blue -&gt; RGB 88 51 255
-    AnsiColor Bright Magenta -&gt; RGB 249 53 248
-    AnsiColor Bright Cyan -&gt; RGB 20 240 240
-    AnsiColor Bright White -&gt; RGB 233 235 235
+    AnsiColor Dark Black -&gt; RGB 1 1 1
+    AnsiColor Dark Red -&gt; RGB 22 56 43
+    AnsiColor Dark Green -&gt; RGB 57 181 74
+    AnsiColor Dark Yellow -&gt; RGB 255 199 6
+    AnsiColor Dark Blue -&gt; RGB 0 111 184
+    AnsiColor Dark Magenta -&gt; RGB 118 38 113
+    AnsiColor Dark Cyan -&gt; RGB 44 181 233
+    AnsiColor Dark White -&gt; RGB 204 204 204
+    AnsiColor Bright Black -&gt; RGB 128 128 128
+    AnsiColor Bright Red -&gt; RGB 255 0 0
+    AnsiColor Bright Green -&gt; RGB 0 255 0
+    AnsiColor Bright Yellow -&gt; RGB 255 255 0
+    AnsiColor Bright Blue -&gt; RGB 0 0 255
+    AnsiColor Bright Magenta -&gt; RGB 255 0 255
+    AnsiColor Bright Cyan -&gt; RGB 0 255 255
+    AnsiColor Bright White -&gt; RGB 255 255 255
 </code></pre>
 <p>But this is a bit too much repetition of <code>AnsiColor</code>, <code>Dark</code> and <code>Bright</code>
 to my taste in this case.</p>
