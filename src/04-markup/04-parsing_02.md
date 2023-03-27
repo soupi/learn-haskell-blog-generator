@@ -48,6 +48,8 @@ we can use **case expressions** and **function definitions** to deconstruct a `n
 Same for `data` types as well:
 
 ```hs
+import Data.Word (Word8) -- Word8 is an 8-bit unsigned integer type
+
 -- | A data type representing colors
 data Color
   = RGB Word8 Word8 Word8
@@ -190,25 +192,25 @@ ansiToUbuntu ansiColor =
       case brightness of
         Dark ->
           case color of
-            Black -> RGB 0 0 0
-            Red -> RGB 194 54 33
-            Green -> RGB 37 188 36
-            Yellow -> RGB 173 173 39
-            Blue -> RGB 73 46 225
-            Magenta -> RGB 211 56 211
-            Cyan -> RGB 51 187 200
-            White -> RGB 203 204 205
+            Black -> RGB 1 1 1
+            Red -> RGB 22 56 43
+            Green -> RGB 57 181 74
+            Yellow -> RGB 255 199 6
+            Blue -> RGB 0 111 184
+            Magenta -> RGB 118 38 113
+            Cyan -> RGB 44 181 233
+            White -> RGB 204 204 204
 
         Bright ->
           case color of
-            Black -> RGB 129 131 131
-            Red -> RGB 252 57 31
-            Green -> RGB 49 231 34
-            Yellow -> RGB 234 236 35
-            Blue -> RGB 88 51 255
-            Magenta -> RGB 249 53 248
-            Cyan -> RGB 20 240 240
-            White -> RGB 233 235 235
+            Black -> RGB 128 128 128
+            Red -> RGB 255 0 0
+            Green -> RGB 0 255 0
+            Yellow -> RGB 255 255 0
+            Blue -> RGB 0 0 255
+            Magenta -> RGB 255 0 255
+            Cyan -> RGB 0 255 255
+            White -> RGB 255 255 255
 ```
 
 Since pattern matching goes arbitrarily deep as we saw before, we could instead
@@ -218,22 +220,22 @@ pattern match all the way through in one case expression:
 ansiToUbuntu :: AnsiColor -> Color
 ansiToUbuntu ansiColor =
   case ansiColor of
-    AnsiColor Dark Black -> RGB 0 0 0
-    AnsiColor Dark Red -> RGB 194 54 33
-    AnsiColor Dark Green -> RGB 37 188 36
-    AnsiColor Dark Yellow -> RGB 173 173 39
-    AnsiColor Dark Blue -> RGB 73 46 225
-    AnsiColor Dark Magenta -> RGB 211 56 211
-    AnsiColor Dark Cyan -> RGB 51 187 200
-    AnsiColor Dark White -> RGB 203 204 205
-    AnsiColor Bright Black -> RGB 129 131 131
-    AnsiColor Bright Red -> RGB 252 57 31
-    AnsiColor Bright Green -> RGB 49 231 34
-    AnsiColor Bright Yellow -> RGB 234 236 35
-    AnsiColor Bright Blue -> RGB 88 51 255
-    AnsiColor Bright Magenta -> RGB 249 53 248
-    AnsiColor Bright Cyan -> RGB 20 240 240
-    AnsiColor Bright White -> RGB 233 235 235
+    AnsiColor Dark Black -> RGB 1 1 1
+    AnsiColor Dark Red -> RGB 22 56 43
+    AnsiColor Dark Green -> RGB 57 181 74
+    AnsiColor Dark Yellow -> RGB 255 199 6
+    AnsiColor Dark Blue -> RGB 0 111 184
+    AnsiColor Dark Magenta -> RGB 118 38 113
+    AnsiColor Dark Cyan -> RGB 44 181 233
+    AnsiColor Dark White -> RGB 204 204 204
+    AnsiColor Bright Black -> RGB 128 128 128
+    AnsiColor Bright Red -> RGB 255 0 0
+    AnsiColor Bright Green -> RGB 0 255 0
+    AnsiColor Bright Yellow -> RGB 255 255 0
+    AnsiColor Bright Blue -> RGB 0 0 255
+    AnsiColor Bright Magenta -> RGB 255 0 255
+    AnsiColor Bright Cyan -> RGB 0 255 255
+    AnsiColor Bright White -> RGB 255 255 255
 ```
 
 But this is a bit too much repetition of `AnsiColor`, `Dark` and `Bright`
