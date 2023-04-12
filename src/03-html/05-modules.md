@@ -194,7 +194,7 @@ render html =
 ```
 
 > As an aside, you might have noticed that I've decided to suffix the functions used to
-> construct HTML values with an undescore (`_`). This mostly an aesthetic decision which,
+> construct HTML values with an underscore (`_`). This mostly an aesthetic decision which,
 > in my opinion, makes the EDSL easier to recognize,
 > but it is also useful to avoid name clashes with
 > functions defined in the Haskell standard library, such as `head`.
