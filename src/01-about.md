@@ -8,7 +8,7 @@
 </div>
 -->
 
-In this book we will implement a simple static blog generator in Haskell,
+In this book, we will implement a simple static blog generator in Haskell,
 converting documents written in our own custom markup language to HTML.
 
 We will:
@@ -19,14 +19,14 @@ We will:
 4. Add command line arguments parsing
 5. Write tests and documentation
 
-In each chapter of the book we will focus on a particular task we wish to achieve,
-and throughout the chapter learn just enough Haskell to complete the task.
+In each chapter of the book, we will focus on a particular task we wish to achieve,
+and throughout the chapter, learn just enough Haskell to complete the task.
 
 ## Why should you read this book?
 
 [[Mentions of lhbg-book in other places](https://github.com/soupi/learn-haskell-blog-generator/discussions/67)]
 
-There are many Haskell tutorials, guides and books out there. Why read this one?
+There are many Haskell tutorials, guides, and books out there. Why read this one?
 
 ### Pros
 
@@ -35,12 +35,12 @@ There are probably more, but here are a few possible pros:
 - It is **relatively short** - most Haskell books are hundreds of pages long.
   This book (when exported to PDF) is roughly 200 pages long.
 - It is **project oriented**. Many Haskell books teach Haskell by teaching the underlying
-  concepts and features in a neat progression. In this book we **build a Haskell program**,
-  and learn Haskell on the way. This will be a pro to some, and a con to others.<br>
+  concepts and features in a neat progression. In this book, we **build a Haskell program**
+  and learn Haskell on the way. This will be a pro to some and a con to others.<br>
   There are other tutorials like this. The most notable ones are
   [Beginning Haskell](https://www.apress.com/gp/book/9781430262510#otherversion=9781430262503)
   and [Haskell via Sokoban](https://haskell-via-sokoban.nomeata.de/).
-- It touches on **important topics** such as design patterns, testing and documentation.
+- It touches on **important topics** such as design patterns, testing, and documentation.
 - It has **many exercises** as well as **solutions** to those exercises.
 - It's **online**, which means corrections are easy to make.
 - It's **free**.
@@ -60,7 +60,7 @@ There are probably more, but here are a few possible cons:
 ### Other learning resources
 
 The [haskell.org/documentation](https://www.haskell.org/documentation/) page lists
-many tutorials, books, guides and courses. You can find a few alternatives that I can
+many tutorials, books, guides, and courses. You can find a few alternatives that I can
 recommend [in this list](https://github.com/soupi/haskell-study-plan#about-this-guide).
 
 ### Who am I?

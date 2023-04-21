@@ -3,7 +3,7 @@
 One key part is missing before we can glue everything together, and that is
 to convert our `Markup` data types to `Html`.
 
-We'll start by creating a new module and import both the `Markup` and the `Html` modules.
+We'll start by creating a new module and importing both the `Markup` and the `Html` modules.
 
 ```hs
 module Convert where
@@ -14,13 +14,13 @@ import qualified Html
 
 ## Qualified Imports
 
-This time, we've imported the modules qualified. Qualified imports means that
+This time, we've imported the modules qualified. Qualified imports mean that
 instead of exposing the names that we've defined in the imported module to
-the general module name space, they now have to be prefixed with the module name.
+the general module namespace, they now have to be prefixed with the module name.
 
 For example, `parse` becomes `Markup.parse`.
 If we would've imported `Html.Internal` qualified, we'd have to write
-`Html.Internal.el` which is a bit long.
+`Html.Internal.el`, which is a bit long.
 
 We can also give the module a new name with the `as` keyword:
 
@@ -32,8 +32,8 @@ And write `HI.el` instead.
 
 I like using qualified imports because readers do not have to guess where a
 name comes from. Some modules are even designed to be imported qualified.
-For example, the APIs of many container types such as maps, sets, and vectors, are very similar.
-If we want to use multiple containers in a single module we pretty much have
+For example, the APIs of many container types, such as maps, sets, and vectors, are very similar.
+If we want to use multiple containers in a single module, we pretty much have
 to use qualified imports so that when we write a function such as `singleton`,
 which creates a container with a single value, GHC will know which `singleton`
 function we are referring to.
@@ -75,7 +75,7 @@ Notice that running this code with `-Wall` will reveal that the pattern matching
 is *non-exhaustive*. This is because we don't currently have a way to build
 headings that are not `h1`. There are a few ways to handle this:
 
-- Ignore the warning - this will likely fail at runtime one day and the user will be sad
+- Ignore the warning - this will likely fail at runtime one day, and the user will be sad
 - Pattern match other cases and add a nice error with the `error` function - it has
   the same disadvantage above, but will also no longer notify of the unhandled
   cases at compile time
@@ -138,16 +138,16 @@ convertStructure structure =
 
 ## Document -> Html
 
-In order to create an `Html` document, we need to use the `html_` function.
-This function expects two things: a `Title`, and a `Structure`.
+To create an `Html` document, we need to use the `html_` function.
+This function expects two things: a `Title` and a `Structure`.
 
-For a title we could just supply it from outside using the file name.
+For a title, we could just supply it from outside using the file name.
 
-In order to convert our markup `Document` (which is a list of markup `Structure`)
+To convert our markup `Document` (which is a list of markup `Structure`)
 to an HTML `Structure`, we need to convert each markup `Structure` and then
 concatenate them together.
 
-We already know how to convert each markup `Structure`, we can use the
+We already know how to convert each markup `Structure`; we can use the
 `convertStructure` function we wrote and `map`. This will provide
 us with the following function:
 
@@ -156,10 +156,10 @@ map convertStructure :: Markup.Document -> [Html.Structure]
 ```
 
 To concatenate all of the `Html.Structure`, we could try to write a recursive
-function. However we will quickly run into an issue
-with the base case, what to do when the list is empty?
+function. However, we will quickly run into an issue
+with the base case: what to do when the list is empty?
 
-We could just provide dummy `Html.Structure` that represents an empty
+We could just provide a dummy `Html.Structure` that represents an empty
 HTML structure.
 
 Let's add this to `Html.Internal`:
@@ -193,7 +193,7 @@ that implements `(<>) :: a -> a -> a`, where  `<>` is associative
 (`a <> (b <> c) = (a <> b) <> c`).
 
 It turns out that having an instance of `Semigroup` and also having a value that represents
-an "empty" value is a fairly common pattern. For example a string can be concatenated, 
+an "empty" value is a fairly common pattern. For example, a string can be concatenated, 
 and the empty string can serve as an "empty" value.
 And this is actually a well known **abstraction** called **monoid**.
 
@@ -201,7 +201,7 @@ And this is actually a well known **abstraction** called **monoid**.
 
 Actually, "empty" isn't a very good description of what we want,
 and isn't very useful as an abstraction. Instead, we can describe it as
-an "identity" element, which satisfies the following laws:
+an "identity" element that satisfies the following laws:
 
 - `x <> <identity> = x`
 - `<identity> <> x = x`
@@ -216,7 +216,7 @@ For `String`, the empty string, `""`, satisfies this:
 "hello" <> "" = "hello"
 ```
 
-This is of course true for any value we'd write and not just "world" and "hello".
+This is, of course, true for any value we'd write and not just "world" and "hello".
 
 Actually, if we move out of the Haskell world for a second, even integers
 with `+` as the associative binary operations `+` (in place of `<>`)
@@ -232,12 +232,12 @@ together with `0` form a monoid.
 
 We learn new things from this:
 
-1. A monoid is a more specific abstraction over semigroup, it builds on it
+1. A monoid is a more specific abstraction over semigroup; it builds on it
    by adding a new condition (the existence of an identity member)
 2. This abstraction can be useful! We can write a general `concatStructure`
    that could work for any monoid
 
-And indeed, there exists a type class in `base` called `Monoid` which has
+And indeed, there exists a type class in `base` called `Monoid`, which has
 `Semigroup` as a **super class**.
 
 ```hs
@@ -245,9 +245,9 @@ class Semigroup a => Monoid a where
   mempty :: a
 ```
 
-> Note: this is actually a simplified version. The
+> Note: this is a simplified version. The
 > [actual](https://hackage.haskell.org/package/base-4.16.4.0/docs/Prelude.html#t:Monoid)
-> is a bit more complicated because of backwards compatibility and performance reasons.
+> is a bit more complicated because of backward compatibility and performance reasons.
 > `Semigroup` was actually introduced in Haskell after `Monoid`!
 
 We could add an instance of `Monoid` for our HTML `Structure` data type:
@@ -277,7 +277,7 @@ mconcat list =
 Notice that because `Semigroup` is a *super class* of `Monoid`,
 we can still use the `<>` function from the `Semigroup` class
 without adding the `Semigroup a` constraint to the left side of `=>`.
-By adding the `Monoid a` constraint we implicitly add a `Semigroup a`
+By adding the `Monoid a` constraint, we implicitly add a `Semigroup a`
 constraint as well!
 
 This `mconcat` function is very similar to the `concatStructure` function,
@@ -306,7 +306,7 @@ Abstractions help us identify common patterns and **reuse** code!
 We've used `map` and then `mconcat` twice now. Surely there has to be a function
 that unifies this pattern. And indeed, it is called
 [`foldMap`](https://hackage.haskell.org/package/base-4.16.4.0/docs/Data-Foldable.html#v:foldMap),
-and it works not only for lists, but also for any data structure that can be "folded",
+and it works not only for lists but also for any data structure that can be "folded",
 or "reduced", into a summary value. This abstraction and type class is called **Foldable**.
 
 For a simpler understanding of `Foldable`, we can look at `fold`:
@@ -319,11 +319,11 @@ mconcat :: Monoid m            => [m] -> m
 ```
 
 `mconcat` is just a specialized version of `fold` for lists.
-And `fold` can be a used for any pair of a data structure that implements
+And `fold` can be used for any pair of a data structure that implements
 `Foldable` and a payload type that implements `Monoid`. This
 could be `[]` with `Structure`, or `Maybe` with `Product Int`, or
 your new shiny binary tree with `String` as the payload type. But note that
-the `Foldable` type must be of *kind* `* -> *`. So for example `Html`
+the `Foldable` type must be of *kind* `* -> *`. So, for example `Html`
 cannot be a `Foldable`.
 
 `foldMap` is a function that allows us to apply a function to the
@@ -344,8 +344,8 @@ foldMap
 ```
 
 True to its name, it really "maps" before it "folds". You might pause here
-and think "this 'map' we are talking about isn't specific for lists, maybe
-that's another abstraction?", yes. It is actually a very important and
+and think, "this 'map' we are talking about isn't specific for lists; maybe
+that's another abstraction?" Yes. It is actually a very important and
 fundamental abstraction called `Functor`.
 But I think we had enough abstractions for this chapter.
 We'll cover it in a later chapter!
@@ -359,7 +359,7 @@ convert :: Html.Title -> Markup.Document -> Html.Html
 convert title = Html.html_ title . foldMap convertStructure
 ```
 
-Now we have a full implementation and are able to convert markup documents
+Now we have a full implementation and can convert markup documents
 to HTML:
 
 ```hs
@@ -393,7 +393,7 @@ convertStructure structure =
 
 ## Summary
 
-We learned about:
+We learned about the following:
 
 - Qualified imports
 - Ways to handle errors

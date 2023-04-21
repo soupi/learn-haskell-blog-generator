@@ -45,7 +45,7 @@ And our parsing function can have the type:
 parseDigit :: Char -> Either ParseDigitError Int
 ```
 
-Now when we implement our parsing function we can return `Left` on an error
+Now when we implement our parsing function, we can return `Left` on an error
 describing the problem, and `Right` with the parsed value on successful parsing:
 
 
@@ -71,7 +71,7 @@ so we have some combinators to work with if we want to combine these
 kind of computations.
 
 For example, if we had three characters and we wanted to try and parse
-each of them and then find the maximum between them, we could use the
+each of them and then find the maximum between them; we could use the
 applicative interface:
 
 ```hs
@@ -99,11 +99,11 @@ instance Applicative (Either e) where
 
 At some point, someone will actually want to **inspect** the result
 and see if we get an error (with the `Left` constructor) or the expected value
-(with the `Right` constructor) and they can do that by pattern matching the result.
+(with the `Right` constructor) and they can do that by pattern-matching the result.
 
 ## Applicative + Traversable
 
-The `Applicative` interface of `Either` is very powerful, and can be combined
+The `Applicative` interface of `Either` is very powerful and can be combined
 with another abstraction called
 [`Traversable`](https://hackage.haskell.org/package/base-4.16.4.0/docs/Data-Traversable.html#g:1) -
 for data structures that can be traversed from left to right, like a linked list or a binary tree.
@@ -156,7 +156,7 @@ interface, like `Either a` or `IO`, and the other implements the `Traversable` i
 like `[]` (linked lists) and
 [`Map k`](https://hackage.haskell.org/package/containers-0.6.5.1/docs/Data-Map-Strict.html#t:Map)
 (also known as a dictionary in other languages - a mapping from keys to values).
-For example using `IO` and `Map`. Note that we can construct a `Map` data structure
+For example, using `IO` and `Map`. Note that we can construct a `Map` data structure
 from a list of tuples using the
 [`fromList`](https://hackage.haskell.org/package/containers-0.6.5.1/docs/Data-Map-Strict.html#v:fromList)
 function - the first value in the tuple is the key, and the second is the type.
@@ -182,7 +182,7 @@ readFiles files :: IO (Map String String)
 ```
 
 Above, we created a function `readFiles` that will take a mapping from *output file path*
-to *input file path* and returns an IO operation that when run will read the input files
+to *input file path* and returns an IO operation that, when run will read the input files
 and replace their contents right there in the map! Surely this will be useful later.
 
 ## Multiple errors
@@ -206,7 +206,7 @@ fmap :: (a -> b) -> Either a -> Either b
 ```
 
 And neither `Either a` or `Either b` are *saturated*, so this won't type check.
-For the same reason if we'll try to substitute `f` with, say, `Int`, we'll get:
+For the same reason, if we'll try to substitute `f` with, say, `Int`, we'll get:
 
 ```hs
 fmap :: (a -> b) -> Int a -> Int b
@@ -231,11 +231,11 @@ What this teaches us is that we can only use the applicative interface to
 combine two *`Either`s with the same type for the `Left` constructor*.
 
 So what can we do if we have two functions that can return different errors?
-There are a few approaches, the most prominent ones are:
+There are a few approaches; the most prominent ones are:
 
 1. Make them return the same error type. Write an ADT that holds all possible
    error descriptions. This can work in some cases but isn't always ideal.
-   For example a user calling `parseDigit` shouldn't be forced to
+   For example, a user calling `parseDigit` shouldn't be forced to
    handle a possible case that the input might be an empty string
 2. Use a specialized error type for each type, and when they are composed together,
    map the error type of each function to a more general error type. This can
@@ -250,7 +250,7 @@ The applicative interface allows us to lift a function to work on multiple
 But more often than not, we'd like to use a value from one computation
 that might return an error in another computation that might return an error.
 
-For example, a compiler such has GHC operates in stages, such as lexical analysis,
+For example, a compiler such as GHC operates in stages, such as lexical analysis,
 parsing, type-checking, and so on. Each stage depends on the output of the stage
 before it, and each stage might fail. We can write the types for these functions:
 
@@ -280,7 +280,7 @@ fmap :: (a -> b) -> Either Error a -> Either Error b
 ```
 
 While this code compiles, it isn't great, because we are building
-layers of `Either Error` and we can't use this trick again with
+layers of `Either Error`, and we can't use this trick again with
 `typecheck`! `typecheck` expects an `AST`, but if we try to fmap it
 on `fmap parse (tokenize string)`, the `a` will be `Either Error AST`
 instead.
@@ -295,7 +295,7 @@ it looks something like this:
 
 ---
 
-**Exercise**: What if we just used pattern matching for this instead? How would this look like?
+**Exercise**: What if we just used pattern matching for this instead? What would this look like?
 
 <details><summary>Solution</summary>
 
@@ -312,7 +312,7 @@ case tokenize string of
 ```
 
 If we run into an error in a stage, we return that error and stop. If we succeed, we
-use the value on the next stage.
+use the value in the next stage.
 
 </details>
 
@@ -337,7 +337,7 @@ from before:
 > flatten (fmap parse (tokenize string)) :: Either Error AST
 ```
 
-And now we can use this function again to compose with `typecheck`:
+And now, we can use this function again to compose with `typecheck`:
 
 ```hs
 > flatten (fmap typecheck (flatten (fmap parse (tokenize string)))) :: Either Error TypedAST
@@ -351,7 +351,7 @@ flatMap :: (a -> Either e b) -> Either a -> Either b
 flatMap func val = flatten (fmap func val)
 ```
 
-And now we can write the code this way:
+And now, we can write the code this way:
 
 ```hs
 > flatMap typecheck (flatMap parse (tokenize string)) :: Either Error TypedAST
@@ -395,7 +395,7 @@ pure :: a -> f a
 liftA2 :: (a -> b -> c) -> f a -> f b -> f c
 ```
 
-With monads we can now flatten (or, "join" in Haskell terminology) types that implement
+With monads we can now flatten (or "join" in Haskell terminology) types that implement
 the `Monad` interface:
 
 ```hs
@@ -405,14 +405,14 @@ join :: m (m a) -> m a
 (>>=) :: m a -> (a -> m b) -> m b
 ```
 
-With `>>=` we can write our compilation pipeline from before in a left-to-right
+With `>>=`, we can write our compilation pipeline from before in a left-to-right
 manner, which seems to be more popular for monads:
 
 ```hs
 > tokenize string >>= parse >>= typecheck
 ```
 
-We have already met this function before when we talked about `IO`. Yes,
+We had already met this function before when we talked about `IO`. Yes,
 `IO` also implements the `Monad` interface. The monadic interface for `IO`
 helped us with creating a proper ordering of effects.
 
@@ -424,16 +424,16 @@ The monadic interface can mean very different things for different types. For `I
 is ordering of effects, for `Either` it is early cutoff,
 for [`Logic`](https://hackage.haskell.org/package/logict-0.7.1.0) this means backtracking computation, etc.
 
-Again, don't worry about analogies and metaphors, focus on the API and the
+Again, don't worry about analogies and metaphors; focus on the API and the
 [laws](https://wiki.haskell.org/Monad_laws).
 
-> Hey, did you check the monad laws? left identity, right identity and associativity? We've already
+> Hey, did you check the monad laws? left identity, right identity, and associativity? We've already
 > discussed a type class with exactly these laws - the `Monoid` type class. Maybe this is related
 > to the famous quote about monads being just monoids in something something...
 
 ### Do notation?
 
-Remember the [do notation](../05-glue/02-io.html#do-notation)? Turns out it works for any type that is
+Remember the [do notation](../05-glue/02-io.html#do-notation)? It turns out it works for any type that is
 an instance of `Monad`. How cool is that? Instead of writing:
 
 ```hs
@@ -454,7 +454,7 @@ pipeline string = do
   typecheck ast
 ```
 
-And it will work! Still, in this particular case `tokenize string >>= parse >>= typecheck`
+And it will work! Still, in this particular case, `tokenize string >>= parse >>= typecheck`
 is so concise it can only be beaten by using
 [>=>](https://hackage.haskell.org/package/base-4.16.4.0/docs/Control-Monad.html#v:-62--61--62-)
 or
@@ -498,5 +498,5 @@ Using `Either` for error handling is useful for two reasons:
    making our code more resilient to crashes and bad behaviours
 2. The `Functor`, `Applicative`, and `Monad` interfaces provide us with mechanisms for
    **composing** functions that might fail (almost) effortlessly - reducing boilerplate while
-   maintaining strong guarantees about our code, and delaying the need to handle errors until
+   maintaining strong guarantees about our code and delaying the need to handle errors until
    it is appropriate

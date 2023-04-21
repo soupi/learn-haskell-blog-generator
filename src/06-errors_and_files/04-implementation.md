@@ -1,4 +1,4 @@
-# Lets code already!
+# Let's code already!
 
 This was a long info dump. Let's practice what we've learned. We want to:
 
@@ -15,13 +15,13 @@ This was a long info dump. Let's practice what we've learned. We want to:
 > It was an iterative process of writing code, refactoring, splitting functions, changing
 > type signatures, and more. When solving a coding problem, start small and simple,
 > do the thing that works, and refactor it when it makes sense and makes the code clearer
-> and more modular. In Haskell we pride ourselves in our ability to refactor code and improve
+> and more modular. In Haskell, we pride ourselves in our ability to refactor code and improve
 > it over time, and that principle holds when writing new software as well!
 
 ## New module
 
 Let's create a new module, `HsBlog.Directory`, which will be responsible for handling
-directories and multiple files. From this module we will export the `convertDirectory`
+directories and multiple files. From this module, we will export the `convertDirectory`
 and `buildIndex` functions we've defined before:
 
 ```hs
@@ -34,12 +34,12 @@ module HsBlog.Directory
   where
 ```
 
-In this module we are going to use the
+In this module, we are going to use the
 [directory](https://hackage.haskell.org/package/directory-1.3.7.0/docs/System-Directory.html)
 and [filepath](https://hackage.haskell.org/package/filepath-1.4.2.1/docs/System-FilePath.html)
-libraries to manipulate directories, files and filepaths.
+libraries to manipulate directories, files, and filepaths.
 We'll use the new abstractions we've learned, `Traversable` and `Monad`, and the concepts
-and types we've learned about: `Either`, `IO` and exceptions.
+and types we've learned about: `Either`, `IO`, and exceptions.
 
 For all of that, we need quite a few imports:
 
@@ -77,7 +77,7 @@ read the type signature and the documentation, and play around with it in `ghci`
 
 ## Converting a directory
 
-We can start by describing the high-level function `convertDirectory` which
+We can start by describing the high-level function `convertDirectory`, which
 encapsulates many smaller functions, each responsible for doing a specific thing.
 `convertDirectory` is quite imperative looking, and looks like a different way to
 describe the steps of completing our task:
@@ -144,10 +144,10 @@ This function does 4 important things:
 
 1. Lists all the files in the directory
 2. Splits the files into 2 groups according to their file extension
-3. Reads the contents of the .txt files and report when files fail to be read
+3. Reads the contents of the .txt files and reports when files fail to be read
 4. Returns the results. We've defined a data type to make the result content more obvious
 
-Part (3) is a little bit more involved than the rest, let's explore it.
+Part (3) is a little bit more involved than the rest; let's explore it.
 
 #### `applyIoOnList`
 
@@ -159,7 +159,7 @@ Part (3) is a little bit more involved than the rest, let's explore it.
 applyIoOnList :: (a -> IO b) -> [a] -> IO [(a, Either String b)]
 ```
 
-It tries to apply an `IO` function on a list of values, and document successes and failures.
+It tries to apply an `IO` function on a list of values and document successes and failures.
 
 Try to implement it! If you need a hint for which functions to use, see the import list
 we wrote earlier.
@@ -184,8 +184,8 @@ applyIoOnList action inputs = do
 
 ---
 
-`applyIoOnList` is a higher order function that applies a particular `IO` function
-(in our case `readFile`) on a list of things (in our case `FilePath`s).
+`applyIoOnList` is a higher-order function that applies a particular `IO` function
+(in our case, `readFile`) on a list of things (in our case, `FilePath`s).
 For each thing, it returns the thing itself along with the result of
 applying the `IO` function as an `Either`, where the `Left` side is a `String`
 representation of an error if one occurred.
@@ -198,9 +198,9 @@ from other than the result of the function.
 > Note: when I first wrote this function, it was specialized to work only on `readFile`,
 > take specifically `[FilePath]` and return `IO [(FilePath, Either String String)]`.
 > But after running into other use cases where I could use it (`writeFiles` and `copyFiles`)
-> I refactored out the `action`, the input type and the return type.
+> I refactored out the `action`, the input type, and the return type.
 
-This function uses exceptions to catch any error that might be thrown, and encodes
+This function uses exceptions to catch any error that might be thrown and encodes
 both the failure and success cases in the type system using `Either`, delaying
 the handling of exceptions to the function caller while making sure it won't
 be forgotten!
@@ -292,8 +292,8 @@ createOutputDirectory dir = do
   pure create
 ```
 
-`createOutputDirectoryOrExit` itself is not terribly exciting, it does
-what it is named -- it tries to create the output directory, and exits the
+`createOutputDirectoryOrExit` itself is not terribly exciting; it does
+what it is named -- it tries to create the output directory and exits the
 program in case it didn't succeed.
 
 `createOutputDirectory` is the function that actually does the heavy lifting.
@@ -310,9 +310,9 @@ let
 
 ---
 
-In this part of the code we convert files to markup and change the
+In this part of the code, we convert files to markup and change the
 input file paths to their respective output file paths (`.txt` -> `.html`).
-We then build the index page, and convert everything to HTML.
+We then build the index page and convert everything to HTML.
 
 Implement `txtsToRenderedHtml`, which has the following type signature:
 
@@ -410,7 +410,7 @@ understand? Is it more modular or less? What are the pros and cons?
 
 ## Summary
 
-With that, we have completed our `HsBlog.Directory` module that is responsible for converting
+With that, we have completed our `HsBlog.Directory` module, which is responsible for converting
 a directory safely. Note that the code could probably be simplified quite a bit if we
 were fine with errors crashing the entire program altogether, but sometimes this is
 the price we pay for robustness. It is up to you to choose what you can live with

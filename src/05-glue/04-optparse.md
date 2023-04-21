@@ -49,7 +49,7 @@ In general, there are four important things we need to do:
 
 ### Define a model
 
-Let's envision our command-line interface for a second, what should it
+Let's envision our command-line interface for a second; what should it
 look like?
 
 We want to be able to convert a single file or input stream to either a file
@@ -76,7 +76,7 @@ data SingleOutput
 > Note that we could technically also use `Maybe FilePath` to encode both `SingleInput`
 > and `SingleOutput`, but then we would have to remember what `Nothing` means
 > in each context. By creating a new type with properly named constructors
-> for each option we make it easier for readers of the code to understand
+> for each option, we make it easier for readers of the code to understand
 > the meaning of our code.
 
 In terms of interface, we could decide that when a user would like to convert
@@ -112,10 +112,10 @@ to parse the arguments.
 
 As we've seen with the previous EDSLs, this library uses the *combinator pattern*
 as well. We need to consider the basic primitives for building
-a parser, and the methods of composing small parsers into bigger
+a parser and the methods of composing small parsers into bigger
 parsers.
 
-Let's see an example for a small parser:
+Let's see an example of a small parser:
 
 ```hs
 inp :: Parser FilePath
@@ -145,9 +145,9 @@ and the modifiers describe its properties, such as the flag name,
 the shorthand of the flag name, and how it would be described in the usage
 and help messages.
 
-> Actually `strOption` can return any string type
+> Actually, `strOption` can return any string type
 > that implements the interface `IsString`. There are a few such types,
-> for example `Text`, a much more efficient Unicode text type from the `text` package.
+> for example, `Text`, a much more efficient Unicode text type from the `text` package.
 > It is more efficient than `String` because while `String` is implemented as a
 > linked list of `Char`, `Text` is implemented as an array of bytes.
 > `Text` is usually what we should use for text values instead of `String`. We haven't
@@ -157,8 +157,8 @@ and help messages.
 As you can see, modifiers can be composed using the `<>` function,
 which means modifiers implement an instance of the `Semigroup` type class!
 
-With such an interface we don't have to supply all the modifier
-options, but only the relevant ones. So if we don't want to
+With such an interface, we don't have to supply all the modifier
+options, only the relevant ones. So if we don't want to
 have a shortened flag name, we don't have to add it.
 
 #### Functor
@@ -248,14 +248,14 @@ mapMaybe :: (a -> b) -> Maybe a -> Maybe b
 mapMaybe func maybeX = Nothing
 ```
 
-Check it yourself! It compiles successfully! But unfortunately it does not
+Check it out yourself! It compiles successfully! But unfortunately, it does not
 satisfy the first law. `fmap id = id` means that
-`mapMaybe id (Just x) == Just x`, however from the definition we can
+`mapMaybe id (Just x) == Just x`, however, from the definition, we can
 clearly see that `mapMaybe id (Just x) == Nothing`.
 
-This is a good example of how Haskell doesn't help us make sure the laws
+This is a good example of how Haskell doesn't help us ensure the laws
 are satisfied, and why they are important. Unlawful `Functor` instances
-will behave differently from what we'd expect a `Functor` to behave.
+will behave differently from how we'd expect a `Functor` to behave.
 Let's try again!
 
 ```hs
@@ -272,9 +272,9 @@ equation in each law, then the law holds.
 
 Functor is a very important type class, and many types implement this interface.
 As we know, `IO`, `Maybe`, `[]` and `Parser` all have the kind `* -> *`,
-and all allows us to map over their "payload" type.
+and all allow us to map over their "payload" type.
 
-> Often people try to look for analogies and metaphors to what a type class mean,
+> Often, people try to look for analogies and metaphors to what a type class means,
 > but type classes with funny names like `Functor` don't usually have an
 > analogy or a metaphor that fits them in all cases. It is easier to give up
 > on the metaphor and think about it as it is - an interface with laws.
@@ -328,7 +328,7 @@ on `Parser`s instead? One with this type signature:
   -> (Parser SingleInput -> Parser SingleOutput -> Parser Options)
 ```
 
-Yes. This function is called `liftA2` and it is from the `Applicative`
+Yes. This function is called `liftA2`, and it is from the `Applicative`
 type class. `Applicative` (also known as applicative functor) has three
 primary functions:
 
@@ -353,15 +353,15 @@ a certain `f`, applicative functors allow us to apply a function to
 You should already be familiar with `pure`, we've seen it when we
 talked about `IO`. For `IO`, `pure` lets us create an `IO` action
 with a specific return value without doing IO.
-With `pure` for `Parser`, we can create a `Parser` that when run
+With `pure` for `Parser`, we can create a `Parser` that, when run,
 will return a specific value as output without doing any parsing.
 
 `liftA2` and `<*>` are two functions that can be implemented in
 terms of one another. `<*>` is actually the more useful one between
 the two. Because when combined with `fmap` (or rather the infix version `<$>`),
-it can be used to apply a function with many arguments, instead of just two.
+it can be used to apply a function with many arguments instead of just two.
 
-To combine our two parsers to one, we can use either `liftA2` or
+To combine our two parsers into one, we can use either `liftA2` or
 a combination of `<$>` and `<*>`:
 
 ```hs
@@ -386,7 +386,7 @@ pConvertSingle =
 ```
 
 Let's take a deeper look at the types of the sub-expressions
-we have here, to prove that this type-checks:
+we have here to prove that this type-checks:
 
 ```hs
 pConvertSingle :: Parser Options
@@ -410,10 +410,10 @@ ConvertSingle <$> pInputFile :: Parser (SingleOutput -> Options)
 (ConvertSingle <$> pInputFile) <*> pOutputFile :: Parser Options
 ```
 
-With `<$>` and `<*>` we can chain as many parsers (or any applicative really)
+With `<$>` and `<*>` we can chain as many parsers (or any applicative, really)
 as we want. This is because of two things: currying and parametric polymorphism.
 Because functions in Haskell take exactly one argument and return exactly one,
-any multiple argument function can be represented as `a -> b`.
+any multiple-argument function can be represented as `a -> b`.
 
 > You can find the laws for the applicative functors in this article called
 > [Typeclassopedia](https://wiki.haskell.org/Typeclassopedia#Laws_2), which
@@ -464,7 +464,7 @@ pConvertDir =
 
 One thing we forgot about is that each input and output for
 `ConvertSingle` could also potentially use the standard input and output instead.
-Up until now we only offered one option: reading from or writing to a file
+Up until now, we only offered one option: reading from or writing to a file
 by specifying the flags `--input` and `--output`.
 However, we'd like to make these flags optional, and when they are
 not specified, use the alternative standard i/o. We can do that by using
@@ -530,10 +530,10 @@ command :: String -> ParserInfo a -> Mod CommandFields a
 ```
 
 `subparser` takes *command modifiers* (which can be constructed
-with the `command` function) as input, and produces a `Parser`.
-`command` takes the command name (in our case "convert" or "convert-dir")
+with the `command` function) as input and produces a `Parser`.
+`command` takes the command name (in our case, "convert" or "convert-dir")
 and a `ParserInfo a`, and produces a command modifier. As we've seen
-before these modifiers have a `Monoid` instance and they can be
+before these modifiers have a `Monoid` instance, and they can be
 composed, meaning that we can append multiple commands to serve as alternatives.
 
 A `ParserInfo a` can be constructed with the `info` function:
@@ -544,7 +544,7 @@ info :: Parser a -> InfoMod a -> ParserInfo a
 
 This function wraps a `Parser` with some additional information
 such as a helper message, description, and more, so that the program
-itself and each sub command can print some additional information.
+itself, and each sub-command can print some additional information.
 
 Let's see how to construct a `ParserInfo`:
 
@@ -555,7 +555,7 @@ pConvertSingleInfo =
     (helper <*> pConvertSingle)
     (progDesc "Convert a single markup source to html")
 ```
-Note that `helper` adds a helper output screen in case the parser fails.
+Note that `helper` adds a helper output screen if the parser fails.
 
 Let's also build a command:
 
@@ -612,7 +612,7 @@ but the most convenient way to use it is to let it take care of fetching
 program arguments, try to parse them, and throw errors and help messages in case
 it fails. This can be done with the function `execParser :: ParserInfo a -> IO a`.
 
-We can place all this options parsing stuff in a new module
+We can place all these options parsing stuff in a new module
 and then import it from `app/Main.hs`. Let's do that.
 Here's what we have up until now:
 
@@ -933,9 +933,9 @@ Available commands:
   convert-dir              Convert a directory of markup files to html
 ```
 
-Along the way we've learned two powerful new abstractions, `Functor`
+Along the way, we've learned two powerful new abstractions, `Functor`
 and `Applicative`, as well as revisited an abstraction
-called `Monoid`. With this library we've seen another example
+called `Monoid`. With this library, we've seen another example
 of the usefulness of these abstractions for constructing APIs and EDSLs.
 
 We will continue to meet these abstractions in the rest of the book.
@@ -943,7 +943,7 @@ We will continue to meet these abstractions in the rest of the book.
 ---
 
 **Bonus exercise**: Add another flag named `--replace` to indicate that
-if the output file or directory already exists, it's okay to replace them.
+if the output file or directory already exists, replacing them is okay.
 
 ---
 

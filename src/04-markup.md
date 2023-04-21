@@ -1,15 +1,15 @@
 # Custom markup language
 
-In this chapter we will define our own simple markup language
+In this chapter, we will define our own simple markup language
 and parse documents written in this language into Haskell data structures.
 
 Our markup language will contain the following features:
 
 - Headings: prefix by a number of `*` characters
 - Paragraphs: a group of lines without empty lines in between
-- Unordered lists: a group of lines each prefixed with `- `
-- Ordered lists: a group of lines each prefixed with `# `
-- Code blocks: a group of lines each prefixed with `> `
+- Unordered lists: a group of lines, each prefixed with `- `
+- Ordered lists: a group of lines, each prefixed with `# `
+- Code blocks: a group of lines, each prefixed with `> `
 
 Here's a sample document:
 
@@ -40,17 +40,17 @@ GHC created the following files:
 GHC will produce an executable when the source file satisfies both conditions:
 
 # Defines the main function in the source file
-# Defines the module name to be Main, or does not have a module declaration
+# Defines the module name to be Main or does not have a module declaration
 
 Otherwise, it will only produce the .o and .hi files.
 ```
 
-which we will, eventually, convert into this (modulo formatting) HTML:
+which we will eventually convert into this (modulo formatting) HTML:
 
 ```html
 <h1>Compiling programs with ghc</h1>
 
-<p>Running ghc invokes the Glasgow Haskell Compiler (GHC),
+<p>Running ghc invokes the Glasgow Haskell Compiler (GHC)
 and can be used to compile Haskell modules and programs into native
 executables and libraries.
 </p>

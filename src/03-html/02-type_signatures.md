@@ -3,7 +3,7 @@
 Haskell is a **statically typed** programming language. That means that every
 expression has a type, and we check that the types are valid with
 regards to each other before running the program. If we discover that
-they are not valid, an error message will be printed and the program
+they are not valid, an error message will be printed, and the program
 will not run.
 
 An example of a type error would be if we'd pass 3 arguments to a function
@@ -11,14 +11,14 @@ that takes only 2, or pass a number instead of a string.
 
 Haskell is also **type inferred**, so we don't *need* to specify the type
 of expressions - Haskell can *infer* from the context of the expression
-what its type should be, and that's what we did up until now. However, **specifying
+what its type should be, and that's what we have done until now. However, **specifying
 types is useful** - it adds a layer of documentation for you or others
 that will look at the code later, and it helps verify to some degree
 that what was intended (with the type signature) is what was
 written (with the expression). It is generally recommended to annotate all *top-level*
 definitions with type signatures.
 
-We use double-colon (`::`) to specify the type of names. We usually
+We use a double-colon (`::`) to specify the type of names. We usually
 write it right above the definition of the name itself.
 
 Here are a few examples of types we can write:
@@ -49,14 +49,14 @@ Previously, we thought about `makeHtml` as a function that takes
 two strings and returns a string.
 
 But actually, all functions in Haskell take **exactly one argument** as input
-and return **exactly one value** as output. It's just convenient to refer
+and return **exactly one value** as output. It's convenient to refer
 to functions like `makeHtml` as functions with multiple inputs.
 
-In our case, `makeHtml` is a function that takes **one** string argument,
+In our case, `makeHtml` is a function that takes **one** string argument
 and returns a **function**. _The function it returns_ takes a string argument
 as well and finally returns a string.
 
-The magic here is that `->` is right associative. Which means that when we write:
+The magic here is that `->` is right-associative. This means that when we write:
 
 ```hs
 makeHtml :: String -> String -> String
@@ -83,7 +83,7 @@ el tag content =
   "<" <> tag <> ">" <> content <> "</" <> tag <> ">"
 ```
 
-el is a function that takes a tag and a content, and wraps the content
+el is a function that takes a tag and content, and wraps the content
 with the tag.
 
 We can now implement `html_` and `body_` by partially applying `el` and
@@ -103,11 +103,11 @@ exactly like values of primitive types like `Int` or `String`.
 We can name a function like any other value,
 put it in data structures, pass it to functions, and so on!
 
-The way Haskell treats names is very similar to copy paste. Anywhere
+The way Haskell treats names is very similar to copy-paste. Anywhere
 you see `html_` in the code, you can replace it with `el "html"`. They are
 the same (this is what the equals signs say, right? That the two sides
-are the same). This property, of being able to *substitute* the two sides of the
-equals sign with one another, is called **referential transparency**. And
+are the same). This property of being able to *substitute* the two sides of the
+equals sign with one another is called **referential transparency**. And
 it is pretty unique to Haskell (and a few similar languages such as PureScript and Elm)!
 We'll talk more about referential transparency in a later chapter.
 
@@ -132,7 +132,7 @@ such as `"hello"`, using the following syntax:
 
 This little `\` (which bears some resemblance to the lowercase Greek letter lambda 'λ')
 marks the head of the lambda function,
-and the arrow (`->`) marks the beginning of the body of the function.
+and the arrow (`->`) marks the beginning of the function's body.
 We can even chain lambda functions, making them "multiple argument functions" by
 defining another lambda in the body of another, like this:
 
@@ -140,8 +140,8 @@ defining another lambda in the body of another, like this:
 three = (\num1 -> \num2 -> num1 + num2) 1 2
 ```
 
-Just as before, we evaluate functions by substituting the function argument with
-the applied value. In the example above we substitute `num1` with `1`, and get
+As before, we evaluate functions by substituting the function argument with
+the applied value. In the example above, we substitute `num1` with `1` and get
 `(\num2 -> 1 + num2) 2`. Then substitute `num2` with `2` and get `1 + 2`.
 We'll talk more about substitution later.
 
@@ -161,13 +161,13 @@ el = \tag -> \content ->
   "<" <> tag <> ">" <> content <> "</" <> tag <> ">"
 ```
 
-Hopefully this form makes it a bit clearer why Haskell functions
+Hopefully, this form makes it a bit clearer why Haskell functions
 always take one argument, even when we have syntactic sugar that
 might suggest otherwise.
 
 I'll mention one more syntactic sugar for anonymous functions:
 We don't actually have to write multiple argument anonymous functions
-this way, we can just write:
+this way, we can write:
 
 ```hs
 \<arg1> <arg2> ... <argN> -> <expression>
@@ -182,7 +182,7 @@ three = (\num1 num2 -> num1 + num2) 1 2
 But it's worth remembering what they are under the hood.
 
 We won't be needing anonymous/lambda functions at this point,
-but we'll talk more about them later and see where they can be useful.
+but we'll discuss them later and see where they can be helpful.
 
 ---
 

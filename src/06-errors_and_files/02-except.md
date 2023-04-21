@@ -1,8 +1,8 @@
 # Either with IO?
 
-When we create `IO` actions that may require I/O we risk running into all kinds of errors.
+When we create `IO` actions that may require I/O, we risk running into all kinds of errors.
 For example, when we use `writeFile`, we could run out of disk space in the middle of writing,
-or the file might be write protected. While these scenarios aren't super common, they are definitely
+or the file might be write-protected. While these scenarios aren't super common, they are definitely
 possible.
 
 We could've potentially encoded Haskell functions like `readFile` and `writeFile` as `IO` operations
@@ -13,7 +13,7 @@ readFile :: FilePath -> IO (Either ReadFileError String)
 writeFile :: FilePath -> String -> IO (Either WriteFileError ())
 ```
 
-However there are a couple of issues here, the first is that composing `IO` actions
+However, there are a couple of issues here; the first is that composing `IO` actions
 becomes more difficult. Previously we could write:
 
 ```hs
@@ -28,7 +28,7 @@ before calling `writeFile`.
 
 One way to handle this is by using **monad transformers**. Monad transformers provide a way
 to stack monad capabilities on top of one another. They are called transformers because
-**they take a type that has an instance of monad as input, and return a new type that
+**they take a type with an instance of monad as input and return a new type that
 implements the monad interface, stacking a new capability on top of it**.
 
 For example, if we want to compose values of a type that is equivalent to `IO (Either Error a)`,
@@ -42,7 +42,7 @@ newtype ExceptT e m a = ExceptT (m (Either e a))
 ```
 
 Remember, a `newtype` is a new name for an existing type. And if we substitute
-`e` with `Error` and `m` with `IO` we get exactly `IO (Either Error a)` as we wanted.
+`e` with `Error` and `m` with `IO`, we get exactly `IO (Either Error a)` as we wanted.
 And we can convert an `ExceptT Error IO a` into `IO (Either Error a)` using
 the function `runExceptT`:
 
@@ -84,7 +84,7 @@ bindExceptT mx f = do
 ```
 
 Note that we didn't actually use the implementation details of `Error` or `IO`,
-`Error` isn't mentioned at all, and for `IO` we only used the monadic interface with
+`Error` isn't mentioned at all, and for `IO`, we only used the monadic interface with
 the do notation. We could write the same function with a more generalized type signature:
 
 ```hs
@@ -96,7 +96,7 @@ bindExceptT mx f = do
     Right y -> f y
 ```
 
-And because `newtype ExceptT e m a = ExceptT (m (Either e a))` we can just
+And because `newtype ExceptT e m a = ExceptT (m (Either e a))`, we can just
 pack and unpack that `ExceptT` constructor and get:
 
 
@@ -116,7 +116,7 @@ bindExceptT mx f = ExceptT $ do
 ---
 
 > Note that when stacking monad transformers, the order in which we stack them matters.
-> With `ExceptT Error IO a`, we have an `IO` operation that when run will return `Either`
+> With `ExceptT Error IO a`, we have an `IO` operation that, when run will return `Either`
 > an error or a value.
 
 `ExceptT` can enjoy both worlds - we can return error values using the function `throwError`:
@@ -141,7 +141,7 @@ lift getLine :: ExceptT e IO String
 ```
 
 > Actually, `lift` is also a type class function from `MonadTrans`, the type class
-> of monad transformers. So technically `lift getLine :: MonadTrans t => t IO String`,
+> of monad transformers. So technically, `lift getLine :: MonadTrans t => t IO String`,
 > but we are specializing for concreteness.
 
 
@@ -165,7 +165,7 @@ errors for both `readFile` and `writeFile` must be the same - that would also
 force anyone using these functions to handle these errors - should a user who
 called `writeFile` be required to handle a "file not found" error? Should a user
 who called `readFile` be required to handle an "out of disk space" error?
-There are many many more possible IO errors! "network unreachable", "out of memory",
+There are many, many more possible IO errors! "network unreachable", "out of memory",
 "cancelled thread", we cannot require a user to handle all these errors, or
 even cover them all in a data type.
 

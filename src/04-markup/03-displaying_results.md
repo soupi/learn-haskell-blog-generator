@@ -3,7 +3,7 @@
 We want to be able to print a textual representation of values
 of our `Document` type. There are a few ways to do that:
 
-1. Write our own function of type `Document -> String` which we could then print, or
+1. Write our own function of type `Document -> String`, which we could then print, or
 2. Have Haskell write one for us
 
 Haskell provides us with a mechanism that can automatically generate the implementation of a
@@ -17,7 +17,7 @@ show :: Show a => a -> String
 
 This is something new we haven't seen before. Between `::` and `=>`
 you see what is called a __type class constraint__ on the type `a`. What
-we say in this signature, is that the function `show` can work on any
+we say in this signature is that the function `show` can work on any
 type that is a member of the type class `Show`.
 
 Type classes is a feature in Haskell that allows us to declare a common
@@ -56,7 +56,7 @@ ghci> show "Hello"
 "\"Hello\""
 ```
 
-As can be seen above, the `show` function converts a value to its textual representation.
+As seen above, the `show` function converts a value to its textual representation.
 That is why `"Hello"` includes the quotes as well. The `Show` type class is usually
 used for debugging purposes.
 
@@ -131,8 +131,8 @@ instance Semigroup [a] where
   (<>) = (++)
 ```
 
-Unfortunately the Haskell type system cannot "prove" that instances
-satisfy these laws, but as a community we often shun unlawful instances.
+Unfortunately, the Haskell type system cannot "prove" that instances
+satisfy these laws, but as a community, we often shun unlawful instances.
 
 Many data types (together with their respective operations) can
 form a `Semigroup`, and instances

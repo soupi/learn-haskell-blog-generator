@@ -37,7 +37,7 @@ In order to *consume* values of type `Maybe <something>`, and other types create
 ## Pattern Matching
 
 We've already seen pattern matching a few times.
-It is an incredibly versatile feature of Haskell, we can use it to do two main things:
+It is an incredibly versatile feature of Haskell; we can use it to do two main things:
 
 1. Deconstruct complex values
 2. Control flow
@@ -61,9 +61,9 @@ getBluePart color =
 ```
 
 In `getBluePart` we deconstruct a composite value into its part and extract the third component
-representing the blue value in a color represented by red, green and blue components (RGB).
+representing the blue value in a color represented by red, green, and blue components (RGB).
 
-Note that `blue` is the name we give to the third component so it will be bound
+Note that `blue` is the name we give to the third component, so it will be bound
 to the right of the arrow that comes after the pattern. This is similar to
 a function argument. Also note that `_` matches any value *without* binding it to a name.
 
@@ -103,8 +103,8 @@ ansiColorToVGA ansicolor =
 
 It's important to notice a few things here:
 
-1. Patterns can be nested, notice how we deconstructed `ansicolor` on multiple levels
-2. We try to match patterns from the top down, it is possible for patterns to overlap with one another and the top one will win
+1. Patterns can be nested; notice how we deconstructed `ansicolor` on multiple levels
+2. We try to match patterns from the top down; it is possible for patterns to overlap with one another, and the top one will win
 3. If the value we try to match does not match any of the patterns listed, an error will be thrown at runtime
 
 We can ask GHC to notify us when we accidentally write overlapping patterns,
@@ -213,7 +213,7 @@ ansiToUbuntu ansiColor =
             White -> RGB 255 255 255
 ```
 
-Since pattern matching goes arbitrarily deep as we saw before, we could instead
+Since pattern matching goes arbitrarily deep, as we saw before, we could instead
 pattern match all the way through in one case expression:
 
 ```hs
@@ -238,7 +238,7 @@ ansiToUbuntu ansiColor =
     AnsiColor Bright White -> RGB 255 255 255
 ```
 
-But this is a bit too much repetition of `AnsiColor`, `Dark` and `Bright`
+But this is a bit too much repetition of `AnsiColor`, `Dark`, and `Bright`
 to my taste in this case.
 
 </details>
@@ -273,7 +273,7 @@ isEmpty list =
 ## Parsing with rich context
 
 Previously we wrote a parser that separates documents into different paragraphs.
-With new features under our belt we can now remember the exact context we are in
+With new features under our belt, we can now remember the exact context we are in
 (whether it is a text paragraph, a list, or a code block) and act accordingly!
 
 Let's look again at the parsing code we wrote previously:
@@ -304,8 +304,8 @@ Previously our context, `currentParagraph`, was used to group adjacent lines in 
 
 Next, instead of using a `[String]` type to denote adjacent lines, we can instead use a `Structure` to denote the context.
 
-One issue we might have though with representing context with the `Structure` type,
-is that when we start parsing we don't have any context.
+One issue we might have, though, with representing context with the `Structure` type,
+is that when we start parsing, we don't have any context.
 But we have learned of a way to represent the absence of a value with `Maybe`! So our new context type can be `Maybe Structure` instead.
 
 Let's rewrite our code above with our new context type:
@@ -362,7 +362,7 @@ trim = unwords . words
    </details>
 
    The [maybe](https://hackage.haskell.org/package/base-4.16.4.0/docs/Prelude.html#v:maybe)
-   function let's us do the same thing in a more compact way. It is a function
+   function lets us do the same thing more compactly. It is a function
    that works similarly to pattern matching on a `Maybe`:
    the third argument to `maybe` is the value on which we pattern match,
    the second argument is a function to apply to the value found in a `Just` case,
@@ -388,14 +388,14 @@ trim = unwords . words
 
    This way of encoding pattern matching using functions is fairly common.
 
-   Check out the types of `id`, `(:)` and `maybe id (:)` in GHCi!
+   Check out the types of `id`, `(:)`, and `maybe id (:)` in GHCi!
 
 4. Hey! Didn't we say that appending `String`s/lists is slow (which is what `unwords` does)? Yes, it is.
    Because in our `Structure` data type, a paragraph is defined as `Paragraph String` and not `Paragraph [String]`,
    we can't use our trick of building a list of lines and then reverse it in the end.
 
    So what do we do?
-   There are many ways to handle that, one simple way is to create a different type with the right shape:
+   There are many ways to handle that; one simple way is to create a different type with the right shape:
 
    ```hs
    data Context
@@ -408,10 +408,10 @@ trim = unwords . words
 
    Since creating new types in Haskell is cheap, this is a very viable solution.
 
-   In this case I'm going with the approach of not worrying about it too much,
+   In this case, I'm going with the approach of not worrying about it too much,
    because it's a very local piece of code that can easily be fixed later if needed.
 
-Let's cover more parsing cases, we want to handle headings and lists as well.
+Let's cover more parsing cases; we want to handle headings and lists as well.
 We can do that by examining the first characters of a line:
 
 ```hs
@@ -564,7 +564,7 @@ Try it in GHCi! You can read a text file in GHCi using the following syntax:
 ghci> txt <- readFile "/tmp/sample.txt"
 ```
 
-And then compare with the hand written example values from the solutions
+And then compare with the handwritten example values from the solutions
 (after adding them to the module and loading them in GHCi):
 
 ```hs

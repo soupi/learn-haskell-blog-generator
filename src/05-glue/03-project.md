@@ -1,15 +1,15 @@
 # Defining a project description
 
-Up until now we've only used `base` and the libraries
+Up until now, we've only used `base` and the libraries
 [included](https://downloads.haskell.org/ghc/9.2.5/docs/html/users_guide/9.2.5-notes.html#included-libraries)
-with GHC. Because of that we didn't really need to do anything fancier
+with GHC. Because of that, we didn't really need to do anything fancier
 than `runghc` to run our program. However, we want to start using
-external libraries which are not included with GHC in our programs.
+external libraries not included with GHC in our programs.
 
 External packages can be downloaded from [Hackage](https://hackage.haskell.org/) -
 Haskell's central package archive, [Stackage](https://www.stackage.org/) -
-a subset of Hackage packages that are known to work together, or even
-from remote git repositories. Usually Haskellers use a **package manager** to
+a subset of Hackage packages known to work together or even
+from remote git repositories. Usually, Haskellers use a **package manager** to
 download and manage packages for different projects. The most popular package
 managers for Haskell are [cabal](https://cabal.readthedocs.io) and
 [stack](https://haskellstack.org).
@@ -35,10 +35,10 @@ to build or even run our program with external packages.
 But as programs get larger, use more dependencies, and require more functionality,
 it is better to **create a project description** for our programs and libraries.
 
-Project description is done in a **cabal file**. We can ask cabal or stack
+The project description is done in a **cabal file**. We can ask cabal or stack
 to generate one for us using `cabal init --libandexe` or `stack new`,
 along with many other files, but we will likely need to edit the file by hand
-later. For now let's just paste an initial example in `hs-blog.cabal` and edit it.
+later. For now, let's just paste an initial example in `hs-blog.cabal` and edit it.
 
 ```cabal
 cabal-version:       2.4
@@ -95,7 +95,7 @@ Let's break it down to a few parts, the
 
 ### Package metadata
 
-The first part should be fairly straightforward from the comments, maybe except for:
+The first part should be fairly straightforward from the comments, maybe, except for:
 
 - `cabal-version`: Defines which cabal versions can build this project. We've specified 2.4 and above.
   [More info on different versions](https://cabal.readthedocs.io/en/stable/file-format-changelog.html).
@@ -138,7 +138,7 @@ and test suites. Since Cabal 2.2, we can use
 [common stanzas](https://cabal.readthedocs.io/en/stable/cabal-package.html#common-stanzas)
 to group settings to be shared between different targets, so we don't have to repeat them for each target.
 
-In our case we've created a new common stanza (or block) called `common-settings` and
+In our case, we've created a new common stanza (or block) called `common-settings` and
 defined the default language (Haskell has two standards, 98 and 2010),
 and instructed GHC to compile with `-Wall`.
 
@@ -156,14 +156,14 @@ and all of these settings will be automatically added.
 
 In a `library` target, we define:
 
-- The settings with which to build the library (in this case we just import `common-settings`)
+- The settings with which to build the library (in this case, we just import `common-settings`)
 - The directory in which the source files can be found
 - The packages we require to build the library
 - The modules exposed from the library and can be used by others
 - The modules *not* exposed from the library and which *cannot* be used by others;
   these could be any module you don't wish to export, such as an internal utility
   functions module.
-  In our case we don't have anything like this, so we commented out the `other-modules`
+  In our case, we don't have anything like this, so we commented out the `other-modules`
   label.
 
 Note that it is common to specify **version bounds** for packages.
@@ -186,8 +186,8 @@ library
   -- other-modules:
 ```
 
-Also note that we've added an additional *hierarchy* for our modules and defined
-a different source directory. This means we will need to move the files around
+Also, note that we've added an additional *hierarchy* for our modules and defined
+a different source directory. This means we must move the files around
 a bit and change the `module` name in each file and the `import` statements. This is to avoid
 conflict with other packages that a user might import.
 
@@ -248,7 +248,7 @@ Do this now.
 
 ### Executable
 
-We have separated our code into two sections: a library and an executable, why?
+We have separated our code into two sections: a library and an executable; why?
 
 First, libraries can be used by others. If we publish our code and someone wants to
 use it and build upon it, they can. Executables can't be imported by other projects.
@@ -256,7 +256,7 @@ Second, we can write unit tests for libraries. It is usually
 beneficial to write most, if not all, of our logic as a library, and provide
 a thin executable over it.
 
-Executables' descriptions are very similar to libraries, here we define:
+Executables' descriptions are very similar to libraries; here, we define:
 
 - The name of the executable
 - Where the source directory for this application is
@@ -276,7 +276,7 @@ executable hs-blog-gen
     -O
 ```
 
-We can write many executables descriptions. In this case we only have one.
+We can write many executables descriptions. In this case, we only have one.
 
 ---
 
@@ -420,7 +420,7 @@ The [cabal.project](https://cabal.readthedocs.io/en/stable/cabal-project.html) a
 [stack.yaml](https://docs.haskellstack.org/en/stable/yaml_configuration/#project-specific-config)
 files are used by `cabal` and `stack` respectively to add additional information on *how
 to build the package*. While `cabal.project` isn't necessary to use `cabal`, `stack.yaml`
-is necessary in order to use `stack`, so we will cover it briefly.
+is necessary to use `stack`, so we will cover it briefly.
 
 There are two important fields a `stack.yaml` file must have:
 
@@ -430,7 +430,7 @@ There are two important fields a `stack.yaml` file must have:
   snapshot includes, what their versions are, and which GHC version is used
   with this snapshot
 - `packages`: Describes the location of packages we plan to build. In our case
-  we have only one and it can be found in the current directory
+  we have only one, and it can be found in the current directory
 
 We'll add `stack.yaml` to our project directory:
 
@@ -454,20 +454,20 @@ Building the project - on the first run, cabal will download the package depende
 and use the GHC on PATH to build the project.
 
 Cabal caches packages between projects, so if a new project uses the same packages
-with the same versions (and the same flag settings) they will not need to be reinstalled.
+with the same versions (and the same flag settings), they will not need to be reinstalled.
 
-> In older versions of cabal, packages could be installed either globally, or in sandboxes.
-> In each sandbox (and globally) there could only be one version of a package installed,
-> and users would usually create different sandboxes for different projects, without caching
+> In older versions of cabal, packages could be installed globally or in sandboxes.
+> In each sandbox (and globally), there could only be one version of a package installed,
+> and users would usually create different sandboxes for different projects without caching
 > packages between projects.
 >
 > With the new build system implementation, multiple versions of the same package can be
-> installed globally, and for each project cabal will (try to) choose a specific version for each
-> package dependency such that they all work together, without needing sandboxing.
+> installed globally, and for each project, cabal will (try to) choose a specific version for each
+> package dependency such that they all work together without needing sandboxing.
 > This change helps us increase sharing of built packages while avoiding conflicts and manual
 > handling of sandboxes.
 
-> Note: The new build system implementation is now the default and Cabal commands do not need
+> Note: The new build system implementation is now the default, and Cabal commands do not need
 > to be prefixed with `v2-`, but the Cabal documentation will still mention the prefix to
 > refer to the new commands.
 
@@ -479,8 +479,8 @@ cabal update
 
 [`update`](https://cabal.readthedocs.io/en/stable/cabal-commands.html#cabal-update)
 fetches information from remote package repositories (specifically Hackage unless specified otherwise)
-and updates the local package index which includes various information about available packages such as
-their names, versions and dependencies.
+and updates the local package index, which includes various information about available packages, such as
+their names, versions, and dependencies.
 
 `cabal update` is usually the first command to run before fetching package dependencies.
 
@@ -518,10 +518,10 @@ cabal clean
 [`clean`](https://cabal.readthedocs.io/en/stable/cabal-commands.html#cabal-clean)
 Deletes the build artifacts that we built.
 
-There are more interesting commands we could use, such as `cabal freeze` to generate
+There are more interesting commands we could use, such as `cabal freeze`, to generate
 a file which records the packages versions and flags we used to build this project,
 and `cabal sdist` to bundle the project source to a package tarball which can be
-uploaded to Hackage. If you'd like to learn more visit the
+uploaded to Hackage. If you'd like to learn more, visit the
 [Cabal user guide](https://cabal.readthedocs.io/en/stable/cabal-commands.html).
 
 ### For stack:
@@ -603,16 +603,16 @@ My suggestion is:
 
 It's also important to note the amount of dependencies a package has. Adding many dependencies
 will affect compilation time and code size. And it can sometimes be a good thing to consider
-when comparing packages, or considering whether a package is needed at all.
+when comparing packages or considering whether a package is needed at all.
 
 ## Summary
 
 We've created a package description for our library and used `stack` and/or `cabal`
-to build our program. In future chapters we'll start adding external packages,
-we'll only have to add them to the `build-depends` section in the cabal file and
+to build our program. In future chapters, we'll start adding external packages,
+we'll only have to add them to the `build-depends` section in the cabal file, and
 our package manager will download and install the required package for us!
 
-We've made some change to our project directory, and it should now look like this:
+We've made some changes to our project directory, and it should now look like this:
 
 ```
 .

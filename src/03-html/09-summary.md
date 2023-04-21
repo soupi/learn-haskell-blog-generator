@@ -1,13 +1,13 @@
 # Summary
 
-In this chapter we built a very minimal HTML EDSL.
+In this chapter, we built a very minimal HTML EDSL.
 We will later use this library to convert our custom markup formatted text to HTML.
 
 We've also learned about:
 
 - Defining and using functions
 - Types and type signatures
-- Embedded domain specific languages
+- Embedded domain-specific languages
 - Chaining functions using the `.` operator
 - Preventing incorrect use with `newtype`s
 - Defining modules and the `Internal` module pattern

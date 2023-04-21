@@ -60,14 +60,14 @@ main =
     )
 ```
 
-> Note: we are using two new things here: guards, and the `LambdaCase` language extension.
+> Note: we are using two new things here: guards and the `LambdaCase` language extension.
 >
-> 1. Guards as seen in `sayDiv2` are just a nicer syntax around `if-then-else` expressions.
->    Using guards we can have multiple `if` branches and finally use the `else` branch
->    by using `otherwise`. After each guard (`|`) there's a condition, after the condition there's
+> 1. Guards, as seen in `sayDiv2` are just a nicer syntax around `if-then-else` expressions.
+>    Using guards, we can have multiple `if` branches and finally use the `else` branch
+>    by using `otherwise`. After each guard (`|`), there's a condition; after the condition, there's
 >    a `=` and then the expression (the part after `then` in an `if` expression)
 >
-> 2. LambdaCase as seen in `catch`, is just a syntactic sugar to save a few characters,
+> 2. LambdaCase, as seen in `catch`, is just a syntactic sugar to save a few characters,
 >    instead of writing `\e -> case e of`, we can write `\case`. It requires enabling the
 >    `LambdaCase` extension
 >
@@ -90,11 +90,11 @@ main =
 >    feel free to browse it, but don't worry about trying to memorize all the extensions.
 
 
-This example, of course, is an example that would work much better using `Either` and separating
-the division and printing à la 'functional core, imperative shell'. But as an example it works.
-We have created a custom exception and handled it specifically outside an `IO` block.
+Of course, this example would work much better using `Either` and separating
+the division and printing à la 'functional core, imperative shell'. But as an example, it works.
+We created a custom exception and handled it specifically outside an `IO` block.
 However, we have not handled exceptions that might be raised by `putStrLn`.
-What if, for example, for some reason we close the `stdout` handle before this block:
+What if, for example, for some reason, we close the `stdout` handle before this block:
 
 ```hs
 main :: IO ()
@@ -121,7 +121,7 @@ ghc: <stdout>: hFlush: illegal operation (handle is closed)
 ```
 
 First, how do we know which exception we should handle? Some functions' documentation
-include this, but unfortunately `putStrLn`'s does not. We could guess from the
+include this, but unfortunately, `putStrLn`'s does not. We could guess from the
 [list of instances](https://hackage.haskell.org/package/base-4.16.4.0/docs/Control-Exception.html#i:Exception)
 the `Exception` type class has; I think
 [`IOException`](https://hackage.haskell.org/package/base-4.16.4.0/docs/GHC-IO-Exception.html#t:IOException) fits. Now, how can we handle this case as well? We can chain catches:
@@ -159,7 +159,7 @@ main = do
 ```
 
 > We use the `ScopedTypeVariables` to be able to specify types inside let expressions,
-> lambdas, pattern matching and more.
+> lambdas, pattern matching, and more.
 
 Or we could use the convenient function
 [`catches`](https://hackage.haskell.org/package/base-4.16.4.0/docs/Control-Exception.html#v:catches)
@@ -224,17 +224,17 @@ These functions can help us handle resource acquisition more safely when errors 
 
 ---
 
-In our `main` in the `app/Main.hs` file, we do a small ritual opening and closing handles.
+In our `main` in the `app/Main.hs` file, we do small ritual opening and closing handles.
 Are there scenarios where we would clean-up after ourselves (meaning, close handles we've
 opened)? Which parts of the code could throw an exception? Which handles won't get closed?
 
-- Try to use `bracket` to make sure we always close a handle afterwards, even if an exception
+- Try to use `bracket` to make sure we always close a handle afterward, even if an exception
   is thrown, and avoid closing the handle for the `stdin` and `stdout` cases
   <details><summary>Hint</summary>We might need to use continuation-passing style,
   passing a function that takes a parameter to a function that produces a parameter
   and calls it with that parameter.
   </details>
-- How can we avoid duplicating the `outputHandle` code, for the `Stdin` and `InputFile`
+- How can we avoid duplicating the `outputHandle` code for the `Stdin` and `InputFile`
   branches? <details><summary>Hint</summary> Use `let`.</details>
 
 <details><summary>Answer</summary>
@@ -287,10 +287,10 @@ main = do
 
 </details>
 
-There's action a custom function that does similar thing to
+There's action a custom function that does a similar thing to
 `bracket (openFile file <mode>) hClose`, it's called
 [withFile](https://hackage.haskell.org/package/base-4.17.0.0/docs/System-IO.html#v:withFile).
-Keep an eye out for functions that start with the prefix `with`, they are probably using the
+Keep an eye out for functions that start with the prefix `with`; they are probably using the
 same pattern of continuation-passing style.
 
 ---
@@ -307,5 +307,5 @@ For Haskell, the language designers have made a choice for us by designing `IO` 
 use exceptions instead of `Either`. And this is what I would recommend for
 handling your own effectful computations. However, I think that `Either` is more
 appropriate for uneffectful code, because it forces us to acknowledge and handle errors
-(eventually) thus making our programs more robust. And also because we can only
+(eventually), thus making our programs more robust. And also because we can only
 catch exceptions in `IO` code.

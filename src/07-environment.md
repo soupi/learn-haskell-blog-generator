@@ -26,7 +26,7 @@ defaultEnv = Env "My Blog" "style.css"
 
 After filling this record with the requested information, we can pass it as
 input to any function that might need it. This is a simple approach that can definitely
-work for small projects. But sometimes when the project gets bigger and many
+work for small projects. But sometimes, when the project gets bigger, and many
 nested functions need the same information, threading the environment can get
 tedious.
 
@@ -42,14 +42,14 @@ newtype ReaderT r m a = ReaderT (r -> m a)
 ```
 
 `ReaderT` is another *monad transformer* like `ExceptT`, which means
-that it also has an instance of `Functor`, `Applicative`, `Monad` and `MonadTrans`.
+that it also has an instance of `Functor`, `Applicative`, `Monad`, and `MonadTrans`.
 
 As we can see in the definition, `ReaderT` is *a newtype* over a function that takes
 some value of type `r`, and returns a value of type `m a`. The `r` usually
-represents the environment we want to share between functions that we want to compose,
-and the `m a` represents the underlying result that we return.
+represents the environment we want to share between functions we want to compose,
+and the `m a` represents the underlying result we return.
 The `m` could be any type that implements `Monad` that we are familiar with.
-Usually it goes well with `IO` or `Identity`, depending on if we want to share
+Usually, it goes well with `IO` or `Identity`, depending on if we want to share
 an environment between effectful or uneffectful computations.
 
 `ReaderT` *carries* a value of type `r` and passes it around to
@@ -59,7 +59,7 @@ the `r` and use it, all we have to do is `ask`.
 
 For our case, this means that instead of passing around `Env`, we can instead
 convert our functions to use `ReaderT` - those that are uneffectful and don't use
-`IO`, can return `ReaderT Env Identity a`  instead of `a` (or the simplified version, `Reader Env a`),
+`IO` can return `ReaderT Env Identity a`  instead of `a` (or the simplified version, `Reader Env a`),
 and those that are effectful can return `ReaderT Env IO a` instead of `IO a`.
 
 Note, as we've said before, `Functor`, `Applicative`, and `Monad` all expect the type
@@ -68,8 +68,8 @@ This means that it is `ReaderT r m` which implements these interfaces,
 and when we compose functions with `<*>` or `>>=` we replace the `f` or `m`
 in their type signature with `ReaderT r m`.
 
-This means that, as with `Either e` when we had composed functions with the same error type,
-so it is with `ReaderT r m` - we have to compose functions with the same `r` type and same
+This means that as with `Either e` when we had composed functions with the same error type,
+so it is with `ReaderT r m` - we have to compose functions with the same `r` type and the same
 `m` type, we can't mix different environment types or different underlying `m` types.
 
 We're going to use a specialized version of `ReaderT` that uses a specific `m` = `Identity`
@@ -79,7 +79,7 @@ The `Control.Monad.Reader` provides an alias: `Reader r a = ReaderT r Identity a
 > If the idea behind `ReaderT` is still a bit fuzzy to you and you want
 > to get a better understanding of how `ReaderT` works,
 > try doing the following exercise:
-> 1. Choose an `Applicative` or `Monad` interface function, I recommend `liftA2`,
+> 1. Choose an `Applicative` or `Monad` interface function; I recommend `liftA2`,
 >    and specialize its type signature by replacing `f` (or `m`) with a concrete `ReaderT` type such as
 >    `ReaderT Int IO`
 > 2. Unpack the `ReaderT` newtype, replacing `ReaderT Int IO t` with `Int -> IO t`
@@ -118,8 +118,8 @@ The `Control.Monad.Reader` provides an alias: `Reader r a = ReaderT r Identity a
 > ```
 >
 > Notice how the job of our special `liftA2` for `ReaderT` is to supply the
-> two functions with `env`, and then use the `liftA2`
-> implementation of the underlying `m` type (in our case `IO`) to do the rest of the work.
+> two functions with `env` and then use the `liftA2`
+> implementation of the underlying `m` type (in our case, `IO`) to do the rest of the work.
 > Does it look like we're adding a capability on top of a different `m`?
 > That's the idea behind monad transformers.
 >
@@ -174,7 +174,7 @@ txtsToRenderedHtml txtFiles = do
 Note how we use *do notation* now, and *instead of threading* `env` around we *compose*
 the relevant functions, `buildIndex` and `convertFile`, we use the type classes
 interfaces to compose the functions. Note how we needed to `fmap` over `buildIndex`
-to add the output file we needed with the tuple, and how we needed to use `traverse` instead
+to add the output file we needed with the tuple and how we needed to use `traverse` instead
 of `map` to compose the various `Reader` values `convertFile` will produce.
 
 ### Extracting `Env`
@@ -206,16 +206,16 @@ convertFile (file, doc) = do
   pure (file, convert env (takeBaseName file) doc)
 ```
 
-> Note: we didn't change `convert` to use `Reader` because it is a user facing API for our
-> library. By providing a simpler interface we allow more users to use our library -
+> Note: we didn't change `convert` to use `Reader` because it is a user-facing API for our
+> library. By providing a simpler interface, we allow more users to use our library -
 > even those that aren't yet familiar with monad transformers.
 >
 > Providing a simple function argument passing interface is preferred in this case.
 
 ### Run a `Reader`
 
-Similar to handling the errors with `Either`, at some point we need to supply the environment to
-a computation that uses `Reader`, and extract the result from the computation.
+Similar to handling the errors with `Either`, at some point, we need to supply the environment to
+a computation that uses `Reader` and extracts the result from the computation.
 We can do that with the functions `runReader` and `runReaderT`:
 
 ```hs
@@ -239,18 +239,18 @@ convertDirectory env inputDir outputDir = do
   putStrLn "Done."
 ```
 
-See the `let outputHtmls`part.
+See the `let outputHtmls` part.
 
 ### Extra: Transforming `Env` for a particular call
 
 Sometimes we may want to modify the `Env` we pass to a particular function call.
-For example, we may have a general `Env` type that contains a lot of information, and
+For example, we may have a general `Env` type that contains a lot of information and
 functions that only need a part of that information.
 
 If the functions we are calling are like `convert` and take the environment as an
 argument instead of a `Reader`, we can just extract the environment
 with `ask`, apply a function to the extracted environment,
-and pass the result to the function, like this:
+and pass the result to the function like this:
 
 ```hs
 outer :: Reader BigEnv MyResult
@@ -323,7 +323,7 @@ Note the order of the environments! We use a function from a `BigEnv` to a `Smal
 to convert a `Reader` of `SmallEnv` to a `Reader` of `BigEnv`!
 
 This is because we are mapping over the *input* of a function rather than the *output*,
-and is related to topics like variance and covariance, but isn't terribly important
+and is related to topics like variance and covariance, but it isn't terribly important
 for us at the moment.
 
 ### Using `Env` in our logic code
@@ -486,7 +486,7 @@ to build the `head`!
    </details>
 
 3. Create a command-line parser for `Env`, attach it to the `convert-dir` command,
-   and pass the result it to the `convertDirectory` function.
+   and pass the result to the `convertDirectory` function.
 
    <details><summary>Solution</summary>
 
@@ -588,15 +588,15 @@ with explicit argument passing in our particular case.
 
 Using `Reader` and `ReaderT` makes our code a little less friendly toward beginners
 that are not yet familiar with these concepts and techniques, and we don't see
-(in this case) much benefit.
+(in this case) many benefits.
 
-As programs grow larger, techniques like using `Reader` become more attractive to use.
+As programs grow larger, techniques like `Reader` become more attractive.
 For our relatively small example, using `Reader` might not be appropriate.
 I've included it in this book because it is an important technique to have in our
-arsenal and I wanted to demonstrate it.
+arsenal, and I wanted to demonstrate it.
 
 It is important to weigh the benefits and costs of using advanced techniques,
-and it's often better to try and get away with simpler techniques if we can.
+and it's often better to try and get away with simpler techniques if possible.
 
 > You can view the git commit of
 > [the changes we've made](https://github.com/soupi/learn-haskell-blog-generator/commit/f9fe7179fcf0e6c818f6caa860b52e991432dab2)

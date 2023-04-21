@@ -4,11 +4,10 @@ We have now built a very small but convenient and safe way to write
 HTML code in Haskell. This is something that we could (potentially)
 publish as a *library* and share with the world by uploading it
 to a package repository such as [Hackage](https://hackage.haskell.org/).
-Users who are interested in our library could use a package manager
-to include our library in their project and build their own HTML pages
-with it.
+Users interested in our library could use a package manager
+to include it in their project and build their own HTML pages.
 
-It is important to note that users are building their project against
+It is important to note that users are building their projects against
 the API that we expose to them, and the package manager doesn't generally
 provide access to the source code, so they can't, for example,
 modify the `Html` module (that we expose) in their project directly
@@ -18,7 +17,7 @@ Because we wanted our `Html` EDSL to be safe, we **hid the internal
 implementation from the user**, and the only way to interact with the
 library is via the API we provide.
 
-This provides the safety we wanted to provide, but in this case it also
+This provides the safety we wanted to provide, but in this case, it also
 *blocks* the user from extending our library *in their own project* with
 things we haven't implemented yet, such as lists or code blocks.
 
@@ -28,12 +27,12 @@ submit a pull request, but sometimes the user needs things to work *now*.
 
 We admit that we are not perfect and can't think of all use cases for our
 library. Sometimes the restrictions we add are too great and may limit
-the usage of advanced users that know how things work under the hood and
-need certain functionality in order to use our library.
+the usage of advanced users who know how things work under the hood and
+need certain functionality to use our library.
 
 ### Internal modules
 
-For that we can expose internal modules to provide some flexibility for
+For that, we can expose internal modules to provide some flexibility for
 advanced users. Internal modules are not a language concept but
 rather a (fairly common) design pattern (or idiom) in Haskell.
 
@@ -42,7 +41,7 @@ which export all of the functionality and implementation details in that module.
 
 Instead of writing the implementation in (for example) the `Html` module,
 we write it in the `Html.Internal` module, which will export everything.
-Then we will import that module in the `Html` module, and write an explicit export list
+Then we will import that module in the `Html` module and write an explicit export list
 to only export the API we'd like to export (as before).
 
 `Internal` modules are considered unstable and risky to use by convention.
@@ -198,4 +197,4 @@ for other developers to use, it would be nice
 to also expose the internal implementation as an `Internal`
 module. Just so we can save some trouble for potential users!
 
-We will see how to create a package from our source code in a later chapter.
+In a later chapter, we will see how to create a package from our source code.

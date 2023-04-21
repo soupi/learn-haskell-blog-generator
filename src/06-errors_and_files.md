@@ -1,6 +1,6 @@
 # Handling errors and multiple files
 
-We have left an unimplemented function last chapter,
+We left an unimplemented function last chapter,
 and there are a few more things left for us to do to actually call our program a static blog generator.
 We still need to process multiple files in a directory and create an index landing page with links to other pages.
 
@@ -9,8 +9,8 @@ We still need to process multiple files in a directory and create an index landi
 Our HTML EDSL currently does not support links or other content modifiers such as bold and italics.
 We should add these so we can use them when creating an index.
 
-Up until now we've passed `String` to `Structure` creating functions such as `p_`
-and `h_`. Instead, we could create and pass them a new type, `Content`, which
+Up until now, we've passed `String` to `Structure`, creating functions such as `p_`
+and `h_`. Instead, we can create and pass them a new type, `Content`, which
 can be regular text, links, images, and so on.
 
 ---
@@ -277,7 +277,7 @@ Our general strategy for processing whole directories is going to be:
 
 - Create the output directory
 - Grab all file names in a directory
-- Filter them according to their extension, we want to process `txt` file and
+- Filter them according to their extension; we want to process the `txt` file and
   copy other files without modification
 - We want to parse each text file, build an index of the result,
   convert the files to HTML, and write everything to the target directory
@@ -285,8 +285,8 @@ Our general strategy for processing whole directories is going to be:
 While our parsing function can't really fail, trying to read or write a file
 to the file-system can fail in several ways. It would be nice if our
 static blog generator was robust enough that it wouldn't fail completely if one
-single file gave it some trouble. This is a good opportunity to learn about
+single file gave it some trouble. This is an excellent opportunity to learn about
 error handling in Haskell, both in uneffectful code and for I/O code.
 
-In the next few chapters we'll survey the landscape of error handling in Haskell
+In the following few chapters, we'll survey the landscape of error handling in Haskell
 before figuring out the right approach for our use case.
