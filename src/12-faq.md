@@ -1,6 +1,6 @@
 # Frequently asked questions
 
-> Got a question? You can ask in the [book's issue tracker](https://github.com/soupi/learn-haskell-blog-generator/issues)!
+> Got a question? You can ask in the [discussion board](https://github.com/soupi/learn-haskell-blog-generator/discussions) or the [issue tracker](https://github.com/soupi/learn-haskell-blog-generator/issues)!
 
 ## General questions
 

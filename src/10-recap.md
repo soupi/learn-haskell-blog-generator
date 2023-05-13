@@ -34,7 +34,7 @@ Thank you for reading this book. I hope you enjoyed it and found Haskell interes
 
 I would very much like to hear your feedback. If you'd like, you could leave your
 feedback on this book's
-[GitHub issue board](https://github.com/soupi/learn-haskell-blog-generator/issues),
+[discussion board](https://github.com/soupi/learn-haskell-blog-generator/discussions),
 or you could reach me directly on [mastodon](https://fosstodon.org/@suppi) or via email.
 You can find my contact information [on my website](https://gilmi.me).
 
