@@ -3,7 +3,7 @@
 We'd like to be able to write different HTML pages without having to write the whole
 structure of HTML and body tags over and over again. We can do that with functions.
 
-To define a function, we create a definition like we saw previously and add the argument
+To define a function, we create a definition as we saw previously and add the argument
 names after the name and before the equals sign (`=`).
 So a function definition has the following form:
 
@@ -56,18 +56,18 @@ we'll get an error from GHC stating that `putStrLn` is applied to two arguments,
 but it only takes one. This is because the above is of the form `<name> <arg1> <arg2>`
 in which, as we defined earlier, `<arg1>` and `<arg2>` are arguments to `<name>`.
 
-By using parenthesis we can group together the expressions in the right order.
+Using parenthesis, we can group the expressions together in the correct order.
 
 > #### An aside about operator precedence and fixity
 >
-> operators (like `<>`) are infix functions which take two arguments - one from each side.
+> operators (like `<>`) are infix functions that take two arguments - one from each side.
 >
 > When there are multiple operators in the same expression without parenthesis, the operator
 > *fixity* (left or right) and *precedence* (a number between 0 and 10) determine which
 > operator binds more tightly.
 >
-> In our case `<>` has *right* fixity, so Haskell adds invisible parenthesis on the right side
-> of `<>`. So for example:
+> In our case, `<>` has *right* fixity, so Haskell adds an invisible parenthesis on the right side
+> of `<>`. So, for example:
 >
 > ```hs
 > "<html><body>" <> content <> "</body></html>"
@@ -89,13 +89,13 @@ By using parenthesis we can group together the expressions in the right order.
 >
 > You might run into errors when mixing different operators with the *same precedence*
 > but *different fixity*, because Haskell won't understand how to group these expressions.
-> In that case we can solve the problem by adding parenthesis explicitly.
+> In that case, we can solve the problem by adding parenthesis explicitly.
 
 ---
 
 Exercises:
 
-1. Separate the functionality of `wrapHtml` to two functions:
+1. Separate the functionality of `wrapHtml` into two functions:
    1. One that wraps content in `html` tag
    2. one that wraps content in a `body` tag
 
@@ -218,7 +218,7 @@ It should display `Hello, world!` on the page and `Hello title` on the page's ti
 You might ask how does Haskell know a definition is complete?
 The answer is: Haskell uses indentation to know when things should be grouped together.
 
-Indentation in Haskell can be a bit tricky, but in general: code which is supposed to be
+Indentation in Haskell can be a bit tricky, but in general: code that is supposed to be
 part of some expression should be indented further than the beginning of that expression.
 
 We know two definitions are separate because the second one is not indented further than the first one.
@@ -226,10 +226,10 @@ We know two definitions are separate because the second one is not indented furt
 
 ### Indentation tips
 
-1. Choose a specific amount of spaces for indentation (2 spaces, 4 spaces, etc) and stick to it.
+1. Choose a specific amount of spaces for indentation (2 spaces, 4 spaces, etc.) and stick to it.
    Always use spaces over tabs.
-2. Do not indent more than once in any given time.
-3. When in doubt, drop line as needed and indent once.
+2. Do not indent more than once at any given time.
+3. When in doubt, drop the line as needed and indent once.
 
 Here are a few examples:
 
@@ -246,7 +246,7 @@ main =
         (wrapHtml "Hello, world!")
 ```
 
-__Avoid the following styles__, which use more than one indentation steps, or completely disregard
+__Avoid the following styles__, which use more than one indentation step, or completely disregard
 indentation steps:
 
 ```hs

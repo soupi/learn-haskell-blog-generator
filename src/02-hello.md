@@ -1,6 +1,6 @@
 # Hello, world!
 
-In this chapter we will create a simple HTML "hello world" program and use the Haskell toolchain
+In this chapter, we will create a simple HTML "hello world" program and use the Haskell toolchain
 to compile and run it.
 
 > If you haven't installed a Haskell toolchain yet, visit
@@ -11,7 +11,7 @@ to compile and run it.
 
 A Haskell source file is composed of definitions.
 
-The most common type of definitions have the following form:
+The most common type of definition has the following form:
 
 ```hs
 <name> = <expression>
@@ -25,7 +25,7 @@ Note that:
 A source file containing a definition of the name `main` can be treated as an executable,
 and the expression `main` is bound to is the entry point to the program.
 
-Let's create a new Haskell source file called `hello.hs`, and write the following line there:
+Let's create a new Haskell source file called `hello.hs` and write the following line there:
 
 ```hs
 main = putStrLn "<html><body>Hello, world!</body></html>"
@@ -73,7 +73,7 @@ And after the compilation, we can run the `hello` executable:
 
 ## Interpreting programs
 
-Alternatively, we can skip the compilation and creation of artifact files phase, and run the source file directly
+Alternatively, we can skip the compilation and creation of artifact files phase and run the source file directly
 using the command line program `runghc`:
 
 ```sh

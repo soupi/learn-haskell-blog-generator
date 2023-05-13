@@ -3,9 +3,9 @@
 There are [many ways](https://documentation.divio.com/)
 to help others to get started with our projects and libraries.
 For example, we can write tutorials, provide runnable examples,
-describe the internals of the system, and create an API reference.
+describe the system's internals, and create an API reference.
 
-In this chapter we will focus on generating API reference pages (the kind that can be seen on Hackage)
+In this chapter, we will focus on generating API reference pages (the kind that can be seen on Hackage)
 from annotated Haskell source code using [Haddock](https://www.haskell.org/haddock).
 
 ## Running Haddock
@@ -93,7 +93,7 @@ We can then open the `index.html` file from that directory in a web browser and 
 
 ### Haddock coverage
 
-Haddock will also output a coverage report when run, and will mention user-exposed constructs which are missing
+Haddock will also output a coverage report when run and mention user-exposed constructs that are missing
 documentation. These constructs could be module headers, types, data constructors, type classes, functions, values, etc.
 
 For example:
@@ -113,10 +113,10 @@ Haddock coverage:
 ```
 
 We can see that we did not document the `HsBlog.Convert` at all, and we are missing
-documentation for the module header, the `convert` function and the `convertStructure` function.
+documentation for the module header, the `convert` function, and the `convertStructure` function.
 
 On the other hand, it seems that we do currently have some documentation written for the `HsBlog.Directory`
-module! We'll see why, but first - try to generate haddocks, see the module hierarchy, browse around
+module! We'll see why, but first - try to generate haddocks, visit the module hierarchy, browse around
 the different modules, follow the links of the types, imagine what this API reference could look like,
 and let's see how we can improve it.
 
@@ -133,9 +133,9 @@ but if you'd like to learn more, a complete guide for Haddock markup can be foun
 ### Documenting definitions
 
 All haddock annotations appear as part of regular Haskell comments.
-They can be used with both single line form (`--`) and multi-line form (`{-` and `-}`).
-The placement of a comment block and the haddock marker determine to which Haskell
-definition the haddock string is attached.
+They can be used with both single-line form (`--`) and multi-line form (`{-` and `-}`).
+The placements of a comment block and the haddock marker determine which Haskell
+definition the haddock string is attached to.
 
 We can annotate a Haskell definition by writing a comment block prefixed with `|` *before*
 the definition, or by writing a comment block prefixed with `^` *after* the definition.
@@ -199,7 +199,7 @@ Haddock annotations to remember (and even then, `|` alone will suffice).
 ### Section headings
 
 We can separate our module into sections by adding headings.
-Headings are comments which are prefixed with a number of `*` (just like in our markup language).
+Headings are comments prefixed with a number of `*` (just like in our markup language).
 
 For example:
 
@@ -296,10 +296,10 @@ For example, we can:
 
 ### More
 
-In this chapter we've covered the basics of the Haddock markup language.
+In this chapter, we've covered the basics of the Haddock markup language.
 If you'd like to know more, the [Haddock markup guide](https://haskell-haddock.readthedocs.io/en/latest/markup.html)
-contains information on how to create even more interesting documentation structures, such as
-code blocks, grid tables, images and examples.
+contains information on creating even more interesting documentation structures, such as
+code blocks, grid tables, images, and examples.
 
 ## Summary
 
@@ -314,6 +314,6 @@ documentation that can help your users get started quickly, such as examples and
 ---
 
 **Exercise**: Add haddock annotation to the top-level definitions in our project and test your understanding
-of the program and the various parts - sometimes the best way to learn something is to try explaining it!
+of the program and the various parts - sometimes, the best way to learn something is to try explaining it!
 
 ---

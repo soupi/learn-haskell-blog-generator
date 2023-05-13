@@ -6,18 +6,18 @@ and most mainstream languages is the ability to represent data precisely and suc
 So how do we represent our markup language using Haskell?
 
 Previously, in our HTML builder library, we used `newtype`s to differentiate
-between HTML documents, structures and titles, but we didn't really need to
-differentiate between different kinds of structures such as paragraphs and headings,
-not without parsing the data at least.
+between HTML documents, structures, and titles, but we didn't really need to
+differentiate between different kinds of structures, such as paragraphs and headings,
+not without parsing the data, at least.
 
 In this case, we have a list of structures, and each structure could be
 one of a few specific options (a paragraph, a heading, a list, etc.),
 and we want to be able to know which structure is which so we can easily
 convert it into the equivalent HTML representation.
 
-For that, we have `data` definitions. `data` gives us the ability to
+For that, we have `data` definitions. Using `data` we can
 create custom types by grouping multiple types together and having
-alternative structures. Think of them as combination of both structs and enums.
+alternative structures. Think of them as a combination of both structs and enums.
 
 `data` declarations look like this:
 
@@ -31,15 +31,15 @@ data <Type-name> <type-args>
 It looks really similar to `newtype`, but there are two important
 differences:
 
-1. In the `<types>` part we can write many types (Like `Int`, `String`, or `Bool`).
-   For `newtype`s we can only write one.
+1. In the `<types>` part, we can write many types (Like `Int`, `String`, or `Bool`).
+   For `newtype`s, we can only write one.
 2. We can have alternative structures using `|`, `newtype`s have no
    alternatives.
 
-This is because `newtype` is used to provide a type safe __alias__, and `data`
+This is because `newtype` is used to provide a type-safe __alias__, and `data`
 is used to build a new **composite** type that can potentially have *alternatives*.
 
-Let's see a few of examples of data types:
+Let's see a few examples of data types:
 
 1. Bool
 
@@ -50,7 +50,7 @@ Let's see a few of examples of data types:
    ```
 
    We created a new data type named `Bool` with the possible values `True` or `False`.
-   In this case we only have *constructor* alternatives and none of the constructors
+   In this case, we only have *constructor* alternatives, and none of the constructors
    carry additional values. This is similar to enums in other languages.
 
 2. Person
@@ -74,8 +74,8 @@ Let's see a few of examples of data types:
    Person "Gil" 32
    ```
 
-   In this case we create a *composite* of multiple types, without alternatives.
-   This is similar to structs in other language, but structs give each field
+   In this case, we create a *composite* of multiple types without alternatives.
+   This is similar to structs in other languages, but structs give each field
    a name, and here we distinguish them by position.
 
    Alternatively, Haskell has *syntactic sugar* for naming fields called **records**.
@@ -116,7 +116,7 @@ Let's see a few of examples of data types:
    32
    ```
 
-   We even have special syntax for updating specific fields in a record. Of course,
+   We even have a special syntax for updating specific fields in a record. Of course,
    we do not update records in place - we generate a new value instead.
 
    ```hs
@@ -169,9 +169,9 @@ Let's see a few of examples of data types:
    ('a', 'z') :: (Char, Char)
    ```
 
-    This `Tuple` definition is polymorphic, we define the structure but are able to
+    This `Tuple` definition is polymorphic; we define the structure but are able to
     plug different types into the structure to get concrete types. You can think of `Tuple`
-    as a *template* for a data type waiting to be filled, or as a **function** waiting
+    as a *template* for a data type waiting to be filled or as a **function** waiting
     for types as input in order to return a data type. We can even take a look at the "type"
     signature of `Tuple` in `ghci` using the `:kind` command.
 
@@ -184,17 +184,17 @@ Let's see a few of examples of data types:
     > #### Quick detour: Kinds
     >
     > The `:kind` command is called as such because the "type" of a type is called a **kind**.
-    > Kinds can be one of two things, either a `*` which means a saturated (or concrete) type,
+    > Kinds can be one of two things, either a `*`, which means a saturated (or concrete) type,
     > such as `Int` or `Person`, or an `->` of two kinds, which is, as you might have guessed,
     > a type function, taking kind and returning a kind.
     >
-    > Note that only types that have the kind `*` can have values. So for example while `Tuple Int`
+    > Note that only types that have the kind `*` can have values. So, for example, while `Tuple Int`
     > is a valid Haskell concept that has the *kind* `* -> *`, and we can write code that will
     > work "generically" for all types that have a certain kind (e.g. `* -> *`), we cannot
-    > construct a value that will have the kind `* -> *`. All values have types, and all
+    > construct a value that has the kind `* -> *`. All values have types and all
     > types that have values have the kind `*`.
     >
-    > We will talk more about kinds later, for now let's focus on types!
+    > We will talk more about kinds later; let's focus on types for now!
 
 4. Either
 
@@ -204,7 +204,7 @@ Let's see a few of examples of data types:
      | Right b
    ```
 
-   Similar to Tuple but instead of having only one constructor, we have
+   Similar to Tuple, but instead of having only one constructor, we have
    two. This means that we can choose which side we want. Here are a
    couple of values of type `Either String Int`:
 
@@ -219,7 +219,7 @@ Let's see a few of examples of data types:
    and got an error instead (The `Left` constructor with a string or a
    custom error type).
 
-In our program we use `data` types to model the different kinds of content types
+In our program, we use `data` types to model the different kinds of content types
 in our markup language. We tag each structure using the data constructor
 and provide the rest of the information (the paragraph text, the list items, etc.)
 in the `<types>` section of the data declaration for each constructor:
@@ -257,7 +257,7 @@ Represent the following markup documents as values of `Document`:
 
 3. ```org
    Remember that multiple lines with no separation
-   are grouped together to a single paragraph
+   are grouped together into a single paragraph
    but list items remain separate.
 
    # Item 1 of a list
@@ -291,7 +291,7 @@ Represent the following markup documents as values of `Document`:
    GHC will produce an executable when the source file satisfies both conditions:
 
    # Defines the main function in the source file
-   # Defines the module name to be Main, or does not have a module declaration
+   # Defines the module name to be Main or does not have a module declaration
 
    Otherwise, it will only produce the .o and .hi files.
    ```
@@ -375,7 +375,7 @@ example4 =
 </details>
 
 Add a new module named `Markup` and add the data type definition to it.
-Note that in this case we *do* want to export the constructors of `Structure`.
+Note that in this case, we *do* want to export the constructors of `Structure`.
 
 <details>
   <summary>Solution</summary>
@@ -408,19 +408,19 @@ data Structure
 
 ## Translating directly?
 
-You might ask "Why do we even need to represent the markup as a type?
+You might ask, "Why do we even need to represent the markup as a type?
 Why don't we convert it into HTML as soon as we parse it
 instead?". That's a good question and a valid strategy. The reason we
 first represent it as a Haskell type is for flexibility and modularity.
 
 If the parsing code is coupled with HTML generation, we lose the
-ability to pre-process the markup document. For example we might want
-to take only a small part of the document (for summary) and present
+ability to pre-process the markup document. For example, we might want
+to take only a small part of the document (for a summary) and present
 it, or create a table of content from headings. Or maybe we'd like to
 add other targets and not just HTML - maybe markdown format or a GUI reader?
 
 Parsing to an "abstract data type" (ADT) representation (one that does
-not contain the details of the language, for example '#' for
+not contain the details of the language, for example, '#' for
 ordered lists) gives us the freedom to do so much more than just
-conversion to HTML that it's usually worth it in my opinion unless you
+conversion to HTML that it's usually worth it, in my opinion, unless you
 really need to optimize the process.

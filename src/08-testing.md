@@ -6,7 +6,7 @@ HTML generation code, or translation from markup to HTML code, and make a mistak
 have a safety net alerting us of issues.
 
 We will use the [Hspec](https://hspec.github.io/) testing framework to write our tests.
-There are other testing frameworks in Haskell, for example
+There are other testing frameworks in Haskell, for example,
 [tasty](https://hackage.haskell.org/package/tasty), but I like Hspec's documentation,
 so we'll use that.
 
@@ -15,7 +15,7 @@ so we'll use that.
 ### Cabal file additions
 
 We're going to define a new section in our `hs-blog-gen.cabal` file for our new test suite.
-This section is called `test-suite` and it is fairly similar to the `library` and
+This section is called `test-suite` and is fairly similar to the `library` and
 `executable` sections.
 
 The interfaces for how to define a test suite are described in the
@@ -62,9 +62,9 @@ test-suite hs-blog-gen-test
   - [`-O`](https://downloads.haskell.org/ghc/latest/docs/html/users_guide/using-optimisation.html#options-optimise) -
     Compile with optimizations
   - [`-threaded`](https://downloads.haskell.org/ghc/latest/docs/html/users_guide/phases.html#ghc-flag--threaded) -
-    Use the multi-core runtime instead of single-core runtime. The multi-core
+    Use the multi-core runtime instead of the single-core runtime. The multi-core
     runtime is generally a bit slower in my experience, but when writing code that actually uses
-    multiple cores (such as a test framework that runs tests in parallel) it can give a good
+    multiple cores (such as a test framework that runs tests in parallel), it can give a good
     performance boost
   - [`-rtsopts`](https://downloads.haskell.org/ghc/latest/docs/html/users_guide/phases.html#ghc-flag--rtsopts[=%E2%9F%A8none|some|all|ignore|ignoreAll%E2%9F%A9]) -
     Let us configure the Haskell runtime system by passing command-line arguments to our application
@@ -76,14 +76,14 @@ test-suite hs-blog-gen-test
   Use a specific executable from a package dependency in aid of building the package.
   In this case, we are using the `hspec-discover` executable from the
   [`hspec-discover`](https://hackage.haskell.org/package/hspec-discover) package, which
-  goes over the source directory for the tests, finds all of the `Spec` files,
+  goes over the source directory for the tests, finds all of the `Spec` files
   and creates an entry point for the program that will run all the tests it discovered
 
 
 ### Hspec discovery
 
-In order for `hspec-discover` to work, we need to add the following
-to the "main" file of the test suite, for us this is `test/Spec.hs`:
+For `hspec-discover` to work, we need to add the following
+to the "main" file of the test suite, for us, this is `test/Spec.hs`:
 
 ```hs
 {-# OPTIONS_GHC -F -pgmF hspec-discover #-}
@@ -99,7 +99,7 @@ Finished in 0.0000 seconds
 ```
 
 When we add new Hspec tests, `hspec-discover` will find and run them automatically
-(though we will still need add them to the `other-modules` section in the cabal file).
+(though we will still need to add them to the `other-modules` section in the cabal file).
 
 For `hspec-discover` to identify modules as test modules, the modules must follow
 a convention:
@@ -124,11 +124,11 @@ import HsBlog.Markup
 `Hspec` provides us with a monadic interface for describing, composing and
 nesting test specifications (`Spec`s).
 
-Using the `describe` function we can
-describe a group of tests, using the `it` function we can add a new test,
-and using a function like `shouldBe` we can compare two values and make
+Using the `describe` function, we can
+describe a group of tests; using the `it` function, we can add a new test,
+and using a function like `shouldBe`, we can compare two values and make
 sure they are equal by using their `Eq` instance.
-If they are, the test will pass, and if not, it will fail with a descriptive error.
+If they are, the test will pass; if not, it will fail with a descriptive error.
 
 Let's try it and write a test that obviously fails!
 
@@ -171,7 +171,7 @@ Finished in 0.0004 seconds
 1 example, 1 failure
 ```
 
-The output describes which tests are running in a hierarchy tree (module, group and test),
+The output describes which tests are running in a hierarchy tree (module, group, and test),
 whether the tests pass or fail, and if they fail, the output and the expected output.
 
 We can fix our test by matching the expected output:
@@ -228,7 +228,7 @@ Finished in 0.0003 seconds
 
 This is the gist of writing unit tests with Hspec. It's important to note
 that we can nest `Spec`s that are declared with `describe` to create trees,
-and of course refactor and move things to different functions and modules
+and, of course, refactor and move things to different functions and modules
 to make our test suite better organized.
 
 For example, we can write our tests like this:
@@ -270,7 +270,7 @@ and can be found in the
 
 ### Raw strings
 
-If we want to write multi-line strings, or avoid escaping strings like we did in the "code"
+If we want to write multi-line strings or avoid escaping strings as we did in the "code"
 test, we can use a library called
 [raw-strings-qq](https://hackage.haskell.org/package/raw-strings-qq)
 which uses a language extension called
@@ -455,7 +455,7 @@ example4Result =
 ## Parallel test execution
 
 Without further configuration, Hspec will run all
-of our tests on the main thread, sequentially.
+of our tests on the main thread sequentially.
 
 There are a couple of ways to configure tests to run
 in parallel. One is to manually mark a `Spec`
@@ -478,8 +478,8 @@ We haven't talked about
 testing expected failures, testing IO code, inspection testing, benchmarking, and more.
 There's just too much to cover!
 
-My hope is that this chapter
-provided you with the basics of how to start writing tests for your own projects.
+I hope this chapter
+provided you with the basics of how to start writing tests for your projects.
 Please consult the tutorial for your chosen testing framework, and read more about
 this very important subject on your own.
 

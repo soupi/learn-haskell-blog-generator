@@ -4,12 +4,12 @@ Now that `Html` has its own source file and module, and creating
 HTML code can be done only via the functions we exported,
 we can also handle user input that may contain characters
 that may conflict with our meta language, HTML,
-such as `<` and `>` which are used for creating HTML tags.
+such as `<` and `>`, which are used for creating HTML tags.
 
 We can convert these characters into different strings that HTML can handle.
 
 See [Stack overflow question](https://stackoverflow.com/questions/7381974/which-characters-need-to-be-escaped-in-html)
-for a list of characters we need to escape.
+for a list of characters, we need to escape.
 
 Let's create a new function called `escape`:
 
@@ -46,32 +46,32 @@ In `escape` we see a few new things:
    characters and convert them to a string. Note that `_` is a "catch
    all" pattern that will always succeed.
 
-3. Two new functions: `map` and `concat`, we'll talk about these more in depth
+3. Two new functions: `map` and `concat`; we'll talk about these in more in-depth
 
-4. That the syntax highlighting broke a bit for this snippet for some reason. Don't worry about it.
+4. The syntax highlighting broke a bit for this snippet for some reason. Don't worry about it.
 
 ## Linked lists briefly
 
 Linked lists are very common data structures in Haskell, so common that
 they have their own special syntax:
 
-1. The list types are denoted with brackets and inside them is the type of the element. For example:
+1. The list types are denoted with brackets, and inside them is the type of the element. For example:
    - `[Int]` - a list of integers
    - `[Char]` - a list of characters
    - `[String]` - a list of strings
    - `[[String]]` - a list of a list of strings
    - `[a]` - a list of any single type (all elements must be of the same type)
 2. An empty list is written like this: `[]`
-3. Prepending an element to a list is done with the operator `:` (pronounced cons) which is right-associative (like `->`).
+3. Prepending an element to a list is done with the operator `:` (pronounced cons), which is right-associative (like `->`).
    For example: `1 : []`, or `1 : 2 : 3 : []`.
-4. The above lists can also be written like this: `[1]` and `[1, 2, 3]`.
+4. The above lists can also be written like `[1]` and `[1, 2, 3]`.
 
 Also, Strings are linked lists of characters - String is defined as:
 `type String = [Char]`, so we can use them the same way we use lists.
 
 > Do note, however, that linked lists, despite their convenience, are often
 > not the right tool for the job. They are not particularly space efficient
-> and are slow for appending, random access and more. That also makes `String`
+> and are slow for appending, random access, and more. That also makes `String`
 > a lot less efficient than what it could be. And I generally recommend using a
 > different string type, `Text`, instead, which is available in an external package.
 > We will talk about lists, `Text`, and other data structures in the future!
@@ -86,7 +86,7 @@ and [concat](https://hackage.haskell.org/package/base-4.16.4.0/docs/Data-List.ht
 
 ### `map`
 
-Using `map` we can apply a function to each of the elements in a list. Its type signature is:
+Using `map`, we can apply a function to each element in a list. Its type signature is:
 
 ```hs
 map :: (a -> b) -> [a] -> [b]
@@ -125,7 +125,7 @@ In our case it will flatten `[String]` into `String`, remember that
 
 ## GHCi
 
-One way we can quickly see our code in action is using the interactive development environment **GHCi**.
+One way we can quickly see our code in action is by using the interactive development environment **GHCi**.
 Running `ghci` will open an interactive prompt where Haskell expressions can be written and
 evaluated. This is called a "Read-Evaluate-Print Loop" (for short - REPL).
 
@@ -211,7 +211,7 @@ We've seen a couple of examples of that above - passing the string `"<html>"` to
 a browser as `<html>` instead of an HTML tag.
 
 If you are having a hard time figuring out what a particular function does, consider
-testing it in GHCi - pass it different inputs, and see if it matches your expectations.
+testing it in GHCi - pass it different inputs and see if it matches your expectations.
 Concrete examples of running code can aid a lot in understanding it!
 
 > If you'd like to learn more about GHCi, you can find a more thorough introduction in the
@@ -228,7 +228,7 @@ The user of our library can currently only supply strings in a few places:
 3. Headings
 
 We can apply our escape function at these places before doing anything else with it.
-That way all HTML constructions are safe.
+That way, all HTML constructions are safe.
 
 Try adding the escaping function in those places.
 
@@ -345,5 +345,5 @@ Try constructing an invalid HTML in `hello.hs` to see if this works or not!
 
 Now we can use our tiny HTML library safely. But what if the user
 wants to use our library with a valid use case we didn't think about, for
-example adding unordered lists? We are completely blocking them from
+example, adding unordered lists? We are completely blocking them from
 extending our library. We'll talk about this next.
