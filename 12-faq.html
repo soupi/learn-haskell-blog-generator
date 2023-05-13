@@ -168,39 +168,39 @@ which can be installed via <a href="https://www.haskell.org/ghcup/">GHCup</a> or
 or alternatively use <a href="https://github.com/ndmitchell/ghcid#readme">GHCid</a>
 which provides rapid feedback independently from an editor.</p>
 <h3 id="how-to-learn-new-things"><a class="header" href="#how-to-learn-new-things">How to learn new things</a></h3>
-<p>The Haskell community keeps marching forward, developing new libraries, tools and techniques
+<p>The Haskell community keeps marching forward, developing new libraries, tools, and techniques
 as well as creating new material for older concepts.
 The <a href="https://haskell.pl-a.net">Haskell planetarium</a> aggregates feeds from several communities into
 one page, as well as a <a href="https://haskellweekly.news/">Haskell Weekly newsletter</a>.
-You might also find the quite a bit of Haskell presence on
+You might also find quite a bit of Haskell presence on
 <a href="https://twitter.com/search?q=%23Haskell&amp;src=typeahead_click">Twitter</a>!</p>
 <h2 id="debugging"><a class="header" href="#debugging">Debugging</a></h2>
 <h3 id="how-to-debug-haskell-code"><a class="header" href="#how-to-debug-haskell-code">How to debug Haskell code</a></h3>
 <p>Most imperative languages provide a step debugger. While the
 <a href="https://downloads.haskell.org/ghc/latest/docs/users_guide/ghci.html#the-ghci-debugger">GHCi debugger</a>,
-exists it is not particularly easy to use, especially because of Haskell's lazy evaluation where things
-might not evaluated at the order we might intuitively expect. Because of that,
+exists, it is not particularly easy to use, especially because of Haskell's lazy evaluation, where things
+might not be evaluated in the order we might intuitively expect. Because of that,
 Haskellers tend to use
 <a href="https://hackage.haskell.org/package/base-4.16.4.0/docs/Debug-Trace.html#g:1">trace debugging</a> and
 equational reasoning. With trace debugging, we try to <em>verify our assumptions</em> about the code -
 we use the various <code>trace</code> functions as a &quot;hack&quot; to print variables, functions inputs, functions output
-or even just say &quot;got here&quot;, from anywhere at the code.</p>
+or even just say &quot;got here&quot; from anywhere in the code.</p>
 <p>After finding something that does not match our assumptions, such as unexpected input or output
-of a function, we try to think what piece of code could be responsible for the discrepancy, or even use
+of a function, we try to think what piece of code could be responsible for the discrepancy or even use
 trace debugging again to pinpoint the exact location, and try to use &quot;equational reasoning&quot; to
 evaluate the offending code that betrayed our expectations. If it's easy to do, we try running
 the function in <code>ghci</code> with different inputs to check our assumptions as well.</p>
-<p>Because Haskell focuses on immutability, composibility and using types to eliminate many
+<p>Because Haskell focuses on immutability, composability, and using types to eliminate many
 classes of possible errors, &quot;local reasoning&quot; becomes possible, and trace debugging
 becomes a viable strategy for debugging Haskell programs.</p>
 <h3 id="how-to-understand-type-errors"><a class="header" href="#how-to-understand-type-errors">How to understand type errors</a></h3>
-<p>GHC type errors are often not the most friendly errors messages, but they mean well! They are just
+<p>GHC type errors are often not the most friendly error messages, but they mean well! They are just
 trying to help us find inconsistencies in our code - often with regards to type usage, they help us
 avoid making errors.</p>
-<p>When you run into error messages, start by reading the messages themselves carefully
-until you get used to them, and then the offending code hinted by the error message.
+<p>When you run into error messages, start by reading them carefully
+until you get used to them, and then the offending code hinted at by the error message.
 As you gain experience, it is likely that the most important part of an error will be the location
-of the offending code, and by reading the code we can find the error without the actual error message.</p>
+of the offending code, and by reading the code, we can find the error without the actual error message.</p>
 <p>Adding type signatures and annotations to test your understanding of the types also helps greatly.
 We can even ask GHC for the expected type in a certain place by using
 <a href="https://downloads.haskell.org/ghc/latest/docs/users_guide/exts/typed_holes.html">typed holes</a>.</p>
@@ -211,17 +211,17 @@ in terms of time complexity of the common operations, to less efficient memory r
 (this is another reminder to use <code>Text</code> over <code>String</code> in most cases),
 and laziness issues (again, the evaluation strategy!).</p>
 <p>The <a href="https://github.com/soupi/haskell-study-plan#performance">performance section</a> in my Haskell
-study plan links to various resources on Haskell evaluation, profiling and case studies.</p>
+study plan links to various resources on Haskell evaluation, profiling, and case studies.</p>
 <h2 id="design"><a class="header" href="#design">Design</a></h2>
 <h3 id="how-to-structure-programs"><a class="header" href="#how-to-structure-programs">How to structure programs</a></h3>
 <p>Start with the imperative shell functional core approach, define EDSLs with the combinator
 pattern for logic if needed, use capabilities such as <code>State</code> locally if needed,
-maybe add an environment configuration with <code>ReaderT</code>, see how it goes.</p>
+maybe add an environment configuration with <code>ReaderT</code>, and see how it goes.</p>
 <p>If that approach fails you, look at why it fails and examine other solutions according to your needs.</p>
 <h3 id="how-to-model-data"><a class="header" href="#how-to-model-data">How to model data</a></h3>
-<p>Modeling data using ADTs are usually the way to go. Often programmers coming from object oriented
+<p>Modeling data using ADTs are usually the way to go. Often programmers coming from object-oriented
 background tend to look at type classes as a way to define methods similar to inheritance,
-but this often isn't the right approach and ADTs with different constructors for different alternatives
+but this often isn't the right approach, and ADTs with different constructors for different alternatives
 go a long way. Remember that even OOP people often preach for composition over inheritance.</p>
 <p>Use functions to define behavior on data rather than trying to couple the two together.</p>
 

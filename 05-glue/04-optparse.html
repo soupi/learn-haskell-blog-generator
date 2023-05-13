@@ -193,7 +193,7 @@ and commands for our program</p>
 </li>
 </ol>
 <h3 id="define-a-model"><a class="header" href="#define-a-model">Define a model</a></h3>
-<p>Let's envision our command-line interface for a second, what should it
+<p>Let's envision our command-line interface for a second; what should it
 look like?</p>
 <p>We want to be able to convert a single file or input stream to either a file
 or an output stream, or we want to process a whole directory and create a new directory.
@@ -217,7 +217,7 @@ data SingleOutput
 <p>Note that we could technically also use <code>Maybe FilePath</code> to encode both <code>SingleInput</code>
 and <code>SingleOutput</code>, but then we would have to remember what <code>Nothing</code> means
 in each context. By creating a new type with properly named constructors
-for each option we make it easier for readers of the code to understand
+for each option, we make it easier for readers of the code to understand
 the meaning of our code.</p>
 </blockquote>
 <p>In terms of interface, we could decide that when a user would like to convert
@@ -247,9 +247,9 @@ representing the program arguments and produces an <code>a</code> if it manages
 to parse the arguments.</p>
 <p>As we've seen with the previous EDSLs, this library uses the <em>combinator pattern</em>
 as well. We need to consider the basic primitives for building
-a parser, and the methods of composing small parsers into bigger
+a parser and the methods of composing small parsers into bigger
 parsers.</p>
-<p>Let's see an example for a small parser:</p>
+<p>Let's see an example of a small parser:</p>
 <pre><code class="language-hs">inp :: Parser FilePath
 inp =
   strOption
@@ -276,9 +276,9 @@ and the modifiers describe its properties, such as the flag name,
 the shorthand of the flag name, and how it would be described in the usage
 and help messages.</p>
 <blockquote>
-<p>Actually <code>strOption</code> can return any string type
+<p>Actually, <code>strOption</code> can return any string type
 that implements the interface <code>IsString</code>. There are a few such types,
-for example <code>Text</code>, a much more efficient Unicode text type from the <code>text</code> package.
+for example, <code>Text</code>, a much more efficient Unicode text type from the <code>text</code> package.
 It is more efficient than <code>String</code> because while <code>String</code> is implemented as a
 linked list of <code>Char</code>, <code>Text</code> is implemented as an array of bytes.
 <code>Text</code> is usually what we should use for text values instead of <code>String</code>. We haven't
@@ -287,8 +287,8 @@ than <code>String</code>. But it is often the preferred type to use for text!</p
 </blockquote>
 <p>As you can see, modifiers can be composed using the <code>&lt;&gt;</code> function,
 which means modifiers implement an instance of the <code>Semigroup</code> type class!</p>
-<p>With such an interface we don't have to supply all the modifier
-options, but only the relevant ones. So if we don't want to
+<p>With such an interface, we don't have to supply all the modifier
+options, only the relevant ones. So if we don't want to
 have a shortened flag name, we don't have to add it.</p>
 <h4 id="functor"><a class="header" href="#functor">Functor</a></h4>
 <p>For the data type we've defined, having <code>Parser FilePath</code> takes us
@@ -355,13 +355,13 @@ Here's one very simple (and wrong) implementation:</p>
 <pre><code class="language-hs">mapMaybe :: (a -&gt; b) -&gt; Maybe a -&gt; Maybe b
 mapMaybe func maybeX = Nothing
 </code></pre>
-<p>Check it yourself! It compiles successfully! But unfortunately it does not
+<p>Check it out yourself! It compiles successfully! But unfortunately, it does not
 satisfy the first law. <code>fmap id = id</code> means that
-<code>mapMaybe id (Just x) == Just x</code>, however from the definition we can
+<code>mapMaybe id (Just x) == Just x</code>, however, from the definition, we can
 clearly see that <code>mapMaybe id (Just x) == Nothing</code>.</p>
-<p>This is a good example of how Haskell doesn't help us make sure the laws
+<p>This is a good example of how Haskell doesn't help us ensure the laws
 are satisfied, and why they are important. Unlawful <code>Functor</code> instances
-will behave differently from what we'd expect a <code>Functor</code> to behave.
+will behave differently from how we'd expect a <code>Functor</code> to behave.
 Let's try again!</p>
 <pre><code class="language-hs">mapMaybe :: (a -&gt; b) -&gt; Maybe a -&gt; Maybe b
 mapMaybe func maybeX =
@@ -374,9 +374,9 @@ by doing algebra - if we can do substitution and reach the other side of the
 equation in each law, then the law holds.</p>
 <p>Functor is a very important type class, and many types implement this interface.
 As we know, <code>IO</code>, <code>Maybe</code>, <code>[]</code> and <code>Parser</code> all have the kind <code>* -&gt; *</code>,
-and all allows us to map over their &quot;payload&quot; type.</p>
+and all allow us to map over their &quot;payload&quot; type.</p>
 <blockquote>
-<p>Often people try to look for analogies and metaphors to what a type class mean,
+<p>Often, people try to look for analogies and metaphors to what a type class means,
 but type classes with funny names like <code>Functor</code> don't usually have an
 analogy or a metaphor that fits them in all cases. It is easier to give up
 on the metaphor and think about it as it is - an interface with laws.</p>
@@ -420,7 +420,7 @@ on <code>Parser</code>s instead? One with this type signature:</p>
   :: (SingleInput -&gt; SingleOutput -&gt; Options)
   -&gt; (Parser SingleInput -&gt; Parser SingleOutput -&gt; Parser Options)
 </code></pre>
-<p>Yes. This function is called <code>liftA2</code> and it is from the <code>Applicative</code>
+<p>Yes. This function is called <code>liftA2</code>, and it is from the <code>Applicative</code>
 type class. <code>Applicative</code> (also known as applicative functor) has three
 primary functions:</p>
 <pre><code class="language-hs">class Functor f =&gt; Applicative f where
@@ -439,13 +439,13 @@ a certain <code>f</code>, applicative functors allow us to apply a function to
 <p>You should already be familiar with <code>pure</code>, we've seen it when we
 talked about <code>IO</code>. For <code>IO</code>, <code>pure</code> lets us create an <code>IO</code> action
 with a specific return value without doing IO.
-With <code>pure</code> for <code>Parser</code>, we can create a <code>Parser</code> that when run
+With <code>pure</code> for <code>Parser</code>, we can create a <code>Parser</code> that, when run,
 will return a specific value as output without doing any parsing.</p>
 <p><code>liftA2</code> and <code>&lt;*&gt;</code> are two functions that can be implemented in
 terms of one another. <code>&lt;*&gt;</code> is actually the more useful one between
 the two. Because when combined with <code>fmap</code> (or rather the infix version <code>&lt;$&gt;</code>),
-it can be used to apply a function with many arguments, instead of just two.</p>
-<p>To combine our two parsers to one, we can use either <code>liftA2</code> or
+it can be used to apply a function with many arguments instead of just two.</p>
+<p>To combine our two parsers into one, we can use either <code>liftA2</code> or
 a combination of <code>&lt;$&gt;</code> and <code>&lt;*&gt;</code>:</p>
 <pre><code class="language-hs">-- with liftA2
 pConvertSingle :: Parser Options
@@ -464,7 +464,7 @@ pConvertSingle =
   (ConvertSingle &lt;$&gt; pInputFile) &lt;*&gt; pOutputFile
 </code></pre>
 <p>Let's take a deeper look at the types of the sub-expressions
-we have here, to prove that this type-checks:</p>
+we have here to prove that this type-checks:</p>
 <pre><code class="language-hs">pConvertSingle :: Parser Options
 
 pInputFile :: Parser SingleInput
@@ -485,10 +485,10 @@ ConvertSingle &lt;$&gt; pInputFile :: Parser (SingleOutput -&gt; Options)
 -- So we get:
 (ConvertSingle &lt;$&gt; pInputFile) &lt;*&gt; pOutputFile :: Parser Options
 </code></pre>
-<p>With <code>&lt;$&gt;</code> and <code>&lt;*&gt;</code> we can chain as many parsers (or any applicative really)
+<p>With <code>&lt;$&gt;</code> and <code>&lt;*&gt;</code> we can chain as many parsers (or any applicative, really)
 as we want. This is because of two things: currying and parametric polymorphism.
 Because functions in Haskell take exactly one argument and return exactly one,
-any multiple argument function can be represented as <code>a -&gt; b</code>.</p>
+any multiple-argument function can be represented as <code>a -&gt; b</code>.</p>
 <blockquote>
 <p>You can find the laws for the applicative functors in this article called
 <a href="https://wiki.haskell.org/Typeclassopedia#Laws_2">Typeclassopedia</a>, which
@@ -530,7 +530,7 @@ pConvertDir =
 <h4 id="alternative"><a class="header" href="#alternative">Alternative</a></h4>
 <p>One thing we forgot about is that each input and output for
 <code>ConvertSingle</code> could also potentially use the standard input and output instead.
-Up until now we only offered one option: reading from or writing to a file
+Up until now, we only offered one option: reading from or writing to a file
 by specifying the flags <code>--input</code> and <code>--output</code>.
 However, we'd like to make these flags optional, and when they are
 not specified, use the alternative standard i/o. We can do that by using
@@ -578,17 +578,17 @@ functions:</p>
 command :: String -&gt; ParserInfo a -&gt; Mod CommandFields a
 </code></pre>
 <p><code>subparser</code> takes <em>command modifiers</em> (which can be constructed
-with the <code>command</code> function) as input, and produces a <code>Parser</code>.
-<code>command</code> takes the command name (in our case &quot;convert&quot; or &quot;convert-dir&quot;)
+with the <code>command</code> function) as input and produces a <code>Parser</code>.
+<code>command</code> takes the command name (in our case, &quot;convert&quot; or &quot;convert-dir&quot;)
 and a <code>ParserInfo a</code>, and produces a command modifier. As we've seen
-before these modifiers have a <code>Monoid</code> instance and they can be
+before these modifiers have a <code>Monoid</code> instance, and they can be
 composed, meaning that we can append multiple commands to serve as alternatives.</p>
 <p>A <code>ParserInfo a</code> can be constructed with the <code>info</code> function:</p>
 <pre><code class="language-hs">info :: Parser a -&gt; InfoMod a -&gt; ParserInfo a
 </code></pre>
 <p>This function wraps a <code>Parser</code> with some additional information
 such as a helper message, description, and more, so that the program
-itself and each sub command can print some additional information.</p>
+itself, and each sub-command can print some additional information.</p>
 <p>Let's see how to construct a <code>ParserInfo</code>:</p>
 <pre><code class="language-hs">pConvertSingleInfo :: ParserInfo Options
 pConvertSingleInfo =
@@ -638,7 +638,7 @@ opts =
 but the most convenient way to use it is to let it take care of fetching
 program arguments, try to parse them, and throw errors and help messages in case
 it fails. This can be done with the function <code>execParser :: ParserInfo a -&gt; IO a</code>.</p>
-<p>We can place all this options parsing stuff in a new module
+<p>We can place all these options parsing stuff in a new module
 and then import it from <code>app/Main.hs</code>. Let's do that.
 Here's what we have up until now:</p>
 <details><summary>app/OptParse.hs</summary>
@@ -927,14 +927,14 @@ Available commands:
   convert                  Convert a single markup source to html
   convert-dir              Convert a directory of markup files to html
 </code></pre>
-<p>Along the way we've learned two powerful new abstractions, <code>Functor</code>
+<p>Along the way, we've learned two powerful new abstractions, <code>Functor</code>
 and <code>Applicative</code>, as well as revisited an abstraction
-called <code>Monoid</code>. With this library we've seen another example
+called <code>Monoid</code>. With this library, we've seen another example
 of the usefulness of these abstractions for constructing APIs and EDSLs.</p>
 <p>We will continue to meet these abstractions in the rest of the book.</p>
 <hr />
 <p><strong>Bonus exercise</strong>: Add another flag named <code>--replace</code> to indicate that
-if the output file or directory already exists, it's okay to replace them.</p>
+if the output file or directory already exists, replacing them is okay.</p>
 <hr />
 <blockquote>
 <p>You can view the git commit of

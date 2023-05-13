@@ -147,7 +147,7 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="working-with-io"><a class="header" href="#working-with-io">Working with IO</a></h1>
-<p>In previous chapters we were able to build a parser from a text
+<p>In previous chapters, we were able to build a parser from a text
 string to a Haskell representation of our markup language,
 and we built an EDSL for easy writing of HTML code.
 However, our program is still not useful to other users because
@@ -207,21 +207,21 @@ main =
 </code></pre>
 <p>This hypothetical program will read 2 integers from the standard input,
 and then will subtract the second one (+2) from the first one (+1),
-or so we would expect if this was a strict language. In a strict language
-we expect the order of operations to happen from the top-down.</p>
-<p>But in a lazy language we don't evaluate an expression until
+or so we would expect if this was a strict language. In a strict language,
+we expect the order of operations to happen from the top down.</p>
+<p>But in a lazy language, we don't evaluate an expression until
 it is needed, and so neither <code>result1</code> nor <code>result2</code> are evaluated
 until we wish to print the result of subtracting one from the other.
-And then when we try to evaluate <code>-</code>, it evaluates the two arguments
+And then, when we try to evaluate <code>-</code>, it evaluates the two arguments
 from left to right, so we first evaluate <code>result2</code>.</p>
-<p>Evaluating <code>result2</code>, with substitution, means to replace occurrences of <code>n</code>
-with the input <code>2</code>, and then evaluate the top level function (<code>+</code>), which is a
+<p>Evaluating <code>result2</code> with substitution means replacing occurrences of <code>n</code>
+with the input <code>2</code>, and then evaluate the top-level function (<code>+</code>), which is a
 primitive function. We then evaluate its arguments, <code>readIntFromStdin</code>
 and then <code>n</code>; at this point <em>we are reading the first integer from the stdin</em>.</p>
 <p>After calculating the result, we can move to evaluate <code>result1</code>, which
 <em>will read the second integer from stdin</em>. This is the
 complete opposite of what we wanted!</p>
-<p>Issues like these make lazy evaluation hard to work with in the presence of
+<p>Issues like these make lazy evaluation hard to work within the presence of
 <strong>side effects</strong> - when the evaluation of an expression <em>can affect or be affected
 by the outside world</em>, this includes reading/writing from mutable memory
 or performing I/O operations.</p>
@@ -233,16 +233,16 @@ and also messes up our ability to use <strong>equational reasoning</strong> to u
 <p>Therefore, in Haskell, it was decided to only allow <strong>pure</strong> functions and expressions - ones that
 have <strong>no side effects</strong>. Pure functions will <em>always</em> return the same output (given the same input)
 and <strong>evaluating pure expressions is deterministic</strong>.</p>
-<p>But now, how can we do I/O operations? There are many possible solutions</p>
-<p>For Haskell it was decided to design an interface
+<p>But now, how can we do I/O operations? There are many possible solutions.</p>
+<p>For Haskell, it was decided to design an interface
 with an accompanied type called <code>IO</code>. <code>IO</code>'s interface will force a distinction
-from non-I/O expressions, and will also require that in order to <em>combine</em>
-multiple <code>IO</code> operations, we will have to <strong>specify the order the operations</strong>.</p>
+from non-I/O expressions and will also require that in order to <em>combine</em>
+multiple <code>IO</code> operations, we will have to <strong>specify the order of the operations</strong>.</p>
 <h2 id="io"><a class="header" href="#io">IO</a></h2>
-<p><code>IO</code> is an opaque type, like our <code>Html</code> type in which we hide its internal
-representation from the user behind an interface. But in this case <code>IO</code> is a
-built-in type that is hidden by the Haskell language rather than a module.</p>
-<p>Similar to <code>Maybe</code>, <code>IO</code> has a payload type which represents the
+<p><code>IO</code> is an opaque type, like our <code>Html</code> type, in which we hide its internal
+representation from the user behind an interface. But in this case, <code>IO</code> is a
+built-in type and its internals are hidden by the Haskell language rather than a module.</p>
+<p>Similar to <code>Maybe</code>, <code>IO</code> has a payload type that represents the
 result of an <code>IO</code> operation.
 When there isn't a meaningful result, we use the unit type,
 <code>()</code> (which only has one value: <code>()</code>) to represent that.</p>
@@ -258,27 +258,27 @@ lookupEnv :: String -&gt; IO (Maybe String)
 writeFile :: FilePath -&gt; String -&gt; IO ()
 </code></pre>
 <!-- You can find more useful IO functions and operations in the
-[System.IO](https://hackage.haskell.org/package/base-4.16.4.0/docs/System-IO.html) module.
+[System.IO](https://hackage.haskell.org/package/base-4.16.4.0/docs/System-IO.html) module,
 which is shipped with `base`. -->
 <p>Notice that each function returns an <code>IO &lt;something&gt;</code>, but what does that mean?</p>
 <p>The meaning behind <code>IO a</code> is that it is a <em>description of a program (or subroutine)
-that when executed will produce some value of type <code>a</code>, and may do some I/O effects
+that, when executed, will produce some value of type <code>a</code>, and may do some I/O effects
 during execution</em>.</p>
 <p>Executing an <code>IO a</code> is different from evaluating it.
 Evaluating an <code>IO a</code> expression is pure - the <strong>evaluation</strong> will always reduce to
 the same <strong>description</strong> of a program. This helps us keep purity and equational reasoning!</p>
 <p>The Haskell runtime will <em>execute</em> the entry point to the program
-(the expression <code>main</code>, that must have the type <code>IO ()</code>) in order for our IO operation
+(the expression <code>main</code> that must have the type <code>IO ()</code>). For our IO operation
 to also run - it has to be <em>combined into</em> the <code>main</code> expression - let's see what that means.</p>
 <h2 id="combining-io-expressions"><a class="header" href="#combining-io-expressions">Combining IO expressions</a></h2>
-<p>Just like our <code>Html.Structure</code> type, the IO interface provides <strong>combinators</strong> for composing
+<p>Like our <code>Html.Structure</code> type, the IO interface provides <strong>combinators</strong> for composing
 small <code>IO</code> operations into bigger ones. This interface also ensures that the order
-of operations is well defined!</p>
+of operations is well-defined!</p>
 <p>Note that, just like the <code>&lt;&gt;</code> we've defined for <code>Html.Structure</code>, the combinators for <code>IO</code>
 are implemented as <strong>type-class instances</strong> rather than specialized variants
 (for example our <code>append_</code> function was a specialized version of <code>&lt;&gt;</code> tailored only
 for <code>Structure</code>).</p>
-<p>In this section I will introduce specialized type signatures rather than generalized ones,
+<p>In this section, I will introduce specialized type signatures rather than generalized ones,
 because I think it'll be easier to digest, but we'll talk about the generalized versions
 later.</p>
 <h3 id=""><a class="header" href="#">&gt;&gt;=</a></h3>
@@ -287,7 +287,7 @@ later.</p>
 </code></pre>
 <p>This combinator takes two arguments, the first is an IO operation, and the second is
 a function that takes as input <em>the result of the first IO operation</em> and returns
-a new <code>IO b</code> which is the final result.</p>
+a new <code>IO b</code>, which is the final result.</p>
 <p>Here are a few examples using the functions we described above:</p>
 <ol>
 <li>
@@ -300,7 +300,7 @@ and then write it to the standard output in the body of the lambda function.
 <code>&gt;&gt;=</code>'s role here is to <strong>pass the result of the IO operation
 on the left to the function returning an IO operation on the right</strong>.</p>
 <p>Notice how <code>&gt;&gt;=</code> <em>defines an order of operations - from left to right</em>.</p>
-<p>The type of each sub expression here is:</p>
+<p>The type of each sub-expression here is:</p>
 <pre><code class="language-hs">getLine :: IO String
 
 putStrLn :: String -&gt; IO ()
@@ -312,14 +312,14 @@ line :: String
 <ul>
 <li>Question: what is the type of the whole expression? <details><summary>Answer</summary>IO ()</details></li>
 </ul>
-<p>Also note that this example can be written in a more concise manner
-in point free style <code>getLine &gt;&gt;= putStrLn</code>.</p>
+<p>Also, note that this example can be written in a more concise manner
+in point-free style <code>getLine &gt;&gt;= putStrLn</code>.</p>
 </li>
 <li>
 <p>Appending two inputs</p>
 <pre><code>getLine &gt;&gt;= (\honorific -&gt; getLine &gt;&gt;= (\name -&gt; putStrLn (&quot;Hello &quot; ++ honorific ++ &quot; &quot; ++ name)))
 </code></pre>
-<p>This subroutine combines multiple operations together, it reads two lines from
+<p>This subroutine combines multiple operations together; it reads two lines from
 the standard input and prints a greeting.
 Note that:</p>
 <ul>
@@ -357,9 +357,9 @@ the other that might not return anything meaningful, such as <code>putStrLn</cod
 <p>like <code>*&gt;</code> and <code>&gt;&gt;</code>, <code>pure</code> is a more general version of <code>return</code>. <code>pure</code> also has the
 advantage of not having a resemblance to an unrelated keyword in other languages.</p>
 <p>Remember that we said <code>IO a</code> is a description of a program
-that when executed will produce some value of type <code>a</code> and may do some I/O effects
+that, when executed, will produce some value of type <code>a</code> and may do some I/O effects
 during execution?</p>
-<p>With <code>pure</code>, we can build an <code>IO a</code> that does no I/O, and will produce a
+<p>With <code>pure</code>, we can build an <code>IO a</code> that does no I/O and will produce a
 specific value of type <code>a</code>, the one we supply to <code>pure</code>!</p>
 <p>This function is useful when we want to do some uneffectful computation that depends on <code>IO</code>.</p>
 <p>For example:</p>
@@ -418,7 +418,7 @@ fmap :: (a -&gt; b) -&gt; IO a -&gt; IO b
 </code></pre>
 <h2 id="io-is-first-class"><a class="header" href="#io-is-first-class">IO is first class</a></h2>
 <p>The beauty of <code>IO</code> is that it's a completely first-class construct in the language,
-and is not really different from <code>Maybe</code>, <code>Either</code> or <code>Structure</code>. We can pass it to
+and is not really different from <code>Maybe</code>, <code>Either</code>, or <code>Structure</code>. We can pass it to
 functions, put it in a container, etc. Remember that it represents a description
 of a program, and without combining it into <code>main</code> in some way won't actually
 <em>do</em> anything. It is just a value!</p>
@@ -438,12 +438,12 @@ main =
       putStrLn &quot;Bye&quot;
 </code></pre>
 <p>Notice how <code>putStrLn &quot;IO is actually pretty awesome&quot;</code> isn't executed
-right away, but only if it is what <code>whenIO</code> returns, and in turn is <em>combined</em>
+right away, but only if it is what <code>whenIO</code> returns, and in turn, is <em>combined</em>
 with <code>*&gt;</code> as part of the <code>main</code> expression.</p>
 <h2 id="getting-out-of-io"><a class="header" href="#getting-out-of-io">Getting out of IO?</a></h2>
-<p>What we've seen above has great consequences to the Haskell language.
+<p>What we've seen above has great consequences for the Haskell language.
 In our <code>Html</code> type, we had a function <code>render :: Html -&gt; String</code>
-that could turn an <code>Html</code> to a string value.</p>
+that could turn an <code>Html</code> into a string value.</p>
 <p>In Haskell, <strong>there is no way</strong> to implement a function such as <code>execute :: IO a -&gt; a</code>
 that preserves purity and equational reasoning!</p>
 <p>Also, <code>IO</code> is <em>opaque</em>. It does not let us examine it. So we are really bound
@@ -455,8 +455,8 @@ it with more IO computations.</p>
 <p>We also can't use <code>IO a</code> in place of an <code>a</code>. For example,
 we can't write <code>getLine ++ &quot;!&quot;</code> because <code>++</code> expects both
 sides to be <code>String</code>, but <code>getLine</code>'s type is <code>IO String</code>. The types do not match!
-We have to use <code>fmap</code> and the return type must be <code>IO String</code>, like we've seen before.</p>
-<p>In Haskell we like to keep <code>IO</code> usage minimal, and we like to push it to the edges
+We have to use <code>fmap</code>, and the return type must be <code>IO String</code>, as we've seen before.</p>
+<p>In Haskell, we like to keep <code>IO</code> usage minimal, and we like to push it to the edges
 of the program. This pattern is often called <em>Functional core, imperative shell</em>.</p>
 <h2 id="functional-core-imperative-shell"><a class="header" href="#functional-core-imperative-shell">Functional core, imperative shell</a></h2>
 <p>In our blog generator program, we want to read a file, parse it, convert it to HTML,
@@ -469,7 +469,7 @@ and <code>Html</code> is being converted to a <code>String</code> rather than be
 a lot of flexibility. These functions without <code>IO</code> are easier to test and examine
 (because they are guaranteed to have deterministic evaluation!),
 and they are more modular and can work in many contexts (reading from stdin,
-reading from network socket, writing to an HTTP connection, and more).</p>
+reading from a network socket, writing to an HTTP connection, and more).</p>
 <p>This pattern is often a good approach for building Haskell programs, especially
 batch programs.</p>
 <h2 id="building-a-blog-generator"><a class="header" href="#building-a-blog-generator">Building a blog generator</a></h2>
@@ -584,7 +584,7 @@ whenIO cond action =
 <p>While using <code>&gt;&gt;=</code> to chain <code>IO</code> actions is manageable, Haskell provides
 an even more convenient syntactic sugar called <em>do notation</em>
 which emulates imperative programming.</p>
-<p>A <em>do block</em> starts with the <code>do</code> keyword, and continues with one or more
+<p>A <em>do block</em> starts with the <code>do</code> keyword and continues with one or more
 &quot;statements&quot; which can be one of the following:</p>
 <ol>
 <li>An expression of type <code>IO ()</code>, such as:
@@ -637,7 +637,7 @@ greeting =
         putStrLn (greet name)
 </code></pre>
 <p>It's important to note the difference between <code>let</code> and <code>&lt;-</code> (bind).
-<code>let</code> is used to give a new name to an expression which will be in scope
+<code>let</code> is used to give a new name to an expression that will be in scope
 for subsequent lines, and <code>&lt;-</code> is used to bind the result <code>a</code> in an <code>IO a</code>
 action to a new name which will be in scope for subsequent lines.</p>
 <table>
@@ -738,13 +738,13 @@ whenIO cond action = do
 </ol>
 <hr />
 <h2 id="summary-1"><a class="header" href="#summary-1">Summary</a></h2>
-<p>In this chapter we discussed what &quot;purely functional&quot; means,
+<p>In this chapter, we discussed what &quot;purely functional&quot; means,
 where the initial motivation for being purely functional comes from,
 and how Haskell's I/O interface allows us to create descriptions of programs
 without breaking purity.</p>
 <p>We have also achieved a major milestone. With this chapter, we have implemented
 enough pieces to finally run our program on a single document
-and get an HTML rendered result!</p>
+and get an HTML-rendered result!</p>
 <p>However, our command-line interface is still sub-par. We want to render a blog
 with multiple articles, create an index page, and more. We still have more to do
 to be able to call our program a blog generator.</p>

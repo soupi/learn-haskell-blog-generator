@@ -146,7 +146,7 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="lets-code-already"><a class="header" href="#lets-code-already">Lets code already!</a></h1>
+                        <h1 id="lets-code-already"><a class="header" href="#lets-code-already">Let's code already!</a></h1>
 <p>This was a long info dump. Let's practice what we've learned. We want to:</p>
 <ul>
 <li>Create the output directory</li>
@@ -162,12 +162,12 @@ convert the files to HTML, and write everything to the target directory</li>
 It was an iterative process of writing code, refactoring, splitting functions, changing
 type signatures, and more. When solving a coding problem, start small and simple,
 do the thing that works, and refactor it when it makes sense and makes the code clearer
-and more modular. In Haskell we pride ourselves in our ability to refactor code and improve
+and more modular. In Haskell, we pride ourselves in our ability to refactor code and improve
 it over time, and that principle holds when writing new software as well!</p>
 </blockquote>
 <h2 id="new-module"><a class="header" href="#new-module">New module</a></h2>
 <p>Let's create a new module, <code>HsBlog.Directory</code>, which will be responsible for handling
-directories and multiple files. From this module we will export the <code>convertDirectory</code>
+directories and multiple files. From this module, we will export the <code>convertDirectory</code>
 and <code>buildIndex</code> functions we've defined before:</p>
 <pre><code class="language-hs">-- | Process multiple files and convert directories
 
@@ -177,12 +177,12 @@ module HsBlog.Directory
   )
   where
 </code></pre>
-<p>In this module we are going to use the
+<p>In this module, we are going to use the
 <a href="https://hackage.haskell.org/package/directory-1.3.7.0/docs/System-Directory.html">directory</a>
 and <a href="https://hackage.haskell.org/package/filepath-1.4.2.1/docs/System-FilePath.html">filepath</a>
-libraries to manipulate directories, files and filepaths.
+libraries to manipulate directories, files, and filepaths.
 We'll use the new abstractions we've learned, <code>Traversable</code> and <code>Monad</code>, and the concepts
-and types we've learned about: <code>Either</code>, <code>IO</code> and exceptions.</p>
+and types we've learned about: <code>Either</code>, <code>IO</code>, and exceptions.</p>
 <p>For all of that, we need quite a few imports:</p>
 <pre><code class="language-hs">import qualified HsBlog.Markup as Markup
 import qualified HsBlog.Html as Html
@@ -214,7 +214,7 @@ import System.Directory
 <a href="https://hoogle.haskell.org/">Hoogle</a>,
 read the type signature and the documentation, and play around with it in <code>ghci</code>.</p>
 <h2 id="converting-a-directory"><a class="header" href="#converting-a-directory">Converting a directory</a></h2>
-<p>We can start by describing the high-level function <code>convertDirectory</code> which
+<p>We can start by describing the high-level function <code>convertDirectory</code>, which
 encapsulates many smaller functions, each responsible for doing a specific thing.
 <code>convertDirectory</code> is quite imperative looking, and looks like a different way to
 describe the steps of completing our task:</p>
@@ -270,16 +270,16 @@ getDirFilesAndContent inputDir = do
 <ol>
 <li>Lists all the files in the directory</li>
 <li>Splits the files into 2 groups according to their file extension</li>
-<li>Reads the contents of the .txt files and report when files fail to be read</li>
+<li>Reads the contents of the .txt files and reports when files fail to be read</li>
 <li>Returns the results. We've defined a data type to make the result content more obvious</li>
 </ol>
-<p>Part (3) is a little bit more involved than the rest, let's explore it.</p>
+<p>Part (3) is a little bit more involved than the rest; let's explore it.</p>
 <h4 id="applyioonlist"><a class="header" href="#applyioonlist"><code>applyIoOnList</code></a></h4>
 <hr />
 <p><code>applyIoOnList</code> has the following type signature:</p>
 <pre><code class="language-hs">applyIoOnList :: (a -&gt; IO b) -&gt; [a] -&gt; IO [(a, Either String b)]
 </code></pre>
-<p>It tries to apply an <code>IO</code> function on a list of values, and document successes and failures.</p>
+<p>It tries to apply an <code>IO</code> function on a list of values and document successes and failures.</p>
 <p>Try to implement it! If you need a hint for which functions to use, see the import list
 we wrote earlier.</p>
 <details><summary>Answer</summary>
@@ -297,8 +297,8 @@ applyIoOnList action inputs = do
 </code></pre>
 </details>
 <hr />
-<p><code>applyIoOnList</code> is a higher order function that applies a particular <code>IO</code> function
-(in our case <code>readFile</code>) on a list of things (in our case <code>FilePath</code>s).
+<p><code>applyIoOnList</code> is a higher-order function that applies a particular <code>IO</code> function
+(in our case, <code>readFile</code>) on a list of things (in our case, <code>FilePath</code>s).
 For each thing, it returns the thing itself along with the result of
 applying the <code>IO</code> function as an <code>Either</code>, where the <code>Left</code> side is a <code>String</code>
 representation of an error if one occurred.</p>
@@ -310,9 +310,9 @@ from other than the result of the function.</p>
 <p>Note: when I first wrote this function, it was specialized to work only on <code>readFile</code>,
 take specifically <code>[FilePath]</code> and return <code>IO [(FilePath, Either String String)]</code>.
 But after running into other use cases where I could use it (<code>writeFiles</code> and <code>copyFiles</code>)
-I refactored out the <code>action</code>, the input type and the return type.</p>
+I refactored out the <code>action</code>, the input type, and the return type.</p>
 </blockquote>
-<p>This function uses exceptions to catch any error that might be thrown, and encodes
+<p>This function uses exceptions to catch any error that might be thrown and encodes
 both the failure and success cases in the type system using <code>Either</code>, delaying
 the handling of exceptions to the function caller while making sure it won't
 be forgotten!</p>
@@ -380,8 +380,8 @@ createOutputDirectory dir = do
   when create (createDirectory dir)
   pure create
 </code></pre>
-<p><code>createOutputDirectoryOrExit</code> itself is not terribly exciting, it does
-what it is named -- it tries to create the output directory, and exits the
+<p><code>createOutputDirectoryOrExit</code> itself is not terribly exciting; it does
+what it is named -- it tries to create the output directory and exits the
 program in case it didn't succeed.</p>
 <p><code>createOutputDirectory</code> is the function that actually does the heavy lifting.
 It checks if the directory already exists, and checks if the user would like to
@@ -392,9 +392,9 @@ we do nothing and report their decision.</p>
   outputHtmls = txtsToRenderedHtml filesToProcess
 </code></pre>
 <hr />
-<p>In this part of the code we convert files to markup and change the
+<p>In this part of the code, we convert files to markup and change the
 input file paths to their respective output file paths (<code>.txt</code> -&gt; <code>.html</code>).
-We then build the index page, and convert everything to HTML.</p>
+We then build the index page and convert everything to HTML.</p>
 <p>Implement <code>txtsToRenderedHtml</code>, which has the following type signature:</p>
 <pre><code class="language-hs">txtsToRenderedHtml :: [(FilePath, String)] -&gt; [(FilePath, String)]
 </code></pre>
@@ -464,7 +464,7 @@ What do you think about the resulting code? Is it easier or more difficult to
 understand? Is it more modular or less? What are the pros and cons?</p>
 <hr />
 <h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
-<p>With that, we have completed our <code>HsBlog.Directory</code> module that is responsible for converting
+<p>With that, we have completed our <code>HsBlog.Directory</code> module, which is responsible for converting
 a directory safely. Note that the code could probably be simplified quite a bit if we
 were fine with errors crashing the entire program altogether, but sometimes this is
 the price we pay for robustness. It is up to you to choose what you can live with

@@ -147,16 +147,16 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="either-with-io"><a class="header" href="#either-with-io">Either with IO?</a></h1>
-<p>When we create <code>IO</code> actions that may require I/O we risk running into all kinds of errors.
+<p>When we create <code>IO</code> actions that may require I/O, we risk running into all kinds of errors.
 For example, when we use <code>writeFile</code>, we could run out of disk space in the middle of writing,
-or the file might be write protected. While these scenarios aren't super common, they are definitely
+or the file might be write-protected. While these scenarios aren't super common, they are definitely
 possible.</p>
 <p>We could've potentially encoded Haskell functions like <code>readFile</code> and <code>writeFile</code> as <code>IO</code> operations
 that return <code>Either</code>, for example:</p>
 <pre><code class="language-hs">readFile :: FilePath -&gt; IO (Either ReadFileError String)
 writeFile :: FilePath -&gt; String -&gt; IO (Either WriteFileError ())
 </code></pre>
-<p>However there are a couple of issues here, the first is that composing <code>IO</code> actions
+<p>However, there are a couple of issues here; the first is that composing <code>IO</code> actions
 becomes more difficult. Previously we could write:</p>
 <pre><code class="language-hs">readFile &quot;input.txt&quot; &gt;&gt;= writeFile &quot;output.html&quot;
 </code></pre>
@@ -166,7 +166,7 @@ before calling <code>writeFile</code>.</p>
 <h2 id="composing-io--either-using-exceptt"><a class="header" href="#composing-io--either-using-exceptt">Composing IO + Either using ExceptT</a></h2>
 <p>One way to handle this is by using <strong>monad transformers</strong>. Monad transformers provide a way
 to stack monad capabilities on top of one another. They are called transformers because
-<strong>they take a type that has an instance of monad as input, and return a new type that
+<strong>they take a type that has an instance of monad as input and return a new type that
 implements the monad interface, stacking a new capability on top of it</strong>.</p>
 <p>For example, if we want to compose values of a type that is equivalent to <code>IO (Either Error a)</code>,
 using the monadic interface (the function <code>&gt;&gt;=</code>), we can use a monad transformer
@@ -176,7 +176,7 @@ Let's see how <code>ExceptT</code> is defined:</p>
 <pre><code class="language-hs">newtype ExceptT e m a = ExceptT (m (Either e a))
 </code></pre>
 <p>Remember, a <code>newtype</code> is a new name for an existing type. And if we substitute
-<code>e</code> with <code>Error</code> and <code>m</code> with <code>IO</code> we get exactly <code>IO (Either Error a)</code> as we wanted.
+<code>e</code> with <code>Error</code> and <code>m</code> with <code>IO</code>, we get exactly <code>IO (Either Error a)</code> as we wanted.
 And we can convert an <code>ExceptT Error IO a</code> into <code>IO (Either Error a)</code> using
 the function <code>runExceptT</code>:</p>
 <pre><code class="language-hs">runExceptT :: ExceptT e m a -&gt; m (Either e a)
@@ -204,7 +204,7 @@ bindExceptT mx f = do
     Right y -&gt; f y
 </code></pre>
 <p>Note that we didn't actually use the implementation details of <code>Error</code> or <code>IO</code>,
-<code>Error</code> isn't mentioned at all, and for <code>IO</code> we only used the monadic interface with
+<code>Error</code> isn't mentioned at all, and for <code>IO</code>, we only used the monadic interface with
 the do notation. We could write the same function with a more generalized type signature:</p>
 <pre><code class="language-hs">bindExceptT :: Monad m =&gt; m (Either e a) -&gt; (a -&gt; m (Either e b)) -&gt; m (Either e b)
 bindExceptT mx f = do
@@ -213,7 +213,7 @@ bindExceptT mx f = do
     Left err -&gt; pure (Left err)
     Right y -&gt; f y
 </code></pre>
-<p>And because <code>newtype ExceptT e m a = ExceptT (m (Either e a))</code> we can just
+<p>And because <code>newtype ExceptT e m a = ExceptT (m (Either e a))</code>, we can just
 pack and unpack that <code>ExceptT</code> constructor and get:</p>
 <pre><code class="language-hs">bindExceptT :: Monad m =&gt; ExceptT e m a -&gt; (a -&gt; ExceptT e m b) -&gt; ExceptT e m b
 bindExceptT mx f = ExceptT $ do
@@ -228,7 +228,7 @@ bindExceptT mx f = ExceptT $ do
 <hr />
 <blockquote>
 <p>Note that when stacking monad transformers, the order in which we stack them matters.
-With <code>ExceptT Error IO a</code>, we have an <code>IO</code> operation that when run will return <code>Either</code>
+With <code>ExceptT Error IO a</code>, we have an <code>IO</code> operation that, when run will return <code>Either</code>
 an error or a value.</p>
 </blockquote>
 <p><code>ExceptT</code> can enjoy both worlds - we can return error values using the function <code>throwError</code>:</p>
@@ -245,7 +245,7 @@ lift getLine :: ExceptT e IO String
 </code></pre>
 <blockquote>
 <p>Actually, <code>lift</code> is also a type class function from <code>MonadTrans</code>, the type class
-of monad transformers. So technically <code>lift getLine :: MonadTrans t =&gt; t IO String</code>,
+of monad transformers. So technically, <code>lift getLine :: MonadTrans t =&gt; t IO String</code>,
 but we are specializing for concreteness.</p>
 </blockquote>
 <p>Now, if we had:</p>
@@ -262,7 +262,7 @@ errors for both <code>readFile</code> and <code>writeFile</code> must be the sam
 force anyone using these functions to handle these errors - should a user who
 called <code>writeFile</code> be required to handle a &quot;file not found&quot; error? Should a user
 who called <code>readFile</code> be required to handle an &quot;out of disk space&quot; error?
-There are many many more possible IO errors! &quot;network unreachable&quot;, &quot;out of memory&quot;,
+There are many, many more possible IO errors! &quot;network unreachable&quot;, &quot;out of memory&quot;,
 &quot;cancelled thread&quot;, we cannot require a user to handle all these errors, or
 even cover them all in a data type.</p>
 <p>So what do we do?</p>

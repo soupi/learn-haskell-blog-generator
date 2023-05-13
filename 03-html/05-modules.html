@@ -147,11 +147,11 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="preventing-incorrect-use-with-modules"><a class="header" href="#preventing-incorrect-use-with-modules">Preventing incorrect use with modules</a></h1>
-<p>In this section we will move the HTML generation library to its own module.</p>
+<p>In this section, we will move the HTML generation library to its own module.</p>
 <h2 id="modules"><a class="header" href="#modules">Modules</a></h2>
 <p>Each Haskell source file is a module. The module name should have the
-same name as the source file and should start with a capital
-letter. Sub-directories should also be part of the name and we use <code>.</code>
+same name as the source file and start with a capital
+letter. Sub-directories should also be part of the name, and we use <code>.</code>
 to denote a sub-directory. We'll see that in the next section.</p>
 <p>The only exception to the rule are entry points to the program -
 modules with the name 'Main' that define <code>main</code> in them. Their source
@@ -165,7 +165,7 @@ file names could have any name they want.</p>
 <p>The export list can be omitted if you want to export everything
 defined in the module, but we don't. We will list exactly the
 functions and types we want to export. This will give us control
-on how people can use our tiny library.</p>
+over how people can use our tiny library.</p>
 <p>We will create a new source file named <code>Html.hs</code> and add the following
 module declaration code at the top of the file:</p>
 <pre><code class="language-hs">module Html
@@ -184,7 +184,7 @@ module declaration code at the top of the file:</p>
 <ol>
 <li>
 <p>The constructors for our new types, only the types themselves.
-If we wanted to export the constructors as well we would've written
+If we wanted to export the constructors as well, we would've written
 <code>Html(Html)</code> or <code>Html(..)</code>. This way the user cannot create their own
 <code>Structure</code> by writing <code>Structure &quot;Hello&quot;</code>.</p>
 </li>
@@ -321,7 +321,7 @@ render html =
 </code></pre>
 <blockquote>
 <p>As an aside, you might have noticed that I've decided to suffix the functions used to
-construct HTML values with an underscore (<code>_</code>). This mostly an aesthetic decision which,
+construct HTML values with an underscore (<code>_</code>). This is mostly an aesthetic decision which,
 in my opinion, makes the EDSL easier to recognize,
 but it is also useful to avoid name clashes with
 functions defined in the Haskell standard library, such as <code>head</code>.

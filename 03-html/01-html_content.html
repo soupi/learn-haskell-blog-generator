@@ -149,7 +149,7 @@
                         <h1 id="flexible-html-content-functions"><a class="header" href="#flexible-html-content-functions">Flexible HTML content (functions)</a></h1>
 <p>We'd like to be able to write different HTML pages without having to write the whole
 structure of HTML and body tags over and over again. We can do that with functions.</p>
-<p>To define a function, we create a definition like we saw previously and add the argument
+<p>To define a function, we create a definition as we saw previously and add the argument
 names after the name and before the equals sign (<code>=</code>).
 So a function definition has the following form:</p>
 <pre><code class="language-hs">&lt;name&gt; &lt;arg1&gt; &lt;arg2&gt; ... &lt;argN&gt; = &lt;expression&gt;
@@ -180,15 +180,15 @@ to in <code>main = putStrLn myhtml</code>, we would have to wrap the expression 
 <p>we'll get an error from GHC stating that <code>putStrLn</code> is applied to two arguments,
 but it only takes one. This is because the above is of the form <code>&lt;name&gt; &lt;arg1&gt; &lt;arg2&gt;</code>
 in which, as we defined earlier, <code>&lt;arg1&gt;</code> and <code>&lt;arg2&gt;</code> are arguments to <code>&lt;name&gt;</code>.</p>
-<p>By using parenthesis we can group together the expressions in the right order.</p>
+<p>Using parenthesis, we can group the expressions together in the correct order.</p>
 <blockquote>
 <h4 id="an-aside-about-operator-precedence-and-fixity"><a class="header" href="#an-aside-about-operator-precedence-and-fixity">An aside about operator precedence and fixity</a></h4>
-<p>operators (like <code>&lt;&gt;</code>) are infix functions which take two arguments - one from each side.</p>
+<p>operators (like <code>&lt;&gt;</code>) are infix functions that take two arguments - one from each side.</p>
 <p>When there are multiple operators in the same expression without parenthesis, the operator
 <em>fixity</em> (left or right) and <em>precedence</em> (a number between 0 and 10) determine which
 operator binds more tightly.</p>
-<p>In our case <code>&lt;&gt;</code> has <em>right</em> fixity, so Haskell adds invisible parenthesis on the right side
-of <code>&lt;&gt;</code>. So for example:</p>
+<p>In our case, <code>&lt;&gt;</code> has <em>right</em> fixity, so Haskell adds an invisible parenthesis on the right side
+of <code>&lt;&gt;</code>. So, for example:</p>
 <pre><code class="language-hs">&quot;&lt;html&gt;&lt;body&gt;&quot; &lt;&gt; content &lt;&gt; &quot;&lt;/body&gt;&lt;/html&gt;&quot;
 </code></pre>
 <p>is viewed by Haskell as:</p>
@@ -201,13 +201,13 @@ so we give precedence to <code>*</code> over <code>+</code>. Haskell will view t
 </code></pre>
 <p>You might run into errors when mixing different operators with the <em>same precedence</em>
 but <em>different fixity</em>, because Haskell won't understand how to group these expressions.
-In that case we can solve the problem by adding parenthesis explicitly.</p>
+In that case, we can solve the problem by adding parenthesis explicitly.</p>
 </blockquote>
 <hr />
 <p>Exercises:</p>
 <ol>
 <li>
-<p>Separate the functionality of <code>wrapHtml</code> to two functions:</p>
+<p>Separate the functionality of <code>wrapHtml</code> into two functions:</p>
 <ol>
 <li>One that wraps content in <code>html</code> tag</li>
 <li>one that wraps content in a <code>body</code> tag</li>
@@ -299,15 +299,15 @@ firefox hello.html
 <h2 id="indentation"><a class="header" href="#indentation">Indentation</a></h2>
 <p>You might ask how does Haskell know a definition is complete?
 The answer is: Haskell uses indentation to know when things should be grouped together.</p>
-<p>Indentation in Haskell can be a bit tricky, but in general: code which is supposed to be
+<p>Indentation in Haskell can be a bit tricky, but in general: code that is supposed to be
 part of some expression should be indented further than the beginning of that expression.</p>
 <p>We know two definitions are separate because the second one is not indented further than the first one.</p>
 <h3 id="indentation-tips"><a class="header" href="#indentation-tips">Indentation tips</a></h3>
 <ol>
-<li>Choose a specific amount of spaces for indentation (2 spaces, 4 spaces, etc) and stick to it.
+<li>Choose a specific amount of spaces for indentation (2 spaces, 4 spaces, etc.) and stick to it.
 Always use spaces over tabs.</li>
-<li>Do not indent more than once in any given time.</li>
-<li>When in doubt, drop line as needed and indent once.</li>
+<li>Do not indent more than once at any given time.</li>
+<li>When in doubt, drop the line as needed and indent once.</li>
 </ol>
 <p>Here are a few examples:</p>
 <pre><code class="language-hs">main =
@@ -318,7 +318,7 @@ Always use spaces over tabs.</li>
     putStrLn
         (wrapHtml &quot;Hello, world!&quot;)
 </code></pre>
-<p><strong>Avoid the following styles</strong>, which use more than one indentation steps, or completely disregard
+<p><strong>Avoid the following styles</strong>, which use more than one indentation step, or completely disregard
 indentation steps:</p>
 <pre><code class="language-hs">main = putStrLn
         (wrapHtml &quot;Hello, world!&quot;)

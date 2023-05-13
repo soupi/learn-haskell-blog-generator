@@ -173,7 +173,7 @@ module under the name
 <code>data</code>, we can use pattern matching.</p>
 <h2 id="pattern-matching"><a class="header" href="#pattern-matching">Pattern Matching</a></h2>
 <p>We've already seen pattern matching a few times.
-It is an incredibly versatile feature of Haskell, we can use it to do two main things:</p>
+It is an incredibly versatile feature of Haskell; we can use it to do two main things:</p>
 <ol>
 <li>Deconstruct complex values</li>
 <li>Control flow</li>
@@ -194,8 +194,8 @@ getBluePart color =
     RGB _ _ blue -&gt; blue
 </code></pre>
 <p>In <code>getBluePart</code> we deconstruct a composite value into its part and extract the third component
-representing the blue value in a color represented by red, green and blue components (RGB).</p>
-<p>Note that <code>blue</code> is the name we give to the third component so it will be bound
+representing the blue value in a color represented by red, green, and blue components (RGB).</p>
+<p>Note that <code>blue</code> is the name we give to the third component, so it will be bound
 to the right of the arrow that comes after the pattern. This is similar to
 a function argument. Also note that <code>_</code> matches any value <em>without</em> binding it to a name.</p>
 <p>We can also try to match a value with more than one pattern:</p>
@@ -231,8 +231,8 @@ ansiColorToVGA ansicolor =
 </code></pre>
 <p>It's important to notice a few things here:</p>
 <ol>
-<li>Patterns can be nested, notice how we deconstructed <code>ansicolor</code> on multiple levels</li>
-<li>We try to match patterns from the top down, it is possible for patterns to overlap with one another and the top one will win</li>
+<li>Patterns can be nested; notice how we deconstructed <code>ansicolor</code> on multiple levels</li>
+<li>We try to match patterns from the top down; it is possible for patterns to overlap with one another, and the top one will win</li>
 <li>If the value we try to match does not match any of the patterns listed, an error will be thrown at runtime</li>
 </ol>
 <p>We can ask GHC to notify us when we accidentally write overlapping patterns,
@@ -323,7 +323,7 @@ ansiToUbuntu ansiColor =
             Cyan -&gt; RGB 0 255 255
             White -&gt; RGB 255 255 255
 </code></pre>
-<p>Since pattern matching goes arbitrarily deep as we saw before, we could instead
+<p>Since pattern matching goes arbitrarily deep, as we saw before, we could instead
 pattern match all the way through in one case expression:</p>
 <pre><code class="language-hs">ansiToUbuntu :: AnsiColor -&gt; Color
 ansiToUbuntu ansiColor =
@@ -345,7 +345,7 @@ ansiToUbuntu ansiColor =
     AnsiColor Bright Cyan -&gt; RGB 0 255 255
     AnsiColor Bright White -&gt; RGB 255 255 255
 </code></pre>
-<p>But this is a bit too much repetition of <code>AnsiColor</code>, <code>Dark</code> and <code>Bright</code>
+<p>But this is a bit too much repetition of <code>AnsiColor</code>, <code>Dark</code>, and <code>Bright</code>
 to my taste in this case.</p>
 </details>
 <details><summary>Solution for (3)</summary>
@@ -367,7 +367,7 @@ isEmpty list =
 <hr />
 <h2 id="parsing-with-rich-context"><a class="header" href="#parsing-with-rich-context">Parsing with rich context</a></h2>
 <p>Previously we wrote a parser that separates documents into different paragraphs.
-With new features under our belt we can now remember the exact context we are in
+With new features under our belt, we can now remember the exact context we are in
 (whether it is a text paragraph, a list, or a code block) and act accordingly!</p>
 <p>Let's look again at the parsing code we wrote previously:</p>
 <pre><code class="language-hs">parse :: String -&gt; Document
@@ -392,8 +392,8 @@ trim = unwords . words
 </code></pre>
 <p>Previously our context, <code>currentParagraph</code>, was used to group adjacent lines in an accumulative list.</p>
 <p>Next, instead of using a <code>[String]</code> type to denote adjacent lines, we can instead use a <code>Structure</code> to denote the context.</p>
-<p>One issue we might have though with representing context with the <code>Structure</code> type,
-is that when we start parsing we don't have any context.
+<p>One issue we might have, though, with representing context with the <code>Structure</code> type,
+is that when we start parsing, we don't have any context.
 But we have learned of a way to represent the absence of a value with <code>Maybe</code>! So our new context type can be <code>Maybe Structure</code> instead.</p>
 <p>Let's rewrite our code above with our new context type:</p>
 <pre><code class="language-hs">parse :: String -&gt; Document
@@ -447,7 +447,7 @@ the result of <code>parseLines Nothing rest</code> as is. Try writing this using
 </code></pre>
 </details>
 <p>The <a href="https://hackage.haskell.org/package/base-4.16.4.0/docs/Prelude.html#v:maybe">maybe</a>
-function let's us do the same thing in a more compact way. It is a function
+function lets us do the same thing more compactly. It is a function
 that works similarly to pattern matching on a <code>Maybe</code>:
 the third argument to <code>maybe</code> is the value on which we pattern match,
 the second argument is a function to apply to the value found in a <code>Just</code> case,
@@ -466,14 +466,14 @@ how we partially apply <code>(:)</code> with <code>structure</code> to create a 
 and how we apply <code>parseLines Nothing rest</code> to the case expression.</p>
 </details>
 <p>This way of encoding pattern matching using functions is fairly common.</p>
-<p>Check out the types of <code>id</code>, <code>(:)</code> and <code>maybe id (:)</code> in GHCi!</p>
+<p>Check out the types of <code>id</code>, <code>(:)</code>, and <code>maybe id (:)</code> in GHCi!</p>
 </li>
 <li>
 <p>Hey! Didn't we say that appending <code>String</code>s/lists is slow (which is what <code>unwords</code> does)? Yes, it is.
 Because in our <code>Structure</code> data type, a paragraph is defined as <code>Paragraph String</code> and not <code>Paragraph [String]</code>,
 we can't use our trick of building a list of lines and then reverse it in the end.</p>
 <p>So what do we do?
-There are many ways to handle that, one simple way is to create a different type with the right shape:</p>
+There are many ways to handle that; one simple way is to create a different type with the right shape:</p>
 <pre><code class="language-hs">data Context
   = CtxHeading Natural String
   | CtxParagraph [String]
@@ -482,11 +482,11 @@ There are many ways to handle that, one simple way is to create a different type
   | CtxCodeBlock [String]
 </code></pre>
 <p>Since creating new types in Haskell is cheap, this is a very viable solution.</p>
-<p>In this case I'm going with the approach of not worrying about it too much,
+<p>In this case, I'm going with the approach of not worrying about it too much,
 because it's a very local piece of code that can easily be fixed later if needed.</p>
 </li>
 </ol>
-<p>Let's cover more parsing cases, we want to handle headings and lists as well.
+<p>Let's cover more parsing cases; we want to handle headings and lists as well.
 We can do that by examining the first characters of a line:</p>
 <pre><code class="language-hs">parse :: String -&gt; Document
 parse = parseLines Nothing . lines
@@ -625,7 +625,7 @@ we can compare solutions with the <code>==</code> (equals) operator.</p>
 <p>Try it in GHCi! You can read a text file in GHCi using the following syntax:</p>
 <pre><code class="language-hs">ghci&gt; txt &lt;- readFile &quot;/tmp/sample.txt&quot;
 </code></pre>
-<p>And then compare with the hand written example values from the solutions
+<p>And then compare with the handwritten example values from the solutions
 (after adding them to the module and loading them in GHCi):</p>
 <pre><code class="language-hs">ghci&gt; parse txt == example4
 </code></pre>

@@ -152,22 +152,22 @@
 <ol>
 <li>Encoding errors as a data type and using the <code>Either</code> type to encode &quot;a value or an error&quot;.
 Useful approach for uneffectful code</li>
-<li>Using <code>ExceptT</code> when we want to combine the approach in (1) on top on an existing
+<li>Using <code>ExceptT</code> when we want to combine the approach in (1) on top of an existing
 type with monadic capabilities</li>
 <li>Using exceptions for IO code</li>
 </ol>
 <p>We've also learned a few new abstractions and techniques:</p>
 <ol>
-<li>The <code>Traversable</code> type class, for data structures that can be traversed from left to right
+<li>The <code>Traversable</code> type class, for data structures that can be traversed from left to right, 
 such as linked lists, binary trees and <code>Map</code>s.
 Pretty useful when combined with another applicative functor type like <code>Either</code> or <code>IO</code></li>
 <li>The <code>Monad</code> type class extends the <code>Applicative</code> type class with the <code>join :: m (m a) -&gt; m a</code>
-function. We learned that <code>Either</code> implements this type class interface and so does <code>IO</code></li>
+function. We learned that <code>Either</code> implements this type class interface, and so does <code>IO</code></li>
 <li>The <code>MonadTrans</code> type class for <em>monad transformers</em> for types that take other monads as inputs
 and provide a monadic interface (<code>&gt;&gt;=</code>, do notation, etc.) while combining both their capabilities.
 We saw how to stack an <code>Either</code>-like monad transformer, <code>ExceptT</code>, on top of <code>IO</code></li>
 </ol>
-<p>We are almost done. Only a couple more things left to do with this project. Let's go!</p>
+<p>We are almost done – only a couple more things left to do with this project. Let's go!</p>
 <blockquote>
 <p>You can view the git commit of
 <a href="https://github.com/soupi/learn-haskell-blog-generator/commit/a08d148d981fa00cb7025f1b651d7b75084dd1ae">the changes we've made</a>

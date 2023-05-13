@@ -147,7 +147,7 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="hello-world"><a class="header" href="#hello-world">Hello, world!</a></h1>
-<p>In this chapter we will create a simple HTML &quot;hello world&quot; program and use the Haskell toolchain
+<p>In this chapter, we will create a simple HTML &quot;hello world&quot; program and use the Haskell toolchain
 to compile and run it.</p>
 <blockquote>
 <p>If you haven't installed a Haskell toolchain yet, visit
@@ -156,7 +156,7 @@ and install a Haskell toolchain.</p>
 </blockquote>
 <h2 id="a-haskell-source-file"><a class="header" href="#a-haskell-source-file">A Haskell source file</a></h2>
 <p>A Haskell source file is composed of definitions.</p>
-<p>The most common type of definitions have the following form:</p>
+<p>The most common type of definition has the following form:</p>
 <pre><code class="language-hs">&lt;name&gt; = &lt;expression&gt;
 </code></pre>
 <p>Note that:</p>
@@ -166,7 +166,7 @@ and install a Haskell toolchain.</p>
 </ol>
 <p>A source file containing a definition of the name <code>main</code> can be treated as an executable,
 and the expression <code>main</code> is bound to is the entry point to the program.</p>
-<p>Let's create a new Haskell source file called <code>hello.hs</code>, and write the following line there:</p>
+<p>Let's create a new Haskell source file called <code>hello.hs</code> and write the following line there:</p>
 <pre><code class="language-hs">main = putStrLn &quot;&lt;html&gt;&lt;body&gt;Hello, world!&lt;/body&gt;&lt;/html&gt;&quot;
 </code></pre>
 <p>We've defined a new name, <code>main</code>, and bound it to the expression <code>putStrLn &quot;&lt;html&gt;&lt;body&gt;Hello, world!&lt;/body&gt;&lt;/html&gt;&quot;</code>.</p>
@@ -196,7 +196,7 @@ Linking hello ...
 &lt;html&gt;&lt;body&gt;Hello, world!&lt;/body&gt;&lt;/html&gt;
 </code></pre>
 <h2 id="interpreting-programs"><a class="header" href="#interpreting-programs">Interpreting programs</a></h2>
-<p>Alternatively, we can skip the compilation and creation of artifact files phase, and run the source file directly
+<p>Alternatively, we can skip the compilation and creation of artifact files phase and run the source file directly
 using the command line program <code>runghc</code>:</p>
 <pre><code class="language-sh">&gt; runghc hello.hs
 &lt;html&gt;&lt;body&gt;Hello, world!&lt;/body&gt;&lt;/html&gt;

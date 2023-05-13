@@ -147,15 +147,15 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="defining-a-project-description"><a class="header" href="#defining-a-project-description">Defining a project description</a></h1>
-<p>Up until now we've only used <code>base</code> and the libraries
+<p>Up until now, we've only used <code>base</code> and the libraries
 <a href="https://downloads.haskell.org/ghc/9.2.5/docs/html/users_guide/9.2.5-notes.html#included-libraries">included</a>
-with GHC. Because of that we didn't really need to do anything fancier
+with GHC. Because of that, we didn't really need to do anything fancier
 than <code>runghc</code> to run our program. However, we want to start using
-external libraries which are not included with GHC in our programs.</p>
+external libraries not included with GHC in our programs.</p>
 <p>External packages can be downloaded from <a href="https://hackage.haskell.org/">Hackage</a> -
 Haskell's central package archive, <a href="https://www.stackage.org/">Stackage</a> -
-a subset of Hackage packages that are known to work together, or even
-from remote git repositories. Usually Haskellers use a <strong>package manager</strong> to
+a subset of Hackage packages known to work together or even
+from remote git repositories. Usually, Haskellers use a <strong>package manager</strong> to
 download and manage packages for different projects. The most popular package
 managers for Haskell are <a href="https://cabal.readthedocs.io">cabal</a> and
 <a href="https://haskellstack.org">stack</a>.</p>
@@ -176,10 +176,10 @@ For quick experimentation, we can just
 to build or even run our program with external packages.
 But as programs get larger, use more dependencies, and require more functionality,
 it is better to <strong>create a project description</strong> for our programs and libraries.</p>
-<p>Project description is done in a <strong>cabal file</strong>. We can ask cabal or stack
+<p>The project description is done in a <strong>cabal file</strong>. We can ask cabal or stack
 to generate one for us using <code>cabal init --libandexe</code> or <code>stack new</code>,
 along with many other files, but we will likely need to edit the file by hand
-later. For now let's just paste an initial example in <code>hs-blog.cabal</code> and edit it.</p>
+later. For now, let's just paste an initial example in <code>hs-blog.cabal</code> and edit it.</p>
 <pre><code class="language-cabal">cabal-version:       2.4
 
 name:                name should match with &lt;name&gt;.cabal
@@ -269,7 +269,7 @@ extra-doc-files:
 and test suites. Since Cabal 2.2, we can use
 <a href="https://cabal.readthedocs.io/en/stable/cabal-package.html#common-stanzas">common stanzas</a>
 to group settings to be shared between different targets, so we don't have to repeat them for each target.</p>
-<p>In our case we've created a new common stanza (or block) called <code>common-settings</code> and
+<p>In our case, we've created a new common stanza (or block) called <code>common-settings</code> and
 defined the default language (Haskell has two standards, 98 and 2010),
 and instructed GHC to compile with <code>-Wall</code>.</p>
 <pre><code class="language-cabal">common common-settings
@@ -282,14 +282,14 @@ and all of these settings will be automatically added.</p>
 <h3 id="library"><a class="header" href="#library">Library</a></h3>
 <p>In a <code>library</code> target, we define:</p>
 <ul>
-<li>The settings with which to build the library (in this case we just import <code>common-settings</code>)</li>
+<li>The settings with which to build the library (in this case, we just import <code>common-settings</code>)</li>
 <li>The directory in which the source files can be found</li>
 <li>The packages we require to build the library</li>
 <li>The modules exposed from the library and can be used by others</li>
 <li>The modules <em>not</em> exposed from the library and which <em>cannot</em> be used by others;
 these could be any module you don't wish to export, such as an internal utility
 functions module.
-In our case we don't have anything like this, so we commented out the <code>other-modules</code>
+In our case, we don't have anything like this, so we commented out the <code>other-modules</code>
 label.</li>
 </ul>
 <p>Note that it is common to specify <strong>version bounds</strong> for packages.
@@ -309,8 +309,8 @@ These can also be generated using cabal with the <code>cabal gen-bounds</code> c
       HsBlog.Markup
   -- other-modules:
 </code></pre>
-<p>Also note that we've added an additional <em>hierarchy</em> for our modules and defined
-a different source directory. This means we will need to move the files around
+<p>Also, note that we've added an additional <em>hierarchy</em> for our modules and defined
+a different source directory (<code>src</code>). This means we will need to move the files around
 a bit and change the <code>module</code> name in each file and the <code>import</code> statements. This is to avoid
 conflict with other packages that a user might import.</p>
 <hr />
@@ -360,13 +360,13 @@ import HsBlog.Html.Internal
 </details>
 <hr />
 <h3 id="executable"><a class="header" href="#executable">Executable</a></h3>
-<p>We have separated our code into two sections: a library and an executable, why?</p>
+<p>We have separated our code into two sections: a library and an executable; why?</p>
 <p>First, libraries can be used by others. If we publish our code and someone wants to
 use it and build upon it, they can. Executables can't be imported by other projects.
 Second, we can write unit tests for libraries. It is usually
 beneficial to write most, if not all, of our logic as a library, and provide
 a thin executable over it.</p>
-<p>Executables' descriptions are very similar to libraries, here we define:</p>
+<p>Executables' descriptions are very similar to libraries; here, we define:</p>
 <ul>
 <li>The name of the executable</li>
 <li>Where the source directory for this application is</li>
@@ -384,7 +384,7 @@ a thin executable over it.</p>
   ghc-options:
     -O
 </code></pre>
-<p>We can write many executables descriptions. In this case we only have one.</p>
+<p>We can write many executables descriptions. In this case, we only have one.</p>
 <hr />
 <p><strong>Exercise</strong>: Add a new file: <code>app/Main.hs</code> which imports <code>HsBlog</code> and runs <code>main</code>.</p>
 <details><summary>Solution</summary>
@@ -512,7 +512,7 @@ Visit <a href="https://www.stackage.org/lts-18.22">this link</a> to find out whi
 snapshot includes, what their versions are, and which GHC version is used
 with this snapshot</li>
 <li><code>packages</code>: Describes the location of packages we plan to build. In our case
-we have only one and it can be found in the current directory</li>
+we have only one, and it can be found in the current directory</li>
 </ul>
 <p>We'll add <code>stack.yaml</code> to our project directory:</p>
 <pre><code class="language-yaml">resolver: lts-18.22
@@ -528,30 +528,25 @@ or <code>cabal</code> to build and run our program and package (I mostly use sta
 <p>Building the project - on the first run, cabal will download the package dependencies
 and use the GHC on PATH to build the project.</p>
 <p>Cabal caches packages between projects, so if a new project uses the same packages
-with the same versions (and the same flag settings) they will not need to be reinstalled.</p>
+with the same versions (and the same flag settings), they will not need to be reinstalled.</p>
 <blockquote>
-<p>In older versions of cabal, packages could be installed either globally, or in sandboxes.
-In each sandbox (and globally) there could only be one version of a package installed,
-and users would usually create different sandboxes for different projects, without caching
+<p>In older versions of cabal, packages could be installed globally or in sandboxes.
+In each sandbox (and globally), there could only be one version of a package installed,
+and users would usually create different sandboxes for different projects without caching
 packages between projects.</p>
 <p>With the new build system implementation, multiple versions of the same package can be
-installed globally, and for each project cabal will (try to) choose a specific version for each
-package dependency such that they all work together, without needing sandboxing.
+installed globally, and for each project, cabal will (try to) choose a specific version for each
+package dependency such that they all work together without needing sandboxing.
 This change helps us increase sharing of built packages while avoiding conflicts and manual
 handling of sandboxes.</p>
-</blockquote>
-<blockquote>
-<p>Note: The new build system implementation is now the default and Cabal commands do not need
-to be prefixed with <code>v2-</code>, but the Cabal documentation will still mention the prefix to
-refer to the new commands.</p>
 </blockquote>
 <p>A few important commands we should be familiar with:</p>
 <pre><code class="language-sh">cabal update
 </code></pre>
 <p><a href="https://cabal.readthedocs.io/en/stable/cabal-commands.html#cabal-update"><code>update</code></a>
 fetches information from remote package repositories (specifically Hackage unless specified otherwise)
-and updates the local package index which includes various information about available packages such as
-their names, versions and dependencies.</p>
+and updates the local package index, which includes various information about available packages, such as
+their names, versions, and dependencies.</p>
 <p><code>cabal update</code> is usually the first command to run before fetching package dependencies.</p>
 <pre><code class="language-sh">cabal build
 </code></pre>
@@ -574,10 +569,10 @@ it will load the target's package dependencies and modules to be available in <c
 </code></pre>
 <p><a href="https://cabal.readthedocs.io/en/stable/cabal-commands.html#cabal-clean"><code>clean</code></a>
 Deletes the build artifacts that we built.</p>
-<p>There are more interesting commands we could use, such as <code>cabal freeze</code> to generate
+<p>There are more interesting commands we could use, such as <code>cabal freeze</code>, to generate
 a file which records the packages versions and flags we used to build this project,
 and <code>cabal sdist</code> to bundle the project source to a package tarball which can be
-uploaded to Hackage. If you'd like to learn more visit the
+uploaded to Hackage. If you'd like to learn more, visit the
 <a href="https://cabal.readthedocs.io/en/stable/cabal-commands.html">Cabal user guide</a>.</p>
 <h3 id="for-stack"><a class="header" href="#for-stack">For stack:</a></h3>
 <p>Building the project - on the first run, stack will install the right GHC for this project
@@ -635,13 +630,13 @@ still experimental</li>
 </ul>
 <p>It's also important to note the amount of dependencies a package has. Adding many dependencies
 will affect compilation time and code size. And it can sometimes be a good thing to consider
-when comparing packages, or considering whether a package is needed at all.</p>
+when comparing packages or considering whether a package is needed at all.</p>
 <h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
 <p>We've created a package description for our library and used <code>stack</code> and/or <code>cabal</code>
-to build our program. In future chapters we'll start adding external packages,
-we'll only have to add them to the <code>build-depends</code> section in the cabal file and
+to build our program. In future chapters, we'll start adding external packages,
+we'll only have to add them to the <code>build-depends</code> section in the cabal file, and
 our package manager will download and install the required package for us!</p>
-<p>We've made some change to our project directory, and it should now look like this:</p>
+<p>We've made some changes to our project directory, and it should now look like this:</p>
 <pre><code>.
 ├── app
 │   └── Main.hs

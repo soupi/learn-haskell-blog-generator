@@ -150,19 +150,19 @@
 <p>Haskell is a <strong>statically typed</strong> programming language. That means that every
 expression has a type, and we check that the types are valid with
 regards to each other before running the program. If we discover that
-they are not valid, an error message will be printed and the program
+they are not valid, an error message will be printed, and the program
 will not run.</p>
 <p>An example of a type error would be if we'd pass 3 arguments to a function
 that takes only 2, or pass a number instead of a string.</p>
 <p>Haskell is also <strong>type inferred</strong>, so we don't <em>need</em> to specify the type
 of expressions - Haskell can <em>infer</em> from the context of the expression
-what its type should be, and that's what we did up until now. However, <strong>specifying
+what its type should be, and that's what we have done until now. However, <strong>specifying
 types is useful</strong> - it adds a layer of documentation for you or others
 that will look at the code later, and it helps verify to some degree
 that what was intended (with the type signature) is what was
 written (with the expression). It is generally recommended to annotate all <em>top-level</em>
 definitions with type signatures.</p>
-<p>We use double-colon (<code>::</code>) to specify the type of names. We usually
+<p>We use a double-colon (<code>::</code>) to specify the type of names. We usually
 write it right above the definition of the name itself.</p>
 <p>Here are a few examples of types we can write:</p>
 <ul>
@@ -186,10 +186,10 @@ two strings and returns a string.</p>
 <p>But actually, all functions in Haskell take <strong>exactly one argument</strong> as input
 and return <strong>exactly one value</strong> as output. It's just convenient to refer
 to functions like <code>makeHtml</code> as functions with multiple inputs.</p>
-<p>In our case, <code>makeHtml</code> is a function that takes <strong>one</strong> string argument,
+<p>In our case, <code>makeHtml</code> is a function that takes <strong>one</strong> string argument
 and returns a <strong>function</strong>. <em>The function it returns</em> takes a string argument
 as well and finally returns a string.</p>
-<p>The magic here is that <code>-&gt;</code> is right associative. Which means that when we write:</p>
+<p>The magic here is that <code>-&gt;</code> is right-associative. This means that when we write:</p>
 <pre><code class="language-hs">makeHtml :: String -&gt; String -&gt; String
 </code></pre>
 <p>Haskell parses it as:</p>
@@ -205,7 +205,7 @@ defining a new function, <code>el</code>.</p>
 el tag content =
   &quot;&lt;&quot; &lt;&gt; tag &lt;&gt; &quot;&gt;&quot; &lt;&gt; content &lt;&gt; &quot;&lt;/&quot; &lt;&gt; tag &lt;&gt; &quot;&gt;&quot;
 </code></pre>
-<p>el is a function that takes a tag and a content, and wraps the content
+<p>el is a function that takes a tag and content, and wraps the content
 with the tag.</p>
 <p>We can now implement <code>html_</code> and <code>body_</code> by partially applying <code>el</code> and
 only provide the tag.</p>
@@ -220,11 +220,11 @@ equals sign because Haskell functions are &quot;<strong>first class</strong>&quo
 exactly like values of primitive types like <code>Int</code> or <code>String</code>.
 We can name a function like any other value,
 put it in data structures, pass it to functions, and so on!</p>
-<p>The way Haskell treats names is very similar to copy paste. Anywhere
+<p>The way Haskell treats names is very similar to copy-paste. Anywhere
 you see <code>html_</code> in the code, you can replace it with <code>el &quot;html&quot;</code>. They are
 the same (this is what the equals signs say, right? That the two sides
-are the same). This property, of being able to <em>substitute</em> the two sides of the
-equals sign with one another, is called <strong>referential transparency</strong>. And
+are the same). This property of being able to <em>substitute</em> the two sides of the
+equals sign with one another is called <strong>referential transparency</strong>. And
 it is pretty unique to Haskell (and a few similar languages such as PureScript and Elm)!
 We'll talk more about referential transparency in a later chapter.</p>
 <h3 id="anonymouslambda-functions"><a class="header" href="#anonymouslambda-functions">Anonymous/lambda functions</a></h3>
@@ -243,13 +243,13 @@ such as <code>&quot;hello&quot;</code>, using the following syntax:</p>
 </code></pre>
 <p>This little <code>\</code> (which bears some resemblance to the lowercase Greek letter lambda 'λ')
 marks the head of the lambda function,
-and the arrow (<code>-&gt;</code>) marks the beginning of the body of the function.
+and the arrow (<code>-&gt;</code>) marks the beginning of the function's body.
 We can even chain lambda functions, making them &quot;multiple argument functions&quot; by
 defining another lambda in the body of another, like this:</p>
 <pre><code class="language-hs">three = (\num1 -&gt; \num2 -&gt; num1 + num2) 1 2
 </code></pre>
-<p>Just as before, we evaluate functions by substituting the function argument with
-the applied value. In the example above we substitute <code>num1</code> with <code>1</code>, and get
+<p>As before, we evaluate functions by substituting the function argument with
+the applied value. In the example above, we substitute <code>num1</code> with <code>1</code> and get
 <code>(\num2 -&gt; 1 + num2) 2</code>. Then substitute <code>num2</code> with <code>2</code> and get <code>1 + 2</code>.
 We'll talk more about substitution later.</p>
 <p>So, when we write:</p>
@@ -262,12 +262,12 @@ el tag content =
 el = \tag -&gt; \content -&gt;
   &quot;&lt;&quot; &lt;&gt; tag &lt;&gt; &quot;&gt;&quot; &lt;&gt; content &lt;&gt; &quot;&lt;/&quot; &lt;&gt; tag &lt;&gt; &quot;&gt;&quot;
 </code></pre>
-<p>Hopefully this form makes it a bit clearer why Haskell functions
+<p>Hopefully, this form makes it a bit clearer why Haskell functions
 always take one argument, even when we have syntactic sugar that
 might suggest otherwise.</p>
 <p>I'll mention one more syntactic sugar for anonymous functions:
 We don't actually have to write multiple argument anonymous functions
-this way, we can just write:</p>
+this way, we can write:</p>
 <pre><code class="language-hs">\&lt;arg1&gt; &lt;arg2&gt; ... &lt;argN&gt; -&gt; &lt;expression&gt;
 </code></pre>
 <p>to save us some trouble. For example:</p>
@@ -275,7 +275,7 @@ this way, we can just write:</p>
 </code></pre>
 <p>But it's worth remembering what they are under the hood.</p>
 <p>We won't be needing anonymous/lambda functions at this point,
-but we'll talk more about them later and see where they can be useful.</p>
+but we'll discuss them later and see where they can be useful.</p>
 <hr />
 <p>Exercises:</p>
 <ol>

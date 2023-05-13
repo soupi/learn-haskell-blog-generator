@@ -150,7 +150,7 @@
 <p>We want to be able to print a textual representation of values
 of our <code>Document</code> type. There are a few ways to do that:</p>
 <ol>
-<li>Write our own function of type <code>Document -&gt; String</code> which we could then print, or</li>
+<li>Write our own function of type <code>Document -&gt; String</code>, which we could then print, or</li>
 <li>Have Haskell write one for us</li>
 </ol>
 <p>Haskell provides us with a mechanism that can automatically generate the implementation of a
@@ -160,7 +160,7 @@ of our <code>Document</code> type. There are a few ways to do that:</p>
 </code></pre>
 <p>This is something new we haven't seen before. Between <code>::</code> and <code>=&gt;</code>
 you see what is called a <strong>type class constraint</strong> on the type <code>a</code>. What
-we say in this signature, is that the function <code>show</code> can work on any
+we say in this signature is that the function <code>show</code> can work on any
 type that is a member of the type class <code>Show</code>.</p>
 <p>Type classes is a feature in Haskell that allows us to declare a common
 interface for different types. In our case, Haskell's standard library
@@ -189,7 +189,7 @@ ghci&gt; show 187
 ghci&gt; show &quot;Hello&quot;
 &quot;\&quot;Hello\&quot;&quot;
 </code></pre>
-<p>As can be seen above, the <code>show</code> function converts a value to its textual representation.
+<p>As seen above, the <code>show</code> function converts a value to its textual representation.
 That is why <code>&quot;Hello&quot;</code> includes the quotes as well. The <code>Show</code> type class is usually
 used for debugging purposes.</p>
 <h2 id="deriving-instances"><a class="header" href="#deriving-instances">Deriving instances</a></h2>
@@ -240,8 +240,8 @@ meaning that these two sides should evaluate to the same result:</p>
 <pre><code class="language-hs">instance Semigroup [a] where
   (&lt;&gt;) = (++)
 </code></pre>
-<p>Unfortunately the Haskell type system cannot &quot;prove&quot; that instances
-satisfy these laws, but as a community we often shun unlawful instances.</p>
+<p>Unfortunately, the Haskell type system cannot &quot;prove&quot; that instances
+satisfy these laws, but as a community, we often shun unlawful instances.</p>
 <p>Many data types (together with their respective operations) can
 form a <code>Semigroup</code>, and instances
 don't even have to look similar or have a common analogy/metaphor

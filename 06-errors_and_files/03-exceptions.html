@@ -202,16 +202,16 @@ main =
     )
 </code></pre>
 <blockquote>
-<p>Note: we are using two new things here: guards, and the <code>LambdaCase</code> language extension.</p>
+<p>Note: we are using two new things here: guards and the <code>LambdaCase</code> language extension.</p>
 <ol>
 <li>
-<p>Guards as seen in <code>sayDiv2</code> are just a nicer syntax around <code>if-then-else</code> expressions.
-Using guards we can have multiple <code>if</code> branches and finally use the <code>else</code> branch
-by using <code>otherwise</code>. After each guard (<code>|</code>) there's a condition, after the condition there's
+<p>Guards, as seen in <code>sayDiv2</code> are just a nicer syntax around <code>if-then-else</code> expressions.
+Using guards, we can have multiple <code>if</code> branches and finally use the <code>else</code> branch
+by using <code>otherwise</code>. After each guard (<code>|</code>), there's a condition; after the condition, there's
 a <code>=</code> and then the expression (the part after <code>then</code> in an <code>if</code> expression)</p>
 </li>
 <li>
-<p>LambdaCase as seen in <code>catch</code>, is just a syntactic sugar to save a few characters,
+<p>LambdaCase, as seen in <code>catch</code>, is just a syntactic sugar to save a few characters,
 instead of writing <code>\e -&gt; case e of</code>, we can write <code>\case</code>. It requires enabling the
 <code>LambdaCase</code> extension</p>
 <h4 id="language-extensions"><a class="header" href="#language-extensions">Language extensions</a></h4>
@@ -231,11 +231,11 @@ feel free to browse it, but don't worry about trying to memorize all the extensi
 </li>
 </ol>
 </blockquote>
-<p>This example, of course, is an example that would work much better using <code>Either</code> and separating
-the division and printing à la 'functional core, imperative shell'. But as an example it works.
-We have created a custom exception and handled it specifically outside an <code>IO</code> block.
+<p>Of course, this example would work much better using <code>Either</code> and separating
+the division and printing à la 'functional core, imperative shell'. But as an example, it works.
+We created a custom exception and handled it specifically outside an <code>IO</code> block.
 However, we have not handled exceptions that might be raised by <code>putStrLn</code>.
-What if, for example, for some reason we close the <code>stdout</code> handle before this block:</p>
+What if, for example, for some reason, we close the <code>stdout</code> handle before this block:</p>
 <pre><code class="language-hs">main :: IO ()
 main = do
   hClose stdout
@@ -256,7 +256,7 @@ main = do
 <pre><code>ghc: &lt;stdout&gt;: hFlush: illegal operation (handle is closed)
 </code></pre>
 <p>First, how do we know which exception we should handle? Some functions' documentation
-include this, but unfortunately <code>putStrLn</code>'s does not. We could guess from the
+include this, but unfortunately, <code>putStrLn</code>'s does not. We could guess from the
 <a href="https://hackage.haskell.org/package/base-4.16.4.0/docs/Control-Exception.html#i:Exception">list of instances</a>
 the <code>Exception</code> type class has; I think
 <a href="https://hackage.haskell.org/package/base-4.16.4.0/docs/GHC-IO-Exception.html#t:IOException"><code>IOException</code></a> fits. Now, how can we handle this case as well? We can chain catches:</p>
@@ -292,7 +292,7 @@ main = do
 </code></pre>
 <blockquote>
 <p>We use the <code>ScopedTypeVariables</code> to be able to specify types inside let expressions,
-lambdas, pattern matching and more.</p>
+lambdas, pattern matching, and more.</p>
 </blockquote>
 <p>Or we could use the convenient function
 <a href="https://hackage.haskell.org/package/base-4.16.4.0/docs/Control-Exception.html#v:catches"><code>catches</code></a>
@@ -349,17 +349,17 @@ handling for other scenarios.</p>
 and <a href="https://hackage.haskell.org/package/base-4.16.4.0/docs/Control-Exception.html#v:finally"><code>finally</code></a>.
 These functions can help us handle resource acquisition more safely when errors are present.</p>
 <hr />
-<p>In our <code>main</code> in the <code>app/Main.hs</code> file, we do a small ritual opening and closing handles.
+<p>In our <code>main</code> in the <code>app/Main.hs</code> file, we do a small ritual of opening and closing handles.
 Are there scenarios where we would clean-up after ourselves (meaning, close handles we've
 opened)? Which parts of the code could throw an exception? Which handles won't get closed?</p>
 <ul>
-<li>Try to use <code>bracket</code> to make sure we always close a handle afterwards, even if an exception
+<li>Try to use <code>bracket</code> to make sure we always close a handle afterward, even if an exception
 is thrown, and avoid closing the handle for the <code>stdin</code> and <code>stdout</code> cases<details><summary>Hint</summary>We might need to use continuation-passing style,
 passing a function that takes a parameter to a function that produces a parameter
 and calls it with that parameter.
 </details>
 </li>
-<li>How can we avoid duplicating the <code>outputHandle</code> code, for the <code>Stdin</code> and <code>InputFile</code>
+<li>How can we avoid duplicating the <code>outputHandle</code> code for the <code>Stdin</code> and <code>InputFile</code>
 branches? <details><summary>Hint</summary> Use <code>let</code>.</details></li>
 </ul>
 <details><summary>Answer</summary>
@@ -408,10 +408,10 @@ main = do
         withInputHandle (\title -&gt; withOutputHandle . HsBlog.convertSingle title)
 </code></pre>
 </details>
-<p>There's action a custom function that does similar thing to
+<p>There's action a custom function that does a similar thing to
 <code>bracket (openFile file &lt;mode&gt;) hClose</code>, it's called
 <a href="https://hackage.haskell.org/package/base-4.17.0.0/docs/System-IO.html#v:withFile">withFile</a>.
-Keep an eye out for functions that start with the prefix <code>with</code>, they are probably using the
+Keep an eye out for functions that start with the prefix <code>with</code>; they are probably using the
 same pattern of continuation-passing style.</p>
 <hr />
 <h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
@@ -424,7 +424,7 @@ to handle them.</p>
 use exceptions instead of <code>Either</code>. And this is what I would recommend for
 handling your own effectful computations. However, I think that <code>Either</code> is more
 appropriate for uneffectful code, because it forces us to acknowledge and handle errors
-(eventually) thus making our programs more robust. And also because we can only
+(eventually), thus making our programs more robust. And also because we can only
 catch exceptions in <code>IO</code> code.</p>
 
                     </main>

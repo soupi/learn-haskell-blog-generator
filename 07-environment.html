@@ -168,7 +168,7 @@ defaultEnv = Env &quot;My Blog&quot; &quot;style.css&quot;
 </code></pre>
 <p>After filling this record with the requested information, we can pass it as
 input to any function that might need it. This is a simple approach that can definitely
-work for small projects. But sometimes when the project gets bigger and many
+work for small projects. But sometimes, when the project gets bigger, and many
 nested functions need the same information, threading the environment can get
 tedious.</p>
 <p>There is an alternative solution to threading the environment as input to functions,
@@ -179,13 +179,13 @@ type from the <code>mtl</code> (or <code>transformers</code>) package.</p>
 <pre><code class="language-hs">newtype ReaderT r m a = ReaderT (r -&gt; m a)
 </code></pre>
 <p><code>ReaderT</code> is another <em>monad transformer</em> like <code>ExceptT</code>, which means
-that it also has an instance of <code>Functor</code>, <code>Applicative</code>, <code>Monad</code> and <code>MonadTrans</code>.</p>
+that it also has an instance of <code>Functor</code>, <code>Applicative</code>, <code>Monad</code>, and <code>MonadTrans</code>.</p>
 <p>As we can see in the definition, <code>ReaderT</code> is <em>a newtype</em> over a function that takes
 some value of type <code>r</code>, and returns a value of type <code>m a</code>. The <code>r</code> usually
-represents the environment we want to share between functions that we want to compose,
-and the <code>m a</code> represents the underlying result that we return.
+represents the environment we want to share between functions we want to compose,
+and the <code>m a</code> represents the underlying result we return.
 The <code>m</code> could be any type that implements <code>Monad</code> that we are familiar with.
-Usually it goes well with <code>IO</code> or <code>Identity</code>, depending on if we want to share
+Usually, it goes well with <code>IO</code> or <code>Identity</code>, depending on if we want to share
 an environment between effectful or uneffectful computations.</p>
 <p><code>ReaderT</code> <em>carries</em> a value of type <code>r</code> and passes it around to
 other functions when we use the <code>Applicative</code> and <code>Monad</code> interfaces so that
@@ -193,15 +193,15 @@ we don't have to pass the value around manually. And when we want to grab
 the <code>r</code> and use it, all we have to do is <code>ask</code>.</p>
 <p>For our case, this means that instead of passing around <code>Env</code>, we can instead
 convert our functions to use <code>ReaderT</code> - those that are uneffectful and don't use
-<code>IO</code>, can return <code>ReaderT Env Identity a</code>  instead of <code>a</code> (or the simplified version, <code>Reader Env a</code>),
+<code>IO</code> can return <code>ReaderT Env Identity a</code>  instead of <code>a</code> (or the simplified version, <code>Reader Env a</code>),
 and those that are effectful can return <code>ReaderT Env IO a</code> instead of <code>IO a</code>.</p>
 <p>Note, as we've said before, <code>Functor</code>, <code>Applicative</code>, and <code>Monad</code> all expect the type
 that implements their interfaces to have the kind <code>* -&gt; *</code>.
 This means that it is <code>ReaderT r m</code> which implements these interfaces,
 and when we compose functions with <code>&lt;*&gt;</code> or <code>&gt;&gt;=</code> we replace the <code>f</code> or <code>m</code>
 in their type signature with <code>ReaderT r m</code>.</p>
-<p>This means that, as with <code>Either e</code> when we had composed functions with the same error type,
-so it is with <code>ReaderT r m</code> - we have to compose functions with the same <code>r</code> type and same
+<p>This means that as with <code>Either e</code> when we had composed functions with the same error type,
+so it is with <code>ReaderT r m</code> - we have to compose functions with the same <code>r</code> type and the same
 <code>m</code> type, we can't mix different environment types or different underlying <code>m</code> types.</p>
 <p>We're going to use a specialized version of <code>ReaderT</code> that uses a specific <code>m</code> = <code>Identity</code>
 called <a href="https://hackage.haskell.org/package/mtl-2.3.1/docs/Control-Monad-Reader.html#g:2"><code>Reader</code></a>.
@@ -211,7 +211,7 @@ The <code>Control.Monad.Reader</code> provides an alias: <code>Reader r a = Read
 to get a better understanding of how <code>ReaderT</code> works,
 try doing the following exercise:</p>
 <ol>
-<li>Choose an <code>Applicative</code> or <code>Monad</code> interface function, I recommend <code>liftA2</code>,
+<li>Choose an <code>Applicative</code> or <code>Monad</code> interface function; I recommend <code>liftA2</code>,
 and specialize its type signature by replacing <code>f</code> (or <code>m</code>) with a concrete <code>ReaderT</code> type such as
 <code>ReaderT Int IO</code></li>
 <li>Unpack the <code>ReaderT</code> newtype, replacing <code>ReaderT Int IO t</code> with <code>Int -&gt; IO t</code></li>
@@ -236,8 +236,8 @@ specialLiftA2 combine funcA funcB env =
   liftA2 combine (funcA env) (funcB env)
 </code></pre>
 <p>Notice how the job of our special <code>liftA2</code> for <code>ReaderT</code> is to supply the
-two functions with <code>env</code>, and then use the <code>liftA2</code>
-implementation of the underlying <code>m</code> type (in our case <code>IO</code>) to do the rest of the work.
+two functions with <code>env</code> and then use the <code>liftA2</code>
+implementation of the underlying <code>m</code> type (in our case, <code>IO</code>) to do the rest of the work.
 Does it look like we're adding a capability on top of a different <code>m</code>?
 That's the idea behind monad transformers.</p>
 </details>
@@ -275,7 +275,7 @@ txtsToRenderedHtml txtFiles = do
 <p>Note how we use <em>do notation</em> now, and <em>instead of threading</em> <code>env</code> around we <em>compose</em>
 the relevant functions, <code>buildIndex</code> and <code>convertFile</code>, we use the type classes
 interfaces to compose the functions. Note how we needed to <code>fmap</code> over <code>buildIndex</code>
-to add the output file we needed with the tuple, and how we needed to use <code>traverse</code> instead
+to add the output file we needed with the tuple and how we needed to use <code>traverse</code> instead
 of <code>map</code> to compose the various <code>Reader</code> values <code>convertFile</code> will produce.</p>
 <h3 id="extracting-env"><a class="header" href="#extracting-env">Extracting <code>Env</code></a></h3>
 <p>When we want to use our <code>Env</code>, we need to <em>extract</em> it from the <code>Reader</code>.
@@ -296,14 +296,14 @@ convertFile (file, doc) = do
   pure (file, convert env (takeBaseName file) doc)
 </code></pre>
 <blockquote>
-<p>Note: we didn't change <code>convert</code> to use <code>Reader</code> because it is a user facing API for our
-library. By providing a simpler interface we allow more users to use our library -
+<p>Note: we didn't change <code>convert</code> to use <code>Reader</code> because it is a user-facing API for our
+library. By providing a simpler interface, we allow more users to use our library -
 even those that aren't yet familiar with monad transformers.</p>
 <p>Providing a simple function argument passing interface is preferred in this case.</p>
 </blockquote>
 <h3 id="run-a-reader"><a class="header" href="#run-a-reader">Run a <code>Reader</code></a></h3>
-<p>Similar to handling the errors with <code>Either</code>, at some point we need to supply the environment to
-a computation that uses <code>Reader</code>, and extract the result from the computation.
+<p>Similar to handling the errors with <code>Either</code>, at some point, we need to supply the environment to
+a computation that uses <code>Reader</code> and extract the result from the computation.
 We can do that with the functions <code>runReader</code> and <code>runReaderT</code>:</p>
 <pre><code class="language-hs">runReader :: Reader r a -&gt; (r -&gt; a)
 
@@ -321,15 +321,15 @@ convertDirectory env inputDir outputDir = do
   writeFiles outputDir outputHtmls
   putStrLn &quot;Done.&quot;
 </code></pre>
-<p>See the <code>let outputHtmls</code>part.</p>
+<p>See the <code>let outputHtmls</code> part.</p>
 <h3 id="extra-transforming-env-for-a-particular-call"><a class="header" href="#extra-transforming-env-for-a-particular-call">Extra: Transforming <code>Env</code> for a particular call</a></h3>
 <p>Sometimes we may want to modify the <code>Env</code> we pass to a particular function call.
-For example, we may have a general <code>Env</code> type that contains a lot of information, and
+For example, we may have a general <code>Env</code> type that contains a lot of information and
 functions that only need a part of that information.</p>
 <p>If the functions we are calling are like <code>convert</code> and take the environment as an
 argument instead of a <code>Reader</code>, we can just extract the environment
 with <code>ask</code>, apply a function to the extracted environment,
-and pass the result to the function, like this:</p>
+and pass the result to the function like this:</p>
 <pre><code class="language-hs">outer :: Reader BigEnv MyResult
 outer = do
   env &lt;- ask
@@ -381,7 +381,7 @@ outer = withReaderT extractSmallEnv inner
 <p>Note the order of the environments! We use a function from a <code>BigEnv</code> to a <code>SmallEnv</code>,
 to convert a <code>Reader</code> of <code>SmallEnv</code> to a <code>Reader</code> of <code>BigEnv</code>!</p>
 <p>This is because we are mapping over the <em>input</em> of a function rather than the <em>output</em>,
-and is related to topics like variance and covariance, but isn't terribly important
+and is related to topics like variance and covariance, but it isn't terribly important
 for us at the moment.</p>
 <h3 id="using-env-in-our-logic-code"><a class="header" href="#using-env-in-our-logic-code">Using <code>Env</code> in our logic code</a></h3>
 <p>One thing we haven't talked about yet is using our environment in the <code>convert</code>
@@ -522,7 +522,7 @@ buildIndex files = do
 </li>
 <li>
 <p>Create a command-line parser for <code>Env</code>, attach it to the <code>convert-dir</code> command,
-and pass the result it to the <code>convertDirectory</code> function.</p>
+and pass the result to the <code>convertDirectory</code> function.</p>
 <details><summary>Solution</summary>
 <details><summary>src/HsBlog.hs</summary>
 <pre><code class="language-hs">import HsBlog.Env (defaultEnv)
@@ -604,13 +604,13 @@ main = do
 with explicit argument passing in our particular case.</p>
 <p>Using <code>Reader</code> and <code>ReaderT</code> makes our code a little less friendly toward beginners
 that are not yet familiar with these concepts and techniques, and we don't see
-(in this case) much benefit.</p>
-<p>As programs grow larger, techniques like using <code>Reader</code> become more attractive to use.
+(in this case) many benefits.</p>
+<p>As programs grow larger, techniques like <code>Reader</code> become more attractive.
 For our relatively small example, using <code>Reader</code> might not be appropriate.
 I've included it in this book because it is an important technique to have in our
-arsenal and I wanted to demonstrate it.</p>
+arsenal, and I wanted to demonstrate it.</p>
 <p>It is important to weigh the benefits and costs of using advanced techniques,
-and it's often better to try and get away with simpler techniques if we can.</p>
+and it's often better to try and get away with simpler techniques if possible.</p>
 <blockquote>
 <p>You can view the git commit of
 <a href="https://github.com/soupi/learn-haskell-blog-generator/commit/f9fe7179fcf0e6c818f6caa860b52e991432dab2">the changes we've made</a>

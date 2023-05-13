@@ -150,8 +150,8 @@
 <p>There are <a href="https://documentation.divio.com/">many ways</a>
 to help others to get started with our projects and libraries.
 For example, we can write tutorials, provide runnable examples,
-describe the internals of the system, and create an API reference.</p>
-<p>In this chapter we will focus on generating API reference pages (the kind that can be seen on Hackage)
+describe the system's internals, and create an API reference.</p>
+<p>In this chapter, we will focus on generating API reference pages (the kind that can be seen on Hackage)
 from annotated Haskell source code using <a href="https://www.haskell.org/haddock">Haddock</a>.</p>
 <h2 id="running-haddock"><a class="header" href="#running-haddock">Running Haddock</a></h2>
 <p>We can generate API reference pages (a.k.a. haddocks in the Haskell world) for our project
@@ -219,7 +219,7 @@ Preprocessing executable 'hs-blog-gen' for hs-blog-0.1.0.0..
 </code></pre>
 <p>We can then open the <code>index.html</code> file from that directory in a web browser and view our package documentation.</p>
 <h3 id="haddock-coverage"><a class="header" href="#haddock-coverage">Haddock coverage</a></h3>
-<p>Haddock will also output a coverage report when run, and will mention user-exposed constructs which are missing
+<p>Haddock will also output a coverage report when run and mention user-exposed constructs that are missing
 documentation. These constructs could be module headers, types, data constructors, type classes, functions, values, etc.</p>
 <p>For example:</p>
 <pre><code class="language-hs">Haddock coverage:
@@ -235,9 +235,9 @@ documentation. These constructs could be module headers, types, data constructor
 ...
 </code></pre>
 <p>We can see that we did not document the <code>HsBlog.Convert</code> at all, and we are missing
-documentation for the module header, the <code>convert</code> function and the <code>convertStructure</code> function.</p>
+documentation for the module header, the <code>convert</code> function, and the <code>convertStructure</code> function.</p>
 <p>On the other hand, it seems that we do currently have some documentation written for the <code>HsBlog.Directory</code>
-module! We'll see why, but first - try to generate haddocks, see the module hierarchy, browse around
+module! We'll see why, but first - try to generate haddocks, visit the module hierarchy, browse around
 the different modules, follow the links of the types, imagine what this API reference could look like,
 and let's see how we can improve it.</p>
 <h2 id="haddock-markup"><a class="header" href="#haddock-markup">Haddock markup</a></h2>
@@ -248,9 +248,9 @@ but if you'd like to learn more, a complete guide for Haddock markup can be foun
 <a href="https://haskell-haddock.readthedocs.io/en/latest/markup.html">Haddock documentation</a>.</p>
 <h3 id="documenting-definitions"><a class="header" href="#documenting-definitions">Documenting definitions</a></h3>
 <p>All haddock annotations appear as part of regular Haskell comments.
-They can be used with both single line form (<code>--</code>) and multi-line form (<code>{-</code> and <code>-}</code>).
-The placement of a comment block and the haddock marker determine to which Haskell
-definition the haddock string is attached.</p>
+They can be used with both single-line form (<code>--</code>) and multi-line form (<code>{-</code> and <code>-}</code>).
+The placements of a comment block and the haddock marker determine which Haskell
+definition the haddock string is attached to.</p>
 <p>We can annotate a Haskell definition by writing a comment block prefixed with <code>|</code> <em>before</em>
 the definition, or by writing a comment block prefixed with <code>^</code> <em>after</em> the definition.</p>
 <p>For example:</p>
@@ -301,7 +301,7 @@ with some high-level description of what they are used for (at the very least).<
 </blockquote>
 <h3 id="section-headings"><a class="header" href="#section-headings">Section headings</a></h3>
 <p>We can separate our module into sections by adding headings.
-Headings are comments which are prefixed with a number of <code>*</code> (just like in our markup language).</p>
+Headings are comments prefixed with a number of <code>*</code> (just like in our markup language).</p>
 <p>For example:</p>
 <pre><code class="language-hs">-- * HTML EDSL
 
@@ -388,10 +388,10 @@ For example, we can:</p>
 </li>
 </ul>
 <h3 id="more"><a class="header" href="#more">More</a></h3>
-<p>In this chapter we've covered the basics of the Haddock markup language.
+<p>In this chapter, we've covered the basics of the Haddock markup language.
 If you'd like to know more, the <a href="https://haskell-haddock.readthedocs.io/en/latest/markup.html">Haddock markup guide</a>
-contains information on how to create even more interesting documentation structures, such as
-code blocks, grid tables, images and examples.</p>
+contains information on creating even more interesting documentation structures, such as
+code blocks, grid tables, images, and examples.</p>
 <h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
 <p>We've briefly covered one aspect of documenting Haskell programs:
 using Haddock to generate informative API reference pages created from source code
@@ -400,7 +400,7 @@ comments which are annotated with Haddock markup.</p>
 documentation that can help your users get started quickly, such as examples and tutorials.</p>
 <hr />
 <p><strong>Exercise</strong>: Add haddock annotation to the top-level definitions in our project and test your understanding
-of the program and the various parts - sometimes the best way to learn something is to try explaining it!</p>
+of the program and the various parts - sometimes, the best way to learn something is to try explaining it!</p>
 <hr />
 
                     </main>

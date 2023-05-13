@@ -150,9 +150,9 @@
 <p>Let's have a look at how to parse a multi-lined string of markup text
 written by a user and convert it to the <code>Document</code> type we defined
 in the previous chapter.</p>
-<p>Our strategy is to take the string of markup text, and:</p>
+<p>Our strategy is to take the string of markup text and:</p>
 <ol>
-<li>Split it to a list where each element represents a separate line, and</li>
+<li>Split it into a list where each element represents a separate line, and</li>
 <li>Go over the list line by line and process it, remembering
 information from previous lines if necessary</li>
 </ol>
@@ -164,7 +164,7 @@ module from the Haskell standard library
 <a href="https://hackage.haskell.org/package/base"><code>base</code></a> exposes the function
 <a href="https://hackage.haskell.org/package/base-4.16.4.0/docs/Prelude.html#v:lines"><code>lines</code></a>
 that does exactly what we want. The <code>Prelude</code> module is exposed in every
-Haskell file by default so we don't need to import it.</p>
+Haskell file by default, so we don't need to import it.</p>
 <p>For the line processing part, let's start by ignoring all of the markup syntax
 and just group lines together into paragraphs (paragraphs are separated by an empty line),
 and iteratively add new features later in the chapter.</p>
@@ -176,20 +176,20 @@ results.</p>
 <p>Our approach in Haskell isn't so different, except that we do not use loops
 or mutable variables. Instead, we use <strong>recursion</strong>.</p>
 <h2 id="recursion-and-accumulating-information"><a class="header" href="#recursion-and-accumulating-information">Recursion and accumulating information</a></h2>
-<p>Instead of loops, in Haskell we use recursion to model iteration.</p>
+<p>Instead of loops, in Haskell, we use recursion to model iteration.</p>
 <p>Consider the following contrived example: let's say that
 we want to write an algorithm for adding two natural numbers together,
 and we don't have a standard operation to do that (+), but we do
 have two operations we could use on each number: <code>increment</code>
 and <code>decrement</code>.</p>
 <p>A solution we could come up with is to slowly &quot;pass&quot; one number
-to the other number iteratively, by incrementing one, and decrementing the other.
+to the other number iteratively by incrementing one and decrementing the other.
 And we do that until the number we decrement reaches 0.</p>
-<p>For example for <code>3</code> and <code>2</code>:</p>
+<p>For example, for <code>3</code> and <code>2</code>:</p>
 <ul>
 <li>We start with <code>3</code> and <code>2</code>, and we increment <code>3</code> and decrement <code>2</code></li>
-<li>On the next step we now have <code>4</code> and <code>1</code>, we increment <code>4</code> and decrement <code>1</code></li>
-<li>On the next step we now have <code>5</code> and <code>0</code>, since the second number is <code>0</code> we declare <code>5</code> as the result.</li>
+<li>In the next step, we now have <code>4</code> and <code>1</code>, we increment <code>4</code> and decrement <code>1</code></li>
+<li>In the next step, we now have <code>5</code> and <code>0</code>, since the second number is <code>0</code> we declare <code>5</code> as the result.</li>
 </ul>
 <p>This can be written imperatively using a loop:</p>
 <pre><code class="language-js">function add(n, m) {
@@ -206,36 +206,36 @@ And we do that until the number we decrement reaches 0.</p>
     then add (increment n) (decrement m)
     else n
 </code></pre>
-<p>In Haskell, in order to <em>emulate iteration with mutable state</em>, we call the function again
+<p>In Haskell, to <em>emulate iteration with a mutable state</em>, we call the function again
 with the values we want the variables to have in the next iteration.</p>
 <h3 id="evaluation-of-recursion"><a class="header" href="#evaluation-of-recursion">Evaluation of recursion</a></h3>
 <p>Recursion commonly has a bad reputation for being slow and possibly unsafe compared to loops.
-This is because in imperative languages, calling a function often requires creating
+This is because, in imperative languages, calling a function often requires creating
 a new call stack.</p>
 <p>However, functional languages (and Haskell in particular) play by different
 rules and implement a feature called tail call elimination - when the result of a function call
 is the result of the function (this is called tail position), we can just drop the current
 stack frame and then allocate one for the function we call, so we don't require <code>N</code> stack frames
 for <code>N</code> iterations.</p>
-<p>This is of course only one way to do tail call elimination and other
+<p>This is, of course, only one way to do tail call elimination and other
 strategies exist, such as translating code like our recursive <code>add</code> above to the iteration version.</p>
 <h4 id="laziness"><a class="header" href="#laziness">Laziness</a></h4>
 <p>Haskell plays by slightly different rules because it uses a <em>lazy evaluation strategy</em>
 instead of the much more common strict evaluation strategy. An <em>evaluation strategy</em>
-refers to &quot;when do we evaluate a computation&quot;. In a strict language the answer is simple:
+refers to &quot;when do we evaluate a computation&quot;. In a strict language, the answer is simple:
 <em>we evaluate the arguments of a function before entering a function</em>.</p>
-<p>So for example the evaluation of <code>add (increment 3) (decrement 2)</code> using strict evaluation
+<p>So, for example, the evaluation of <code>add (increment 3) (decrement 2)</code> using strict evaluation
 will look like this:</p>
 <ol>
 <li>Evaluate <code>increment 3</code> to <code>4</code></li>
 <li>Evaluate <code>decrement 2</code> to <code>1</code></li>
 <li>Evaluate <code>add 4 1</code></li>
 </ol>
-<p>Or, alternatively (depending on the language) we reverse (1) and (2) and evaluate the arguments
+<p>Or, Alternatively (depending on the language), we reverse (1) and (2) and evaluate the arguments
 from right-to-left instead of left-to-right.</p>
 <p>On the other hand, with lazy evaluation, we <em>only evaluate computation when we need it</em>, which
 is when it is part of a computation that will have some effect on the
-outside world, for example when writing a computation to standard output or sending it over the network.</p>
+outside world, for example, when writing a computation to standard output or sending it over the network.</p>
 <p>So unless this computation is required, it won't be evaluated. For example:</p>
 <pre><code class="language-hs">main =
   if add (increment 2) (decrement 3) == 5
@@ -251,10 +251,10 @@ so it will be evaluated. But:</p>
   in
     putStrLn &quot;Not required&quot;
 </code></pre>
-<p>In the case above we don't actually need <code>five</code>, so we don't evaluate it!</p>
-<p>But then if we know we need <code>add (increment 2) (decrement 3)</code>,
+<p>In the case above, we don't actually need <code>five</code>, so we don't evaluate it!</p>
+<p>But then, if we know we need <code>add (increment 2) (decrement 3)</code>,
 do we use strict evaluation now? The answer is no - because we might not need
-to evaluate the arguments to complete the computation. For example in this case:</p>
+to evaluate the arguments to complete the computation. For example, in this case:</p>
 <pre><code class="language-hs">const a b = a
 
 main =
@@ -263,9 +263,9 @@ main =
     else putStrLn &quot;No.&quot;
 </code></pre>
 <p><code>const</code> ignores the second argument and returns the first, so we don't actually need
-to calculate <code>decrement 3</code> in order to provide an answer to the computation and in
+to calculate <code>decrement 3</code> to provide an answer to the computation and in
 turn output an answer to the screen.</p>
-<p>With the lazy evaluation strategy we will evaluate expressions when we need to (when they are required
+<p>With the lazy evaluation strategy, we will evaluate expressions when we need to (when they are required
 in order to do something for the user), and we evaluate from the outside in - first
 we enter functions, and then we evaluate the arguments when we need to (usually when the thing
 we want to evaluate appears in some control flow such as the condition of an <code>if</code> expression
@@ -459,12 +459,12 @@ ghci&gt; replicate 0 True
 ghci&gt; replicate (-13) True
 []
 </code></pre>
-<p>How would we implement this function recursively? How would describe it in three steps above?</p>
+<p>How would we implement this function recursively? How would we describe it in the three steps above?</p>
 <ol>
 <li><strong>Base case</strong>: the cases we already know how to generate are the cases where the length
 of the list is zero (or less) - we just return an empty list.</li>
 <li><strong>Reduce</strong>: while we might not know how to generate a list of size <code>N</code> (where <code>N</code> is positive),
-if we knew the solution for <code>N-1</code> we could:</li>
+if we knew the solution for <code>N-1</code>, we could:</li>
 <li><strong>Mitigate</strong>: Add another element to the solution for <code>N-1</code> using the <code>:</code> (cons) operator.</li>
 </ol>
 <hr />
@@ -488,11 +488,11 @@ replicate n x =
 </details>
 <hr />
 <h3 id="mutual-recursion"><a class="header" href="#mutual-recursion">Mutual recursion</a></h3>
-<p>When solving functions recursively we usually call the same function again,
+<p>When solving functions recursively, we usually call the same function again,
 but that doesn't have to be the case. It is possible to reduce our problem
 to something simpler that requires an answer from a different function.
 If, in turn, that function will (or another function in that call chain)
-call our function again, we have a <strong>mutual recursive</strong> solution.</p>
+call our function again; we have a <strong>mutual recursive</strong> solution.</p>
 <p>For example, let's write two functions, one that checks whether a natural number
 is even or not, and one that checks whether a number is odd or not
 only by decrementing it.</p>
@@ -500,7 +500,7 @@ only by decrementing it.</p>
 
 odd :: Int -&gt; Bool
 </code></pre>
-<p>Let's start with <code>even</code>, how should we solve this recursively?</p>
+<p>Let's start with <code>even</code>; how should we solve this recursively?</p>
 <ol>
 <li><strong>Base case</strong>: We know the answer for <code>0</code> - it is <code>True</code>.</li>
 <li><strong>Reduction</strong>: We might not know the answer for a general <code>N</code>, but we could check whether <code>N - 1</code> is odd,</li>
@@ -549,8 +549,8 @@ as well as <strong>avoid writing</strong> partial functions.</p>
 In the situation above, it is definitely possible to handle negative numbers
 as well, so we should do that! Or, instead, we could require that our functions
 accept a <code>Natural</code> instead of an <code>Int</code>, and then the type system would've stopped
-us from using these functions with values that we did not handle.</p>
-<p>There are cases where we can't possibly cover all inputs, in these cases it is important
+us from using these functions with values we did not handle.</p>
+<p>There are cases where we can't possibly cover all inputs; in these cases, it is important
 to re-examine the code and see if we could further restrict the inputs using types to
 mitigate these issues.</p>
 <p>For example, the <code>head :: [a] -&gt; a</code> function from <code>Prelude</code> promises
@@ -561,20 +561,20 @@ could possibly be empty, so how can this function deliver on its promise?</p>
 <a href="https://hackage.haskell.org/package/base-4.16.4.0/docs/Data-List-NonEmpty.html"><code>Data.List.NonEmpty</code></a>
 module! The trick here is that this other <code>head</code> does not take a general list
 as input, it takes a different type entirely, one that promises to have
-at least one element, and therefore can deliver on its promise!</p>
+at least one element and, therefore, can deliver on its promise!</p>
 <p>We could also potentially use smart constructors with <code>newtype</code> and enforce some sort
 of restrictions in the type system, as we saw in earlier chapters,
 But this solution can sometimes be less ergonomic to use.</p>
 <p>An alternative approach is to use <code>data</code> types to encode the absence of a proper result,
 for example, using <code>Maybe</code>, as we'll see in a future chapter.</p>
 <p>Make sure the functions you write return a result for every input,
-either by constraining the input using types, or by encoding the absence of a result using
+either by constraining the input using types or by encoding the absence of a result using
 types.</p>
 <h2 id="parsing-markup"><a class="header" href="#parsing-markup">Parsing markup?</a></h2>
 <p>Let's get back to the task at hand.</p>
 <p>As stated previously, our strategy for parsing the markup text is:</p>
 <ol>
-<li>Split the string to a list where each element is a separate line
+<li>Split the string into a list where each element is a separate line
 (which we can do with <a href="https://hackage.haskell.org/package/base-4.16.4.0/docs/Prelude.html#v:lines"><code>lines</code></a>), and</li>
 <li>Go over the list line by line and process it, remembering
 information from previous lines if necessary</li>
@@ -617,14 +617,14 @@ the performance implications in the case that we are still grouping lines</p>
 <li>
 <p>We saw case expressions used to deconstruct <code>newtype</code>s and <code>Char</code>s,
 but we can also pattern match on lists and other ADTs as well!
-In this case we match against two patterns, an empty list (<code>[]</code>),
+In this case, we match against two patterns, an empty list (<code>[]</code>),
 and a &quot;cons cell&quot; - a list with at least one element (<code>currentLine : rest</code>).
 In the body of the &quot;cons&quot; pattern, we bind the first element to the name <code>currentLine</code>,
 and the rest of the elements to the name <code>rest</code>.</p>
 <p>We will talk about how all of this works really soon!</p>
 </li>
 <li>
-<p>When we run into an empty line we add the accumulated paragraph to the resulting list (A <code>Document</code> is a list of structures) and start the function again with the rest of the input.</p>
+<p>When we run into an empty line, we add the accumulated paragraph to the resulting list (A <code>Document</code> is a list of structures) and start the function again with the rest of the input.</p>
 </li>
 <li>
 <p>We pass the new lines to be grouped in a paragraph <strong>in reverse order</strong> because of
@@ -634,11 +634,11 @@ us to create a new cons (<code>:</code>) cell to hold a pointer to the value and
 but appending requires us to traverse the list to its end and rebuild the cons cells -
 the last one will contain the last value of the list and a pointer to the list to append,
 the next will contain the value before the last value of the list and a pointer to the
-list which contains the last element and the appended list, and so on.</p>
+list, which contains the last element and the appended list, and so on.</p>
 </li>
 </ol>
 <p>This code above will group together paragraphs in a structure, but how do we view our result?
-In the next chapter we will take a short detour and talk about type classes, and how
+In the next chapter, we will take a short detour and talk about type classes, and how
 they can help us in this scenario.</p>
 
                     </main>

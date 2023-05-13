@@ -147,15 +147,15 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="custom-markup-language"><a class="header" href="#custom-markup-language">Custom markup language</a></h1>
-<p>In this chapter we will define our own simple markup language
+<p>In this chapter, we will define our own simple markup language
 and parse documents written in this language into Haskell data structures.</p>
 <p>Our markup language will contain the following features:</p>
 <ul>
 <li>Headings: prefix by a number of <code>*</code> characters</li>
 <li>Paragraphs: a group of lines without empty lines in between</li>
-<li>Unordered lists: a group of lines each prefixed with <code>- </code></li>
-<li>Ordered lists: a group of lines each prefixed with <code># </code></li>
-<li>Code blocks: a group of lines each prefixed with <code>&gt; </code></li>
+<li>Unordered lists: a group of lines, each prefixed with <code>- </code></li>
+<li>Ordered lists: a group of lines, each prefixed with <code># </code></li>
+<li>Code blocks: a group of lines, each prefixed with <code>&gt; </code></li>
 </ul>
 <p>Here's a sample document:</p>
 <pre><code class="language-org">* Compiling programs with ghc
@@ -184,11 +184,11 @@ GHC created the following files:
 GHC will produce an executable when the source file satisfies both conditions:
 
 # Defines the main function in the source file
-# Defines the module name to be Main, or does not have a module declaration
+# Defines the module name to be Main or does not have a module declaration
 
 Otherwise, it will only produce the .o and .hi files.
 </code></pre>
-<p>which we will, eventually, convert into this (modulo formatting) HTML:</p>
+<p>which we will eventually convert into this (modulo formatting) HTML:</p>
 <pre><code class="language-html">&lt;h1&gt;Compiling programs with ghc&lt;/h1&gt;
 
 &lt;p&gt;Running ghc invokes the Glasgow Haskell Compiler (GHC),

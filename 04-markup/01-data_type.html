@@ -151,16 +151,16 @@
 and most mainstream languages is the ability to represent data precisely and succinctly.</p>
 <p>So how do we represent our markup language using Haskell?</p>
 <p>Previously, in our HTML builder library, we used <code>newtype</code>s to differentiate
-between HTML documents, structures and titles, but we didn't really need to
-differentiate between different kinds of structures such as paragraphs and headings,
-not without parsing the data at least.</p>
+between HTML documents, structures, and titles, but we didn't really need to
+differentiate between different kinds of structures, such as paragraphs and headings,
+not without parsing the data, at least.</p>
 <p>In this case, we have a list of structures, and each structure could be
 one of a few specific options (a paragraph, a heading, a list, etc.),
 and we want to be able to know which structure is which so we can easily
 convert it into the equivalent HTML representation.</p>
-<p>For that, we have <code>data</code> definitions. <code>data</code> gives us the ability to
+<p>For that, we have <code>data</code> definitions. Using <code>data</code> we can
 create custom types by grouping multiple types together and having
-alternative structures. Think of them as combination of both structs and enums.</p>
+alternative structures. Think of them as a combination of both structs and enums.</p>
 <p><code>data</code> declarations look like this:</p>
 <pre><code class="language-hs">data &lt;Type-name&gt; &lt;type-args&gt;
   = &lt;Data-constructor1&gt; &lt;types&gt;
@@ -170,14 +170,14 @@ alternative structures. Think of them as combination of both structs and enums.<
 <p>It looks really similar to <code>newtype</code>, but there are two important
 differences:</p>
 <ol>
-<li>In the <code>&lt;types&gt;</code> part we can write many types (Like <code>Int</code>, <code>String</code>, or <code>Bool</code>).
-For <code>newtype</code>s we can only write one.</li>
+<li>In the <code>&lt;types&gt;</code> part, we can write many types (Like <code>Int</code>, <code>String</code>, or <code>Bool</code>).
+For <code>newtype</code>s, we can only write one.</li>
 <li>We can have alternative structures using <code>|</code>, <code>newtype</code>s have no
 alternatives.</li>
 </ol>
-<p>This is because <code>newtype</code> is used to provide a type safe <strong>alias</strong>, and <code>data</code>
+<p>This is because <code>newtype</code> is used to provide a type-safe <strong>alias</strong>, and <code>data</code>
 is used to build a new <strong>composite</strong> type that can potentially have <em>alternatives</em>.</p>
-<p>Let's see a few of examples of data types:</p>
+<p>Let's see a few examples of data types:</p>
 <ol>
 <li>
 <p>Bool</p>
@@ -186,7 +186,7 @@ is used to build a new <strong>composite</strong> type that can potentially have
   | False
 </code></pre>
 <p>We created a new data type named <code>Bool</code> with the possible values <code>True</code> or <code>False</code>.
-In this case we only have <em>constructor</em> alternatives and none of the constructors
+In this case, we only have <em>constructor</em> alternatives, and none of the constructors
 carry additional values. This is similar to enums in other languages.</p>
 </li>
 <li>
@@ -202,8 +202,8 @@ look like this:</p>
 <p>For example:</p>
 <pre><code class="language-hs">Person &quot;Gil&quot; 32
 </code></pre>
-<p>In this case we create a <em>composite</em> of multiple types, without alternatives.
-This is similar to structs in other language, but structs give each field
+<p>In this case, we create a <em>composite</em> of multiple types without alternatives.
+This is similar to structs in other languages, but structs give each field
 a name, and here we distinguish them by position.</p>
 <p>Alternatively, Haskell has <em>syntactic sugar</em> for naming fields called <strong>records</strong>.
 The above definition can also be written like this:</p>
@@ -227,7 +227,7 @@ age :: Person -&gt; Int
 <pre><code class="language-hs">ghci&gt; age (Person { name = &quot;Gil&quot;, age = 32 })
 32
 </code></pre>
-<p>We even have special syntax for updating specific fields in a record. Of course,
+<p>We even have a special syntax for updating specific fields in a record. Of course,
 we do not update records in place - we generate a new value instead.</p>
 <pre><code class="language-hs">ghci&gt; gil = Person { name = &quot;Gil&quot;, age = 32 }
 ghci&gt; age (gil { age = 33 })
@@ -265,9 +265,9 @@ Tuple 'a' 'z' :: Tuple Char Char
 
 ('a', 'z') :: (Char, Char)
 </code></pre>
-<p>This <code>Tuple</code> definition is polymorphic, we define the structure but are able to
+<p>This <code>Tuple</code> definition is polymorphic; we define the structure but are able to
 plug different types into the structure to get concrete types. You can think of <code>Tuple</code>
-as a <em>template</em> for a data type waiting to be filled, or as a <strong>function</strong> waiting
+as a <em>template</em> for a data type waiting to be filled or as a <strong>function</strong> waiting
 for types as input in order to return a data type. We can even take a look at the &quot;type&quot;
 signature of <code>Tuple</code> in <code>ghci</code> using the <code>:kind</code> command.</p>
 <pre><code class="language-hs">ghci&gt; data Tuple a b = Tuple a b
@@ -277,15 +277,15 @@ Tuple :: * -&gt; * -&gt; *
 <blockquote>
 <h4 id="quick-detour-kinds"><a class="header" href="#quick-detour-kinds">Quick detour: Kinds</a></h4>
 <p>The <code>:kind</code> command is called as such because the &quot;type&quot; of a type is called a <strong>kind</strong>.
-Kinds can be one of two things, either a <code>*</code> which means a saturated (or concrete) type,
+Kinds can be one of two things, either a <code>*</code>, which means a saturated (or concrete) type,
 such as <code>Int</code> or <code>Person</code>, or an <code>-&gt;</code> of two kinds, which is, as you might have guessed,
 a type function, taking kind and returning a kind.</p>
-<p>Note that only types that have the kind <code>*</code> can have values. So for example while <code>Tuple Int</code>
+<p>Note that only types that have the kind <code>*</code> can have values. So, for example, while <code>Tuple Int</code>
 is a valid Haskell concept that has the <em>kind</em> <code>* -&gt; *</code>, and we can write code that will
 work &quot;generically&quot; for all types that have a certain kind (e.g. <code>* -&gt; *</code>), we cannot
-construct a value that will have the kind <code>* -&gt; *</code>. All values have types, and all
+construct a value that has the kind <code>* -&gt; *</code>. All values have types and all
 types that have values have the kind <code>*</code>.</p>
-<p>We will talk more about kinds later, for now let's focus on types!</p>
+<p>We will talk more about kinds later; let's focus on types for now!</p>
 </blockquote>
 </li>
 <li>
@@ -294,7 +294,7 @@ types that have values have the kind <code>*</code>.</p>
   = Left a
   | Right b
 </code></pre>
-<p>Similar to Tuple but instead of having only one constructor, we have
+<p>Similar to Tuple, but instead of having only one constructor, we have
 two. This means that we can choose which side we want. Here are a
 couple of values of type <code>Either String Int</code>:</p>
 <pre><code class="language-hs">Left &quot;Hello&quot;
@@ -307,7 +307,7 @@ and got an error instead (The <code>Left</code> constructor with a string or a
 custom error type).</p>
 </li>
 </ol>
-<p>In our program we use <code>data</code> types to model the different kinds of content types
+<p>In our program, we use <code>data</code> types to model the different kinds of content types
 in our markup language. We tag each structure using the data constructor
 and provide the rest of the information (the paragraph text, the list items, etc.)
 in the <code>&lt;types&gt;</code> section of the data declaration for each constructor:</p>
@@ -339,7 +339,7 @@ To this tutorial about Haskell.
 </li>
 <li>
 <pre><code class="language-org">Remember that multiple lines with no separation
-are grouped together to a single paragraph
+are grouped together into a single paragraph
 but list items remain separate.
 
 # Item 1 of a list
@@ -373,7 +373,7 @@ GHC created the following files:
 GHC will produce an executable when the source file satisfies both conditions:
 
 # Defines the main function in the source file
-# Defines the module name to be Main, or does not have a module declaration
+# Defines the module name to be Main or does not have a module declaration
 
 Otherwise, it will only produce the .o and .hi files.
 </code></pre>
@@ -441,7 +441,7 @@ example4 =
 </code></pre>
 </details>
 <p>Add a new module named <code>Markup</code> and add the data type definition to it.
-Note that in this case we <em>do</em> want to export the constructors of <code>Structure</code>.</p>
+Note that in this case, we <em>do</em> want to export the constructors of <code>Structure</code>.</p>
 <details>
   <summary>Solution</summary>
 <pre><code class="language-hs">-- Markup.hs
@@ -467,19 +467,19 @@ data Structure
 </details>
 <hr />
 <h2 id="translating-directly"><a class="header" href="#translating-directly">Translating directly?</a></h2>
-<p>You might ask &quot;Why do we even need to represent the markup as a type?
+<p>You might ask, &quot;Why do we even need to represent the markup as a type?
 Why don't we convert it into HTML as soon as we parse it
 instead?&quot;. That's a good question and a valid strategy. The reason we
 first represent it as a Haskell type is for flexibility and modularity.</p>
 <p>If the parsing code is coupled with HTML generation, we lose the
-ability to pre-process the markup document. For example we might want
-to take only a small part of the document (for summary) and present
+ability to pre-process the markup document. For example, we might want
+to take only a small part of the document (for a summary) and present
 it, or create a table of content from headings. Or maybe we'd like to
 add other targets and not just HTML - maybe markdown format or a GUI reader?</p>
 <p>Parsing to an &quot;abstract data type&quot; (ADT) representation (one that does
-not contain the details of the language, for example '#' for
+not contain the details of the language, for example, '#' for
 ordered lists) gives us the freedom to do so much more than just
-conversion to HTML that it's usually worth it in my opinion unless you
+conversion to HTML that it's usually worth it, in my opinion, unless you
 really need to optimize the process.</p>
 
                     </main>
