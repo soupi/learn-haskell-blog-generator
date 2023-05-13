@@ -26,7 +26,7 @@
   - [Handling errors with Either](./06-errors_and_files/01-either.md)
   - [Either with IO?](./06-errors_and_files/02-except.md)
   - [Exceptions](./06-errors_and_files/03-exceptions.md)
-  - [Lets code already!](./06-errors_and_files/04-implementation.md)
+  - [Let's code already!](./06-errors_and_files/04-implementation.md)
   - [Summary](./06-errors_and_files/05-summary.md)
 - [Passing an environment](./07-environment.md)
 - [Writing tests](./08-testing.md)

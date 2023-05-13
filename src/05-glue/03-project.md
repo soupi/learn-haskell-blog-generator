@@ -1,7 +1,7 @@
 # Defining a project description
 
 Up until now, we've only used `base` and the libraries
-[included](https://downloads.haskell.org/ghc/9.2.5/docs/html/users_guide/9.2.5-notes.html#included-libraries)
+[included](https://downloads.haskell.org/ghc/9.2.7/docs/html/users_guide/9.2.7-notes.html#included-libraries)
 with GHC. Because of that, we didn't really need to do anything fancier
 than `runghc` to run our program. However, we want to start using
 external libraries not included with GHC in our programs.
