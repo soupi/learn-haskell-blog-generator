@@ -114,7 +114,7 @@ by passing the flag `-Wall` to `ghc` or `runghc`.
 **My recommendation is to always use `-Wall`**!
 
 > As an aside, while it is possible to use pattern matching in function definitions by defining a function
-> multiple times, [I personally don't like that feature very much](https://twitter.com/_gilmi/status/1257225601079029760)
+> multiple times, [I personally don't like that feature very much](https://fosstodon.org/@suppi/110360105149103689)
 > and I would encourage you to avoid it,
 > but if you want to use it instead of case expressions, it is possible.
 

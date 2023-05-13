@@ -31,8 +31,8 @@ The Haskell community keeps marching forward, developing new libraries, tools, a
 as well as creating new material for older concepts.
 The [Haskell planetarium](https://haskell.pl-a.net) aggregates feeds from several communities into
 one page, as well as a [Haskell Weekly newsletter](https://haskellweekly.news/).
-You might also find quite a bit of Haskell presence on
-[Twitter](https://twitter.com/search?q=%23Haskell&src=typeahead_click)!
+You might also find quite a bit of Haskell presence on the
+[Fediverse](https://fosstodon.org/tags/haskell)!
 
 ## Debugging
 
