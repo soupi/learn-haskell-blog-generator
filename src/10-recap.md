@@ -8,7 +8,7 @@ In this book, we've implemented a very simple static blog generator while learni
   a composable html generation library.
 - We've learned how to leverage types, modules, and smart constructors
   to [make invalid states unrepresentable](./03-html/04-safer_construction.html).
-- We've learned to represent complex data using [ADTs](./04-markup/01-data_type.html).
+- We've learned how to represent complex data using [ADTs](./04-markup/01-data_type.html).
 - We've learned how to use [pattern matching](./04-markup/04-parsing_02.html#pattern-matching) to transform ADTs,
   and how to use [recursion](./04-markup/02-parsing_01.html#recursion-and-accumulating-information) to solve problems.
 - We've used the *functional core, imperative shell* approach to build a program that handles IO and applies

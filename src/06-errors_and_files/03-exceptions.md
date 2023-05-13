@@ -224,7 +224,7 @@ These functions can help us handle resource acquisition more safely when errors 
 
 ---
 
-In our `main` in the `app/Main.hs` file, we do small ritual opening and closing handles.
+In our `main` in the `app/Main.hs` file, we do a small ritual of opening and closing handles.
 Are there scenarios where we would clean-up after ourselves (meaning, close handles we've
 opened)? Which parts of the code could throw an exception? Which handles won't get closed?
 

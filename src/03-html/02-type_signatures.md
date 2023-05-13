@@ -49,7 +49,7 @@ Previously, we thought about `makeHtml` as a function that takes
 two strings and returns a string.
 
 But actually, all functions in Haskell take **exactly one argument** as input
-and return **exactly one value** as output. It's convenient to refer
+and return **exactly one value** as output. It's just convenient to refer
 to functions like `makeHtml` as functions with multiple inputs.
 
 In our case, `makeHtml` is a function that takes **one** string argument
@@ -182,7 +182,7 @@ three = (\num1 num2 -> num1 + num2) 1 2
 But it's worth remembering what they are under the hood.
 
 We won't be needing anonymous/lambda functions at this point,
-but we'll discuss them later and see where they can be helpful.
+but we'll discuss them later and see where they can be useful.
 
 ---
 

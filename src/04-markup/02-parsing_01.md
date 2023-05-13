@@ -106,7 +106,7 @@ will look like this:
 2. Evaluate `decrement 2` to `1`
 3. Evaluate `add 4 1`
 
-Alternatively (depending on the language), we reverse (1) and (2) and evaluate the arguments
+Or, Alternatively (depending on the language), we reverse (1) and (2) and evaluate the arguments
 from right-to-left instead of left-to-right.
 
 On the other hand, with lazy evaluation, we *only evaluate computation when we need it*, which
@@ -156,7 +156,7 @@ turn output an answer to the screen.
 With the lazy evaluation strategy, we will evaluate expressions when we need to (when they are required
 in order to do something for the user), and we evaluate from the outside in - first
 we enter functions, and then we evaluate the arguments when we need to (usually when the thing
-we want to evaluate what appears in some control flow such as the condition of an `if` expression
+we want to evaluate appears in some control flow such as the condition of an `if` expression
 or a pattern in pattern matching).
 
 ---
@@ -425,7 +425,7 @@ ghci> replicate (-13) True
 []
 ```
 
-How would we implement this function recursively? How would you describe it in the three steps above?
+How would we implement this function recursively? How would we describe it in the three steps above?
 
 1. **Base case**: the cases we already know how to generate are the cases where the length
    of the list is zero (or less) - we just return an empty list.

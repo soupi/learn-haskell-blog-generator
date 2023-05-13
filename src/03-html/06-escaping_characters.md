@@ -64,7 +64,7 @@ they have their own special syntax:
 2. An empty list is written like this: `[]`
 3. Prepending an element to a list is done with the operator `:` (pronounced cons), which is right-associative (like `->`).
    For example: `1 : []`, or `1 : 2 : 3 : []`.
-4. The above lists can be written like `[1]` and `[1, 2, 3]`.
+4. The above lists can also be written like `[1]` and `[1, 2, 3]`.
 
 Also, Strings are linked lists of characters - String is defined as:
 `type String = [Char]`, so we can use them the same way we use lists.
@@ -125,7 +125,7 @@ In our case it will flatten `[String]` into `String`, remember that
 
 ## GHCi
 
-We can quickly see our code in action using the interactive development environment **GHCi**.
+One way we can quickly see our code in action is by using the interactive development environment **GHCi**.
 Running `ghci` will open an interactive prompt where Haskell expressions can be written and
 evaluated. This is called a "Read-Evaluate-Print Loop" (for short - REPL).
 

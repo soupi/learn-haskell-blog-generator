@@ -50,7 +50,7 @@ which we will eventually convert into this (modulo formatting) HTML:
 ```html
 <h1>Compiling programs with ghc</h1>
 
-<p>Running ghc invokes the Glasgow Haskell Compiler (GHC)
+<p>Running ghc invokes the Glasgow Haskell Compiler (GHC),
 and can be used to compile Haskell modules and programs into native
 executables and libraries.
 </p>

@@ -28,7 +28,7 @@ before calling `writeFile`.
 
 One way to handle this is by using **monad transformers**. Monad transformers provide a way
 to stack monad capabilities on top of one another. They are called transformers because
-**they take a type with an instance of monad as input and return a new type that
+**they take a type that has an instance of monad as input and return a new type that
 implements the monad interface, stacking a new capability on top of it**.
 
 For example, if we want to compose values of a type that is equivalent to `IO (Either Error a)`,

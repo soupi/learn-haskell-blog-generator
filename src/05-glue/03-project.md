@@ -95,7 +95,7 @@ Let's break it down to a few parts, the
 
 ### Package metadata
 
-The first part should be fairly straightforward from the comments, maybe, except for:
+The first part should be fairly straightforward from the comments, maybe except for:
 
 - `cabal-version`: Defines which cabal versions can build this project. We've specified 2.4 and above.
   [More info on different versions](https://cabal.readthedocs.io/en/stable/file-format-changelog.html).
@@ -187,7 +187,7 @@ library
 ```
 
 Also, note that we've added an additional *hierarchy* for our modules and defined
-a different source directory. This means we must move the files around
+a different source directory (`src`). This means we will need to move the files around
 a bit and change the `module` name in each file and the `import` statements. This is to avoid
 conflict with other packages that a user might import.
 
@@ -420,7 +420,7 @@ The [cabal.project](https://cabal.readthedocs.io/en/stable/cabal-project.html) a
 [stack.yaml](https://docs.haskellstack.org/en/stable/yaml_configuration/#project-specific-config)
 files are used by `cabal` and `stack` respectively to add additional information on *how
 to build the package*. While `cabal.project` isn't necessary to use `cabal`, `stack.yaml`
-is necessary to use `stack`, so we will cover it briefly.
+is necessary in order to use `stack`, so we will cover it briefly.
 
 There are two important fields a `stack.yaml` file must have:
 
@@ -467,9 +467,6 @@ with the same versions (and the same flag settings), they will not need to be re
 > This change helps us increase sharing of built packages while avoiding conflicts and manual
 > handling of sandboxes.
 
-> Note: The new build system implementation is now the default, and Cabal commands do not need
-> to be prefixed with `v2-`, but the Cabal documentation will still mention the prefix to
-> refer to the new commands.
 
 A few important commands we should be familiar with:
 

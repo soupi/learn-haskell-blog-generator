@@ -393,7 +393,7 @@ convertStructure structure =
 
 ## Summary
 
-We learned about the following:
+We learned about:
 
 - Qualified imports
 - Ways to handle errors

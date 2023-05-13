@@ -263,7 +263,7 @@ simple = do
         [CodeBlock ["main = putStrLn \"hello world!\""]]
 ```
 
-Also, we can use other "expectations" like `shouldBe` when writing tests.
+Also, there are other "expectations" like `shouldBe` that we can use when writing tests.
 They are described in the [Hspec tutorial](https://hspec.github.io/expectations.html)
 and can be found in the
 [haddock documentation](https://hackage.haskell.org/package/hspec-expectations-0.8.2/docs/Test-Hspec-Expectations.html) as well.

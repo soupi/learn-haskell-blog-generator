@@ -555,7 +555,7 @@ pConvertSingleInfo =
     (helper <*> pConvertSingle)
     (progDesc "Convert a single markup source to html")
 ```
-Note that `helper` adds a helper output screen if the parser fails.
+Note that `helper` adds a helper output screen in case the parser fails.
 
 Let's also build a command:
 

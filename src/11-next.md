@@ -59,7 +59,7 @@ is a fantastic resource with loads of articles and information about the languag
 It is often the best place to learn about the Haskell language.
 
 However, don't feel pressured to learn everything Haskell
-offers right away. Mastering Haskell is a journey that can take a lot of time.
+has to offer right away. Mastering Haskell is a journey that can take a lot of time.
 Most of us are definitely not there yet, but we can still be very productive with Haskell,
 build real-world projects, and even discover new techniques and concepts ourselves.
 

@@ -89,7 +89,7 @@ Using parenthesis, we can group the expressions together in the correct order.
 >
 > You might run into errors when mixing different operators with the *same precedence*
 > but *different fixity*, because Haskell won't understand how to group these expressions.
-> In that case, we can explicitly solve the problem by adding parenthesis.
+> In that case, we can solve the problem by adding parenthesis explicitly.
 
 ---
 
@@ -221,7 +221,7 @@ The answer is: Haskell uses indentation to know when things should be grouped to
 Indentation in Haskell can be a bit tricky, but in general: code that is supposed to be
 part of some expression should be indented further than the beginning of that expression.
 
-We know the two definitions are separate because the second one is not indented further than the first one.
+We know two definitions are separate because the second one is not indented further than the first one.
 
 
 ### Indentation tips

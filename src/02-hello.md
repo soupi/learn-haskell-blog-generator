@@ -23,7 +23,7 @@ Note that:
 2. We cannot use the same name more than once in a file
 
 A source file containing a definition of the name `main` can be treated as an executable,
-and the expression `main` is bound to be the entry point to the program.
+and the expression `main` is bound to is the entry point to the program.
 
 Let's create a new Haskell source file called `hello.hs` and write the following line there:
 

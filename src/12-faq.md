@@ -65,7 +65,7 @@ trying to help us find inconsistencies in our code - often with regards to type 
 avoid making errors.
 
 When you run into error messages, start by reading them carefully
-until you get used to them, and then the offending code is hinted at by the error message.
+until you get used to them, and then the offending code hinted at by the error message.
 As you gain experience, it is likely that the most important part of an error will be the location
 of the offending code, and by reading the code, we can find the error without the actual error message.
 

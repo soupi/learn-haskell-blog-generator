@@ -92,7 +92,7 @@ newtype Structure = Structure String
 To use the underlying type that the newtype wraps, we first
 need to extract it out of the type. We do this using pattern matching.
 
-Pattern matching can be used in two ways, in case of expressions and in
+Pattern matching can be used in two ways, in case-expressions and in
 function definitions.
 
 1. case expressions are kind of beefed up switch expressions and look like this:
@@ -255,8 +255,8 @@ our case, this is the operator `.` which has the type:
 (.) :: (b -> c) -> (a -> b) -> (a -> c)
 ```
 
-After that, we can try to **match** the type of arguments we
-apply to this function with the type of arguments from the type signature.
+After that, we can try to **match** the type of the arguments we
+apply to this function with the type of the arguments from the type signature.
 
 In this case, we try to apply two arguments to `.`:
 
@@ -271,7 +271,7 @@ And luckily, `.` expects two arguments with the types:
 > Note: Applying a function with more arguments than it expects is a type error.
 
 Since the `.` operator takes at least the number of arguments we supply, we continue
-to the next phase of type-checking: matching the types of inputs with the types
+to the next phase of type-checking: matching the types of the inputs with the types
 of the expected inputs (from the type signature of the operator).
 
 When we match two types, we check for *equivalence* between them. There are a few
@@ -321,7 +321,7 @@ about the type variables in it:
 2. `b ~ String`
 3. `c ~ Structure`
 
-Now, when asking what is the type of expression:
+Now, when asking what is the type of the expression:
 
 ```hs
 p_ = Structure . el "p"

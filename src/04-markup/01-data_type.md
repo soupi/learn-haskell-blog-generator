@@ -7,7 +7,7 @@ So how do we represent our markup language using Haskell?
 
 Previously, in our HTML builder library, we used `newtype`s to differentiate
 between HTML documents, structures, and titles, but we didn't really need to
-Distinguish between different kinds of structures, such as paragraphs and headings,
+differentiate between different kinds of structures, such as paragraphs and headings,
 not without parsing the data, at least.
 
 In this case, we have a list of structures, and each structure could be
@@ -15,7 +15,7 @@ one of a few specific options (a paragraph, a heading, a list, etc.),
 and we want to be able to know which structure is which so we can easily
 convert it into the equivalent HTML representation.
 
-For that, we have `data` definitions. `data` allows us to
+For that, we have `data` definitions. Using `data` we can
 create custom types by grouping multiple types together and having
 alternative structures. Think of them as a combination of both structs and enums.
 
@@ -172,7 +172,7 @@ Let's see a few examples of data types:
     This `Tuple` definition is polymorphic; we define the structure but are able to
     plug different types into the structure to get concrete types. You can think of `Tuple`
     as a *template* for a data type waiting to be filled or as a **function** waiting
-    for types as input to return a data type. We can even take a look at the "type"
+    for types as input in order to return a data type. We can even take a look at the "type"
     signature of `Tuple` in `ghci` using the `:kind` command.
 
     ```hs
@@ -188,10 +188,10 @@ Let's see a few examples of data types:
     > such as `Int` or `Person`, or an `->` of two kinds, which is, as you might have guessed,
     > a type function, taking kind and returning a kind.
     >
-    > Note that only types with the kind `*` can have values. So, for example, while `Tuple Int`
+    > Note that only types that have the kind `*` can have values. So, for example, while `Tuple Int`
     > is a valid Haskell concept that has the *kind* `* -> *`, and we can write code that will
     > work "generically" for all types that have a certain kind (e.g. `* -> *`), we cannot
-    > construct a value with the kind `* -> *`. All values have types and all
+    > construct a value that has the kind `* -> *`. All values have types and all
     > types that have values have the kind `*`.
     >
     > We will talk more about kinds later; let's focus on types for now!

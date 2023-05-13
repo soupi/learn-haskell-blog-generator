@@ -9,7 +9,7 @@ and build an actual blog generator. We will:
 4. Generate HTML code
 5. Write it to a file
 
-While doing so, we will learn the following:
+While doing so, we will learn:
 
 - How to work with IO
 - How to import external libraries to process whole directories and create a simple command-line interface

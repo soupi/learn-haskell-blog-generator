@@ -277,7 +277,7 @@ Our general strategy for processing whole directories is going to be:
 
 - Create the output directory
 - Grab all file names in a directory
-- Filter them according to their extension; we want to process the `txt` file and
+- Filter them according to their extension; we want to process the `txt` files and
   copy other files without modification
 - We want to parse each text file, build an index of the result,
   convert the files to HTML, and write everything to the target directory
@@ -288,5 +288,5 @@ static blog generator was robust enough that it wouldn't fail completely if one
 single file gave it some trouble. This is an excellent opportunity to learn about
 error handling in Haskell, both in uneffectful code and for I/O code.
 
-In the following few chapters, we'll survey the landscape of error handling in Haskell
+In the next few chapters, we'll survey the landscape of error handling in Haskell
 before figuring out the right approach for our use case.

@@ -215,7 +215,7 @@ convertFile (file, doc) = do
 ### Run a `Reader`
 
 Similar to handling the errors with `Either`, at some point, we need to supply the environment to
-a computation that uses `Reader` and extracts the result from the computation.
+a computation that uses `Reader` and extract the result from the computation.
 We can do that with the functions `runReader` and `runReaderT`:
 
 ```hs
