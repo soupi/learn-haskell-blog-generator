@@ -20,6 +20,7 @@ jobs:
           ./mymdbook2 build
           cp assets/book-logo.png book/
           cp assets/book-logo-transparent.png book/
+          cp lhbg-v0.pdf book/
           echo "lhbg-book.link" > book/CNAME
 
       - name: Deploy

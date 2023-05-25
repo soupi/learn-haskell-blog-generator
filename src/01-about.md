@@ -1,6 +1,6 @@
 # About this book
 
-> <img src="book-logo-transparent.png" alt="book logo" style="max-height: 1.5em; vertical-align: top"> This book is actively maintained. If you find errors, [please let me know](https://github.com/soupi/learn-haskell-blog-generator/issues).
+> <p style="text-align: center;"><img src="book-logo-transparent.png" alt="book logo" style="max-height: 1.5em; vertical-align: top"> This book is actively maintained. If you find errors, <a href="https://github.com/soupi/learn-haskell-blog-generator/issues">please let me know</a>.</p>
 
 <!--
 <div style="text-align: center">
@@ -22,6 +22,8 @@ We will:
 In each chapter of the book, we will focus on a particular task we wish to achieve,
 and throughout the chapter, learn just enough Haskell to complete the task.
 
+> <p style="text-align: center;">An experimental PDF version is now available: <a href="lhbg-v0.pdf">lhbg-v0.pdf</a>.</p>
+
 ## Why should you read this book?
 
 [[Mentions of lhbg-book in other places](https://github.com/soupi/learn-haskell-blog-generator/discussions/67)]
@@ -33,7 +35,7 @@ There are many Haskell tutorials, guides, and books out there. Why read this one
 There are probably more, but here are a few possible pros:
 
 - It is **relatively short** - most Haskell books are hundreds of pages long.
-  This book (when exported to PDF) is roughly 200 pages long.
+  This book (when exported to PDF) is roughly 150 pages long.
 - It is **project oriented**. Many Haskell books teach Haskell by teaching the underlying
   concepts and features in a neat progression. In this book, we **build a Haskell program**
   and learn Haskell on the way. This will be a pro to some and a con to others.<br>
