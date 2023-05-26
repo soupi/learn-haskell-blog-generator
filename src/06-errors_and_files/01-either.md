@@ -122,7 +122,7 @@ type String = [Char]
       -- Defined in ‘GHC.Base’
 
 ghci> :t map parseDigit "1234567"
-map parseDigit mystring :: [Either ParseDigitError Int]
+map parseDigit "1234567" :: [Either ParseDigitError Int]
 ghci> map parseDigit "1234567"
 [Right 1,Right 2,Right 3,Right 4,Right 5,Right 6,Right 7]
 
@@ -130,7 +130,7 @@ ghci> :t sequenceA
 sequenceA :: (Traversable t, Applicative f) => t (f a) -> f (t a)
 -- Substitute `t` with `[]`, and `f` with `Either Error` for a specialized version
 
-ghci> sequenceA (map parseDigit mystring)
+ghci> sequenceA (map parseDigit "1234567")
 Right [1,2,3,4,5,6,7]
 
 ghci> map parseDigit "1a2"
