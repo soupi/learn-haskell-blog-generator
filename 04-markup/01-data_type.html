@@ -401,7 +401,7 @@ example2 =
   <summary>Solution 3</summary>
 <pre><code class="language-hs">example3 :: Document
 example3 =
-  [ Paragraph &quot;Remember that multiple lines with no separation are grouped together to a single paragraph but list items remain separate.&quot;
+  [ Paragraph &quot;Remember that multiple lines with no separation are grouped together into a single paragraph but list items remain separate.&quot;
   , OrderedList
     [ &quot;Item 1 of a list&quot;
     , &quot;Item 2 of the same list&quot;
@@ -434,7 +434,7 @@ example4 =
   , Paragraph &quot;GHC will produce an executable when the source file satisfies both conditions:&quot;
   , OrderedList
     [ &quot;Defines the main function in the source file&quot;
-    , &quot;Defines the module name to be Main, or does not have a module declaration&quot;
+    , &quot;Defines the module name to be Main or does not have a module declaration&quot;
     ]
   , Paragraph &quot;Otherwise, it will only produce the .o and .hi files.&quot;
   ]
