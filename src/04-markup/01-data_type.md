@@ -329,7 +329,7 @@ example2 =
 ```hs
 example3 :: Document
 example3 =
-  [ Paragraph "Remember that multiple lines with no separation are grouped together to a single paragraph but list items remain separate."
+  [ Paragraph "Remember that multiple lines with no separation are grouped together into a single paragraph but list items remain separate."
   , OrderedList
     [ "Item 1 of a list"
     , "Item 2 of the same list"
@@ -366,7 +366,7 @@ example4 =
   , Paragraph "GHC will produce an executable when the source file satisfies both conditions:"
   , OrderedList
     [ "Defines the main function in the source file"
-    , "Defines the module name to be Main, or does not have a module declaration"
+    , "Defines the module name to be Main or does not have a module declaration"
     ]
   , Paragraph "Otherwise, it will only produce the .o and .hi files."
   ]
