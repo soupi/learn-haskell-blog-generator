@@ -25,7 +25,181 @@ defaultEnv = Env "My Blog" "style.css"
 ```
 
 After filling this record with the requested information, we can pass it as
-input to any function that might need it. This is a simple approach that can definitely
+input to any function that might need it.
+
+### First things first
+
+In this chapter we'll show a different approach to passing around `Env`,
+but please try using the argument passing approach first -
+it would help to have a point of reference to compare to better understand
+this other technique!
+
+---
+
+1. Make the `convert` function from `HsBlog.Convert`,
+   and the `buildIndex` function from `HsBlog.Directory` take an additional
+   argument for `Env`, and pass it around from `main` all the way down.
+   You can use `defaultEnv` for starters, later I will ask you to write an
+   options parser for `Env` values.
+
+After getting `Env` to `convert` and `buildIndex`,
+we can finally use the information in the environment for the page generation.
+But actually, we don't even have the ability to add stylesheets to our
+HTML EDSL at the moment! We need to go back and extend it.
+
+Let's do all that now:
+
+Since stylesheets go in the `head` element, perhaps it's a good idea to create an additional
+`newtype` like `Structure` for `head` information? Things like title, stylesheet,
+and even meta elements can be composed together just like we did for `Structure`
+to build the `head`!
+
+2. Do it now: extend our HTML library to include headings and add 3 functions:
+   `title_` for titles, `stylesheet_` for stylesheets, and `meta_` for meta elements
+   like [twitter cards](https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/abouts-cards).
+
+   <details><summary>Solution</summary>
+
+     <details><summary>src/HsBlog/Html.hs</summary>
+
+     ```hs
+     -- Html.hs
+
+     module HsBlog.Html
+       ( Html
+       , Head
+       , title_
+       , stylesheet_
+       , meta_
+       , Structure
+       , html_
+       , p_
+       , h_
+       , ul_
+       , ol_
+       , code_
+	   , Content
+       , txt_
+       , img_
+       , link_
+       , b_
+       , i_
+       , render
+       )
+       where
+
+     import Prelude hiding (head)
+     import HsBlog.Html.Internal
+     ```
+
+     </details>
+
+     <details><summary>src/HsBlog/Html/Internal.hs</summary>
+
+     ```hs
+     newtype Head
+       = Head String
+
+     -- * EDSL
+
+     html_ :: Head -> Structure -> Html
+     html_ (Head head) content =
+       Html
+         ( el "html"
+           ( el "head" head
+             <> el "body" (getStructureString content)
+           )
+         )
+
+     -- * Head
+
+     title_ :: String -> Head
+     title_ = Head . el "title" . escape
+
+     stylesheet_ :: FilePath -> Head
+     stylesheet_ path =
+       Head $ "<link rel=\"stylesheet\" type=\"text/css\" href=\"" <> escape path <> "\">"
+
+     meta_ :: String -> String -> Head
+     meta_ name content =
+       Head $ "<meta name=\"" <> escape name <> "\" content=\"" <> escape content <> "\">"
+
+     instance Semigroup Head where
+       (<>) (Head h1) (Head h2) =
+         Head (h1 <> h2)
+
+     instance Monoid Head where
+       mempty = Head ""
+     ```
+
+     </details>
+
+   </details>
+
+2. Use `Env` in `convert` and `buildIndex` to add a stylesheet to the page, and the blog name to the title.
+
+   <details><summary>Solution</summary>
+
+     <details><summary>src/HsBlog/Convert.hs</summary>
+
+     ```hs
+     import Prelude hiding (head)
+     import HsBlog.Env (Env(..))
+
+     convert :: Env -> String -> Markup.Document -> Html.Html
+     convert env title doc =
+       let
+         head =
+           Html.title_ (eBlogName env <> " - " <> title)
+             <> Html.stylesheet_ (eStylesheetPath env)
+         article =
+           foldMap convertStructure doc
+         websiteTitle =
+           Html.h_ 1 (Html.link_ "index.html" $ Html.txt_ $ eBlogName env)
+         body =
+           websiteTitle <> article
+       in
+         Html.html_ head body
+     ```
+
+     </details>
+
+     <details><summary>src/HsBlog/Directory.hs</summary>
+
+     ```hs
+     buildIndex :: Env -> [(FilePath, Markup.Document)] -> Html.Html
+     buildIndex env files =
+       let
+         previews =
+           map
+             ( \(file, doc) ->
+               case doc of
+                 Markup.Head 1 head : article ->
+                   Html.h_ 3 (Html.link_ file (Html.txt_ head))
+                     <> foldMap convertStructure (take 2 article)
+                     <> Html.p_ (Html.link_ file (Html.txt_ "..."))
+                 _ ->
+                   Html.h_ 3 (Html.link_ file (Html.txt_ file))
+             )
+             files
+       in
+	     Html.html_
+           ( Html.title_ (eBlogName env)
+             <> Html.stylesheet_ (eStylesheetPath env)
+           )
+           ( Html.h_ 1 (Html.link_ "index.html" (Html.txt_ "Blog"))
+             <> Html.h_ 2 (Html.txt_ "Posts")
+             <> mconcat previews
+           )
+     ```
+
+     </details>
+
+   </details>
+
+---
+
+The argument passing approach is a simple approach that can definitely
 work for small projects. But sometimes, when the project gets bigger, and many
 nested functions need the same information, threading the environment can get
 tedious.
@@ -326,133 +500,15 @@ This is because we are mapping over the *input* of a function rather than the *o
 and is related to topics like variance and covariance, but it isn't terribly important
 for us at the moment.
 
-### Using `Env` in our logic code
+### Finishing touches
 
-One thing we haven't talked about yet is using our environment in the `convert`
-function to generate the pages we want. And actually, we don't even have the ability to add
-stylesheets to our HTML EDSL at the moment! We need to go back and extend it. Let's do all
-that now:
+The are a couple of things left to do:
 
 ---
 
-Since stylesheets go in the `head` element, perhaps it's a good idea to create an additional
-`newtype` like `Structure` for `head` information? Things like title, stylesheet,
-and even meta elements can be composed together just like we did for `Structure`
-to build the `head`!
-
-1. Do it now: extend our HTML library to include headings and add 3 functions:
-   `title_` for titles, `stylesheet_` for stylesheets, and `meta_` for meta elements
-   like [twitter cards](https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/abouts-cards).
+1. Change `buildIndex` to use `Reader` instead of argument passing.
 
    <details><summary>Solution</summary>
-
-     <details><summary>src/HsBlog/Html.hs</summary>
-
-     ```hs
-     -- Html.hs
-
-     module HsBlog.Html
-       ( Html
-       , Head
-       , title_
-       , stylesheet_
-       , meta_
-       , Structure
-       , html_
-       , p_
-       , h_
-       , ul_
-       , ol_
-       , code_
-	   , Content
-       , txt_
-       , img_
-       , link_
-       , b_
-       , i_
-       , render
-       )
-       where
-
-     import Prelude hiding (head)
-     import HsBlog.Html.Internal
-     ```
-
-     </details>
-
-     <details><summary>src/HsBlog/Html/Internal.hs</summary>
-
-     ```hs
-     newtype Head
-       = Head String
-
-     -- * EDSL
-
-     html_ :: Head -> Structure -> Html
-     html_ (Head head) content =
-       Html
-         ( el "html"
-           ( el "head" head
-             <> el "body" (getStructureString content)
-           )
-         )
-
-     -- * Head
-
-     title_ :: String -> Head
-     title_ = Head . el "title" . escape
-
-     stylesheet_ :: FilePath -> Head
-     stylesheet_ path =
-       Head $ "<link rel=\"stylesheet\" type=\"text/css\" href=\"" <> escape path <> "\">"
-
-     meta_ :: String -> String -> Head
-     meta_ name content =
-       Head $ "<meta name=\"" <> escape name <> "\" content=\"" <> escape content <> "\">"
-
-     instance Semigroup Head where
-       (<>) (Head h1) (Head h2) =
-         Head (h1 <> h2)
-
-     instance Monoid Head where
-       mempty = Head ""
-     ```
-
-     </details>
-
-   </details>
-
-2. Fix `convert` and `buildIndex` to use the new API. Note: `buildIndex` should return
-   `Reader`!
-
-
-   <details><summary>Solution</summary>
-
-     <details><summary>src/HsBlog/Convert.hs</summary>
-
-     ```hs
-     import Prelude hiding (head)
-     import HsBlog.Env (Env(..))
-
-     convert :: Env -> String -> Markup.Document -> Html.Html
-     convert env title doc =
-       let
-         head =
-           Html.title_ (eBlogName env <> " - " <> title)
-             <> Html.stylesheet_ (eStylesheetPath env)
-         article =
-           foldMap convertStructure doc
-         websiteTitle =
-           Html.h_ 1 (Html.link_ "index.html" $ Html.txt_ $ eBlogName env)
-         body =
-           websiteTitle <> article
-       in
-         Html.html_ head body
-     ```
-
-     </details>
-
-     <details><summary>src/HsBlog/Directory.hs</summary>
 
      ```hs
      buildIndex :: [(FilePath, Markup.Document)] -> Reader Env Html.Html
@@ -481,11 +537,9 @@ to build the `head`!
            )
      ```
 
-     </details>
-
    </details>
 
-3. Create a command-line parser for `Env`, attach it to the `convert-dir` command,
+2. Create a command-line parser for `Env`, attach it to the `convert-dir` command,
    and pass the result to the `convertDirectory` function.
 
    <details><summary>Solution</summary>
