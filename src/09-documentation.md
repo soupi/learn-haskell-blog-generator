@@ -6,7 +6,7 @@ For example, we can write tutorials, provide runnable examples,
 describe the system's internals, and create an API reference.
 
 In this chapter, we will focus on generating API reference pages (the kind that can be seen on Hackage)
-from annotated Haskell source code using [Haddock](https://www.haskell.org/haddock).
+from annotated Haskell source code using [Haddock](https://haskell-haddock.readthedocs.io/en/latest/).
 
 ## Running Haddock
 
