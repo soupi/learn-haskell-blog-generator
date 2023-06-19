@@ -71,6 +71,16 @@ convertStructure structure =
       Html.code_ (unlines list)
 ```
 
+> What are these $?
+> 
+> We use the dollar sign (`$`) to avoid parentheses. `$` is a function application operator (`f $ x` is the same as `f x`) but has very low precedence. The following are the same:
+>   `Html.ul_ $ map Html.p_ list`
+>   `Html.ul_ (map Html.p_ list)`
+> 
+> Because regular function application has high precedence, the following usage results in a compilation error:
+>  `Html.ul_ map Html.p_ list`
+>  `(Html.ul_ map) Html.p_ list`
+
 Notice that running this code with `-Wall` will reveal that the pattern matching
 is *non-exhaustive*. This is because we don't currently have a way to build
 headings that are not `h1`. There are a few ways to handle this:
