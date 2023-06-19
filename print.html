@@ -7491,7 +7491,158 @@ defaultEnv :: Env
 defaultEnv = Env &quot;My Blog&quot; &quot;style.css&quot;
 </code></pre>
 <p>After filling this record with the requested information, we can pass it as
-input to any function that might need it. This is a simple approach that can definitely
+input to any function that might need it.</p>
+<h3 id="first-things-first"><a class="header" href="#first-things-first">First things first</a></h3>
+<p>In this chapter we'll show a different approach to passing around <code>Env</code>,
+but please try using the argument passing approach first -
+it would help to have a point of reference to compare to better understand
+this other technique!</p>
+<hr />
+<ol>
+<li>Make the <code>convert</code> function from <code>HsBlog.Convert</code>,
+and the <code>buildIndex</code> function from <code>HsBlog.Directory</code> take an additional
+argument for <code>Env</code>, and pass it around from <code>main</code> all the way down.
+You can use <code>defaultEnv</code> for starters, later I will ask you to write an
+options parser for <code>Env</code> values.</li>
+</ol>
+<p>After getting <code>Env</code> to <code>convert</code> and <code>buildIndex</code>,
+we can finally use the information in the environment for the page generation.
+But actually, we don't even have the ability to add stylesheets to our
+HTML EDSL at the moment! We need to go back and extend it.</p>
+<p>Let's do all that now:</p>
+<p>Since stylesheets go in the <code>head</code> element, perhaps it's a good idea to create an additional
+<code>newtype</code> like <code>Structure</code> for <code>head</code> information? Things like title, stylesheet,
+and even meta elements can be composed together just like we did for <code>Structure</code>
+to build the <code>head</code>!</p>
+<ol start="2">
+<li>
+<p>Do it now: extend our HTML library to include headings and add 3 functions:
+<code>title_</code> for titles, <code>stylesheet_</code> for stylesheets, and <code>meta_</code> for meta elements
+like <a href="https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/abouts-cards">twitter cards</a>.</p>
+<details><summary>Solution</summary>
+<details><summary>src/HsBlog/Html.hs</summary>
+<pre><code class="language-hs">-- Html.hs
+
+module HsBlog.Html
+  ( Html
+  , Head
+  , title_
+  , stylesheet_
+  , meta_
+  , Structure
+  , html_
+  , p_
+  , h_
+  , ul_
+  , ol_
+  , code_
+  , Content
+  , txt_
+  , img_
+  , link_
+  , b_
+  , i_
+  , render
+  )
+  where
+
+import Prelude hiding (head)
+import HsBlog.Html.Internal
+</code></pre>
+</details>
+<details><summary>src/HsBlog/Html/Internal.hs</summary>
+<pre><code class="language-hs">newtype Head
+  = Head String
+
+-- * EDSL
+
+html_ :: Head -&gt; Structure -&gt; Html
+html_ (Head head) content =
+  Html
+    ( el &quot;html&quot;
+      ( el &quot;head&quot; head
+        &lt;&gt; el &quot;body&quot; (getStructureString content)
+      )
+    )
+
+-- * Head
+
+title_ :: String -&gt; Head
+title_ = Head . el &quot;title&quot; . escape
+
+stylesheet_ :: FilePath -&gt; Head
+stylesheet_ path =
+  Head $ &quot;&lt;link rel=\&quot;stylesheet\&quot; type=\&quot;text/css\&quot; href=\&quot;&quot; &lt;&gt; escape path &lt;&gt; &quot;\&quot;&gt;&quot;
+
+meta_ :: String -&gt; String -&gt; Head
+meta_ name content =
+  Head $ &quot;&lt;meta name=\&quot;&quot; &lt;&gt; escape name &lt;&gt; &quot;\&quot; content=\&quot;&quot; &lt;&gt; escape content &lt;&gt; &quot;\&quot;&gt;&quot;
+
+instance Semigroup Head where
+  (&lt;&gt;) (Head h1) (Head h2) =
+    Head (h1 &lt;&gt; h2)
+
+instance Monoid Head where
+  mempty = Head &quot;&quot;
+</code></pre>
+</details>
+</details>
+</li>
+<li>
+<p>Use <code>Env</code> in <code>convert</code> and <code>buildIndex</code> to add a stylesheet to the page, and the blog name to the title.</p>
+<details><summary>Solution</summary>
+<details><summary>src/HsBlog/Convert.hs</summary>
+<pre><code class="language-hs">import Prelude hiding (head)
+import HsBlog.Env (Env(..))
+
+convert :: Env -&gt; String -&gt; Markup.Document -&gt; Html.Html
+convert env title doc =
+  let
+    head =
+      Html.title_ (eBlogName env &lt;&gt; &quot; - &quot; &lt;&gt; title)
+        &lt;&gt; Html.stylesheet_ (eStylesheetPath env)
+    article =
+      foldMap convertStructure doc
+    websiteTitle =
+      Html.h_ 1 (Html.link_ &quot;index.html&quot; $ Html.txt_ $ eBlogName env)
+    body =
+      websiteTitle &lt;&gt; article
+  in
+    Html.html_ head body
+</code></pre>
+</details>
+<details><summary>src/HsBlog/Directory.hs</summary>
+<pre><code class="language-hs">buildIndex :: Env -&gt; [(FilePath, Markup.Document)] -&gt; Html.Html
+buildIndex env files =
+  let
+    previews =
+      map
+        ( \(file, doc) -&gt;
+          case doc of
+            Markup.Head 1 head : article -&gt;
+              Html.h_ 3 (Html.link_ file (Html.txt_ head))
+                &lt;&gt; foldMap convertStructure (take 2 article)
+                &lt;&gt; Html.p_ (Html.link_ file (Html.txt_ &quot;...&quot;))
+            _ -&gt;
+              Html.h_ 3 (Html.link_ file (Html.txt_ file))
+        )
+        files
+  in
+    Html.html_
+      ( Html.title_ (eBlogName env)
+        &lt;&gt; Html.stylesheet_ (eStylesheetPath env)
+      )
+      ( Html.h_ 1 (Html.link_ &quot;index.html&quot; (Html.txt_ &quot;Blog&quot;))
+        &lt;&gt; Html.h_ 2 (Html.txt_ &quot;Posts&quot;)
+        &lt;&gt; mconcat previews
+      )
+</code></pre>
+</details>
+</details>
+</li>
+</ol>
+<hr />
+<p>The argument passing approach is a simple approach that can definitely
 work for small projects. But sometimes, when the project gets bigger, and many
 nested functions need the same information, threading the environment can get
 tedious.</p>
@@ -7707,115 +7858,13 @@ to convert a <code>Reader</code> of <code>SmallEnv</code> to a <code>Reader</cod
 <p>This is because we are mapping over the <em>input</em> of a function rather than the <em>output</em>,
 and is related to topics like variance and covariance, but it isn't terribly important
 for us at the moment.</p>
-<h3 id="using-env-in-our-logic-code"><a class="header" href="#using-env-in-our-logic-code">Using <code>Env</code> in our logic code</a></h3>
-<p>One thing we haven't talked about yet is using our environment in the <code>convert</code>
-function to generate the pages we want. And actually, we don't even have the ability to add
-stylesheets to our HTML EDSL at the moment! We need to go back and extend it. Let's do all
-that now:</p>
+<h3 id="finishing-touches"><a class="header" href="#finishing-touches">Finishing touches</a></h3>
+<p>The are a couple of things left to do:</p>
 <hr />
-<p>Since stylesheets go in the <code>head</code> element, perhaps it's a good idea to create an additional
-<code>newtype</code> like <code>Structure</code> for <code>head</code> information? Things like title, stylesheet,
-and even meta elements can be composed together just like we did for <code>Structure</code>
-to build the <code>head</code>!</p>
 <ol>
 <li>
-<p>Do it now: extend our HTML library to include headings and add 3 functions:
-<code>title_</code> for titles, <code>stylesheet_</code> for stylesheets, and <code>meta_</code> for meta elements
-like <a href="https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/abouts-cards">twitter cards</a>.</p>
+<p>Change <code>buildIndex</code> to use <code>Reader</code> instead of argument passing.</p>
 <details><summary>Solution</summary>
-<details><summary>src/HsBlog/Html.hs</summary>
-<pre><code class="language-hs">-- Html.hs
-
-module HsBlog.Html
-  ( Html
-  , Head
-  , title_
-  , stylesheet_
-  , meta_
-  , Structure
-  , html_
-  , p_
-  , h_
-  , ul_
-  , ol_
-  , code_
-  , Content
-  , txt_
-  , img_
-  , link_
-  , b_
-  , i_
-  , render
-  )
-  where
-
-import Prelude hiding (head)
-import HsBlog.Html.Internal
-</code></pre>
-</details>
-<details><summary>src/HsBlog/Html/Internal.hs</summary>
-<pre><code class="language-hs">newtype Head
-  = Head String
-
--- * EDSL
-
-html_ :: Head -&gt; Structure -&gt; Html
-html_ (Head head) content =
-  Html
-    ( el &quot;html&quot;
-      ( el &quot;head&quot; head
-        &lt;&gt; el &quot;body&quot; (getStructureString content)
-      )
-    )
-
--- * Head
-
-title_ :: String -&gt; Head
-title_ = Head . el &quot;title&quot; . escape
-
-stylesheet_ :: FilePath -&gt; Head
-stylesheet_ path =
-  Head $ &quot;&lt;link rel=\&quot;stylesheet\&quot; type=\&quot;text/css\&quot; href=\&quot;&quot; &lt;&gt; escape path &lt;&gt; &quot;\&quot;&gt;&quot;
-
-meta_ :: String -&gt; String -&gt; Head
-meta_ name content =
-  Head $ &quot;&lt;meta name=\&quot;&quot; &lt;&gt; escape name &lt;&gt; &quot;\&quot; content=\&quot;&quot; &lt;&gt; escape content &lt;&gt; &quot;\&quot;&gt;&quot;
-
-instance Semigroup Head where
-  (&lt;&gt;) (Head h1) (Head h2) =
-    Head (h1 &lt;&gt; h2)
-
-instance Monoid Head where
-  mempty = Head &quot;&quot;
-</code></pre>
-</details>
-</details>
-</li>
-<li>
-<p>Fix <code>convert</code> and <code>buildIndex</code> to use the new API. Note: <code>buildIndex</code> should return
-<code>Reader</code>!</p>
-<details><summary>Solution</summary>
-<details><summary>src/HsBlog/Convert.hs</summary>
-<pre><code class="language-hs">import Prelude hiding (head)
-import HsBlog.Env (Env(..))
-
-convert :: Env -&gt; String -&gt; Markup.Document -&gt; Html.Html
-convert env title doc =
-  let
-    head =
-      Html.title_ (eBlogName env &lt;&gt; &quot; - &quot; &lt;&gt; title)
-        &lt;&gt; Html.stylesheet_ (eStylesheetPath env)
-    article =
-      foldMap convertStructure doc
-    websiteTitle =
-      Html.h_ 1 (Html.link_ &quot;index.html&quot; $ Html.txt_ $ eBlogName env)
-    body =
-      websiteTitle &lt;&gt; article
-  in
-    Html.html_ head body
-</code></pre>
-</details>
-<details><summary>src/HsBlog/Directory.hs</summary>
 <pre><code class="language-hs">buildIndex :: [(FilePath, Markup.Document)] -&gt; Reader Env Html.Html
 buildIndex files = do
   env &lt;- ask
@@ -7841,7 +7890,6 @@ buildIndex files = do
         &lt;&gt; mconcat previews
       )
 </code></pre>
-</details>
 </details>
 </li>
 <li>
