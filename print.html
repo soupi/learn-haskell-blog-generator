@@ -3662,15 +3662,6 @@ convertStructure structure =
     Markup.CodeBlock list -&gt;
       Html.code_ (unlines list)
 </code></pre>
-<blockquote>
-<p>What are these $?</p>
-<p>We use the dollar sign (<code>$</code>) to avoid parentheses. <code>$</code> is a function application operator (<code>f $ x</code> is the same as <code>f x</code>) but has very low precedence. The following are the same:
-<code>Html.ul_ $ map Html.p_ list</code>
-<code>Html.ul_ (map Html.p_ list)</code></p>
-<p>Because regular function application has high precedence, the following usage results in a compilation error:
-<code>Html.ul_ map Html.p_ list</code>
-<code>(Html.ul_ map) Html.p_ list</code></p>
-</blockquote>
 <p>Notice that running this code with <code>-Wall</code> will reveal that the pattern matching
 is <em>non-exhaustive</em>. This is because we don't currently have a way to build
 headings that are not <code>h1</code>. There are a few ways to handle this:</p>
@@ -3687,6 +3678,34 @@ specific supported headings. This is a reasonable approach</li>
 <li>Implement an HTML function supporting arbitrary headings. Should be straightforward
 to do</li>
 </ul>
+<blockquote>
+<h4 id="what-are-these-"><a class="header" href="#what-are-these-">What are these <code>$</code>?</a></h4>
+<p>The dollar sign (<code>$</code>) is an operator that we can use to group expressions, like we do with parenthesis.
+we can replace the <code>$</code> with invisible parenthesis around the expressions to the left of it,
+and around the expression to the right of it. So that:</p>
+<pre><code class="language-hs">Html.ul_ $ map Html.p_ list
+</code></pre>
+<p>is understood as:</p>
+<pre><code class="language-hs">(Html.ul_) (map Html.p_ list)
+</code></pre>
+<p>It is a function application operator, it applies the argument on the right of the dollar
+to the function on the left of the dollar.</p>
+<p><code>$</code> is right-associative and has very low precedence, which means that:
+it groups to the right, and other operators bind more tightly.
+For example the following expression:</p>
+<pre><code class="language-hs">filter (2&lt;) $ map abs $ [-1, -2, -3] &lt;&gt; [4, 5, 6]
+</code></pre>
+<p>is understood as:</p>
+<pre><code class="language-hs">(filter (2&lt;) ((map abs) ([1, -2, 3] &lt;&gt; [-4, 5, 6]))
+</code></pre>
+<p>Which is also equivalent to the following code with less parenthesis:</p>
+<pre><code class="language-hs">filter (2&lt;) (map abs ([1, -2, 3] &lt;&gt; [-4, 5, 6]))
+</code></pre>
+<p>See how information flows from right to left and that <code>&lt;&gt;</code> binds more tightly?</p>
+<p>This operator is fairly common in Haskell code and it helps us reduce some clutter,
+but feel free to avoid it in favor of parenthesis if you'd like, it's not
+like we're even saving keystrokes with <code>$</code>!</p>
+</blockquote>
 <hr />
 <p>Exercise: Implement <code>h_ :: Natural -&gt; String -&gt; Structure</code>
 which we'll use to define arbitrary headings (such as <code>&lt;h1&gt;</code>, <code>&lt;h2&gt;</code>, and so on).</p>
@@ -3757,7 +3776,7 @@ type class? We mentioned that <code>Semigroup</code> is an <strong>abstraction</
 that implements <code>(&lt;&gt;) :: a -&gt; a -&gt; a</code>, where  <code>&lt;&gt;</code> is associative
 (<code>a &lt;&gt; (b &lt;&gt; c) = (a &lt;&gt; b) &lt;&gt; c</code>).</p>
 <p>It turns out that having an instance of <code>Semigroup</code> and also having a value that represents
-an &quot;empty&quot; value is a fairly common pattern. For example, a string can be concatenated, 
+an &quot;empty&quot; value is a fairly common pattern. For example, a string can be concatenated,
 and the empty string can serve as an &quot;empty&quot; value.
 And this is actually a well known <strong>abstraction</strong> called <strong>monoid</strong>.</p>
 <h2 id="monoids"><a class="header" href="#monoids">Monoids</a></h2>
