@@ -201,6 +201,15 @@ convertStructure structure =
     Markup.CodeBlock list -&gt;
       Html.code_ (unlines list)
 </code></pre>
+<blockquote>
+<p>What are these $?</p>
+<p>We use the dollar sign (<code>$</code>) to avoid parentheses. <code>$</code> is a function application operator (<code>f $ x</code> is the same as <code>f x</code>) but has very low precedence. The following are the same:
+<code>Html.ul_ $ map Html.p_ list</code>
+<code>Html.ul_ (map Html.p_ list)</code></p>
+<p>Because regular function application has high precedence, the following usage results in a compilation error:
+<code>Html.ul_ map Html.p_ list</code>
+<code>(Html.ul_ map) Html.p_ list</code></p>
+</blockquote>
 <p>Notice that running this code with <code>-Wall</code> will reveal that the pattern matching
 is <em>non-exhaustive</em>. This is because we don't currently have a way to build
 headings that are not <code>h1</code>. There are a few ways to handle this:</p>
