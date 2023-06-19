@@ -71,16 +71,6 @@ convertStructure structure =
       Html.code_ (unlines list)
 ```
 
-> What are these $?
-> 
-> We use the dollar sign (`$`) to avoid parentheses. `$` is a function application operator (`f $ x` is the same as `f x`) but has very low precedence. The following are the same:
->   `Html.ul_ $ map Html.p_ list`
->   `Html.ul_ (map Html.p_ list)`
-> 
-> Because regular function application has high precedence, the following usage results in a compilation error:
->  `Html.ul_ map Html.p_ list`
->  `(Html.ul_ map) Html.p_ list`
-
 Notice that running this code with `-Wall` will reveal that the pattern matching
 is *non-exhaustive*. This is because we don't currently have a way to build
 headings that are not `h1`. There are a few ways to handle this:
@@ -96,6 +86,45 @@ headings that are not `h1`. There are a few ways to handle this:
   specific supported headings. This is a reasonable approach
 - Implement an HTML function supporting arbitrary headings. Should be straightforward
   to do
+
+> #### What are these `$`?
+>
+> The dollar sign (`$`) is an operator that we can use to group expressions, like we do with parenthesis.
+> we can replace the `$` with invisible parenthesis around the expressions to the left of it,
+> and around the expression to the right of it. So that:
+>
+> ```hs
+> Html.ul_ $ map Html.p_ list
+> ```
+> is understood as:
+> ```hs
+> (Html.ul_) (map Html.p_ list)
+> ```
+>
+> It is a function application operator, it applies the argument on the right of the dollar
+> to the function on the left of the dollar.
+>
+> `$` is right-associative and has very low precedence, which means that:
+> it groups to the right, and other operators bind more tightly.
+> For example the following expression:
+>
+> ```hs
+> filter (2<) $ map abs $ [-1, -2, -3] <> [4, 5, 6]
+> ```
+> is understood as:
+> ```hs
+> (filter (2<) ((map abs) ([1, -2, 3] <> [-4, 5, 6]))
+> ```
+>
+> Which is also equivalent to the following code with less parenthesis:
+> ```hs
+> filter (2<) (map abs ([1, -2, 3] <> [-4, 5, 6]))
+> ```
+> See how information flows from right to left and that `<>` binds more tightly?
+>
+> This operator is fairly common in Haskell code and it helps us reduce some clutter,
+> but feel free to avoid it in favor of parenthesis if you'd like, it's not
+> like we're even saving keystrokes with `$`!
 
 ---
 
@@ -203,7 +232,7 @@ that implements `(<>) :: a -> a -> a`, where  `<>` is associative
 (`a <> (b <> c) = (a <> b) <> c`).
 
 It turns out that having an instance of `Semigroup` and also having a value that represents
-an "empty" value is a fairly common pattern. For example, a string can be concatenated, 
+an "empty" value is a fairly common pattern. For example, a string can be concatenated,
 and the empty string can serve as an "empty" value.
 And this is actually a well known **abstraction** called **monoid**.
 
