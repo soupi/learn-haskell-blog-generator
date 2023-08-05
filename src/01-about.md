@@ -31,7 +31,7 @@ and throughout the chapter, learn just enough Haskell to complete the task.
     <img style="max-height: 140px;" src="https://i.ytimg.com/vi/ZL0qExCnO8g/hqdefault.jpg?sqp=-oaymwEXCNACELwBSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLDQbKeP3DE3OL0JN1oL8FYWyQ85JA" border=1>
   </a>
   <p style="width: 260px; margin: 0px;">Do you prefer watching videos?<br>
-  <a href="https://impurepics.com">Impure Pics</a> is making a video series based on this book!
+  <a href="https://impurepics.com">Impure Pics</a> made a video series based on this book!
   </p>
 </div>
 
