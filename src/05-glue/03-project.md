@@ -276,7 +276,7 @@ executable hs-blog-gen
     -O
 ```
 
-We can write many executables descriptions. In this case, we only have one.
+We can write many executables' descriptions. In this case, we only have one.
 
 ---
 
@@ -516,7 +516,7 @@ cabal clean
 Deletes the build artifacts that we built.
 
 There are more interesting commands we could use, such as `cabal freeze`, to generate
-a file which records the packages versions and flags we used to build this project,
+a file that records the versions of the packages and flags we used to build this project,
 and `cabal sdist` to bundle the project source to a package tarball which can be
 uploaded to Hackage. If you'd like to learn more, visit the
 [Cabal user guide](https://cabal.readthedocs.io/en/stable/cabal-commands.html).
@@ -529,7 +529,7 @@ download the package dependencies, and compile the project.
 
 Stack caches these installations between projects that use the same resolver,
 so future projects with the same resolver and future runs of this project won't
-require reinstallation. This approach is kind of a middle ground between full packages
+require reinstallation. This approach is kind of a middle ground between full package
 sharing and sandboxes.
 
 Let's look at the (somewhat) equivalent commands for Stack:

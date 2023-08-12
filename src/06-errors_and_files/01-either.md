@@ -68,7 +68,7 @@ parseDigit c =
 
 `Either a` is also an instance of `Functor` and `Applicative`,
 so we have some combinators to work with if we want to combine these
-kind of computations.
+kinds of computations.
 
 For example, if we had three characters and we wanted to try and parse
 each of them and then find the maximum between them; we could use the
@@ -197,7 +197,7 @@ Remember that when we look at a type class function signature like:
 fmap :: Functor f => (a -> b) -> f a -> f b
 ```
 
-And we want to implement it for a specific type (in place of the `f`),
+And if we want to implement it for a specific type (in place of the `f`),
 we need to be able to *substitute* the `f` with the target type. If we'd try
 to do it with `Either` we would get:
 

@@ -12,7 +12,7 @@ Our strategy is to take the string of markup text and:
 
 So the first thing we want to do is to process the string line by line.
 We can do that by converting the string to a list of string.
-Fortunately the Haskell
+Fortunately, the Haskell
 [`Prelude`](https://hackage.haskell.org/package/base-4.16.4.0/docs/Prelude.html#v:lines)
 module from the Haskell standard library
 [`base`](https://hackage.haskell.org/package/base) exposes the function
@@ -106,7 +106,7 @@ will look like this:
 2. Evaluate `decrement 2` to `1`
 3. Evaluate `add 4 1`
 
-Or, Alternatively (depending on the language), we reverse (1) and (2) and evaluate the arguments
+Or, alternatively (depending on the language), we reverse (1) and (2) and evaluate the arguments
 from right-to-left instead of left-to-right.
 
 On the other hand, with lazy evaluation, we *only evaluate computation when we need it*, which

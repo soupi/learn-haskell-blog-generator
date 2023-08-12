@@ -91,7 +91,7 @@ We can also redirect the output of the program to a file and then open it in Fir
 This command should open Firefox and display a web page with `Hello, world!` written in it.
 
 I recommend using `runghc` with this tutorial. While compiling produces significantly faster programs,
-intepreting programs provides us with faster feedback while we are developing and making frequent changes.
+interpreting programs provides us with faster feedback while we are developing and making frequent changes.
 
 > If you want to learn more about the core Haskell tools, you can read
 > [this article](https://gilmi.me/blog/post/2021/08/14/hs-core-tools),
@@ -100,7 +100,7 @@ intepreting programs provides us with faster feedback while we are developing an
 ## More bindings
 
 We can define the HTML string passed to `putStrLn` in a new name instead of passing
-it directly to `putStrLn`. Change the content of file `hello.hs` we defined above to:
+it directly to `putStrLn`. Change the content of the `hello.hs` file we defined above to:
 
 ```hs
 main = putStrLn myhtml

@@ -264,8 +264,8 @@ module HsBlog.Html
   where
 ```
 
-Separating parts of the module into sections helps keeping the important things together
-and Haddock will create a table-of-contents at the top of a module page for us as well.
+Separating parts of the module into sections helps keep the important things together
+and Haddock will create a table of contents at the top of a module page for us as well.
 
 Sometimes it's also easier to figure out whether a module should be split into multiple
 modules or not after splitting it into sections using headings.
