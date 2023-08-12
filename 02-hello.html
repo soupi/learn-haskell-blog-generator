@@ -207,7 +207,7 @@ using the command line program <code>runghc</code>:</p>
 </code></pre>
 <p>This command should open Firefox and display a web page with <code>Hello, world!</code> written in it.</p>
 <p>I recommend using <code>runghc</code> with this tutorial. While compiling produces significantly faster programs,
-intepreting programs provides us with faster feedback while we are developing and making frequent changes.</p>
+interpreting programs provides us with faster feedback while we are developing and making frequent changes.</p>
 <blockquote>
 <p>If you want to learn more about the core Haskell tools, you can read
 <a href="https://gilmi.me/blog/post/2021/08/14/hs-core-tools">this article</a>,
@@ -215,7 +215,7 @@ but what's described above is enough for our usage at the moment.</p>
 </blockquote>
 <h2 id="more-bindings"><a class="header" href="#more-bindings">More bindings</a></h2>
 <p>We can define the HTML string passed to <code>putStrLn</code> in a new name instead of passing
-it directly to <code>putStrLn</code>. Change the content of file <code>hello.hs</code> we defined above to:</p>
+it directly to <code>putStrLn</code>. Change the content of the <code>hello.hs</code> file we defined above to:</p>
 <pre><code class="language-hs">main = putStrLn myhtml
 
 myhtml = &quot;&lt;html&gt;&lt;body&gt;Hello, world!&lt;/body&gt;&lt;/html&gt;&quot;

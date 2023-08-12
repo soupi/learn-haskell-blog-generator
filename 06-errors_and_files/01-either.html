@@ -197,7 +197,7 @@ parseDigit c =
 </code></pre>
 <p><code>Either a</code> is also an instance of <code>Functor</code> and <code>Applicative</code>,
 so we have some combinators to work with if we want to combine these
-kind of computations.</p>
+kinds of computations.</p>
 <p>For example, if we had three characters and we wanted to try and parse
 each of them and then find the maximum between them; we could use the
 applicative interface:</p>
@@ -301,7 +301,7 @@ kind <code>* -&gt; *</code>.
 Remember that when we look at a type class function signature like:</p>
 <pre><code class="language-hs">fmap :: Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
 </code></pre>
-<p>And we want to implement it for a specific type (in place of the <code>f</code>),
+<p>And if we want to implement it for a specific type (in place of the <code>f</code>),
 we need to be able to <em>substitute</em> the <code>f</code> with the target type. If we'd try
 to do it with <code>Either</code> we would get:</p>
 <pre><code class="language-hs">fmap :: (a -&gt; b) -&gt; Either a -&gt; Either b

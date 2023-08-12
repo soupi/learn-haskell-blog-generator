@@ -384,7 +384,7 @@ a thin executable over it.</p>
   ghc-options:
     -O
 </code></pre>
-<p>We can write many executables descriptions. In this case, we only have one.</p>
+<p>We can write many executables' descriptions. In this case, we only have one.</p>
 <hr />
 <p><strong>Exercise</strong>: Add a new file: <code>app/Main.hs</code> which imports <code>HsBlog</code> and runs <code>main</code>.</p>
 <details><summary>Solution</summary>
@@ -570,7 +570,7 @@ it will load the target's package dependencies and modules to be available in <c
 <p><a href="https://cabal.readthedocs.io/en/stable/cabal-commands.html#cabal-clean"><code>clean</code></a>
 Deletes the build artifacts that we built.</p>
 <p>There are more interesting commands we could use, such as <code>cabal freeze</code>, to generate
-a file which records the packages versions and flags we used to build this project,
+a file that records the versions of the packages and flags we used to build this project,
 and <code>cabal sdist</code> to bundle the project source to a package tarball which can be
 uploaded to Hackage. If you'd like to learn more, visit the
 <a href="https://cabal.readthedocs.io/en/stable/cabal-commands.html">Cabal user guide</a>.</p>
@@ -580,7 +580,7 @@ which is specified by the <code>resolver</code> field in the <code>stack.yaml</c
 download the package dependencies, and compile the project.</p>
 <p>Stack caches these installations between projects that use the same resolver,
 so future projects with the same resolver and future runs of this project won't
-require reinstallation. This approach is kind of a middle ground between full packages
+require reinstallation. This approach is kind of a middle ground between full package
 sharing and sandboxes.</p>
 <p>Let's look at the (somewhat) equivalent commands for Stack:</p>
 <pre><code class="language-sh">stack build

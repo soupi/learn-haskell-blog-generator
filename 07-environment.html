@@ -169,7 +169,7 @@ defaultEnv = Env &quot;My Blog&quot; &quot;style.css&quot;
 <p>After filling this record with the requested information, we can pass it as
 input to any function that might need it.</p>
 <h3 id="first-things-first"><a class="header" href="#first-things-first">First things first</a></h3>
-<p>In this chapter we'll show a different approach to passing around <code>Env</code>,
+<p>In this chapter, we'll show a different approach to passing around <code>Env</code>,
 but please try using the argument passing approach first -
 it would help to have a point of reference to compare to better understand
 this other technique!</p>
@@ -348,7 +348,7 @@ convert our functions to use <code>ReaderT</code> - those that are uneffectful a
 and those that are effectful can return <code>ReaderT Env IO a</code> instead of <code>IO a</code>.</p>
 <p>Note, as we've said before, <code>Functor</code>, <code>Applicative</code>, and <code>Monad</code> all expect the type
 that implements their interfaces to have the kind <code>* -&gt; *</code>.
-This means that it is <code>ReaderT r m</code> which implements these interfaces,
+This means that it is <code>ReaderT r m</code> that implements these interfaces,
 and when we compose functions with <code>&lt;*&gt;</code> or <code>&gt;&gt;=</code> we replace the <code>f</code> or <code>m</code>
 in their type signature with <code>ReaderT r m</code>.</p>
 <p>This means that as with <code>Either e</code> when we had composed functions with the same error type,

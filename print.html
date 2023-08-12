@@ -288,7 +288,7 @@ using the command line program <code>runghc</code>:</p>
 </code></pre>
 <p>This command should open Firefox and display a web page with <code>Hello, world!</code> written in it.</p>
 <p>I recommend using <code>runghc</code> with this tutorial. While compiling produces significantly faster programs,
-intepreting programs provides us with faster feedback while we are developing and making frequent changes.</p>
+interpreting programs provides us with faster feedback while we are developing and making frequent changes.</p>
 <blockquote>
 <p>If you want to learn more about the core Haskell tools, you can read
 <a href="https://gilmi.me/blog/post/2021/08/14/hs-core-tools">this article</a>,
@@ -296,7 +296,7 @@ but what's described above is enough for our usage at the moment.</p>
 </blockquote>
 <h2 id="more-bindings"><a class="header" href="#more-bindings">More bindings</a></h2>
 <p>We can define the HTML string passed to <code>putStrLn</code> in a new name instead of passing
-it directly to <code>putStrLn</code>. Change the content of file <code>hello.hs</code> we defined above to:</p>
+it directly to <code>putStrLn</code>. Change the content of the <code>hello.hs</code> file we defined above to:</p>
 <pre><code class="language-hs">main = putStrLn myhtml
 
 myhtml = &quot;&lt;html&gt;&lt;body&gt;Hello, world!&lt;/body&gt;&lt;/html&gt;&quot;
@@ -464,7 +464,7 @@ firefox hello.html
 The answer is: Haskell uses indentation to know when things should be grouped together.</p>
 <p>Indentation in Haskell can be a bit tricky, but in general: code that is supposed to be
 part of some expression should be indented further than the beginning of that expression.</p>
-<p>We know two definitions are separate because the second one is not indented further than the first one.</p>
+<p>We know the two definitions are separate because the second one is not indented further than the first one.</p>
 <h3 id="indentation-tips"><a class="header" href="#indentation-tips">Indentation tips</a></h3>
 <ol>
 <li>Choose a specific amount of spaces for indentation (2 spaces, 4 spaces, etc.) and stick to it.
@@ -492,7 +492,7 @@ indentation steps:</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="adding-type-signatures"><a class="header" href="#adding-type-signatures">Adding type signatures</a></h1>
 <p>Haskell is a <strong>statically typed</strong> programming language. That means that every
 expression has a type, and we check that the types are valid with
-regards to each other before running the program. If we discover that
+regard to each other before running the program. If we discover that
 they are not valid, an error message will be printed, and the program
 will not run.</p>
 <p>An example of a type error would be if we'd pass 3 arguments to a function
@@ -765,7 +765,7 @@ creating build systems, writing tests, and many more.</p>
 a concise (and often safe) way, and by embedding, we get to use the full power of
 the host language for our domain logic, including syntax highlighting and
 various tools available for the language.</p>
-<p>The drawback of embedding domain-specific languages is that we have to adhere
+<p>The drawback of embedding domain-specific languages is that we have to adhere to
 the rules of the programming language we embed in, such as syntactic and semantic rules.</p>
 <p>Some languages alleviate this drawback by providing meta-programming capabilities
 in the form of macros or other features to extend the language.
@@ -2483,7 +2483,7 @@ information from previous lines if necessary</li>
 </ol>
 <p>So the first thing we want to do is to process the string line by line.
 We can do that by converting the string to a list of string.
-Fortunately the Haskell
+Fortunately, the Haskell
 <a href="https://hackage.haskell.org/package/base-4.16.4.0/docs/Prelude.html#v:lines"><code>Prelude</code></a>
 module from the Haskell standard library
 <a href="https://hackage.haskell.org/package/base"><code>base</code></a> exposes the function
@@ -2556,7 +2556,7 @@ will look like this:</p>
 <li>Evaluate <code>decrement 2</code> to <code>1</code></li>
 <li>Evaluate <code>add 4 1</code></li>
 </ol>
-<p>Or, Alternatively (depending on the language), we reverse (1) and (2) and evaluate the arguments
+<p>Or, alternatively (depending on the language), we reverse (1) and (2) and evaluate the arguments
 from right-to-left instead of left-to-right.</p>
 <p>On the other hand, with lazy evaluation, we <em>only evaluate computation when we need it</em>, which
 is when it is part of a computation that will have some effect on the
@@ -3145,7 +3145,7 @@ getBluePart color =
 representing the blue value in a color represented by red, green, and blue components (RGB).</p>
 <p>Note that <code>blue</code> is the name we give to the third component, so it will be bound
 to the right of the arrow that comes after the pattern. This is similar to
-a function argument. Also note that <code>_</code> matches any value <em>without</em> binding it to a name.</p>
+a function argument. Also, note that <code>_</code> matches any value <em>without</em> binding it to a name.</p>
 <p>We can also try to match a value with more than one pattern:</p>
 <pre><code class="language-hs">data Brightness
   = Dark
@@ -4439,7 +4439,7 @@ greeting =
 <p>It's important to note the difference between <code>let</code> and <code>&lt;-</code> (bind).
 <code>let</code> is used to give a new name to an expression that will be in scope
 for subsequent lines, and <code>&lt;-</code> is used to bind the result <code>a</code> in an <code>IO a</code>
-action to a new name which will be in scope for subsequent lines.</p>
+action to a new name that will be in scope for subsequent lines.</p>
 <table>
   <tr>
     <th>code</th>
@@ -4449,7 +4449,7 @@ action to a new name which will be in scope for subsequent lines.</p>
     <th>comment</th>
   </tr>
   <tr>
-    <td><pre><pre>let gretting = "hello"</pre></pre></td>
+    <td><pre><pre>let greeting = "hello"</pre></pre></td>
     <td><pre>=</pre></td>
     <td><pre>String</pre></td>
     <td><pre>String</pre></td>
@@ -4792,7 +4792,7 @@ a thin executable over it.</p>
   ghc-options:
     -O
 </code></pre>
-<p>We can write many executables descriptions. In this case, we only have one.</p>
+<p>We can write many executables' descriptions. In this case, we only have one.</p>
 <hr />
 <p><strong>Exercise</strong>: Add a new file: <code>app/Main.hs</code> which imports <code>HsBlog</code> and runs <code>main</code>.</p>
 <details><summary>Solution</summary>
@@ -4978,7 +4978,7 @@ it will load the target's package dependencies and modules to be available in <c
 <p><a href="https://cabal.readthedocs.io/en/stable/cabal-commands.html#cabal-clean"><code>clean</code></a>
 Deletes the build artifacts that we built.</p>
 <p>There are more interesting commands we could use, such as <code>cabal freeze</code>, to generate
-a file which records the packages versions and flags we used to build this project,
+a file that records the versions of the packages and flags we used to build this project,
 and <code>cabal sdist</code> to bundle the project source to a package tarball which can be
 uploaded to Hackage. If you'd like to learn more, visit the
 <a href="https://cabal.readthedocs.io/en/stable/cabal-commands.html">Cabal user guide</a>.</p>
@@ -4988,7 +4988,7 @@ which is specified by the <code>resolver</code> field in the <code>stack.yaml</c
 download the package dependencies, and compile the project.</p>
 <p>Stack caches these installations between projects that use the same resolver,
 so future projects with the same resolver and future runs of this project won't
-require reinstallation. This approach is kind of a middle ground between full packages
+require reinstallation. This approach is kind of a middle ground between full package
 sharing and sandboxes.</p>
 <p>Let's look at the (somewhat) equivalent commands for Stack:</p>
 <pre><code class="language-sh">stack build
@@ -6172,7 +6172,7 @@ parseDigit c =
 </code></pre>
 <p><code>Either a</code> is also an instance of <code>Functor</code> and <code>Applicative</code>,
 so we have some combinators to work with if we want to combine these
-kind of computations.</p>
+kinds of computations.</p>
 <p>For example, if we had three characters and we wanted to try and parse
 each of them and then find the maximum between them; we could use the
 applicative interface:</p>
@@ -6276,7 +6276,7 @@ kind <code>* -&gt; *</code>.
 Remember that when we look at a type class function signature like:</p>
 <pre><code class="language-hs">fmap :: Functor f =&gt; (a -&gt; b) -&gt; f a -&gt; f b
 </code></pre>
-<p>And we want to implement it for a specific type (in place of the <code>f</code>),
+<p>And if we want to implement it for a specific type (in place of the <code>f</code>),
 we need to be able to <em>substitute</em> the <code>f</code> with the target type. If we'd try
 to do it with <code>Either</code> we would get:</p>
 <pre><code class="language-hs">fmap :: (a -&gt; b) -&gt; Either a -&gt; Either b
@@ -6943,7 +6943,7 @@ module HsBlog.Directory
 <p>In this module, we are going to use the
 <a href="https://hackage.haskell.org/package/directory-1.3.7.0/docs/System-Directory.html">directory</a>
 and <a href="https://hackage.haskell.org/package/filepath-1.4.2.1/docs/System-FilePath.html">filepath</a>
-libraries to manipulate directories, files, and filepaths.
+libraries to manipulate directories, files, and file paths.
 We'll use the new abstractions we've learned, <code>Traversable</code> and <code>Monad</code>, and the concepts
 and types we've learned about: <code>Either</code>, <code>IO</code>, and exceptions.</p>
 <p>For all of that, we need quite a few imports:</p>
@@ -7148,7 +7148,7 @@ what it is named -- it tries to create the output directory and exits the
 program in case it didn't succeed.</p>
 <p><code>createOutputDirectory</code> is the function that actually does the heavy lifting.
 It checks if the directory already exists, and checks if the user would like to
-override it. If they do, we remove it and create the new directory; if they don't,
+override it. If they do, we remove it and create a new directory; if they don't,
 we do nothing and report their decision.</p>
 <h3 id="txtstorenderedhtml"><a class="header" href="#txtstorenderedhtml"><code>txtsToRenderedHtml</code></a></h3>
 <pre><code class="language-hs">let
@@ -7493,7 +7493,7 @@ defaultEnv = Env &quot;My Blog&quot; &quot;style.css&quot;
 <p>After filling this record with the requested information, we can pass it as
 input to any function that might need it.</p>
 <h3 id="first-things-first"><a class="header" href="#first-things-first">First things first</a></h3>
-<p>In this chapter we'll show a different approach to passing around <code>Env</code>,
+<p>In this chapter, we'll show a different approach to passing around <code>Env</code>,
 but please try using the argument passing approach first -
 it would help to have a point of reference to compare to better understand
 this other technique!</p>
@@ -7672,7 +7672,7 @@ convert our functions to use <code>ReaderT</code> - those that are uneffectful a
 and those that are effectful can return <code>ReaderT Env IO a</code> instead of <code>IO a</code>.</p>
 <p>Note, as we've said before, <code>Functor</code>, <code>Applicative</code>, and <code>Monad</code> all expect the type
 that implements their interfaces to have the kind <code>* -&gt; *</code>.
-This means that it is <code>ReaderT r m</code> which implements these interfaces,
+This means that it is <code>ReaderT r m</code> that implements these interfaces,
 and when we compose functions with <code>&lt;*&gt;</code> or <code>&gt;&gt;=</code> we replace the <code>f</code> or <code>m</code>
 in their type signature with <code>ReaderT r m</code>.</p>
 <p>This means that as with <code>Either e</code> when we had composed functions with the same error type,
@@ -8620,8 +8620,8 @@ link_ = ...
   )
   where
 </code></pre>
-<p>Separating parts of the module into sections helps keeping the important things together
-and Haddock will create a table-of-contents at the top of a module page for us as well.</p>
+<p>Separating parts of the module into sections helps keep the important things together
+and Haddock will create a table of contents at the top of a module page for us as well.</p>
 <p>Sometimes it's also easier to figure out whether a module should be split into multiple
 modules or not after splitting it into sections using headings.</p>
 <hr />
@@ -8811,7 +8811,7 @@ classes of possible errors, &quot;local reasoning&quot; becomes possible, and tr
 becomes a viable strategy for debugging Haskell programs.</p>
 <h3 id="how-to-understand-type-errors"><a class="header" href="#how-to-understand-type-errors">How to understand type errors</a></h3>
 <p>GHC type errors are often not the most friendly error messages, but they mean well! They are just
-trying to help us find inconsistencies in our code - often with regards to type usage, they help us
+trying to help us find inconsistencies in our code - often with regard to type usage, they help us
 avoid making errors.</p>
 <p>When you run into error messages, start by reading them carefully
 until you get used to them, and then the offending code hinted at by the error message.
