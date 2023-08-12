@@ -61,7 +61,7 @@ becomes a viable strategy for debugging Haskell programs.
 ### How to understand type errors
 
 GHC type errors are often not the most friendly error messages, but they mean well! They are just
-trying to help us find inconsistencies in our code - often with regards to type usage, they help us
+trying to help us find inconsistencies in our code - often with regard to type usage, they help us
 avoid making errors.
 
 When you run into error messages, start by reading them carefully

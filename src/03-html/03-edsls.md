@@ -32,7 +32,7 @@ a concise (and often safe) way, and by embedding, we get to use the full power o
 the host language for our domain logic, including syntax highlighting and
 various tools available for the language.
 
-The drawback of embedding domain-specific languages is that we have to adhere
+The drawback of embedding domain-specific languages is that we have to adhere to
 the rules of the programming language we embed in, such as syntactic and semantic rules.
 
 Some languages alleviate this drawback by providing meta-programming capabilities

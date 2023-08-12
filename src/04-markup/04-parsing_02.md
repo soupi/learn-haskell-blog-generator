@@ -65,7 +65,7 @@ representing the blue value in a color represented by red, green, and blue compo
 
 Note that `blue` is the name we give to the third component, so it will be bound
 to the right of the arrow that comes after the pattern. This is similar to
-a function argument. Also note that `_` matches any value *without* binding it to a name.
+a function argument. Also, note that `_` matches any value *without* binding it to a name.
 
 We can also try to match a value with more than one pattern:
 

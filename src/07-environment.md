@@ -29,7 +29,7 @@ input to any function that might need it.
 
 ### First things first
 
-In this chapter we'll show a different approach to passing around `Env`,
+In this chapter, we'll show a different approach to passing around `Env`,
 but please try using the argument passing approach first -
 it would help to have a point of reference to compare to better understand
 this other technique!
@@ -238,7 +238,7 @@ and those that are effectful can return `ReaderT Env IO a` instead of `IO a`.
 
 Note, as we've said before, `Functor`, `Applicative`, and `Monad` all expect the type
 that implements their interfaces to have the kind `* -> *`.
-This means that it is `ReaderT r m` which implements these interfaces,
+This means that it is `ReaderT r m` that implements these interfaces,
 and when we compose functions with `<*>` or `>>=` we replace the `f` or `m`
 in their type signature with `ReaderT r m`.
 

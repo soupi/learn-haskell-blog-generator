@@ -221,7 +221,7 @@ The answer is: Haskell uses indentation to know when things should be grouped to
 Indentation in Haskell can be a bit tricky, but in general: code that is supposed to be
 part of some expression should be indented further than the beginning of that expression.
 
-We know two definitions are separate because the second one is not indented further than the first one.
+We know the two definitions are separate because the second one is not indented further than the first one.
 
 
 ### Indentation tips

@@ -37,7 +37,7 @@ module HsBlog.Directory
 In this module, we are going to use the
 [directory](https://hackage.haskell.org/package/directory-1.3.7.0/docs/System-Directory.html)
 and [filepath](https://hackage.haskell.org/package/filepath-1.4.2.1/docs/System-FilePath.html)
-libraries to manipulate directories, files, and filepaths.
+libraries to manipulate directories, files, and file paths.
 We'll use the new abstractions we've learned, `Traversable` and `Monad`, and the concepts
 and types we've learned about: `Either`, `IO`, and exceptions.
 
@@ -298,7 +298,7 @@ program in case it didn't succeed.
 
 `createOutputDirectory` is the function that actually does the heavy lifting.
 It checks if the directory already exists, and checks if the user would like to
-override it. If they do, we remove it and create the new directory; if they don't,
+override it. If they do, we remove it and create a new directory; if they don't,
 we do nothing and report their decision.
 
 ### `txtsToRenderedHtml`

@@ -2,7 +2,7 @@
 
 Haskell is a **statically typed** programming language. That means that every
 expression has a type, and we check that the types are valid with
-regards to each other before running the program. If we discover that
+regard to each other before running the program. If we discover that
 they are not valid, an error message will be printed, and the program
 will not run.
 
