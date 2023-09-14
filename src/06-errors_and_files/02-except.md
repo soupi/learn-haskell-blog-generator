@@ -156,7 +156,7 @@ writeFile :: FilePath -> String -> ExceptT IOError IO ()
 We could compose them again without issue:
 
 ```hs
-readFile "input.txt" >>= writeFile "ouptut.html"
+readFile "input.txt" >>= writeFile "output.html"
 ```
 
 But remember - the error type `e` (in both the case `Either` and `Except`)
