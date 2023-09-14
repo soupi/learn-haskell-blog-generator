@@ -408,7 +408,7 @@ main = do
         withInputHandle (\title -&gt; withOutputHandle . HsBlog.convertSingle title)
 </code></pre>
 </details>
-<p>There's action a custom function that does a similar thing to
+<p>There's actually a custom function that does a similar thing to
 <code>bracket (openFile file &lt;mode&gt;) hClose</code>, it's called
 <a href="https://hackage.haskell.org/package/base-4.17.0.0/docs/System-IO.html#v:withFile">withFile</a>.
 Keep an eye out for functions that start with the prefix <code>with</code>; they are probably using the

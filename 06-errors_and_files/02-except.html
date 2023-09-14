@@ -254,7 +254,7 @@ but we are specializing for concreteness.</p>
 writeFile :: FilePath -&gt; String -&gt; ExceptT IOError IO ()
 </code></pre>
 <p>We could compose them again without issue:</p>
-<pre><code class="language-hs">readFile &quot;input.txt&quot; &gt;&gt;= writeFile &quot;ouptut.html&quot;
+<pre><code class="language-hs">readFile &quot;input.txt&quot; &gt;&gt;= writeFile &quot;output.html&quot;
 </code></pre>
 <p>But remember - the error type <code>e</code> (in both the case <code>Either</code> and <code>Except</code>)
 must be the same between composed functions! This means that the type representing
