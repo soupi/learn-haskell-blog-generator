@@ -287,7 +287,7 @@ main = do
 
 </details>
 
-There's action a custom function that does a similar thing to
+There's actually a custom function that does a similar thing to
 `bracket (openFile file <mode>) hClose`, it's called
 [withFile](https://hackage.haskell.org/package/base-4.17.0.0/docs/System-IO.html#v:withFile).
 Keep an eye out for functions that start with the prefix `with`; they are probably using the
