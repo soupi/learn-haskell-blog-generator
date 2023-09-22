@@ -22,7 +22,7 @@ jobs:
           cp assets/book-logo-transparent.png book/
           cp assets/pdf.png book/
           cp lhbg-v0.pdf book/
-          echo "lhbg-book.link" > book/CNAME
+          echo "learn-haskell.blog" > book/CNAME
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
