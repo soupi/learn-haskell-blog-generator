@@ -371,7 +371,7 @@ Just write whatever you want here:
 
 One day it will be a static blog generator.
 
-[Read the book](https://lhbg-book.link).
+[Read the book](https://learn-haskell.blog).
 ```
 
 </details>

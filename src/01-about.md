@@ -47,7 +47,7 @@ and throughout the chapter, learn just enough Haskell to complete the task.
 
 ## Why should you read this book?
 
-[[Mentions of lhbg-book in other places](https://github.com/soupi/learn-haskell-blog-generator/discussions/67)]
+> <p style="text-align: center;"> Looking for reviews and mentions? <a href="https://github.com/soupi/learn-haskell-blog-generator/discussions/67">Click here</a>.</p>
 
 There are many Haskell tutorials, guides, and books out there. Why read this one?
 

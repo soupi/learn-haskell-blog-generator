@@ -2,9 +2,9 @@
 
 This is the source repository for
 "Learn Haskell by building a blog generator",
-a book about Haskell.
+a project-oriented book about Haskell.
 
-To view the book, visit the [website](https://lhbg-book.link).
+To view the book, visit the [website](https://learn-haskell.blog).
 
 To report issues and ask questions,
 visit the [issue tracker](https://github.com/soupi/learn-haskell-blog-generator/issues).
