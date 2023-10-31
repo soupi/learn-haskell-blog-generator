@@ -177,7 +177,7 @@ ghci> :load Html.hs
 [1 of 1] Compiling Html    ( Html.hs, interpreted )
 Ok, one module loaded.
 ghci> render (html_ "<title>" (p_ "<body>"))
-"<html><head><title>&lt;title&gt;</title></head><body><p>&lt;body&gt;</p></body></html>"
+"<html><head><title><title></title><body><p><body</p></body></head></html>"
 ```
 
 As well as import library modules:
