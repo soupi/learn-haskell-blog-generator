@@ -3698,7 +3698,7 @@ For example the following expression:</p>
 <pre><code class="language-hs">filter (2&lt;) $ map abs $ [-1, -2, -3] &lt;&gt; [4, 5, 6]
 </code></pre>
 <p>is understood as:</p>
-<pre><code class="language-hs">(filter (2&lt;) ((map abs) ([1, -2, 3] &lt;&gt; [-4, 5, 6]))
+<pre><code class="language-hs">(filter (2&lt;)) ((map abs) ([1, -2, 3] &lt;&gt; [-4, 5, 6]))
 </code></pre>
 <p>Which is also equivalent to the following code with less parenthesis:</p>
 <pre><code class="language-hs">filter (2&lt;) (map abs ([1, -2, 3] &lt;&gt; [-4, 5, 6]))
