@@ -113,7 +113,7 @@ headings that are not `h1`. There are a few ways to handle this:
 > ```
 > is understood as:
 > ```hs
-> (filter (2<) ((map abs) ([1, -2, 3] <> [-4, 5, 6]))
+> (filter (2<)) ((map abs) ([1, -2, 3] <> [-4, 5, 6]))
 > ```
 >
 > Which is also equivalent to the following code with less parenthesis:
