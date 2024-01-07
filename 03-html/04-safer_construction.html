@@ -414,13 +414,15 @@ can help us understand where the types do not match, and then we can figure out 
 <p><strong>Note</strong>: If we use a <em>parametrically polymorphic</em> function more than once,
 or use different functions that have similar type variable names,
 the type variables don't have to match in all instances simply because they share a name.
-Each instance has its own unique set of type variables. For example:</p>
+Each instance has its own unique set of type variables.
+For example, consider the following snippet:</p>
+<pre><code class="language-hs">incrementChar :: Char -&gt; Char
+incrementChar c = chr (ord (id c) + id 1)
+</code></pre>
+<p>where the types for the functions we use are:</p>
 <pre><code class="language-hs">id :: a -&gt; a
 ord :: Char -&gt; Int
 chr :: Int -&gt; Char
-
-incrementChar :: Char -&gt; Char
-incrementChar c = chr (ord (id c) + id 1)
 </code></pre>
 <p>In the snippet above, we use <code>id</code> twice (for no good reason other than for demonstration purposes).
 The first <code>id</code> takes a <code>Char</code> as argument, and its <code>a</code> is equivalent to <code>Char</code>.
