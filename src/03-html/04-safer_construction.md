@@ -356,15 +356,19 @@ can help us understand where the types do not match, and then we can figure out 
 > **Note**: If we use a *parametrically polymorphic* function more than once,
 > or use different functions that have similar type variable names,
 > the type variables don't have to match in all instances simply because they share a name.
-> Each instance has its own unique set of type variables. For example:
+> Each instance has its own unique set of type variables.
+> For example, consider the following snippet:
+>
+> ```hs
+> incrementChar :: Char -> Char
+> incrementChar c = chr (ord (id c) + id 1)
+> ```
+> where the types for the functions we use are:
 > 
 > ```hs
 > id :: a -> a
 > ord :: Char -> Int
 > chr :: Int -> Char
-> 
-> incrementChar :: Char -> Char
-> incrementChar c = chr (ord (id c) + id 1)
 > ```
 > 
 > In the snippet above, we use `id` twice (for no good reason other than for demonstration purposes).
