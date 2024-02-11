@@ -1,6 +1,10 @@
 # About this book
 
+<!--
+
 > <p style="text-align: center;"><img src="book-logo-transparent.png" alt="book logo" style="max-height: 1.5em; vertical-align: top"> This book is actively maintained. If you find errors, <a href="https://github.com/soupi/learn-haskell-blog-generator/issues">please let me know</a>.</p>
+
+-->
 
 <!--
 <div style="text-align: center">
@@ -86,11 +90,15 @@ The [haskell.org/documentation](https://www.haskell.org/documentation/) page lis
 many tutorials, books, guides, and courses. You can find a few alternatives that I can
 recommend [in this list](https://github.com/soupi/haskell-study-plan#about-this-guide).
 
+<!--
+
 ### Who am I?
 
 I'm
 [<img src="https://avatars.githubusercontent.com/u/8547573" alt="🐨" style="border-radius: 100px; max-height: 1.5em; vertical-align: top">
 gilmi](https://gilmi.me).
+
+-->
 
 ## Discussions
 
