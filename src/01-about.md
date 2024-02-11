@@ -1,5 +1,7 @@
 # About this book
 
+> <p style="text-align: center;"> Looking for reviews and mentions? <a href="https://github.com/soupi/learn-haskell-blog-generator/discussions/67">Click here</a>.</p>
+
 <!--
 
 > <p style="text-align: center;"><img src="book-logo-transparent.png" alt="book logo" style="max-height: 1.5em; vertical-align: top"> This book is actively maintained. If you find errors, <a href="https://github.com/soupi/learn-haskell-blog-generator/issues">please let me know</a>.</p>
@@ -50,8 +52,6 @@ and throughout the chapter, learn just enough Haskell to complete the task.
 </div>
 
 ## Why should you read this book?
-
-> <p style="text-align: center;"> Looking for reviews and mentions? <a href="https://github.com/soupi/learn-haskell-blog-generator/discussions/67">Click here</a>.</p>
 
 There are many Haskell tutorials, guides, and books out there. Why read this one?
 
