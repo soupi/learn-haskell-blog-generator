@@ -58,7 +58,7 @@ There are still a few tricks we can use to make our HTML EDSL better:
    can include unescaped special characters,
    and throw a type error when the user tries to do something invalid.
 
-2. Our HTML EDSL can move to its own module so it can be reused in multiple modules
+2. Our HTML EDSL can move to its own module so it can be reused in multiple modules.
 
 In the next few sections, we'll take a look at how to define our own types and
 how to work with modules to make it harder to make errors, and a little bit
