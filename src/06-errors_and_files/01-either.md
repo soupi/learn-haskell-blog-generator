@@ -347,7 +347,7 @@ This `flatten` + `fmap` combination looks like a recurring pattern which
 we can combine into a function:
 
 ```hs
-flatMap :: (a -> Either e b) -> Either a -> Either b
+flatMap :: (a -> Either e b) -> Either e a -> Either e b
 flatMap func val = flatten (fmap func val)
 ```
 
