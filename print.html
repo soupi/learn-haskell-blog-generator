@@ -6394,7 +6394,7 @@ from before:</p>
 </code></pre>
 <p>This <code>flatten</code> + <code>fmap</code> combination looks like a recurring pattern which
 we can combine into a function:</p>
-<pre><code class="language-hs">flatMap :: (a -&gt; Either e b) -&gt; Either a -&gt; Either b
+<pre><code class="language-hs">flatMap :: (a -&gt; Either e b) -&gt; Either e a -&gt; Either e b
 flatMap func val = flatten (fmap func val)
 </code></pre>
 <p>And now, we can write the code this way:</p>
