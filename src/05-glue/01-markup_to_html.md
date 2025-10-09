@@ -348,7 +348,29 @@ that unifies this pattern. And indeed, it is called
 and it works not only for lists but also for any data structure that can be "folded",
 or "reduced", into a summary value. This abstraction and type class is called **Foldable**.
 
-For a simpler understanding of `Foldable`, we can look at `fold`:
+`Foldable` is actually the first type class we meet that constraints a **higher-kinded type**.
+
+> We talked briefly about kinds in Haskell previously, we mentioned that kinds are
+> "the types of types". Like how types of values help us formalize and differentiate
+> between different values like `True` and `'a'`, kinds help us formalize and differentiate
+> types like `Int` and `Maybe` (written here without a payload type on purpose!).
+>
+> `Maybe Bool`, for example, is a type with three possible values - `Nothing`,
+> `Just False`, and `Just True`. `Maybe` on its own cannot have values, because
+> we did not specify of which type the payload values are. But still, we can talk
+> about `Maybe` as a structure that can take a payload type and return a new type
+> for which we can have values (for example, `Maybe Bool`).
+>
+> In other words, `Maybe` is a **type function**.
+> It has the **kind** `* -> *` (Or `Type -> Type` in later GHC releases).
+>
+> By adding a "Kind" layer on top of the Haskell type system,
+> we can talk about type functions in a generic way, and in the `Foldable` class
+> we do just that. We talk about types of kind `* -> *`, like `Maybe`,
+> that can be "folded".
+
+
+To make `Foldable` a bit simpler to understand, we can look at `fold`:
 
 ```hs
 fold :: (Foldable t, Monoid m) => t m -> m
@@ -357,16 +379,39 @@ fold :: (Foldable t, Monoid m) => t m -> m
 mconcat :: Monoid m            => [m] -> m
 ```
 
-`mconcat` is just a specialized version of `fold` for lists.
-And `fold` can be used for any pair of a data structure that implements
-`Foldable` and a payload type that implements `Monoid`. This
-could be `[]` with `Structure`, or `Maybe` with `Product Int`, or
-your new shiny binary tree with `String` as the payload type. But note that
-the `Foldable` type must be of *kind* `* -> *`. So, for example `Html`
-cannot be a `Foldable`.
+`mconcat` is just a specialized version of `fold` specific for lists.
 
+`fold` can be used for any pair of a data structure (of kind `* -> *`) that implements
+`Foldable`, and a payload type that implements `Monoid`. This
+could be `[]` (list without the payload type) with `Structure`,
+or `Maybe` with `Product Int`, or
+your new shiny and generic tree with `String` as the payload type.
+
+But note again that the type `t` for which we wish
+to implement an instance of the `Foldable`
+typeclass must be of *kind* `* -> *`. Like `[]`, `Maybe`, or `Product`.
+
+We can also consider `mconcat` as an *implementation* of `fold` specifically for lists,
+and actually if you look at the source code of the `Foldable` class in `base`, you will find:
+
+```hs
+instance Foldable [] where
+  ...
+  fold = List.mconcat
+```
+
+> Note that while a type of a list of ints can be written like this: `[Int]`,
+> it can also be written in prefix form like this: `[] Int`.
+> And also note that we must define a `Foldable` instance for `[]` without
+> mentioning a payload type! If we were to do the same for `Maybe`, we would write
+> `instance Foldable Maybe where` as well.
+
+And finally to give a counterexample, `Html` cannot be a `Foldable`, because it cannot carry a payload type.
+In other words, it has the kind `*`, and not `* -> *`.
+
+Let's look at another function from the `Foldable` class.
 `foldMap` is a function that allows us to apply a function to the
-payload type of the `Foldable` type right before combining them
+values of the payload type of the `Foldable` type right before combining them
 with the `<>` function.
 
 ```hs
@@ -382,11 +427,13 @@ foldMap
   -> Html.Structure
 ```
 
-True to its name, it really "maps" before it "folds". You might pause here
+True to its name, it really "maps" before it "folds".
+
+You might pause here
 and think, "this 'map' we are talking about isn't specific for lists; maybe
 that's another abstraction?" Yes. It is actually a very important and
 fundamental abstraction called `Functor`.
-But I think we had enough abstractions for this chapter.
+But I think we have enough abstractions for this chapter.
 We'll cover it in a later chapter!
 
 ## Finishing our conversion module
@@ -438,6 +485,7 @@ We learned about:
 - Ways to handle errors
 - The `Monoid` type class and abstraction
 - The `Foldable` type class and abstraction
+- Higher-kinded types
 
 Next, we are going to glue our functionality together and learn about
 I/O in Haskell!
