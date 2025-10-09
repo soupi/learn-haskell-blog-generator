@@ -3875,21 +3875,57 @@ that unifies this pattern. And indeed, it is called
 <a href="https://hackage.haskell.org/package/base-4.16.4.0/docs/Data-Foldable.html#v:foldMap"><code>foldMap</code></a>,
 and it works not only for lists but also for any data structure that can be &quot;folded&quot;,
 or &quot;reduced&quot;, into a summary value. This abstraction and type class is called <strong>Foldable</strong>.</p>
-<p>For a simpler understanding of <code>Foldable</code>, we can look at <code>fold</code>:</p>
+<p><code>Foldable</code> is actually the first type class we meet that constraints a <strong>higher-kinded type</strong>.</p>
+<blockquote>
+<p>We talked briefly about kinds in Haskell previously, we mentioned that kinds are
+&quot;the types of types&quot;. Like how types of values help us formalize and differentiate
+between different values like <code>True</code> and <code>'a'</code>, kinds help us formalize and differentiate
+types like <code>Int</code> and <code>Maybe</code> (written here without a payload type on purpose!).</p>
+<p><code>Maybe Bool</code>, for example, is a type with three possible values - <code>Nothing</code>,
+<code>Just False</code>, and <code>Just True</code>. <code>Maybe</code> on its own cannot have values, because
+we did not specify of which type the payload values are. But still, we can talk
+about <code>Maybe</code> as a structure that can take a payload type and return a new type
+for which we can have values (for example, <code>Maybe Bool</code>).</p>
+<p>In other words, <code>Maybe</code> is a <strong>type function</strong>.
+It has the <strong>kind</strong> <code>* -&gt; *</code> (Or <code>Type -&gt; Type</code> in later GHC releases).</p>
+<p>By adding a &quot;Kind&quot; layer on top of the Haskell type system,
+we can talk about type functions in a generic way, and in the <code>Foldable</code> class
+we do just that. We talk about types of kind <code>* -&gt; *</code>, like <code>Maybe</code>,
+that can be &quot;folded&quot;.</p>
+</blockquote>
+<p>To make <code>Foldable</code> a bit simpler to understand, we can look at <code>fold</code>:</p>
 <pre><code class="language-hs">fold :: (Foldable t, Monoid m) =&gt; t m -&gt; m
 
 -- compare with
 mconcat :: Monoid m            =&gt; [m] -&gt; m
 </code></pre>
-<p><code>mconcat</code> is just a specialized version of <code>fold</code> for lists.
-And <code>fold</code> can be used for any pair of a data structure that implements
-<code>Foldable</code> and a payload type that implements <code>Monoid</code>. This
-could be <code>[]</code> with <code>Structure</code>, or <code>Maybe</code> with <code>Product Int</code>, or
-your new shiny binary tree with <code>String</code> as the payload type. But note that
-the <code>Foldable</code> type must be of <em>kind</em> <code>* -&gt; *</code>. So, for example <code>Html</code>
-cannot be a <code>Foldable</code>.</p>
-<p><code>foldMap</code> is a function that allows us to apply a function to the
-payload type of the <code>Foldable</code> type right before combining them
+<p><code>mconcat</code> is just a specialized version of <code>fold</code> specific for lists.</p>
+<p><code>fold</code> can be used for any pair of a data structure (of kind <code>* -&gt; *</code>) that implements
+<code>Foldable</code>, and a payload type that implements <code>Monoid</code>. This
+could be <code>[]</code> (list without the payload type) with <code>Structure</code>,
+or <code>Maybe</code> with <code>Product Int</code>, or
+your new shiny and generic tree with <code>String</code> as the payload type.</p>
+<p>But note again that the type <code>t</code> for which we wish
+to implement an instance of the <code>Foldable</code>
+typeclass must be of <em>kind</em> <code>* -&gt; *</code>. Like <code>[]</code>, <code>Maybe</code>, or <code>Product</code>.</p>
+<p>We can also consider <code>mconcat</code> as an <em>implementation</em> of <code>fold</code> specifically for lists,
+and actually if you look at the source code of the <code>Foldable</code> class in <code>base</code>, you will find:</p>
+<pre><code class="language-hs">instance Foldable [] where
+  ...
+  fold = List.mconcat
+</code></pre>
+<blockquote>
+<p>Note that while a type of a list of ints can be written like this: <code>[Int]</code>,
+it can also be written in prefix form like this: <code>[] Int</code>.
+And also note that we must define a <code>Foldable</code> instance for <code>[]</code> without
+mentioning a payload type! If we were to do the same for <code>Maybe</code>, we would write
+<code>instance Foldable Maybe where</code> as well.</p>
+</blockquote>
+<p>And finally to give a counterexample, <code>Html</code> cannot be a <code>Foldable</code>, because it cannot carry a payload type.
+In other words, it has the kind <code>*</code>, and not <code>* -&gt; *</code>.</p>
+<p>Let's look at another function from the <code>Foldable</code> class.
+<code>foldMap</code> is a function that allows us to apply a function to the
+values of the payload type of the <code>Foldable</code> type right before combining them
 with the <code>&lt;&gt;</code> function.</p>
 <pre><code class="language-hs">foldMap :: (Foldable t, Monoid m) =&gt; (a -&gt; m) -&gt; t a -&gt; m
 
@@ -3902,11 +3938,12 @@ foldMap
   -&gt; [Markup.Structure]
   -&gt; Html.Structure
 </code></pre>
-<p>True to its name, it really &quot;maps&quot; before it &quot;folds&quot;. You might pause here
+<p>True to its name, it really &quot;maps&quot; before it &quot;folds&quot;.</p>
+<p>You might pause here
 and think, &quot;this 'map' we are talking about isn't specific for lists; maybe
 that's another abstraction?&quot; Yes. It is actually a very important and
 fundamental abstraction called <code>Functor</code>.
-But I think we had enough abstractions for this chapter.
+But I think we have enough abstractions for this chapter.
 We'll cover it in a later chapter!</p>
 <h2 id="finishing-our-conversion-module"><a class="header" href="#finishing-our-conversion-module">Finishing our conversion module</a></h2>
 <p>Let's finish our code by writing <code>convert</code>:</p>
@@ -3949,6 +3986,7 @@ convertStructure structure =
 <li>Ways to handle errors</li>
 <li>The <code>Monoid</code> type class and abstraction</li>
 <li>The <code>Foldable</code> type class and abstraction</li>
+<li>Higher-kinded types</li>
 </ul>
 <p>Next, we are going to glue our functionality together and learn about
 I/O in Haskell!</p>
